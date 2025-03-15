@@ -1,3 +1,11 @@
+Assim que baixar o projeto use:
+
+```bash
+npm install
+```
+
+---
+
 Para rodar o projeto use:
 ```bash
 npm run dev
