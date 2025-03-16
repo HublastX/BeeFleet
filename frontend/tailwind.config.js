@@ -5,11 +5,12 @@ module.exports = {
       colors: {
          "bee-yellow": {
             100: "#FFF4DC",
-            200: "#FFF7D6",
-            300: "#FFE38A",
-            400: "#FFCB4A",
-            500: "#FFC107",
-            600: "#DB9E00",
+            200: "#FFEAB8",
+            300: "#FFDF95",
+            400: "#FFD571",
+            500: "#FFCB4A",
+            600: "#FFC107",
+            700: "#DB9E00",
          },
          "bee-purple": {
             100: "#EDE7F6",
