@@ -22,11 +22,28 @@ npm run lint
 
 ---
 
-## Recomendações extras
+# Recomendações extras
 
-### Extenções:
+## Extenções:
 - Tailwind CSS IntelliSense
 - Tailwind Fold
+- ESLint
 
-# Uso:
+## Uso:
 Selecione o modo de linguagem de `JavaScript` para `JavaScript JSX`
+
+**Ou**
+
+configure seu ``settings.json`` do ``.vscode/`` da seguinte maneira:
+
+```json
+{
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "always"
+    },
+    "files.associations": {
+        "*.js": "javascriptreact"
+    }
+}
+```
