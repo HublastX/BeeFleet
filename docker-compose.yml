@@ -47,6 +47,29 @@ services:
         networks:
             - bee-fleet-network
 
+    bee-fleet-datahub:
+        build:
+            dockerfile: Dockerfile
+            context: ./backend/datahub
+        entrypoint: ./entrypoint.sh
+        env_file:
+            - .env
+        container_name: bee-fleet-service
+        restart: always
+        environment:
+            DB_HOST: mysql
+            DB_PORT: 3306
+            DB_USER: ${MYSQL_USER}
+            DB_PASSWORD: ${MYSQL_PASSWORD}
+            DB_NAME: ${MYSQL_DATABASE}
+        ports:
+            - "3001:3001"
+        depends_on:
+            mysql:
+                condition: service_healthy
+        networks:
+            - bee-fleet-network
+
 networks:
     bee-fleet-network:
         driver: bridge

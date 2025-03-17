@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
     provider = "mysql"
-    url      = "mysql://root:rootpassword@localhost:3306/bee_fleet_management"
+    url      = env("DATABASE_URL")
 }
 
 model User {
