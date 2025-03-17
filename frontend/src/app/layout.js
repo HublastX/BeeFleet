@@ -1,8 +1,5 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
-
-import Header from "./components/Header";
-
 const poppins = Poppins({
    variable: "--font-poppins",
    subsets: ["latin"],
@@ -13,6 +10,9 @@ export const metadata = {
    title: "BeeFleet",
    description: "Carros para alugar",
 };
+
+// componentes
+import Header from "./components/Header";
 
 export default function RootLayout({ children }) {
    return (
