@@ -1,7 +1,6 @@
-#!/bin/bash
+#!/bin/sh
 
-
-echo "Migrations"
-
+echo "Fazendo as Migrations"
 npx prisma migrate dev
-
+node server.js
+echo "Finalizando as Migrations"

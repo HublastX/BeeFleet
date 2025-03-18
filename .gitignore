@@ -3,7 +3,7 @@ trash/
 .vscode/
 
 
-
+.env
 # Logs
 logs
 *.log
