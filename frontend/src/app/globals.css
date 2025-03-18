@@ -30,8 +30,8 @@ body {
    font-family: "Poppins", Arial, sans-serif;
 }
 .acrilico {
-   background: rgba(255, 255, 255, 0.363);
-   backdrop-filter: blur(5px);
+   background: rgba(255, 255, 255, 0.267);
+   backdrop-filter: blur(1px);
 }
 .inputText {
    width: 100%;

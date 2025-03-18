@@ -1,5 +1,6 @@
 "use client";
 import Icon from "../elements/Icon";
+import Btn from "../elements/btn";
 
 const Modal = ({ onClose }) => {
    return (
@@ -21,7 +22,7 @@ const Modal = ({ onClose }) => {
                <input className="inputText" type="text" name="sobrenome" id="sobrenome" placeholder="ex.: Santos Silva" />
                <label htmlFor="telefone">Telefone:</label>
                <input className="inputText" type="tel" name="telefone" id="telefone" placeholder="ex.: (11) 99999-9999" />
-               <button className="rounded mt-6 bg-bee-purple-600 text-bee-dark-100 p-2 hover:bg-bee-purple-700 transition-all duration-300 active:scale-95">Solicitar Carro</button>
+               <Btn className="mt-5" texto="Solicitar Carro" />
             </form>
          </div>
       </div>
