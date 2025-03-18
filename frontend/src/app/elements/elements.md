@@ -26,3 +26,32 @@ ex.:
 ` className="h-8 w-8 text-bee-purple-300"`
 
 assim o tamanho dele foi definido com h e w, e a cor dele mudada com text
+
+# btn
+
+para facilitar a vida e nao precisar re escrever varias vezes a class do botao,
+foi criado um elemento `<Btn />`.
+para utilizar, basta importar o elemento:
+
+```js
+import Btn from "../elements/btn";
+```
+
+agora para utilizalo, ate entao voce pode preencher 3 campos dele:
+
+- **texto**: texto e obrigatorio por, ele e o que vem escrito no botao
+
+   ```js
+   <Btn texto="Solicitar Carro" />
+   ```
+
+- **onClick**: para adicionar uma funcao ao botao, e possivel por com `onClick`
+
+   ```js
+   <Btn onClick={onOpenModal} />
+   ```
+
+- **className**: caso queira por um novo estilo ao botao, e possivel adicionar ele no `className` normalmente
+   ```js
+   <Btn className="mt-5" />
+   ```
