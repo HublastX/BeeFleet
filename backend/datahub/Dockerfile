@@ -7,14 +7,16 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
+COPY .env ./
 
 RUN npm install --omit=dev
 
-
 COPY . .
 
+RUN chmod +x entrypoint.sh
 
-EXPOSE 3000
+
+EXPOSE 3001
 
 
 CMD ["node", "server.js"]
