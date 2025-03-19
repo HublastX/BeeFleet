@@ -16,7 +16,25 @@ e o chame assim:
 <Icon name="xMark" />
 ```
 
-o name é o mesmo que foi definido em Icon.js.
+O name é o mesmo que foi definido em Icon.js.
+
+Para editar ele, voce pode usar o className normalmente, como por exemplo:
+
+```js
+<Icon name="xMark" className="text-bee-purple-500" />
+```
+
+Agora, caso voce queira mudar aespessura do icone, use `strokeWidth={}`, como
+por exemplo:
+
+```js
+<Icon name="xMark" strokeWidth={4} />
+```
+
+para importar icones, confira o site deles ou figma e escolha o que quer usar:
+https://heroicons.com/outline
+https://www.figma.com/design/gKE4wCd9xk1erNW9HOg8RE/Heroicons-(Community)?node-id=1695-333&t=uBu52xZko84ClZEr-0
+copie o nome dele, e cole no aray de importacao do arquivo
 
 ---
 
