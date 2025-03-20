@@ -13,7 +13,6 @@ RUN npm install --omit=dev
 
 COPY . .
 
-RUN chmod +x entrypoint.sh
 
 
 EXPOSE 3001
