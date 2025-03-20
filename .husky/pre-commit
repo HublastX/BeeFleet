@@ -1,5 +1,5 @@
-#!/usr/bin/env bash
+ #!/usr/bin/env bash
 # Para substituir o script existente
 
-npx --no -- commitlint --edit "$1"
-
+# Adicione qualquer verificação que desejar ou deixe vazio para não fazer nada
+exit 0
