@@ -1,0 +1,3 @@
+[submodule "diagrama"]
+	path = diagrama
+	url = https://github.com/ADS-Unifg/Diagramas.git
