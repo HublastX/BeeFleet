@@ -7,45 +7,75 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-model User {
-    id        String   @id @default(uuid())
-    name      String
-    email     String   @unique
-    password  String
-    role      Role
-    events    Event[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Manager {
+    id       String       @id @default(uuid())
+    name     String
+    email    String       @unique
+    password String
+    phone    String?
+    cars     Car[]
+    events   Event[]
+    requests CarRequest[]
 }
 
-enum Role {
-    MANAGER
-    DRIVER
+model Driver {
+    id            String  @id @default(uuid())
+    name          String
+    cpf           String  @unique
+    driverLicense String  @unique
+    phone         String?
+    events        Event[]
 }
 
 model Car {
-    id        String   @id @default(uuid())
-    plate     String   @unique
+    id        String       @id @default(uuid())
+    plate     String       @unique
     model     String
-    brand     String
     year      Int
-    color     String
+    available Boolean      @default(true)
     events    Event[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    managerId String
+    manager   Manager      @relation(fields: [managerId], references: [id], onDelete: Cascade)
+    requests  CarRequest[]
+}
+
+model CarRequest {
+    id          String        @id @default(uuid())
+    carId       String?
+    managerId   String
+    status      RequestStatus @default(PENDING)
+    requestDate DateTime      @default(now())
+
+    driverName    String
+    driverCpf     String
+    driverLicense String
+    driverPhone   String?
+
+    manager Manager @relation(fields: [managerId], references: [id], onDelete: Cascade)
+    car     Car?    @relation(fields: [carId], references: [id], onDelete: SetNull)
 }
 
 model Event {
-    id              String    @id @default(uuid())
-    user            User      @relation(fields: [userId], references: [id])
-    userId          String
-    car             Car       @relation(fields: [carId], references: [id])
-    carId           String
-    initialOdometer Int?
-    finalOdometer   Int?
-    type            String // "exit" or "entry"
-    startTime       DateTime  @default(now())
-    endTime         DateTime?
-    createdAt       DateTime  @default(now())
-    updatedAt       DateTime  @updatedAt
+    id        String    @id @default(uuid())
+    managerId String
+    driverId  String
+    carId     String
+    odometer  Int
+    type      EventType
+    timestamp DateTime  @default(now())
+
+    manager Manager @relation(fields: [managerId], references: [id], onDelete: Cascade)
+    driver  Driver  @relation(fields: [driverId], references: [id], onDelete: Cascade)
+    car     Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
+}
+
+enum EventType {
+    CHECKOUT
+    RETURN
+}
+
+enum RequestStatus {
+    PENDING
+    APPROVED
+    REJECTED
 }
