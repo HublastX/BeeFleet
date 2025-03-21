@@ -20,7 +20,7 @@ export default function Home() {
          <Header onOpenModal={handleOpenModal} />
          <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
             <div className="flex gap-4 items-center flex-col sm:flex-row">
-               <Btn texto="Solicitar Carro aaa" onClick={handleOpenModal} />
+               <Btn texto="Solicitar Carro" onClick={handleOpenModal} />
             </div>
          </main>
 
