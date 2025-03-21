@@ -13,6 +13,7 @@ module.exports = {
                 "refactor",
                 "test",
                 "revert",
+                "cleanup",
             ],
         ],
         "type-case": [2, "always", "lowerCase"],
