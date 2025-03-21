@@ -41,7 +41,7 @@ model Car {
 
 model CarRequest {
     id          String        @id @default(uuid())
-    carId       String
+    carId       String?
     managerId   String
     status      RequestStatus @default(PENDING)
     requestDate DateTime      @default(now())
@@ -52,20 +52,20 @@ model CarRequest {
     driverPhone   String?
 
     manager Manager @relation(fields: [managerId], references: [id], onDelete: Cascade)
-    car     Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
+    car     Car?    @relation(fields: [carId], references: [id], onDelete: SetNull)
 }
 
 model Event {
     id        String    @id @default(uuid())
     managerId String
-    driverId  String?
+    driverId  String
     carId     String
     odometer  Int
     type      EventType
     timestamp DateTime  @default(now())
 
     manager Manager @relation(fields: [managerId], references: [id], onDelete: Cascade)
-    driver  Driver? @relation(fields: [driverId], references: [id], onDelete: Cascade)
+    driver  Driver  @relation(fields: [driverId], references: [id], onDelete: Cascade)
     car     Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
 }
 
