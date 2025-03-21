@@ -1,10 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import Btn from "../elements/btn";
+import Modal from "./Modal";
 
-const Header = ({ onOpenModal }) => {
+const Header = () => {
    return (
-      <header className="bg-bee-yellow-600 text-bee-dark-600 py-2 fixed top-0 left-0 w-full z-50 shadow-lg">
+      <header className="bg-bee-yellow-600 text-bee-dark-600 py-2 sticky top-0 left-0 w-full z-50 shadow-lg">
          <div className="mx-auto px-6 flex justify-between items-center">
             <Link href="/" className="flex items-center gap-0">
                <Image
@@ -18,7 +18,7 @@ const Header = ({ onOpenModal }) => {
                   BeeFleet
                </h1>
             </Link>
-            <Btn texto="Solicitar Carro" onClick={onOpenModal}/>
+            <Modal />
          </div>
       </header>
    );
