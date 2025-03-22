@@ -1,3 +1,4 @@
+// This is your Prisma schema file
 generator client {
     provider = "prisma-client-js"
 }
@@ -8,65 +9,62 @@ datasource db {
 }
 
 model Manager {
-    id       String       @id @default(uuid())
-    name     String
-    email    String       @unique
-    password String
-    phone    String?
-    cars     Car[]
-    events   Event[]
-    requests CarRequest[]
+    id        String   @id @default(uuid())
+    email     String   @unique
+    password  String
+    name      String
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    events    Event[]
+
+    @@map("managers")
 }
 
 model Driver {
-    id            String  @id @default(uuid())
-    name          String
-    cpf           String  @unique
-    driverLicense String  @unique
-    phone         String?
-    events        Event[]
+    id        String   @id @default(uuid())
+    name      String
+    phone     String
+    license   String   @unique
+    status    Status   @default(AVAILABLE)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    events    Event[]
+
+    @@map("drivers")
 }
 
 model Car {
-    id        String       @id @default(uuid())
-    plate     String       @unique
+    id        String   @id @default(uuid())
+    plate     String   @unique
     model     String
     year      Int
-    available Boolean      @default(true)
+    color     String
+    odometer  Int      @default(0)
+    status    Status   @default(AVAILABLE)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
     events    Event[]
-    managerId String
-    manager   Manager      @relation(fields: [managerId], references: [id], onDelete: Cascade)
-    requests  CarRequest[]
-}
 
-model CarRequest {
-    id          String        @id @default(uuid())
-    carId       String?
-    managerId   String
-    status      RequestStatus @default(PENDING)
-    requestDate DateTime      @default(now())
-
-    driverName    String
-    driverCpf     String
-    driverLicense String
-    driverPhone   String?
-
-    manager Manager @relation(fields: [managerId], references: [id], onDelete: Cascade)
-    car     Car?    @relation(fields: [carId], references: [id], onDelete: SetNull)
+    @@map("cars")
 }
 
 model Event {
-    id        String    @id @default(uuid())
-    managerId String
-    driverId  String
-    carId     String
-    odometer  Int
-    type      EventType
-    timestamp DateTime  @default(now())
+    id         String    @id @default(uuid())
+    eventType  EventType
+    odometer   Int
+    createdAt  DateTime  @default(now())
+    returnedAt DateTime?
 
-    manager Manager @relation(fields: [managerId], references: [id], onDelete: Cascade)
-    driver  Driver  @relation(fields: [driverId], references: [id], onDelete: Cascade)
-    car     Car     @relation(fields: [carId], references: [id], onDelete: Cascade)
+    manager   Manager @relation(fields: [managerId], references: [id])
+    managerId String
+
+    driver   Driver @relation(fields: [driverId], references: [id])
+    driverId String
+
+    car   Car    @relation(fields: [carId], references: [id])
+    carId String
+
+    @@map("events")
 }
 
 enum EventType {
@@ -74,8 +72,7 @@ enum EventType {
     RETURN
 }
 
-enum RequestStatus {
-    PENDING
-    APPROVED
-    REJECTED
+enum Status {
+    AVAILABLE
+    BUSY
 }
