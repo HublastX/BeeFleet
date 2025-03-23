@@ -19,6 +19,9 @@ export default function RootLayout({ children }) {
    return (
       <html lang="pt-br">
          <body className={`${poppins.variable} antialiased`}>
+            <head>
+               <meta name="apple-mobile-web-app-title" content="BeeFleet" />
+            </head>
             <Header />
             {children}
          </body>
