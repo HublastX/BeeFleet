@@ -1,6 +1,14 @@
 import React from "react";
-import { PlusIcon, HomeIcon, XMarkIcon, DocumentMagnifyingGlassIcon } from "@heroicons/react/24/solid";
-import { UserIcon, ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
+import {
+   PlusIcon,
+   HomeIcon,
+   XMarkIcon,
+   DocumentMagnifyingGlassIcon,
+} from "@heroicons/react/24/solid";
+import {
+   UserIcon,
+   ChatBubbleBottomCenterTextIcon,
+} from "@heroicons/react/24/outline";
 
 const icons = {
    plus: PlusIcon,
@@ -8,8 +16,7 @@ const icons = {
    home: HomeIcon,
    search: DocumentMagnifyingGlassIcon,
    user: UserIcon,
-   chat: ChatBubbleBottomCenterTextIcon,
-};
+   chat: ChatBubbleBottomCenterTextIcon,};
 
 export default function Icon({ name, className, strokeWidth }) {
    const IconComponent = icons[name];
@@ -18,5 +25,5 @@ export default function Icon({ name, className, strokeWidth }) {
       return null;
    }
 
-   return <IconComponent className={className} strokeWidth={strokeWidth}/>;
+   return <IconComponent className={className} strokeWidth={strokeWidth} />;
 }
