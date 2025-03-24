@@ -8,6 +8,7 @@ import {
 import {
    UserIcon,
    ChatBubbleBottomCenterTextIcon,
+   ArrowLeftEndOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 
 const icons = {
@@ -16,7 +17,9 @@ const icons = {
    home: HomeIcon,
    search: DocumentMagnifyingGlassIcon,
    user: UserIcon,
-   chat: ChatBubbleBottomCenterTextIcon,};
+   chat: ChatBubbleBottomCenterTextIcon,
+   closeLeft: ArrowLeftEndOnRectangleIcon,
+};
 
 export default function Icon({ name, className, strokeWidth }) {
    const IconComponent = icons[name];
