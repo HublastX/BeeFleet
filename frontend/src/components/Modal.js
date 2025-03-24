@@ -10,6 +10,7 @@ function Modal() {
    return (
       <>
          <Btn
+            variant="primary"
             texto="Login"
             type="button"
             onClick={() => setIsOpen(true)}
@@ -83,6 +84,7 @@ function Modal() {
                            <InputText type="date" name="data" />
                         </div>
                         <Btn
+                           variant="primary"
                            type="submit"
                            texto="Solicitar Carro"
                            className="mt-5 w-full"

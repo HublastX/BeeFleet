@@ -23,9 +23,9 @@ module.exports = {
                700: "#3b2287",
             },
             "bee-dark": {
-               100: "#F5F5F5", //borda do light mode
+               100: "#fafafa", //cor fundo light mode
                200: "#f9eaffd2",
-               300: "#BDBDBD",
+               300: "#dbdbdb", //borda do light mode
                400: "#364153", //borda do darkmode
                500: "#424242",
                600: "#2E2E2F",
