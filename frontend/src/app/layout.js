@@ -13,17 +13,24 @@ export const metadata = {
 };
 
 // componentes
-import Header from "./components/Header";
+import Header from "../components/Header";
+import NavBar from "../components/NavBar";
 
 export default function RootLayout({ children }) {
    return (
       <html lang="pt-br">
-         <body className={`${poppins.variable} antialiased`}>
+         <body className={`${poppins.variable} antialiased flex row justify-between`}>
             <head>
                <meta name="apple-mobile-web-app-title" content="BeeFleet" />
             </head>
-            <Header />
-            {children}
+            <NavBar />
+
+            <div className="flex-1 transition-all  duration-300 ease-in-out">
+               <Header />
+               <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+                  {children}
+               </div>
+            </div>
          </body>
       </html>
    );
