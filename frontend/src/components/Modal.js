@@ -10,7 +10,7 @@ function Modal() {
    return (
       <>
          <Btn
-            texto="Solicitar Carro"
+            texto="Login"
             type="button"
             onClick={() => setIsOpen(true)}
          />
