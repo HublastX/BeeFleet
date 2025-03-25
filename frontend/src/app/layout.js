@@ -1,5 +1,5 @@
 "use client";
-import { Poppins } from "next/font/google";
+import { Karla } from "next/font/google";
 import "./globals.css";
 import { useNavBar } from "@/context/navBarContext";
 import { NavBarProvider } from "@/context/navBarContext";
@@ -9,10 +9,10 @@ import { metadata } from "./metadata";
 import Header from "../components/Header";
 import NavBar from "../components/NavBar";
 
-const poppins = Poppins({
-   variable: "--font-poppins",
+const karla = Karla({
+   variable: "--font-karla",
    subsets: ["latin"],
-   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+   weight: ["200", "300", "400", "500", "600", "700", "800",],
 });
 
 export default function RootLayout({ children }) {
@@ -20,10 +20,12 @@ export default function RootLayout({ children }) {
       <NavBarProvider>
          <html lang="pt-br">
             <head>
+                <title>{metadata.title}</title>
+                <meta name="description" content={metadata.description} />
                <meta name="apple-mobile-web-app-title" content="BeeFleet" />
             </head>
             <body
-               className={`${poppins.variable} antialiased flex row justify-between`}
+               className={`${karla.variable} antialiased flex row justify-between`}
             >
                <div className="min-h-screen xl:flex">
                   <NavBar />
