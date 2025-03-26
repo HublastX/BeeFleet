@@ -33,6 +33,11 @@ const othersItems = [
          { name: "sair", path: "/logout" },
       ],
    },
+   {
+      icon: "suport",
+      name: "suporte",
+      path: "/suport"
+   }
 ];
 
 const NavBar = () => {
