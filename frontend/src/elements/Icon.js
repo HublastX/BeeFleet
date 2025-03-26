@@ -4,11 +4,14 @@ import {
    HomeIcon,
    XMarkIcon,
    DocumentMagnifyingGlassIcon,
+   EllipsisHorizontalIcon,
+   UserIcon,
+   ChartPieIcon,
 } from "@heroicons/react/24/solid";
 import {
-   UserIcon,
    ChatBubbleBottomCenterTextIcon,
    Bars3BottomLeftIcon,
+   ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 
 const icons = {
@@ -19,6 +22,9 @@ const icons = {
    user: UserIcon,
    chat: ChatBubbleBottomCenterTextIcon,
    closeLeft: Bars3BottomLeftIcon,
+   reticencias: EllipsisHorizontalIcon,
+   prabaixo: ChevronDownIcon,
+   graficoPizza: ChartPieIcon,
 };
 
 export default function Icon({ name, className, strokeWidth }) {
