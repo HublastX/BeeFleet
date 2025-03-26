@@ -7,6 +7,7 @@ import {
    EllipsisHorizontalIcon,
    UserIcon,
    ChartPieIcon,
+   ExclamationCircleIcon,
 } from "@heroicons/react/24/solid";
 import {
    ChatBubbleBottomCenterTextIcon,
@@ -25,6 +26,7 @@ const icons = {
    reticencias: EllipsisHorizontalIcon,
    prabaixo: ChevronDownIcon,
    graficoPizza: ChartPieIcon,
+   suport: ExclamationCircleIcon
 };
 
 export default function Icon({ name, className, strokeWidth }) {
