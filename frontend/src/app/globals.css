@@ -7,6 +7,12 @@
 :root {
    --background: #fff;
    --foreground: #171717;
+   --spacing: 0.25rem;
+   --radius-lg: 0.5rem;
+   --text-theme-sm--line-height: 20px;
+   --text-theme-sm: 14px;
+   --tw-leading: 18px;
+   --font-weight-medium: 800;
 }
 
 @theme inline {
@@ -30,4 +36,46 @@ body {
 .acrilico {
    background: rgba(255, 255, 255, 0.267);
    backdrop-filter: blur(1px);
+}
+@layer utilities {
+   .menu-dropdown-item {
+      position: relative;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      gap: calc(var(--spacing) * 3);
+      border-radius: var(--radius-lg);
+      padding-inline: calc(var(--spacing) * 3);
+      padding-block: calc(var(--spacing) * 2.5);
+   }
+
+   .no-scrollbar {
+      &::-webkit-scrollbar {
+         display: none;
+      }
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+   }
+
+   .menu-item {
+      position: relative;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+      flex-direction: row;
+      -webkit-box-align: center;
+      -ms-flex-align: center;
+      align-items: center;
+      gap: calc(var(--spacing) * 3);
+      border-radius: var(--radius-lg);
+      padding-inline: calc(var(--spacing) * 3);
+      padding-block: calc(var(--spacing) * 2);
+      font-size: var(--text-theme-sm);
+      line-height: var(--tw-leading, var(--text-theme-sm--line-height));
+      --tw-font-weight: var(--font-weight-medium);
+      font-weight: var(--font-weight-medium);
+   }
 }
