@@ -14,6 +14,8 @@ module.exports = {
                 "test",
                 "revert",
                 "cleanup",
+                "build",
+                "remover",
             ],
         ],
         "type-case": [2, "always", "lowerCase"],
