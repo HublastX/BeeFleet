@@ -5,7 +5,7 @@ module.exports = {
       extend: {
          colors: {
             "bee-yellow": {
-               100: "#FFF4DC",
+               100: "#ffd4261c",
                200: "#FFEAB8",
                300: "#FFDF95",
                400: "#FFD571",
@@ -38,6 +38,7 @@ module.exports = {
                300: "#F44336",
                400: "rgba(244, 67, 54, 0.4)",
                500: "#F0F0F0",
+               600: "#dadada6f",
             },
          },
       },
