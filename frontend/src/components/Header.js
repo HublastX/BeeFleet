@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 import { useNavBar } from "@/context/navBarContext";
-import Modal from "./Modal";
+import Modal from "./ModalLoginManager";
 import Btn from "@/elements/btn";
 import Icon from "@/elements/Icon";
 
@@ -15,7 +15,7 @@ const Header = () => {
       }
    };
    return (
-      <header className="sticky top-0 flex w-full bg-bee-dark-100 border-b border-bee-dark-300 z-99999 dark:border-bee-dark-400 dark:bg-bee-dark-800 lg:border-b">
+      <header className="sticky top-0 flex w-full z-40 bg-bee-dark-100 border-b border-bee-dark-300 dark:border-bee-dark-400 dark:bg-bee-dark-800 lg:border-b">
          <div className="flex flex-col items-center justify-between grow lg:flex-row lg:px-6">
             <div className="flex items-center justify-between w-full gap-2 px-3 py-3 border-b border-bee-dark-100 dark:border-bee-dark-400 sm:gap-4 lg:justify-normal lg:border-b-0 lg:px-0 lg:py-4">
                <Btn variant="secondary" type="button" onClick={handleToggle}>
