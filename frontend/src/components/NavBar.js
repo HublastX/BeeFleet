@@ -36,12 +36,18 @@ const othersItems = [
    {
       icon: "suport",
       name: "suporte",
-      path: "/suport"
-   }
+      path: "/suport",
+   },
 ];
 
 const NavBar = () => {
    const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useNavBar();
+   const [isAuthenticated, setIsAuthenticated] = useState(false);
+   useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (token) setIsAuthenticated(true);
+   }, []);
+
    const pathname = usePathname();
 
    const menuItem = (navItems, menuType) => (
@@ -61,7 +67,8 @@ const NavBar = () => {
                              !isExpanded && !isHovered
                                 ? "lg:justify-center"
                                 : "lg:justify-start"
-                          }`}
+                          } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
+                     disabled={!isAuthenticated}
                   >
                      <Icon name={nav.icon} className="w-6 h-6" />
                      {(isExpanded || isHovered || isMobileOpen) && (
@@ -88,9 +95,12 @@ const NavBar = () => {
                            isActive(nav.path)
                               ? " text-bee-yellow-600 bg-bee-yellow-100"
                               : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
-                        }`}
+                        } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
+                        onClick={(e) => {
+                           if (!isAuthenticated) e.preventDefault(); // Impede a navegação
+                        }}
                      >
-                        <Icon name={nav.icon} className="w-6 h-6"  />
+                        <Icon name={nav.icon} className="w-6 h-6" />
                         {(isExpanded || isHovered || isMobileOpen) && (
                            <span className="inline">{nav.name}</span>
                         )}
@@ -120,7 +130,10 @@ const NavBar = () => {
                                     isActive(subItem.path)
                                        ? " bg-bee-yellow-100 text-bee-yellow-600"
                                        : " text-bee-dark-600 dark:text-white"
-                                 }`}
+                                 } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
+                                 onClick={(e) => {
+                                    if (!isAuthenticated) e.preventDefault();
+                                 }}
                               >
                                  {subItem.name}
                               </Link>
