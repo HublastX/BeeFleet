@@ -28,15 +28,18 @@ const othersItems = [
       icon: "user",
       name: "Perfil",
       subItems: [
-         { name: "vizualizar perfil", path: "/line-chart" },
-         { name: "editar perfil", path: "/bar-chart" },
+         { name: "vizualizar perfil", path: "/login" },
+         { name: "editar perfil", path: "/test" },
          { name: "sair", path: "/logout" },
       ],
    },
    {
       icon: "suport",
       name: "suporte",
-      path: "/suport",
+      subItems: [
+         { name: "faq", path: "/faq"},
+         {name: "Gui", path: "/gui"}
+      ]
    },
 ];
 
@@ -91,13 +94,14 @@ const NavBar = () => {
                   nav.path && (
                      <Link
                         href={nav.path}
+                        passHref
                         className={`menu-item group ${
                            isActive(nav.path)
                               ? " text-bee-yellow-600 bg-bee-yellow-100"
                               : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
                         } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
                         onClick={(e) => {
-                           if (!isAuthenticated) e.preventDefault(); // Impede a navegação
+                           if (!isAuthenticated) e.preventDefault(); 
                         }}
                      >
                         <Icon name={nav.icon} className="w-6 h-6" />
@@ -125,11 +129,12 @@ const NavBar = () => {
                         {nav.subItems.map((subItem) => (
                            <li key={subItem.name}>
                               <Link
+                              passHref
                                  href={subItem.path}
                                  className={`menu-dropdown-item ${
                                     isActive(subItem.path)
                                        ? " bg-bee-yellow-100 text-bee-yellow-600"
-                                       : " text-bee-dark-600 dark:text-white"
+                                       : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
                                  } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
                                  onClick={(e) => {
                                     if (!isAuthenticated) e.preventDefault();
