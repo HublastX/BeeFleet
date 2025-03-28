@@ -13,6 +13,16 @@ const navItem = [
       path: "/",
    },
    {
+      icon: "users",
+      name: "Motorista",
+      path: "/driver",
+   },
+   {
+      icon: "truck",
+      name: "Carros",
+      path: "/car",
+   },
+   {
       name: "Graficos",
       icon: "graficoPizza",
       subItems: [
