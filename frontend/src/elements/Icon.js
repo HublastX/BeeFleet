@@ -1,6 +1,5 @@
 import React from "react";
 import {
-   PlusIcon,
    HomeIcon,
    XMarkIcon,
    DocumentMagnifyingGlassIcon,
@@ -8,8 +7,12 @@ import {
    UserIcon,
    ChartPieIcon,
    ExclamationCircleIcon,
+   UsersIcon,
+   TruckIcon,
+   UserPlusIcon,
 } from "@heroicons/react/24/solid";
 import {
+   PlusIcon,
    ChatBubbleBottomCenterTextIcon,
    Bars3BottomLeftIcon,
    ChevronDownIcon,
@@ -26,7 +29,10 @@ const icons = {
    reticencias: EllipsisHorizontalIcon,
    prabaixo: ChevronDownIcon,
    graficoPizza: ChartPieIcon,
-   suport: ExclamationCircleIcon
+   suport: ExclamationCircleIcon,
+   users: UsersIcon,
+   truck: TruckIcon,
+   addUser: UserPlusIcon,
 };
 
 export default function Icon({ name, className, strokeWidth }) {

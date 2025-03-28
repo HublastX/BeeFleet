@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import { useNavBar } from "@/context/navBarContext";
-import Modal from "./ModalLoginManager";
 import Btn from "@/elements/btn";
 import Icon from "@/elements/Icon";
+import Link from "next/link";
 
 const Header = () => {
    const { isMobileOpen, toggleNavBar, toggleMobileNavBar } = useNavBar();
@@ -28,7 +28,7 @@ const Header = () => {
             </div>
          </div>
          <div className="flex items-center gap-2 2xsm:gap-3 pr-2">
-            <Modal />
+            <Link href="/login"><Btn variant="primary" texto="Login" /></Link>
          </div>
       </header>
    );
