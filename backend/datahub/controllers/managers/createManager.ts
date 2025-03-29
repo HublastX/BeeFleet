@@ -1,6 +1,11 @@
-import { prisma } from "../../config/prisma.js";
+import { prisma } from "../../config/prisma";
+import { Request, Response } from "express";
+import { CreateManagerRequestBody } from "../../schemas/managerInterface";
 
-export const createManager = async (req, res) => {
+export const createManager = async (
+    req: Request<{}, {}, CreateManagerRequestBody>,
+    res: Response
+) => {
     try {
         const { name, email, password } = req.body;
 
@@ -27,7 +32,7 @@ export const createManager = async (req, res) => {
             data: {
                 name,
                 email,
-                password,
+                password: password,
             },
         });
 
@@ -38,7 +43,7 @@ export const createManager = async (req, res) => {
             message: "Manager created successfully",
             data: secureManager,
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error("Error creating manager:", error);
         res.status(500).json({
             success: false,
