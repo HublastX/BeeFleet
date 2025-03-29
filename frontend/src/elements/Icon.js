@@ -12,12 +12,15 @@ import {
    UserPlusIcon,
    EnvelopeIcon,
    KeyIcon,
+   UserCircleIcon,
+   BellIcon,
 } from "@heroicons/react/24/solid";
 import {
    PlusIcon,
    ChatBubbleBottomCenterTextIcon,
    Bars3BottomLeftIcon,
    ChevronDownIcon,
+   ArrowLeftStartOnRectangleIcon,
 } from "@heroicons/react/24/outline";
 
 const icons = {
@@ -37,6 +40,9 @@ const icons = {
    addUser: UserPlusIcon,
    email: EnvelopeIcon,
    key: KeyIcon,
+   UserCircle: UserCircleIcon,
+   sair: ArrowLeftStartOnRectangleIcon,
+   sino: BellIcon
 };
 
 export default function Icon({ name, className, strokeWidth }) {
