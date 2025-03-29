@@ -22,7 +22,7 @@ function Modal() {
             {/* header */}
             <div className="flex items-center justify-between border-b pb-3">
                <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
-                  Login
+                  Registro
                </h3>
                <Link href="/">
                   <button className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
@@ -36,6 +36,26 @@ function Modal() {
                <form className="space-y-4" action="#">
                   <div>
                      <label
+                        htmlFor="name"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                     >
+                        Nome
+                     </label>
+                     <div className="relative">
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                           <Icon name="user" className="w-4 h-4 text-gray-900 dark:text-white" />
+                        </div>
+                        <InputText
+                           type="text"
+                           name="name"
+                           id="name"
+                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                           placeholder="Ex: Carlos Silva"
+                        />
+                     </div>
+                  </div>
+                  <div>
+                     <label
                         htmlFor="email"
                         className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                      >
@@ -47,7 +67,7 @@ function Modal() {
                         </div>
                         <InputText
                            type="email"
-                           name="nome"
+                           name="email"
                            id="email"
                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                            placeholder="Ex: exemploemail@email.com"
@@ -74,24 +94,33 @@ function Modal() {
                         />
                      </div>
                   </div>
+                  <div>
+                     <label
+                        htmlFor="confirm-password"
+                        className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                     >
+                        Confirmar Senha
+                     </label>
+                     <div className="relative">
+                        <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                           <Icon name="key" className="w-4 h-4 text-gray-900 dark:text-white" />
+                        </div>
+                        <InputText
+                           type="password"
+                           name="confirm-password"
+                           id="confirm-password"
+                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                           placeholder="********"
+                        />
+                     </div>
+                  </div>
                   <Btn
                      variant="primary"
                      type="submit"
-                     texto="Login"
+                     texto="Registrar"
                      className="mt-5 w-full"
                   />
                </form>
-               <div className="mt-4 text-center">
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                     Não tem uma conta?{" "}
-                     <Link
-                        href="/register"
-                        className="text-blue-600 hover:underline dark:text-blue-400"
-                     >
-                        Registre-se
-                     </Link>
-                  </p>
-               </div>
             </div>
          </div>
       </div>
