@@ -37,19 +37,15 @@ const othersItems = [
    {
       icon: "user",
       name: "Perfil",
-      subItems: [
-         { name: "vizualizar perfil", path: "/login" },
-         { name: "editar perfil", path: "/test" },
-         { name: "sair", path: "/logout" },
-      ],
+      path: "/profile",
    },
    {
       icon: "suport",
       name: "suporte",
       subItems: [
-         { name: "faq", path: "/faq"},
-         {name: "Gui", path: "/gui"}
-      ]
+         { name: "faq", path: "/faq" },
+         { name: "Gui", path: "/gui" },
+      ],
    },
 ];
 
@@ -111,7 +107,7 @@ const NavBar = () => {
                               : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
                         } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
                         onClick={(e) => {
-                           if (!isAuthenticated) e.preventDefault(); 
+                           if (!isAuthenticated) e.preventDefault();
                         }}
                      >
                         <Icon name={nav.icon} className="w-6 h-6" />
@@ -139,7 +135,7 @@ const NavBar = () => {
                         {nav.subItems.map((subItem) => (
                            <li key={subItem.name}>
                               <Link
-                              passHref
+                                 passHref
                                  href={subItem.path}
                                  className={`menu-dropdown-item ${
                                     isActive(subItem.path)
