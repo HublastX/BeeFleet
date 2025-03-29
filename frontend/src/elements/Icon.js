@@ -10,6 +10,8 @@ import {
    UsersIcon,
    TruckIcon,
    UserPlusIcon,
+   EnvelopeIcon,
+   KeyIcon,
 } from "@heroicons/react/24/solid";
 import {
    PlusIcon,
@@ -33,6 +35,8 @@ const icons = {
    users: UsersIcon,
    truck: TruckIcon,
    addUser: UserPlusIcon,
+   email: EnvelopeIcon,
+   key: KeyIcon,
 };
 
 export default function Icon({ name, className, strokeWidth }) {
