@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavBar } from "@/context/navBarContext";
 import Btn from "@/elements/btn";
 import Icon from "@/elements/Icon";
@@ -14,6 +14,24 @@ const Header = () => {
          toggleMobileNavBar();
       }
    };
+
+   const [isAuthenticated, setIsAuthenticated] = useState(false);
+   const [userName, setUserName] = useState("");
+
+   useEffect(() => {
+      const token = localStorage.getItem("token");
+      const name = localStorage.getItem("name");
+
+      if (token) {
+         setIsAuthenticated(true);
+      }
+
+      if (name) {
+         setUserName(name);
+      }
+   }, []);
+
+
    return (
       <header className="sticky top-0 flex w-full z-40 bg-bee-dark-100 border-b border-bee-dark-300 dark:border-bee-dark-400 dark:bg-bee-dark-800 lg:border-b">
          <div className="flex flex-col items-center justify-between grow lg:flex-row lg:px-6">
@@ -26,9 +44,15 @@ const Header = () => {
                   )}
                </Btn>
             </div>
-         </div>
-         <div className="flex items-center gap-2 2xsm:gap-3 pr-2">
-            <Link href="/login"><Btn variant="primary" texto="Login" /></Link>
+            <div className="flex items-center gap-2 2xsm:gap-3">
+               {!isAuthenticated ? (
+                  <Link href="/login">
+                     <Btn variant="primary" texto="Login" />
+                  </Link>
+               ) : (
+                  <p>Olá, {userName}!</p>
+               )}
+            </div>
          </div>
       </header>
    );
