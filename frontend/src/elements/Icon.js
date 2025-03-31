@@ -2,7 +2,6 @@ import React from "react";
 import {
    HomeIcon,
    XMarkIcon,
-   DocumentMagnifyingGlassIcon,
    EllipsisHorizontalIcon,
    UserIcon,
    ChartPieIcon,
@@ -21,13 +20,15 @@ import {
    Bars3BottomLeftIcon,
    ChevronDownIcon,
    ArrowLeftStartOnRectangleIcon,
+   MagnifyingGlassIcon,
+   FunnelIcon,
 } from "@heroicons/react/24/outline";
 
 const icons = {
    plus: PlusIcon,
    xMark: XMarkIcon,
    home: HomeIcon,
-   search: DocumentMagnifyingGlassIcon,
+   search: MagnifyingGlassIcon,
    user: UserIcon,
    chat: ChatBubbleBottomCenterTextIcon,
    closeLeft: Bars3BottomLeftIcon,
@@ -42,7 +43,8 @@ const icons = {
    key: KeyIcon,
    UserCircle: UserCircleIcon,
    sair: ArrowLeftStartOnRectangleIcon,
-   sino: BellIcon
+   sino: BellIcon,
+   filtro: FunnelIcon,
 };
 
 export default function Icon({ name, className, strokeWidth }) {
