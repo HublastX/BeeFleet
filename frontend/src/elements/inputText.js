@@ -1,12 +1,12 @@
 import React from "react";
 import Icon from "./Icon";
 
-const InputText = ({ placeholder, className, name, type, variant, icon, value, onChange, autoComplete }) => {
+const InputText = ({ placeholder, className, name, type, variant, icon, value, onChange, autoComplete, strokeWidth }) => {
    return (
       <div className="relative">
          {variant === "withIcon" && icon && (
             <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-               <Icon name={icon} className="w-4 h-4 text-gray-900 dark:text-white" />
+               <Icon name={icon} strokeWidth={strokeWidth} className="w-4 h-4 text-gray-900 dark:text-white" />
             </span>
          )}
          <input
