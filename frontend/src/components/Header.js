@@ -1,6 +1,8 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useNavBar } from "@/context/navBarContext";
+import UserDropdown from "./header/UserDropdown";
+import NotificationDropdown from "./header/NotificationDropdown";
 import Btn from "@/elements/btn";
 import Icon from "@/elements/Icon";
 import Link from "next/link";
@@ -16,21 +18,18 @@ const Header = () => {
    };
 
    const [isAuthenticated, setIsAuthenticated] = useState(false);
-   const [userName, setUserName] = useState("");
 
    useEffect(() => {
       const token = localStorage.getItem("token");
-      const name = localStorage.getItem("name");
-
       if (token) {
          setIsAuthenticated(true);
       }
-
-      if (name) {
-         setUserName(name);
-      }
    }, []);
 
+   const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
+   const toggleApplicationMenu = () => {
+      setApplicationMenuOpen(!isApplicationMenuOpen);
+   };
 
    return (
       <header className="sticky top-0 flex w-full z-40 bg-bee-dark-100 border-b border-bee-dark-300 dark:border-bee-dark-400 dark:bg-bee-dark-800 lg:border-b">
@@ -43,14 +42,40 @@ const Header = () => {
                      <Icon name="closeLeft" className="h-7" strokeWidth={1.5} />
                   )}
                </Btn>
-            </div>
-            <div className="flex items-center gap-2 2xsm:gap-3">
+
+               {/* menu mobile no else */}
                {!isAuthenticated ? (
-                  <Link href="/login">
+                  <Link href="/login" className="lg:hidden">
                      <Btn variant="primary" texto="Login" />
                   </Link>
                ) : (
-                  <p>Olá, {userName}!</p>
+                  <Btn
+                     variant="secondary"
+                     className=" z-9999 lg:hidden"
+                     onClick={toggleApplicationMenu}
+                  >
+                     <Icon name="reticencias" className="h-7" />
+                  </Btn>
+               )}
+            </div>
+
+            {/* menu da direita no pc, parte fechada no mobile */}
+            <div
+               className={`${
+                  isApplicationMenuOpen ? "flex" : "hidden"
+               } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
+            >
+               {isAuthenticated ? (
+                  <>
+                     <div className="flex items-center gap-2 2xsm:gap-3">
+                        <NotificationDropdown />
+                     </div>
+                     <UserDropdown />
+                  </>
+               ) : (
+                  <Link href="/login" >
+                     <Btn variant="primary" texto="Login" />
+                  </Link>
                )}
             </div>
          </div>
