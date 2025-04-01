@@ -4,6 +4,7 @@ import { useNavBar } from "../context/navBarContext";
 import Link from "next/link";
 import Image from "next/image";
 import Icon from "@/elements/Icon";
+import useAuth from "@/hooks/useAuth";
 import { usePathname } from "next/navigation";
 
 const navItem = [
@@ -15,7 +16,7 @@ const navItem = [
    {
       icon: "users",
       name: "Motorista",
-      path: "/driver",
+      path: "/drivers",
    },
    {
       icon: "truck",
@@ -51,11 +52,7 @@ const othersItems = [
 
 const NavBar = () => {
    const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useNavBar();
-   const [isAuthenticated, setIsAuthenticated] = useState(false);
-   useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) setIsAuthenticated(true);
-   }, []);
+   const {gestor} = useAuth();
 
    const pathname = usePathname();
 
@@ -72,12 +69,12 @@ const NavBar = () => {
                              openSubmenu?.index === index
                                 ? " text-bee-yellow-600 bg-bee-yellow-100"
                                 : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
-                          } cursor-pointer ${
+                          } ${
                              !isExpanded && !isHovered
                                 ? "lg:justify-center"
                                 : "lg:justify-start"
-                          } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
-                     disabled={!isAuthenticated}
+                          } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                     disabled={!gestor}
                   >
                      <Icon name={nav.icon} className="w-6 h-6" />
                      {(isExpanded || isHovered || isMobileOpen) && (
@@ -105,9 +102,9 @@ const NavBar = () => {
                            isActive(nav.path)
                               ? " text-bee-yellow-600 bg-bee-yellow-100"
                               : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
-                        } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
+                        } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                         onClick={(e) => {
-                           if (!isAuthenticated) e.preventDefault();
+                           if (!gestor) e.preventDefault();
                         }}
                      >
                         <Icon name={nav.icon} className="w-6 h-6" />
@@ -141,9 +138,9 @@ const NavBar = () => {
                                     isActive(subItem.path)
                                        ? " bg-bee-yellow-100 text-bee-yellow-600"
                                        : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
-                                 } ${!isAuthenticated ? "opacity-50 cursor-not-allowed" : ""}`}
+                                 } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                                  onClick={(e) => {
-                                    if (!isAuthenticated) e.preventDefault();
+                                    if (!gestor) e.preventDefault();
                                  }}
                               >
                                  {subItem.name}

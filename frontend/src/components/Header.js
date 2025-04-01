@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useNavBar } from "@/context/navBarContext";
+import useAuth from "@/hooks/useAuth"; // Importe o hook useAuth
 import UserDropdown from "./header/UserDropdown";
 import NotificationDropdown from "./header/NotificationDropdown";
 import Btn from "@/elements/btn";
@@ -17,14 +18,7 @@ const Header = () => {
       }
    };
 
-   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-   useEffect(() => {
-      const token = localStorage.getItem("token");
-      if (token) {
-         setIsAuthenticated(true);
-      }
-   }, []);
+   const { gestor } = useAuth(); 
 
    const [isApplicationMenuOpen, setApplicationMenuOpen] = useState(false);
    const toggleApplicationMenu = () => {
@@ -43,8 +37,8 @@ const Header = () => {
                   )}
                </Btn>
 
-               {/* menu mobile no else */}
-               {!isAuthenticated ? (
+               {/* Menu mobile */}
+               {!gestor ? (
                   <Link href="/login" className="lg:hidden">
                      <Btn variant="primary" texto="Login" />
                   </Link>
@@ -59,21 +53,21 @@ const Header = () => {
                )}
             </div>
 
-            {/* menu da direita no pc, parte fechada no mobile */}
+            {/* Menu da direita no PC, parte fechada no mobile */}
             <div
                className={`${
                   isApplicationMenuOpen ? "flex" : "hidden"
                } items-center justify-between w-full gap-4 px-5 py-4 lg:flex shadow-theme-md lg:justify-end lg:px-0 lg:shadow-none`}
             >
-               {isAuthenticated ? (
+               {gestor ? (
                   <>
                      <div className="flex items-center gap-2 2xsm:gap-3">
-                        <NotificationDropdown />
+                        {/* <NotificationDropdown /> */}
                      </div>
                      <UserDropdown />
                   </>
                ) : (
-                  <Link href="/login" >
+                  <Link href="/login">
                      <Btn variant="primary" texto="Login" />
                   </Link>
                )}
