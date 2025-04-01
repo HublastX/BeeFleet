@@ -1,8 +1,9 @@
+"use client";
+import withAuth from "@/utils/withAuth";
 import Link from "next/link";
 import Btn from "@/elements/btn";
-import Icon from "@/elements/Icon";
 import Table from "../../components/table/userTable";
-export default function Driver() {
+function Driver() {
    return (
       <div>
          <div className="p-2 mb-3">
@@ -20,3 +21,4 @@ export default function Driver() {
       </div>
    );
 }
+export default withAuth(Driver);
