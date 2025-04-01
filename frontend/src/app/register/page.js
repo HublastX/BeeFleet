@@ -55,12 +55,16 @@ function Register() {
 
          const data = await res.json();
 
+         // Verifique se o código de status é 201 (Created) para sucesso
          if (res.ok) {
+            // Se a resposta for bem-sucedida, redirecione para login
             router.push("/login");
          } else {
+            // Caso contrário, mostre a mensagem de erro fornecida pelo servidor
             setErro(data.error || "Erro ao registrar. Tente novamente.");
          }
       } catch (error) {
+         // Se ocorrer um erro ao fazer a requisição
          setErro("Erro ao conectar ao servidor. Tente novamente.");
       } finally {
          setCarregando(false);
