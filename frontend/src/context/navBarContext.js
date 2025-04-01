@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import useAuth from "@/hooks/useAuth";
 
 const NavBarContext = createContext(undefined);
 
@@ -18,6 +19,7 @@ export const NavBarProvider = ({ children }) => {
    const [isHovered, setIsHovered] = useState(false);
    const [activeItem, setActiveItem] = useState(null);
    const [openSubmenu, setOpenSubmenu] = useState(null);
+   const { gestor } = useAuth();
 
    useEffect(() => {
       const handleResize = () => {
@@ -34,7 +36,9 @@ export const NavBarProvider = ({ children }) => {
    }, []);
 
    const toggleNavBar = () => {
-      setIsExpanded((prev) => !prev);
+      if (gestor) {  
+         setIsExpanded((prev) => !prev);
+      }
    };
 
    const toggleMobileNavBar = () => {
@@ -42,20 +46,28 @@ export const NavBarProvider = ({ children }) => {
    };
 
    const toggleSubmenu = (item) => {
-      setOpenSubmenu((prev) => (prev === item ? null : item));
+      if (gestor) { 
+         setOpenSubmenu((prev) => (prev === item ? null : item));
+      }
+   };
+
+   const handleHover = (hoverState) => {
+      if (gestor) {  
+         setIsHovered(hoverState);
+      }
    };
 
    return (
       <NavBarContext.Provider
          value={{
-            isExpanded: isMobile ? false : isExpanded,
+            isExpanded: isMobile ? false : (gestor ? isExpanded : false),
             isMobileOpen,
             isHovered,
             activeItem,
             openSubmenu,
             toggleNavBar,
             toggleMobileNavBar,
-            setIsHovered,
+            setIsHovered: handleHover,
             setActiveItem,
             toggleSubmenu,
          }}
