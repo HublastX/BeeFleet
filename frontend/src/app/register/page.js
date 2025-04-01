@@ -55,16 +55,12 @@ function Register() {
 
          const data = await res.json();
 
-         // Verifique se o código de status é 201 (Created) para sucesso
          if (res.ok) {
-            // Se a resposta for bem-sucedida, redirecione para login
             router.push("/login");
          } else {
-            // Caso contrário, mostre a mensagem de erro fornecida pelo servidor
             setErro(data.error || "Erro ao registrar. Tente novamente.");
          }
       } catch (error) {
-         // Se ocorrer um erro ao fazer a requisição
          setErro("Erro ao conectar ao servidor. Tente novamente.");
       } finally {
          setCarregando(false);
@@ -74,9 +70,7 @@ function Register() {
    return (
       <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-50 backdrop-blur-sm">
          <div
-            className={`relative bg-bee-dark-100 rounded-lg shadow-sm dark:bg-bee-dark-400 text-bee-dark-600 dark:text-white p-6 w-96 transform transition-all duration-300 ease-out
-               ${show ? "opacity-100 scale-100" : "opacity-0 scale-95"}
-            `}
+            className={`relative bg-bee-dark-100 rounded-lg shadow-sm dark:bg-bee-dark-400 text-bee-dark-600 dark:text-white p-8 w-96 md:w-[36rem] lg:w-[38rem] transform transition-all duration-300 ease-out ${show ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
          >
             {/* header */}
             <div className="flex items-center justify-between border-b pb-3">
