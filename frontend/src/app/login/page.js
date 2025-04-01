@@ -5,29 +5,18 @@ import InputText from "../../elements/inputText";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
 
 function Login() {
-   const [show, setShow] = useState(false);
+   const { login, carregando, erro } = useAuth();
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
-   const [erro, setErro] = useState(null);
-   const [carregando, setCarregando] = useState(false);
+   const [erroLogin, setErroLogin] = useState(null);
    const router = useRouter();
-
-   useEffect(() => {
-      if (localStorage.getItem("token")) {
-         router.push("/").then(() => {
-            window.location.reload();
-         });
-      }
-
-      setTimeout(() => setShow(true), 10);
-   }, [router]);
 
    useEffect(() => {
       const handleKeyDown = (e) => {
          if (e.key === "Escape") {
-            setShow(false);
             router.push("/");
          }
       };
@@ -37,52 +26,15 @@ function Login() {
 
    const handleSubmit = async (e) => {
       e.preventDefault();
-      setCarregando(true);
-      setErro(null);
+      setErroLogin(null);
 
-      try {
-         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/managers/login`,
-            {
-               method: "POST",
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify({ email, password }),
-            }
-         );
-
-         if (!res.ok) {
-            throw new Error("Credenciais inválidas ou erro no servidor.");
-         }
-
-         const data = await res.json();
-
-         if (data.token) {
-            localStorage.setItem("token", data.token);
-            localStorage.setItem("name", data.manager.name);
-            localStorage.setItem("email", data.manager.email);
-
-            router.push("/").then(() => {
-               window.location.reload();
-            });
-         } else {
-            setErro(data?.error || "Credenciais inválidas.");
-         }
-      } catch (error) {
-         setErro(error.message || "Erro ao fazer login. Tente novamente.");
-      } finally {
-         setCarregando(false);
-      }
+      await login(email, password);
    };
 
    return (
       <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-50 backdrop-blur-sm">
-         <div
-            className={`relative bg-bee-dark-100 rounded-lg shadow-sm dark:bg-bee-dark-400 text-bee-dark-600 dark:text-white p-6 w-96 transform transition-all duration-300 ease-out
-               ${show ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
-         >
-            {/* header */}
+         <div className="relative bg-bee-dark-100 rounded-lg shadow-sm dark:bg-bee-dark-400 text-bee-dark-600 dark:text-white p-6 w-96 transform transition-all duration-300 ease-out">
+            {/* Header */}
             <div className="flex items-center justify-between border-b pb-3">
                <h3 className="text-xl font-semibold">Login</h3>
                <Link href="/">
@@ -92,11 +44,12 @@ function Login() {
                </Link>
             </div>
 
-            {/* formulário */}
-            {erro && <p className="text-red-500 mt-3">{erro}</p>}
+            {/* Formulário */}
+            {erroLogin && <p style={{ color: "red" }}>{erroLogin}</p>}
+            {erro && <p style={{ color: "red" }}>{erro}</p>}
             <div className="mt-5">
                <form
-                  className={`space-y-4 text-sm font-medium ${carregando && "opacity-50 pointer-events-none"}`}
+                  className="space-y-4 text-sm font-medium"
                   onSubmit={handleSubmit}
                >
                   <div>
@@ -106,13 +59,13 @@ function Login() {
                      <InputText
                         variant="withIcon"
                         icon="email"
-                        value={email}
                         type="email"
                         name="email"
                         id="email"
                         placeholder="Ex: exemploemail@email.com"
-                        autoComplete="off"
+                        value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        autoComplete="off"
                         required
                      />
                   </div>
@@ -123,23 +76,23 @@ function Login() {
                      <InputText
                         variant="withIcon"
                         icon="key"
-                        value={password}
                         type="password"
                         name="password"
                         id="password"
                         placeholder="********"
-                        autoComplete="new-password"
+                        value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        autoComplete="current-password"
                         required
                      />
                   </div>
                   <Btn
+                     variant="primary"
                      type="submit"
                      disabled={carregando}
-                     variant="primary"
                      className="mt-5 w-full text-lg"
                   >
-                     {carregando ? "Carregando..." : "Entrar"}
+                     {carregando ? "Entrando..." : "Entrar"}
                   </Btn>
                </form>
                <div className="mt-4 text-center">
