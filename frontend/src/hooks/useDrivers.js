@@ -8,23 +8,35 @@ export default function useDrivers() {
    const [erro, setErro] = useState(null);
 
    useEffect(() => {
+      if (!gestor?.token) return;
+   
       async function fetchDrivers() {
+         console.log("Token usado na requisição:", gestor.token);
+   
          try {
-            const res = await fetch(
-               `http://localhost:3001/api/driver/${gestor.token}`
-            );
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/drivers/`, {
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${gestor.token}`,
+               },
+            });
+   
             if (!res.ok) throw new Error("Erro ao buscar motoristas");
+            
             const data = await res.json();
-            setMotoristas(data);
+            console.log("Motoristas extraídos:", data.data);
+            setMotoristas(data.data);
          } catch (err) {
+            console.error("Erro na requisição:", err);
             setErro(err.message);
          } finally {
             setCarregando(false);
          }
       }
-
+   
       fetchDrivers();
-   }, [gestor]);
+   }, [gestor?.token]);
+   
 
    return {
       motoristas,
