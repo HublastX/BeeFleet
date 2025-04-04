@@ -15,7 +15,7 @@ function Driver() {
                />
             </Link>
          </div>
-         <div className="space-y-6 border-t border-bee-dark-300 p-5 dark:border-bee-dark-400 sm:p-6">
+         <div className="space-y-6 border-t border-bee-dark-300 dark:border-bee-dark-400 py-5 sm:px-3 md:px-5 lg:px-6">
             <Table />
          </div>
       </div>
