@@ -28,7 +28,7 @@ module.exports = {
                300: "#dbdbdb", //borda do light mode
                400: "#364153", //borda do darkmode
                500: "#424242",
-               600: "#2E2E2F",
+               600: "#2E2E2F", //cor do texto do lightmode
                700: "#212121",
                800: "#101828", //cor de fundo do darkmode
             },
