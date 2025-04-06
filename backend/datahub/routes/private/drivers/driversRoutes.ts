@@ -10,7 +10,7 @@ import { authenticateManager } from "../../../middlewares/auth";
 const driverRoutes: Router = express.Router();
 
 driverRoutes.post(
-    "/drivers",
+    "/drivers/create",
     authenticateManager as (
         req: Request,
         res: Response,

@@ -9,7 +9,7 @@ import { getAllDriversUsageReport } from "../../../controllers/reports/getAllDri
 const reportRoutes: Router = express.Router();
 
 reportRoutes.get(
-    "/vehicle-usage",
+    "/report/vehicle-usage",
     authenticateManager as (
         req: Request,
         res: Response,
@@ -19,7 +19,7 @@ reportRoutes.get(
 );
 
 reportRoutes.get(
-    "/driver-usage",
+    "/report/driver-usage",
     authenticateManager as (
         req: Request,
         res: Response,
@@ -29,7 +29,7 @@ reportRoutes.get(
 );
 
 reportRoutes.get(
-    "/all-cars",
+    "/report/all-cars",
     authenticateManager as (
         req: Request,
         res: Response,
@@ -44,7 +44,7 @@ reportRoutes.get(
     }
 );
 reportRoutes.get(
-    "/all-drivers",
+    "/report/all-drivers",
     authenticateManager as (
         req: Request,
         res: Response,
