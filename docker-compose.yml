@@ -68,7 +68,33 @@ services:
                 condition: service_healthy
         networks:
             - bee-fleet-network
-        command: sh -c "npx prisma migrate dev && node server.js"
+        command: sh -c "npx prisma migrate dev && npm run dev"
+
+
+    backend-bee-fleet-bot:
+        build:
+            context: ./backend/bot
+            dockerfile: Dockerfile
+        ports:
+            - "3002:3002"
+        volumes:
+            - .:/app
+        environment:
+            - PYTHONUNBUFFERED=1
+        develop:
+            watch:
+                - action: sync
+                  path: .
+                  target: /app
+                - action: rebuild
+                  path: pyproject.toml
+
+        depends_on:
+            - mysql
+        networks:
+            - bee-fleet-network
+        restart: always
+
 
 networks:
     bee-fleet-network:
