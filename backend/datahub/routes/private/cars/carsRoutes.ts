@@ -3,7 +3,10 @@ import { Request, Response, NextFunction } from "express";
 import { createCar } from "../../../controllers/cars/createCar";
 import { getCar } from "../../../controllers/cars/getAllCar"
 import { getAllCars } from "../../../controllers/cars/getAllCar"
+import { deleteCar } from "../../../controllers/cars/delete.Car";
+
 import { authenticateManager } from "../../../middlewares/auth";
+
 const carRoutes: Router = express.Router();
 
 carRoutes.post(
@@ -34,6 +37,16 @@ carRoutes.get(
         next: NextFunction
     ) => void,
     getAllCars as (req: Request, res: Response) => void
+);
+
+carRoutes.delete(
+    "/cars/:id",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    deleteCar as (req: Request, res: Response) => void
 );
 
 export default carRoutes;
