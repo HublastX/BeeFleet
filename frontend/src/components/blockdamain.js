@@ -1,28 +1,23 @@
-import { useState } from "react";
+const LoginOverlay = ({ onLogin }) => {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-white dark:bg-bee-dark-900 z-50">
+        <div className="text-center space-y-4">
+          <p className="text-2xl font-bold text-red-600 dark:text-bee-dark-600">
+            ⚠️ Acesso Restrito
+          </p>
+          <p className="text-lg dark:text-bee-dark-400">
+            Para acessar, realize o login!
+          </p>
 
-const LoginOverlay = () => {
-  const [isVisible, setIsVisible] = useState(true);
-
-  const handleLogin = () => {
-    setIsVisible(false);
-  };
-
-  if (!isVisible) return null;
-
-  return (
-    <div className="fixed inset-0 flex items-center justify-center bg-white">
-      <div className="text-center">
-        <p className="text-lg font-semibold">⚠️ Acesso Restrito</p>
-         <p>  Para acessar faça o login!</p>
-        <button
-          onClick={handleLogin}
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 transition"
-        >
-          Fazer Login
-        </button>
+          <button
+            onClick={onLogin}
+            className="px-6 py-3 bg-bee-purple-600 text-white rounded-lg hover:bg-bee-purple-700 transition"
+          >
+            Fazer Login
+          </button>
+        </div>
       </div>
-    </div>
-  );
-};  
+    )
+  }
 
-export default LoginOverlay;
+  export default LoginOverlay

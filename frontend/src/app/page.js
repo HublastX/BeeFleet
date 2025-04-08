@@ -11,6 +11,7 @@ export default function Home() {
 
    return (
       <div className="grid grid-cols-12 gap-4 md:gap-6">
+
          {!isLoggedIn && <LoginOverlay onLogin={() => setIsLoggedIn(true)} />}
 
          <div className="col-span-12 xl:col-span-5">
