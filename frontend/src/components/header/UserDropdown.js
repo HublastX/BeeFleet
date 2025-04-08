@@ -51,7 +51,7 @@ export default function UserDropdown() {
          <Dropdown
             isOpen={isOpen}
             onClose={closeDropdown}
-            className="absolute px-7 right-0 mt-[17px] flex  flex-col rounded-2xl border border-bee-dark-300 bg-white p-3 shadow-theme-lg dark:border-bee-dark-600 dark:bg-bee-dark-400"
+            className="absolute min-w-60 px-5 right-0 mt-[17px] mr-[-15px] flex flex-col rounded-b-2xl rounded-t-none border border-bee-dark-300 bg-white p-3 shadow-theme-lg dark:border-bee-dark-600 dark:bg-bee-dark-400"
          >
             <div className="dark:text-white text-bee-dark-600">
                <span className="block font-medium">{name}</span>
