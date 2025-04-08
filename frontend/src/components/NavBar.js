@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useNavBar } from "../context/navBarContext";
+import { useNavBar } from "./navbar/navBarContext";
 import Link from "next/link";
 import Image from "next/image";
 import Icon from "@/elements/Icon";
@@ -52,7 +52,7 @@ const othersItems = [
 
 const NavBar = () => {
    const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useNavBar();
-   const {gestor} = useAuth();
+   const { gestor } = useAuth();
 
    const pathname = usePathname();
 
@@ -211,7 +211,7 @@ const NavBar = () => {
 
    return (
       <aside
-         className={`fixed mt-18 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-bee-dark-100 dark:bg-bee-dark-800 dark:border-bee-dark-400 text-bee-dark-600 h-screen transition-all duration-300 ease-in-out z-50 border-r border-bee-dark-300 ${
+         className={`fixed mt-20 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-bee-dark-100 dark:bg-bee-dark-800 dark:border-bee-dark-400 text-bee-dark-600 h-screen transition-all duration-300 ease-in-out z-50 border-r border-bee-dark-300 ${
             isExpanded || isMobileOpen
                ? "w-[290px]"
                : isHovered
