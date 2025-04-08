@@ -23,7 +23,7 @@ const Header = () => {
       <header className="sticky top-0 flex w-full z-40 bg-bee-dark-100 border-b border-bee-dark-300 dark:border-bee-dark-400 dark:bg-bee-dark-800 lg:border-b">
          <div className="flex items-center justify-between grow flex-row px-6">
             <div className="flex items-center gap-2  border-bee-dark-100 dark:border-bee-dark-400 justify-between border-b-0 px-0 py-4">
-               <Btn variant="secondary" type="button" onClick={handleToggle}>
+               <Btn variant="secondary" type="button" onClick={handleToggle} className={`${!gestor ? "cursor-not-allowed" : ""}`}>
                   {isMobileOpen ? (
                      <Icon name="xMark" className="h-7" />
                   ) : (
