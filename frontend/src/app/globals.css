@@ -13,6 +13,7 @@
    --text-theme-sm: 14px;
    --tw-leading: 18px;
    --font-weight-medium: 800;
+   --input-bg: #fff;
 }
 
 @theme inline {
@@ -78,4 +79,14 @@ body {
       --tw-font-weight: var(--font-weight-medium);
       font-weight: var(--font-weight-medium);
    }
+}
+input:-webkit-autofill {
+   box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+ }
+
+@media (prefers-color-scheme: dark) {
+   input:-webkit-autofill {
+      box-shadow: 0 0 0 1000px #1e2939 inset !important;
+      -webkit-text-fill-color: #fff !important;
+    }
 }
