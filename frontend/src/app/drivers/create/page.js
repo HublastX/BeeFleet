@@ -1,21 +1,30 @@
 "use client";
 import { useState } from "react";
-import Btn from "../../elements/btn";
+import Btn from "../../../elements/btn";
+import { useRouter } from "next/navigation";
+import useDrivers from "@/hooks/useDrivers";
 
 function CreateUser() {
    const [name, setName] = useState("");
    const [phone, setPhone] = useState("");
    const [license, setLicense] = useState("");
+   const { createDriver, carregando, erro } = useDrivers();
+   const router = useRouter();
 
-   const handleSubmit = (e) => {
+   const handleSubmit = async (e) => {
       e.preventDefault();
+
+      await createDriver(name, phone, license);
       console.log({ name, phone, license });
    };
 
    return (
       <div className="min-h-screen py-10 px-4">
          <div className="max-w-3xl mx-auto p-8 rounded-lg shadow-md">
-            <h2 className="text-3xl font-bold mb-6 text-white">Cadastrar Motorista</h2>
+            <h2 className="text-3xl font-bold mb-6 text-white">
+               Cadastrar Motorista
+            </h2>
+            {erro && <p style={{ color: "red" }}>{erro}</p>}
             <form onSubmit={handleSubmit} className="space-y-6">
                <div>
                   <label
@@ -75,8 +84,11 @@ function CreateUser() {
                   type="submit"
                   texto="Cadastrar"
                   variant="primary"
+                  disabled={carregando}
                   className="w-full py-3 px-4 text-lg"
-               />
+               >
+                  {carregando ? "criando..." : "Criar"}
+               </Btn>
             </form>
          </div>
       </div>

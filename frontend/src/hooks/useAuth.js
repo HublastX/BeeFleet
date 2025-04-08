@@ -29,9 +29,17 @@ export default function useAuth() {
          const data = await res.json();
          if (data.token) {
             localStorage.setItem("token", data.token);
+            localStorage.setItem("id", data.manager.id);
             localStorage.setItem("name", data.manager.name);
             localStorage.setItem("email", data.manager.email);
-            setGestor(data.manager);
+
+            setGestor({
+               id: data.manager.id,
+               name: data.manager.name,
+               email: data.manager.email,
+               token: data.token,
+            });
+
             window.location.href = "/";
          } else {
             setErro("Erro no login. Tente novamente.");
@@ -64,9 +72,16 @@ export default function useAuth() {
 
          const data = await res.json();
          if (data.manager) {
+            localStorage.setItem("id", data.manager.id);
             localStorage.setItem("name", data.manager.name);
             localStorage.setItem("email", data.manager.email);
-            setGestor(data.manager);
+
+            setGestor({
+               id: data.manager.id,
+               name: data.manager.name,
+               email: data.manager.email,
+            });
+
             router.push("/login");
          } else {
             setErro(data.error || "Erro ao registrar. Tente novamente.");
@@ -81,17 +96,19 @@ export default function useAuth() {
    // Pegar dados do gestor
    useEffect(() => {
       const token = localStorage.getItem("token");
+      const id = localStorage.getItem("id");
       const name = localStorage.getItem("name");
       const email = localStorage.getItem("email");
 
-      if (token && name && email) {
-         setGestor({ name, email, token });
+      if (token && id && name && email) {
+         setGestor({ id, name, email, token });
       }
    }, []);
 
    // Função para logout
    const logout = () => {
       localStorage.removeItem("token");
+      localStorage.removeItem("id");
       localStorage.removeItem("name");
       localStorage.removeItem("email");
 
