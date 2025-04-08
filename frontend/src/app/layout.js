@@ -1,8 +1,8 @@
 "use client";
 import { Karla } from "next/font/google";
 import "./globals.css";
-import { useNavBar } from "@/context/navBarContext";
-import { NavBarProvider } from "@/context/navBarContext";
+import { useNavBar } from "@/components/navbar/navBarContext";
+import { NavBarProvider } from "@/components/navbar/navBarContext";
 import { metadata } from "./metadata";
 
 // componentes
@@ -12,7 +12,7 @@ import NavBar from "../components/NavBar";
 const karla = Karla({
    variable: "--font-karla",
    subsets: ["latin"],
-   weight: ["200", "300", "400", "500", "600", "700", "800",],
+   weight: ["200", "300", "400", "500", "600", "700", "800"],
 });
 
 export default function RootLayout({ children }) {
@@ -20,8 +20,8 @@ export default function RootLayout({ children }) {
       <NavBarProvider>
          <html lang="pt-br">
             <head>
-                <title>{metadata.title}</title>
-                <meta name="description" content={metadata.description} />
+               <title>{metadata.title}</title>
+               <meta name="description" content={metadata.description} />
                <meta name="apple-mobile-web-app-title" content="BeeFleet" />
             </head>
             <body
