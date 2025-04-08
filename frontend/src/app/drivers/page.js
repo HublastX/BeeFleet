@@ -7,7 +7,7 @@ function Driver() {
    return (
       <div>
          <div className="p-2 mb-3">
-            <Link href="/createUser">
+            <Link href="drivers/create">
                <Btn
                   variant="primary"
                   texto="Adicionar Motorista"
