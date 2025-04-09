@@ -1,7 +1,7 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
 
-export const getManagar = async (req: Request, res: Response) => {
+export const getManager = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
         const manager = await prisma.manager.findUnique({ where: { id } });
