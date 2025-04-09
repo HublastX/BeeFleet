@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import { createManager } from "../../../controllers/managers/createManager";
 import { getManager } from "../../../controllers/managers/getAllManager";
+import { getAllManagers } from "../../../controllers/managers/getAllManager";
 import { deleteManager } from "../../../controllers/managers/deleteManager";
 
 const managerRoutes: Router = express.Router();
@@ -20,6 +21,14 @@ managerRoutes.get("/managers/:id", async (req, res, next) => {
         next(error);
     }
 });
+
+managerRoutes.get("/managers", async (req, res, next) => {
+    try {
+        await getAllManagers(req, res);
+    } catch (error) {
+        next(error);
+    }
+})
 
 managerRoutes.delete("/managers/:id", async (req, res, next) => {
     try {
