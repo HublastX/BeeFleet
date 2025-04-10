@@ -1,4 +1,3 @@
-"use client";
 import React, { useState } from "react";
 import { useNavBar } from "@/components/navbar/navBarContext";
 import useAuth from "@/hooks/useAuth";
@@ -40,9 +39,14 @@ const Header = () => {
                      <UserDropdown />
                   </>
                ) : (
-                  <Link href="/login">
-                     <Btn variant="primary" texto="Login" />
-                  </Link>
+                  <div className="flex gap-2">
+                     <Link href="/login">
+                        <Btn variant="primary" texto="Login" />
+                     </Link>
+                     <Link href="/register">
+                        <Btn variant="outline" texto="Registre-se" />
+                     </Link>
+                  </div>
                )}
             </div>
          </div>
