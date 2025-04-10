@@ -13,6 +13,7 @@ import {
    KeyIcon,
    UserCircleIcon,
    BellIcon,
+
 } from "@heroicons/react/24/solid";
 import {
    PlusIcon,
@@ -22,6 +23,10 @@ import {
    ArrowLeftStartOnRectangleIcon,
    MagnifyingGlassIcon,
    FunnelIcon,
+   EyeIcon,
+   TrashIcon,
+   ArrowLongRightIcon,
+   ArrowLongLeftIcon,
 } from "@heroicons/react/24/outline";
 
 const icons = {
@@ -45,6 +50,10 @@ const icons = {
    sair: ArrowLeftStartOnRectangleIcon,
    sino: BellIcon,
    filtro: FunnelIcon,
+   trash: TrashIcon,
+   eye: EyeIcon,
+   sDireita: ArrowLongRightIcon,
+   sEsquerda: ArrowLongLeftIcon,
 };
 
 export default function Icon({ name, className, strokeWidth }) {
