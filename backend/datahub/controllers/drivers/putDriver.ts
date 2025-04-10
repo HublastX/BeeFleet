@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 export const putDriver = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { name, email, phone, managerId } = req.body;
+        const { name, phone, managerId } = req.body;
 
         const existingDriver = await prisma.driver.findUnique({ where: { id } });
         if (!existingDriver) {
