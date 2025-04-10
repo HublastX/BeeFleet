@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { createCar } from "../../../controllers/cars/createCar";
 import { getCar } from "../../../controllers/cars/getAllCar"
 import { getAllCars } from "../../../controllers/cars/getAllCar"
+import { putCar } from "../../../controllers/cars/putCar";
 import { deleteCar } from "../../../controllers/cars/delete.Car";
 
 import { authenticateManager } from "../../../middlewares/auth";
@@ -37,6 +38,16 @@ carRoutes.get(
         next: NextFunction
     ) => void,
     getAllCars as (req: Request, res: Response) => void
+);
+
+carRoutes.put(
+    "/cars/:id",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    putCar as (req: Request, res: Response) => void
 );
 
 carRoutes.delete(
