@@ -3,6 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { createDriver } from "../../../controllers/drivers/createDriver";
 import { getDriver } from "../../../controllers/drivers/getAllDriver";
 import { getAllDrivers } from "../../../controllers/drivers/getAllDriver";
+import { putDriver } from "../../../controllers/drivers/putDriver";
 import { deleteDriver } from "../../../controllers/drivers/deleteDriver";
 
 import { authenticateManager } from "../../../middlewares/auth";
@@ -37,6 +38,16 @@ driverRoutes.get(
         next: NextFunction
     ) => void,
     getAllDrivers as (req: Request, res: Response) => void
+);
+
+driverRoutes.put(
+    "/drivers/:id",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    putDriver as (req: Request, res: Response) => void
 );
 
 driverRoutes.delete(
