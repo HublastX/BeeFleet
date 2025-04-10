@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import {
    Table,
    TableBody,
@@ -11,61 +11,39 @@ import Link from "next/link";
 import Badge from "../../elements/ui/badge/Badge";
 import useDrivers from "@/hooks/useDrivers";
 import Icon from "@/elements/Icon";
-
-//    {
-//       id: 1,
-//       motorista: {
-//          image: "/web-app-manifest-192x192.png",
-//          name: "Lindsey Curtis",
-//       },
-//       telefone: "(74) 3683-3138",
-//       status: "Ativo",
-//    },
-//    {
-//       id: 2,
-//       motorista: {
-//          image: "/web-app-manifest-192x192.png",
-//          name: "Kaiya George",
-//       },
-//       telefone: "(71) 2327-6526",
-//       status: "Pendente",
-//    },
-//    {
-//       id: 3,
-//       motorista: {
-//          image: "/web-app-manifest-192x192.png",
-//          name: "Zain Geidt",
-//       },
-//       telefone: "(74) 3495-1215",
-//       status: "Ativo",
-//    },
-//    {
-//       id: 4,
-//       motorista: {
-//          image: "/web-app-manifest-192x192.png",
-//          name: "Abram Schleifer",
-//       },
-//       telefone: "(77) 2420-8536",
-//       status: "Inativo",
-//    },
-//    {
-//       id: 5,
-//       motorista: {
-//          image: "/web-app-manifest-192x192.png",
-//          name: "Carla George",
-//       },
-//       telefone: "(73) 3655-2723",
-//       status: "Ativo",
-//    },
-// ];
+import Pagination from "./Pagination";
 
 export default function UserTable() {
    const { motoristas, carregando, erro } = useDrivers();
+   const [ordenarPorStatus, setOrdenarPorStatus] = useState(false);
+   const [ordenarPorNome, setOrdenarPorNome] = useState(false);
+   const motoristasOrdenados = (() => {
+      let copia = [...motoristas];
+
+      if (ordenarPorStatus) {
+         copia.sort((a, b) => b.isAvailable - a.isAvailable);
+      }
+
+      if (ordenarPorNome) {
+         copia.sort((a, b) => a.name.localeCompare(b.name));
+      }
+
+      return copia;
+   })();
+
+   const [currentPage, setCurrentPage] = useState(1);
+   const itemsPerPage = 8;
+   const totalPages = Math.ceil((motoristas?.length || 0) / itemsPerPage);
+   const startIndex = (currentPage - 1) * itemsPerPage;
+   const currentDrivers = motoristasOrdenados.slice(
+      startIndex,
+      startIndex + itemsPerPage
+   );
 
    return (
       <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-white dark:border-bee-dark-400 dark:bg-bee-dark-800">
          {carregando && <p>Carregando motoristas...</p>}
-         {erro && <p style={{ color: "red" }}>Erro: {erro}</p>}
+         {erro && <p className="text-bee-alert-300">Erro: {erro}</p>}
          <div className="max-w-full overflow-x-auto">
             <div>
                <Table>
@@ -74,10 +52,16 @@ export default function UserTable() {
                      <TableRow>
                         <TableCell
                            isHeader
-                           className="px-5 py-3 text-start text-theme-xs"
+                           className="px-5 py-3 text-start text-theme-xs hidden md:table-cell"
                         >
-                           Motorista
+                           <div
+                              onClick={() => setOrdenarPorNome((prev) => !prev)}
+                              className="cursor-pointer hover:underline w-fit"
+                           >
+                              Motorista
+                           </div>
                         </TableCell>
+
                         <TableCell
                            isHeader
                            className="px-5 py-3 text-start text-theme-xs hidden md:table-cell"
@@ -88,13 +72,27 @@ export default function UserTable() {
                            isHeader
                            className="px-5 py-3 text-start text-theme-xs hidden md:table-cell"
                         >
-                           Status
+                           <div
+                              onClick={() => {
+                                 setOrdenarPorStatus((prev) => !prev);
+                              }}
+                              className="cursor-pointer hover:underline"
+                           >
+                              Status
+                           </div>
+                        </TableCell>
+
+                        <TableCell
+                           isHeader
+                           className="px-3 py-3 text-center text-theme-xs "
+                        >
+                           Vizualizar
                         </TableCell>
                         <TableCell
                            isHeader
-                           className="px-5 py-3 text-start text-theme-xs"
+                           className="px-3 py-3 text-center text-theme-xs"
                         >
-                           Vizualizar
+                           Deletar
                         </TableCell>
                      </TableRow>
                   </TableHeader>
@@ -102,7 +100,7 @@ export default function UserTable() {
                   {/* Table Body */}
                   {!carregando && !erro && (
                      <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                        {motoristas.map((motorista) => (
+                        {currentDrivers.map((motorista) => (
                            <TableRow
                               key={motorista.id}
                               className="hover:bg-bee-alert-500 hover:dark:bg-bee-dark-400"
@@ -143,7 +141,7 @@ export default function UserTable() {
                                  {motorista.phone}
                               </TableCell>
 
-                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start font-bold dark:text-bee-dark-100">
+                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-c font-bold dark:text-bee-dark-100">
                                  <Badge
                                     size="sm"
                                     color={
@@ -158,12 +156,28 @@ export default function UserTable() {
                                  </Badge>
                               </TableCell>
 
-                              <TableCell className="px-4 py-3">
+                              <TableCell className="px-4 py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
                                  <Link
                                     href="/viewDriver"
-                                    className="text-bee-yellow-700 underline font-bold text-lg"
+                                    className="inline-block text-bee-yellow-500 hover:text-bee-yellow-700"
                                  >
-                                    Vizualizar
+                                    <Icon
+                                       strokeWidth={1.5}
+                                       name="eye"
+                                       className="w-8 h-8 mx-auto"
+                                    />
+                                 </Link>
+                              </TableCell>
+                              <TableCell className="px-4 py-3 text-center">
+                                 <Link
+                                    href="/viewDriver"
+                                    className="inline-block text-bee-alert-300 hover:text-bee-alert-400"
+                                 >
+                                    <Icon
+                                       strokeWidth={1.5}
+                                       name="trash"
+                                       className="w-8 h-8 mx-auto"
+                                    />
                                  </Link>
                               </TableCell>
                            </TableRow>
@@ -171,6 +185,18 @@ export default function UserTable() {
                      </TableBody>
                   )}
                </Table>
+
+               {/* paginacao */}
+               {!carregando && !erro && totalPages > 1 && (
+                  <div className="flex justify-end px-6 py-4">
+                     <Pagination
+                        currentPage={currentPage}
+                        totalPages={totalPages}
+                        onPageChange={setCurrentPage}
+                        totalMotoristas={motoristas.length}
+                     />
+                  </div>
+               )}
             </div>
          </div>
       </div>
