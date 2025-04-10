@@ -23,7 +23,6 @@ export const putCar = async (req: Request, res: Response) => {
         res.json(updatedCar);
 
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Error updating car" });
     }
 }
