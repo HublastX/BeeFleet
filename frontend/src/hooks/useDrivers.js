@@ -84,10 +84,43 @@ export default function useDrivers() {
       }
    };
 
+   // Deletar motorista
+   const deleteDriver = async (id) => {
+      if (!gestor?.token) {
+         setErro("token do gestor não encontrado.");
+         return;
+      }
+
+      setCarregando(true);
+      setErro(null);
+
+      try {
+         const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/${id}`,
+            {
+               method: "DELETE",
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${gestor.token}`,
+               },
+            }
+         );
+
+         if (!res.ok) throw new Error("Erro ao deletar motorista. Tente novamente.");
+
+         setMotoristas(prev => prev.filter(driver => driver.id !== id));
+      } catch (error) {
+         setErro(error.message || "Erro ao conectar ao servidor.");
+      } finally {
+         setCarregando(false);
+      }
+   };
+
    return {
       motoristas,
       carregando,
       erro,
       createDriver,
+      deleteDriver,
    };
 }
