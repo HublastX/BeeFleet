@@ -35,7 +35,7 @@ export default function UserDropdown() {
                )}
             </span>
 
-            <span className="block mr-1 font-medium text-theme-sm">
+            <span className="hidden md:block mr-1 font-medium text-theme-sm">
                {name}
             </span>
 
