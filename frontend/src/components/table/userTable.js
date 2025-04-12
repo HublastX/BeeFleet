@@ -14,7 +14,7 @@ import Icon from "@/elements/Icon";
 import Pagination from "./Pagination";
 
 export default function UserTable() {
-   const { motoristas, carregando, erro } = useDrivers();
+   const { motoristas, carregando, erro, deleteDriver } = useDrivers();
    const [ordenarPorStatus, setOrdenarPorStatus] = useState(false);
    const [ordenarPorNome, setOrdenarPorNome] = useState(false);
    const motoristasOrdenados = (() => {
@@ -170,7 +170,8 @@ export default function UserTable() {
                               </TableCell>
                               <TableCell className="px-4 py-3 text-center">
                                  <Link
-                                    href="/viewDriver"
+                                    href="/"
+                                    onClick={() => deleteDriver(motorista.id)}
                                     className="inline-block text-bee-alert-300 hover:text-bee-alert-400"
                                  >
                                     <Icon
