@@ -32,7 +32,7 @@ export default function UserTable() {
    })();
 
    const [currentPage, setCurrentPage] = useState(1);
-   const itemsPerPage = 8;
+   const itemsPerPage = 2;
    const totalPages = Math.ceil((motoristas?.length || 0) / itemsPerPage);
    const startIndex = (currentPage - 1) * itemsPerPage;
    const currentDrivers = motoristasOrdenados.slice(
@@ -52,7 +52,7 @@ export default function UserTable() {
                      <TableRow>
                         <TableCell
                            isHeader
-                           className="px-5 py-3 text-start text-theme-xs hidden md:table-cell"
+                           className="px-5 py-3 text-start text-theme-xs md:table-cell"
                         >
                            <div
                               onClick={() => setOrdenarPorNome((prev) => !prev)}
@@ -188,7 +188,7 @@ export default function UserTable() {
 
                {/* paginacao */}
                {!carregando && !erro && totalPages > 1 && (
-                  <div className="flex justify-end px-6 py-4">
+                  <div className="flex justify-end md:px-6 px-2 py-4 sm:justify-center">
                      <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}
