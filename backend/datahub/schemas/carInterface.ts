@@ -3,5 +3,6 @@ export interface CreateCarRequestBody {
     model: string;
     year: number;
     color: string;
+    odometer: number;
     managerId: string;
 }
