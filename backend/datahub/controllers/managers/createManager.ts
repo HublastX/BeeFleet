@@ -6,14 +6,6 @@ export const createManager = async (req: Request, res: Response) => {
     try {
         const { name, email, password } = req.body;
 
-        if (!name || !email || !password) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Missing required fields: name, email, and password are required",
-            });
-        }
-
         const existingManager = await prisma.manager.findUnique({
             where: { email },
         });
@@ -30,8 +22,6 @@ export const createManager = async (req: Request, res: Response) => {
         const imagePath = req.file
             ? `/${req.file.path.replace(/\\/g, "/")}`
             : null;
-        console.log("Uploaded file:", req.file);
-        console.log("Image path:", imagePath);
 
         const manager = await prisma.manager.create({
             data: {

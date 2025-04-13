@@ -1,10 +1,16 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
+import { updateDriverSchema } from "../../schemas/driverInterface";
+import { z } from "zod";
 
 export const putDriver = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-        const { name, phone, license, managerId } = req.body;
+        const { params, body } = updateDriverSchema.parse({
+            params: req.params,
+            body: req.body,
+        });
+
+        const { id } = params;
 
         const existingDriver = await prisma.driver.findUnique({
             where: { id },
@@ -12,7 +18,7 @@ export const putDriver = async (req: Request, res: Response) => {
         if (!existingDriver) {
             return res.status(404).json({
                 success: false,
-                message: "Driver not found",
+                message: "Motorista não encontrado",
             });
         }
 
@@ -20,12 +26,14 @@ export const putDriver = async (req: Request, res: Response) => {
             ? `/${req.file.path.replace(/\\/g, "/")}`
             : undefined;
 
-        const updateData: any = {};
-        if (name !== undefined) updateData.name = name;
-        if (phone !== undefined) updateData.phone = phone;
-        if (license !== undefined) updateData.license = license;
-        if (managerId !== undefined) updateData.managerId = managerId;
-        if (imagePath !== undefined) updateData.image = imagePath;
+        const updateData: any = {
+            ...body,
+            ...(imagePath && { image: imagePath }),
+        };
+
+        Object.keys(updateData).forEach(
+            (key) => updateData[key] === undefined && delete updateData[key]
+        );
 
         const updatedDriver = await prisma.driver.update({
             where: { id },
@@ -34,14 +42,22 @@ export const putDriver = async (req: Request, res: Response) => {
 
         res.status(200).json({
             success: true,
-            message: "Driver updated successfully",
+            message: "Motorista atualizado com sucesso",
             data: updatedDriver,
         });
     } catch (error: any) {
-        console.error("Error updating driver:", error);
+        if (error instanceof z.ZodError) {
+            return res.status(400).json({
+                success: false,
+                message: "Erro de validação",
+                errors: error.format(),
+            });
+        }
+
+        console.error("Erro ao atualizar motorista:", error);
         res.status(500).json({
             success: false,
-            message: "Error updating driver",
+            message: "Erro interno ao atualizar motorista",
             error: error.message,
         });
     }

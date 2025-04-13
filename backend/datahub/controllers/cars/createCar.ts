@@ -1,4 +1,3 @@
-// Updated Car Controller
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
 import { CreateCarRequestBody } from "../../schemas/carInterface";
@@ -8,43 +7,30 @@ export const createCar = async (
     res: Response
 ) => {
     try {
-        const { plate, model, color, managerId } = req.body;
+        const { plate, model, year, color, odometer, managerId } = req.body;
 
-        // Convert string values to appropriate types
-        const year = parseInt(req.body.year.toString());
-        const odometer = parseFloat(req.body.odometer.toString());
+        const plateExists = await prisma.car.findUnique({
+            where: { plate },
+        });
 
-        // Validate required fields
-        if (!plate || !model || !year || !color || !managerId) {
-            return res.status(400).json({
+        if (plateExists) {
+            return res.status(409).json({
                 success: false,
-                message: "Missing required fields for car creation",
+                message: "Placa já está cadastrada",
             });
         }
 
-        // Validate converted values
-        if (isNaN(year) || isNaN(odometer)) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Year must be a valid integer and odometer must be a valid number",
-            });
-        }
-
-        // Get image path if file exists
         const imagePath = req.file
             ? `/${req.file.path.replace(/\\/g, "/")}`
             : null;
-        console.log("Uploaded file:", req.file); // Debug log
-        console.log("Image path:", imagePath); // Debug log
 
         const car = await prisma.car.create({
             data: {
                 plate,
                 model,
-                year, // Now properly converted to integer
+                year,
                 color,
-                odometer, // Now properly converted to float
+                odometer,
                 managerId,
                 image: imagePath,
             },
@@ -52,14 +38,14 @@ export const createCar = async (
 
         res.status(201).json({
             success: true,
-            message: "Car created successfully",
+            message: "Carro criado com sucesso",
             data: car,
         });
     } catch (error: any) {
-        console.error("Error creating car:", error);
+        console.error("Erro ao criar carro:", error);
         res.status(500).json({
             success: false,
-            message: "Failed to create car",
+            message: "Falha ao criar carro",
             error: error.message,
         });
     }

@@ -9,6 +9,7 @@ export const putManager = async (req: Request, res: Response) => {
         const existingManager = await prisma.manager.findUnique({
             where: { id },
         });
+
         if (!existingManager) {
             return res.status(404).json({
                 success: false,
@@ -25,12 +26,10 @@ export const putManager = async (req: Request, res: Response) => {
         if (email !== undefined) updateData.email = email;
         if (imagePath !== undefined) updateData.image = imagePath;
 
-
         const updatedManager = await prisma.manager.update({
             where: { id },
             data: updateData,
         });
-
 
         const { password: _, ...secureManager } = updatedManager;
 

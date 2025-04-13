@@ -1,30 +1,51 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
+import {
+    UpdateCarRequestBody,
+    UpdateCarRequestParams,
+} from "../../schemas/carInterface";
 
-export const putCar = async (req: Request, res: Response) => {
+export const putCar = async (
+    req: Request<UpdateCarRequestParams, {}, UpdateCarRequestBody>,
+    res: Response
+) => {
     try {
         const { id } = req.params;
-        const { model, color, managerId } = req.body;
-
-        const odometer = req.body.odometer
-            ? parseFloat(req.body.odometer)
-            : undefined;
+        const body = req.body;
 
         const existingCar = await prisma.car.findUnique({ where: { id } });
         if (!existingCar) {
             return res.status(404).json({ error: "Car not found" });
         }
 
+        if (body.plate) {
+            const plateExists = await prisma.car.findFirst({
+                where: {
+                    plate: body.plate,
+                    NOT: { id },
+                },
+            });
+
+            if (plateExists) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Essa placa já está em uso por outro veículo",
+                });
+            }
+        }
+
         const imagePath = req.file
             ? `/${req.file.path.replace(/\\/g, "/")}`
             : undefined;
 
-        const updateData: any = {};
-        if (model !== undefined) updateData.model = model;
-        if (color !== undefined) updateData.color = color;
-        if (odometer !== undefined) updateData.odometer = odometer;
-        if (managerId !== undefined) updateData.managerId = managerId;
-        if (imagePath !== undefined) updateData.image = imagePath;
+        const updateData: any = {
+            ...body,
+            ...(imagePath && { image: imagePath }),
+        };
+
+        Object.keys(updateData).forEach(
+            (key) => updateData[key] === undefined && delete updateData[key]
+        );
 
         const updatedCar = await prisma.car.update({
             where: { id },
