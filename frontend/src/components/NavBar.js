@@ -67,7 +67,7 @@ const NavBar = () => {
                           group menu-item ${
                              openSubmenu?.type === menuType &&
                              openSubmenu?.index === index
-                                ? " text-bee-yellow-600 bg-bee-yellow-100"
+                                ? " dark:text-bee-yellow-600 text-bee-yellow-700 bg-bee-yellow-100"
                                 : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
                           } ${
                              !isExpanded && !isHovered
@@ -100,7 +100,7 @@ const NavBar = () => {
                         passHref
                         className={`menu-item group ${
                            isActive(nav.path)
-                              ? " text-bee-yellow-600 bg-bee-yellow-100"
+                              ? " dark:text-bee-yellow-600 text-bee-yellow-700 bg-bee-yellow-100"
                               : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
                         } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                         onClick={(e) => {
