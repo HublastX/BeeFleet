@@ -18,12 +18,17 @@ export const createDriver = async (
             return;
         }
 
+        const imagePath = req.file
+            ? `/${req.file.path.replace(/\\/g, "/")}`
+            : null;
+
         const driver = await prisma.driver.create({
             data: {
                 name,
                 phone,
                 license,
                 managerId,
+                image: imagePath,
             },
         });
 

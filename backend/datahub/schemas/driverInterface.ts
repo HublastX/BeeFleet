@@ -3,4 +3,5 @@ export interface DriverData {
     phone: string;
     license: string;
     managerId: string;
+    image?: string;
 }

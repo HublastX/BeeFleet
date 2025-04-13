@@ -2,6 +2,7 @@ export interface CreateManagerRequestBody {
     name: string;
     email: string;
     password: string;
+    image?: string | null;
 }
 
 export interface LoginRequestBody {

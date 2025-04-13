@@ -1,11 +1,11 @@
 import express, { Router } from "express";
 import { Request, Response, NextFunction } from "express";
+import { uploadDriverImage } from "../../../config/storage/driverStorage";
 import { createDriver } from "../../../controllers/drivers/createDriver";
 import { getDriver } from "../../../controllers/drivers/getAllDriver";
 import { getAllDrivers } from "../../../controllers/drivers/getAllDriver";
 import { putDriver } from "../../../controllers/drivers/putDriver";
 import { deleteDriver } from "../../../controllers/drivers/deleteDriver";
-
 import { authenticateManager } from "../../../middlewares/auth";
 
 const driverRoutes: Router = express.Router();
@@ -17,6 +17,7 @@ driverRoutes.post(
         res: Response,
         next: NextFunction
     ) => void,
+    uploadDriverImage.single("image"),
     createDriver as (req: Request, res: Response) => void
 );
 
@@ -47,9 +48,9 @@ driverRoutes.put(
         res: Response,
         next: NextFunction
     ) => void,
+    uploadDriverImage.single("image"),
     putDriver as (req: Request, res: Response) => void
 );
-
 driverRoutes.delete(
     "/drivers/:id",
     authenticateManager as (
