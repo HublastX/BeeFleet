@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../../config/prisma";
 import { SECRET_KEY } from "../../config/constantes";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 import { LoginRequestBody, Manager } from "../../schemas/managerInterface";
 
 export const loginManager = async (
@@ -15,10 +16,20 @@ export const loginManager = async (
             where: { email },
         });
 
-        if (!manager || manager.password !== password) {
+        if (!manager) {
             res.status(401).json({ error: "Credenciais inválidas" });
             return;
         }
+
+        const isPasswordValid = await bcrypt.compare(
+            password,
+            manager.password
+        );
+        if (!isPasswordValid) {
+            res.status(401).json({ error: "Credenciais inválidas" });
+            return;
+        }
+
         const token = jwt.sign(
             { id: manager.id, email: manager.email },
             SECRET_KEY,

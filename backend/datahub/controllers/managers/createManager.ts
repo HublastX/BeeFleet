@@ -1,5 +1,6 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
 
 export const createManager = async (req: Request, res: Response) => {
     try {
@@ -24,6 +25,8 @@ export const createManager = async (req: Request, res: Response) => {
             });
         }
 
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const imagePath = req.file
             ? `/${req.file.path.replace(/\\/g, "/")}`
             : null;
@@ -34,7 +37,7 @@ export const createManager = async (req: Request, res: Response) => {
             data: {
                 name,
                 email,
-                password: password, // Consider hashing this password
+                password: hashedPassword,
                 image: imagePath,
             },
         });
