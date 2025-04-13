@@ -15,7 +15,7 @@ import Pagination from "./Pagination";
 import TableSkeleton from "@/elements/ui/table/TableSkeleton";
 
 export default function CarTable() {
-   const { carro, carregando, erro } = useCar();
+   const { carro, carregando, erro, deleteCar } = useCar();
    const [ordenarPorStatus, setOrdenarPorStatus] = useState(false);
    const [ordenarPorNome, setOrdenarPorNome] = useState(false);
    const CarrosOrdenados = (() => {
@@ -26,7 +26,7 @@ export default function CarTable() {
       }
 
       if (ordenarPorNome) {
-         copia.sort((a, b) => a.name.localeCompare(b.name));
+         copia.sort((a, b) => a.model.localeCompare(b.model));
       }
 
       return copia;
@@ -48,7 +48,7 @@ export default function CarTable() {
                <TableSkeleton />
             </div>
          )}
-         {erro &&  (
+         {erro && (
             <div className="p-4">
                <TableSkeleton />
                <p className="text-bee-alert-300">Erro: {erro}</p>
@@ -120,12 +120,12 @@ export default function CarTable() {
                               <TableCell className="block md:hidden px-5 py-4 text-start">
                                  <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 overflow-hidden rounded-full">
-                                       <Icon name="UserCircle" />
+                                       <Icon name="truck" />
                                     </div>
                                     <div>
                                        <span
                                           className={`font-medium text-theme-sm ${
-                                            carro.isAvailable
+                                             carro.isAvailable
                                                 ? "text-green-600 dark:text-green-400"
                                                 : "text-red-600 dark:text-red-400"
                                           }`}
@@ -139,7 +139,7 @@ export default function CarTable() {
                               <TableCell className="hidden md:table-cell px-5 py-4 sm:px-6 text-start">
                                  <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 overflow-hidden rounded-full">
-                                       <Icon name="UserCircle" />
+                                       <Icon name="truck" />
                                     </div>
                                     <div>
                                        <span className="block font-medium text-bee-dark-600 text-theme-sm dark:text-bee-dark-100">
@@ -157,9 +157,7 @@ export default function CarTable() {
                                  <Badge
                                     size="sm"
                                     color={
-                                        carro.isAvailable
-                                          ? "success"
-                                          : "error"
+                                       carro.isAvailable ? "success" : "error"
                                     }
                                  >
                                     {carro.isAvailable
@@ -170,7 +168,7 @@ export default function CarTable() {
 
                               <TableCell className="px-4 py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
                                  <Link
-                                    href="/viewDriver"
+                                    href={`/cars/${carro.id}`}
                                     className="inline-block text-bee-yellow-500 hover:text-bee-yellow-700"
                                  >
                                     <Icon
@@ -180,9 +178,11 @@ export default function CarTable() {
                                     />
                                  </Link>
                               </TableCell>
+
                               <TableCell className="px-4 py-3 text-center">
                                  <Link
                                     href="/"
+                                    onClick={() => deleteCar(carro.id)}
                                     className="inline-block text-bee-alert-300 hover:text-bee-alert-400"
                                  >
                                     <Icon
