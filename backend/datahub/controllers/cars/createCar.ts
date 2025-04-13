@@ -7,9 +7,9 @@ export const createCar = async (
     res: Response
 ) => {
     try {
-        const { plate, model, year, color, managerId } = req.body;
+        const { plate, model, year, color, odometer, managerId } = req.body;
         const car = await prisma.car.create({
-            data: { plate, model, year, color, managerId },
+            data: { plate, model, year, color, odometer, managerId },
         });
         res.json(car);
     } catch (error: any) {
