@@ -48,7 +48,7 @@ export default function CarTable() {
                <TableSkeleton />
             </div>
          )}
-         {erro &&  (
+         {erro && (
             <div className="p-4">
                <TableSkeleton />
                <p className="text-bee-alert-300">Erro: {erro}</p>
@@ -125,7 +125,7 @@ export default function CarTable() {
                                     <div>
                                        <span
                                           className={`font-medium text-theme-sm ${
-                                            carro.isAvailable
+                                             carro.isAvailable
                                                 ? "text-green-600 dark:text-green-400"
                                                 : "text-red-600 dark:text-red-400"
                                           }`}
@@ -157,9 +157,7 @@ export default function CarTable() {
                                  <Badge
                                     size="sm"
                                     color={
-                                        carro.isAvailable
-                                          ? "success"
-                                          : "error"
+                                       carro.isAvailable ? "success" : "error"
                                     }
                                  >
                                     {carro.isAvailable
@@ -170,7 +168,7 @@ export default function CarTable() {
 
                               <TableCell className="px-4 py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
                                  <Link
-                                    href="/viewDriver"
+                                    href={`/cars/${carro.id}`}
                                     className="inline-block text-bee-yellow-500 hover:text-bee-yellow-700"
                                  >
                                     <Icon
@@ -180,6 +178,7 @@ export default function CarTable() {
                                     />
                                  </Link>
                               </TableCell>
+
                               <TableCell className="px-4 py-3 text-center">
                                  <Link
                                     href="/"
