@@ -5,4 +5,5 @@ export interface CreateCarRequestBody {
     color: string;
     odometer: number;
     managerId: string;
+    image?: string;
 }

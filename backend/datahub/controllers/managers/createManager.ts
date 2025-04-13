@@ -1,11 +1,7 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
-import { CreateManagerRequestBody } from "../../schemas/managerInterface";
 
-export const createManager = async (
-    req: Request<{}, {}, CreateManagerRequestBody>,
-    res: Response
-) => {
+export const createManager = async (req: Request, res: Response) => {
     try {
         const { name, email, password } = req.body;
 
@@ -28,11 +24,18 @@ export const createManager = async (
             });
         }
 
+        const imagePath = req.file
+            ? `/${req.file.path.replace(/\\/g, "/")}`
+            : null;
+        console.log("Uploaded file:", req.file);
+        console.log("Image path:", imagePath);
+
         const manager = await prisma.manager.create({
             data: {
                 name,
                 email,
-                password: password,
+                password: password, // Consider hashing this password
+                image: imagePath,
             },
         });
 

@@ -1,7 +1,10 @@
 // Pesoal
 trash/
 .vscode/
-
+uploads/
+*.png
+*.gif
+*.jpg
 .env
 # Logs
 logs
