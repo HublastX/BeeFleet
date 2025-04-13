@@ -37,7 +37,6 @@ model Driver {
 model Car {
     id          String    @id @default(uuid())
     plate       String    @unique
-    mark        String
     model       String
     year        Int
     color       String
