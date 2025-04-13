@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 export const putCar = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { model, color, managerId } = req.body;
+        const { model, color, odometer, managerId } = req.body;
 
         const existingCar = await prisma.car.findUnique({ where: { id }});
         if (!existingCar) {
@@ -16,6 +16,7 @@ export const putCar = async (req: Request, res: Response) => {
             data: {
                 model,
                 color,
+                odometer,
                 managerId,
             },
         });
