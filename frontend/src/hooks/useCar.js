@@ -40,6 +40,39 @@ export default function useCar() {
       fetchCars();
    }, [gestor?.token]);
 
+   // Buscar carro individual
+   const getCar = async (id) => {
+      if (!gestor?.token) return;
+
+      setCarregando(true);
+      setErro(null);
+
+      try {
+         const url = `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`;
+         console.log("URL da requisição:", url);
+
+         const res = await fetch(url, {
+            method: "GET",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+
+         if (!res.ok) throw new Error("Erro ao buscar carro");
+
+         const data = await res.json();
+         console.log("Resposta da API:", data);
+
+         return data;
+      } catch (err) {
+         console.error("Erro na requisição:", err);
+         setErro(err.message);
+      } finally {
+         setCarregando(false);
+      }
+   };
+
    // Criar carro
    const createCar = async (plate, model, year, color) => {
       if (!gestor?.id) {
@@ -125,5 +158,6 @@ export default function useCar() {
       erro,
       createCar,
       deleteCar,
+      getCar,
    };
 }
