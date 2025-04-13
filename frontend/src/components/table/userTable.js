@@ -170,7 +170,7 @@ export default function UserTable() {
 
                               <TableCell className="px-4 py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
                                  <Link
-                                    href="/viewDriver"
+                                    href={`/drivers/${motorista.id}`}
                                     className="inline-block text-bee-yellow-500 hover:text-bee-yellow-700"
                                  >
                                     <Icon
