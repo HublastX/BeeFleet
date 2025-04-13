@@ -8,6 +8,8 @@ import { putCar } from "../../../controllers/cars/putCar";
 import { deleteCar } from "../../../controllers/cars/delete.Car";
 import { authenticateManager } from "../../../middlewares/auth";
 import { CreateCarRequestBody } from "../../../schemas/carInterface";
+import { validate } from "../../../middlewares/validate";
+import { carSchema, updateCarSchema } from "../../../schemas/carInterface";
 
 const carRoutes: Router = express.Router();
 
@@ -19,6 +21,7 @@ carRoutes.post(
         next: NextFunction
     ) => void,
     uploadCarImage.single("image"),
+    validate(carSchema),
     createCar as (
         req: Request<{}, {}, CreateCarRequestBody>,
         res: Response
@@ -53,7 +56,9 @@ carRoutes.put(
         next: NextFunction
     ) => void,
     uploadCarImage.single("image"),
-    putCar as (req: Request, res: Response) => void
+    validate(updateCarSchema.shape.params, "params"),
+    validate(updateCarSchema.shape.body, "body"),
+    putCar as unknown as (req: Request, res: Response) => void
 );
 
 carRoutes.delete(

@@ -1,22 +1,9 @@
 import { Request, Response } from "express";
 import { prisma } from "../../config/prisma";
-import { DriverData } from "../../schemas/driverInterface";
 
-export const createDriver = async (
-    req: Request,
-    res: Response
-): Promise<void> => {
+export const createDriver = async (req: Request, res: Response) => {
     try {
-        const { name, phone, license, managerId }: DriverData = req.body;
-
-        if (!name || !phone || !license || !managerId) {
-            res.status(400).json({
-                success: false,
-                message:
-                    "Missing required fields: name, phone, license, and managerId are required",
-            });
-            return;
-        }
+        const { name, phone, license, managerId } = req.body;
 
         const imagePath = req.file
             ? `/${req.file.path.replace(/\\/g, "/")}`
@@ -34,14 +21,14 @@ export const createDriver = async (
 
         res.status(201).json({
             success: true,
-            message: "Driver created successfully",
+            message: "Motorista criado com sucesso",
             data: driver,
         });
     } catch (error: any) {
-        console.error("Error creating driver:", error);
+        console.error("Erro ao criar motorista:", error);
         res.status(500).json({
             success: false,
-            message: "Failed to create driver",
+            message: "Falha ao criar motorista",
             error: error.message,
         });
     }

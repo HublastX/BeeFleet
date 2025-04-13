@@ -7,12 +7,15 @@ import {
 } from "../../../controllers/managers/getAllManager";
 import { putManager } from "../../../controllers/managers/putManager";
 import { deleteManager } from "../../../controllers/managers/deleteManager";
-
+import { validate } from "../../../middlewares/validate";
+import { managerSchema } from "../../../schemas/managerInterface";
 const managerRoutes: Router = express.Router();
 
 managerRoutes.post(
     "/managers/create",
     uploadManagerImage.single("image"),
+    validate(managerSchema),
+
     async (req, res, next) => {
         try {
             await createManager(req, res);
@@ -41,6 +44,7 @@ managerRoutes.get("/managers", async (req, res, next) => {
 managerRoutes.put(
     "/managers/:id",
     uploadManagerImage.single("image"),
+    validate(managerSchema.partial()),
     async (req, res, next) => {
         try {
             await putManager(req, res);

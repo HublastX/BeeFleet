@@ -7,7 +7,11 @@ import { getAllDrivers } from "../../../controllers/drivers/getAllDriver";
 import { putDriver } from "../../../controllers/drivers/putDriver";
 import { deleteDriver } from "../../../controllers/drivers/deleteDriver";
 import { authenticateManager } from "../../../middlewares/auth";
-
+import { validate } from "../../../middlewares/validate";
+import {
+    driverSchema,
+    updateDriverSchema,
+} from "../../../schemas/driverInterface";
 const driverRoutes: Router = express.Router();
 
 driverRoutes.post(
@@ -18,6 +22,7 @@ driverRoutes.post(
         next: NextFunction
     ) => void,
     uploadDriverImage.single("image"),
+    validate(driverSchema, "body"),
     createDriver as (req: Request, res: Response) => void
 );
 
@@ -49,6 +54,8 @@ driverRoutes.put(
         next: NextFunction
     ) => void,
     uploadDriverImage.single("image"),
+    validate(updateDriverSchema.shape.params, "params"),
+    validate(updateDriverSchema.shape.body, "body"),
     putDriver as (req: Request, res: Response) => void
 );
 driverRoutes.delete(
