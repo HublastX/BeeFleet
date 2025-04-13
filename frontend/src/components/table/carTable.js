@@ -9,17 +9,17 @@ import {
 } from "../../elements/ui/table";
 import Link from "next/link";
 import Badge from "../../elements/ui/badge/Badge";
-import useDrivers from "@/hooks/useDrivers";
+import useCar from "@/hooks/useCar";
 import Icon from "@/elements/Icon";
 import Pagination from "./Pagination";
 import TableSkeleton from "@/elements/ui/table/TableSkeleton";
 
-export default function UserTable() {
-   const { motoristas, carregando, erro, deleteDriver } = useDrivers();
+export default function CarTable() {
+   const { carro, carregando, erro } = useCar();
    const [ordenarPorStatus, setOrdenarPorStatus] = useState(false);
    const [ordenarPorNome, setOrdenarPorNome] = useState(false);
-   const motoristasOrdenados = (() => {
-      let copia = [...motoristas];
+   const CarrosOrdenados = (() => {
+      let copia = [...carro];
 
       if (ordenarPorStatus) {
          copia.sort((a, b) => b.isAvailable - a.isAvailable);
@@ -34,9 +34,9 @@ export default function UserTable() {
 
    const [currentPage, setCurrentPage] = useState(1);
    const itemsPerPage = 2;
-   const totalPages = Math.ceil((motoristas?.length || 0) / itemsPerPage);
+   const totalPages = Math.ceil((carro?.length || 0) / itemsPerPage);
    const startIndex = (currentPage - 1) * itemsPerPage;
-   const currentDrivers = motoristasOrdenados.slice(
+   const currentCar = CarrosOrdenados.slice(
       startIndex,
       startIndex + itemsPerPage
    );
@@ -71,7 +71,7 @@ export default function UserTable() {
                                  }
                                  className="cursor-pointer hover:underline w-fit"
                               >
-                                 Motorista
+                                 Carro
                               </div>
                            </TableCell>
 
@@ -79,7 +79,7 @@ export default function UserTable() {
                               isHeader
                               className="px-5 py-3 text-start text-theme-xs hidden md:table-cell"
                            >
-                              Telefone
+                              Placa
                            </TableCell>
                            <TableCell
                               isHeader
@@ -112,9 +112,9 @@ export default function UserTable() {
 
                      {/* Table Body */}
                      <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                        {currentDrivers.map((motorista) => (
+                        {currentCar.map((carro) => (
                            <TableRow
-                              key={motorista.id}
+                              key={carro.id}
                               className="hover:bg-bee-alert-500 hover:dark:bg-bee-dark-400"
                            >
                               <TableCell className="block md:hidden px-5 py-4 text-start">
@@ -125,12 +125,12 @@ export default function UserTable() {
                                     <div>
                                        <span
                                           className={`font-medium text-theme-sm ${
-                                             motorista.isAvailable
+                                            carro.isAvailable
                                                 ? "text-green-600 dark:text-green-400"
                                                 : "text-red-600 dark:text-red-400"
                                           }`}
                                        >
-                                          {motorista.name}
+                                          {carro.model}
                                        </span>
                                     </div>
                                  </div>
@@ -143,26 +143,26 @@ export default function UserTable() {
                                     </div>
                                     <div>
                                        <span className="block font-medium text-bee-dark-600 text-theme-sm dark:text-bee-dark-100">
-                                          {motorista.name}
+                                          {carro.model}
                                        </span>
                                     </div>
                                  </div>
                               </TableCell>
 
                               <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start font-bold dark:text-bee-dark-100">
-                                 {motorista.phone}
+                                 {carro.plate}
                               </TableCell>
 
                               <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-c font-bold dark:text-bee-dark-100">
                                  <Badge
                                     size="sm"
                                     color={
-                                       motorista.isAvailable
+                                        carro.isAvailable
                                           ? "success"
                                           : "error"
                                     }
                                  >
-                                    {motorista.isAvailable
+                                    {carro.isAvailable
                                        ? "Disponível"
                                        : "Indisponível"}
                                  </Badge>
@@ -183,7 +183,6 @@ export default function UserTable() {
                               <TableCell className="px-4 py-3 text-center">
                                  <Link
                                     href="/"
-                                    onClick={() => deleteDriver(motorista.id)}
                                     className="inline-block text-bee-alert-300 hover:text-bee-alert-400"
                                  >
                                     <Icon
@@ -206,7 +205,7 @@ export default function UserTable() {
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={setCurrentPage}
-                        totalMotoristas={motoristas.length}
+                        totalMotoristas={carro.length}
                      />
                   </div>
                )}
