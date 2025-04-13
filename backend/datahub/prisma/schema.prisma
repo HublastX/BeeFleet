@@ -12,6 +12,7 @@ model Manager {
     email     String   @unique
     password  String
     name      String
+    image     String?
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
     events    Event[]
@@ -24,6 +25,7 @@ model Driver {
     id          String   @id @default(uuid())
     name        String
     phone       String
+    image       String?
     license     String   @unique
     isAvailable Boolean  @default(true)
     createdAt   DateTime @default(now())
@@ -39,6 +41,7 @@ model Car {
     plate       String    @unique
     model       String
     year        Int
+    image       String?
     color       String
     odometer    Int       @default(0)
     status      CarStatus @default(AVAILABLE)
