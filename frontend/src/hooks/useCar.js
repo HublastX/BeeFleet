@@ -86,10 +86,44 @@ export default function useCar() {
       }
    };
 
+   // Deletar carro
+   const deleteCar = async (id) => {
+      if (!gestor?.token) {
+         setErro("token do gestor não encontrado.");
+         return;
+      }
+
+      setCarregando(true);
+      setErro(null);
+
+      try {
+         const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`,
+            {
+               method: "DELETE",
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${gestor.token}`,
+               },
+            }
+         );
+
+         if (!res.ok)
+            throw new Error("Erro ao deletar carro. Tente novamente.");
+
+         setCarro((prev) => prev.filter((car) => car.id !== id));
+      } catch (error) {
+         setErro(error.message || "Erro ao conectar ao servidor.");
+      } finally {
+         setCarregando(false);
+      }
+   };
+
    return {
       carro,
       carregando,
       erro,
       createCar,
+      deleteCar,
    };
 }
