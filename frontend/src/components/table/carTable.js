@@ -33,7 +33,7 @@ export default function CarTable() {
    })();
 
    const [currentPage, setCurrentPage] = useState(1);
-   const itemsPerPage = 2;
+   const itemsPerPage = 5;
    const totalPages = Math.ceil((carro?.length || 0) / itemsPerPage);
    const startIndex = (currentPage - 1) * itemsPerPage;
    const currentCar = CarrosOrdenados.slice(
@@ -205,7 +205,7 @@ export default function CarTable() {
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={setCurrentPage}
-                        totalMotoristas={carro.length}
+                        totalItems={carro.length}
                      />
                   </div>
                )}

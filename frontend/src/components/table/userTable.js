@@ -33,7 +33,7 @@ export default function UserTable() {
    })();
 
    const [currentPage, setCurrentPage] = useState(1);
-   const itemsPerPage = 2;
+   const itemsPerPage = 5;
    const totalPages = Math.ceil((motoristas?.length || 0) / itemsPerPage);
    const startIndex = (currentPage - 1) * itemsPerPage;
    const currentDrivers = motoristasOrdenados.slice(
@@ -206,7 +206,7 @@ export default function UserTable() {
                         currentPage={currentPage}
                         totalPages={totalPages}
                         onPageChange={setCurrentPage}
-                        totalMotoristas={motoristas.length}
+                        totalItems={motoristas.length}
                      />
                   </div>
                )}

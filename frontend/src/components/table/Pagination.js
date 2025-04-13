@@ -3,7 +3,7 @@ const Pagination = ({
    currentPage,
    totalPages,
    onPageChange,
-   totalMotoristas,
+   totalItems,
 }) => {
    const getPages = (currentPage, totalPages) => {
       if (totalPages <= 3) {
@@ -22,7 +22,7 @@ const Pagination = ({
    return (
       <div className="flex items-center justify-center w-full md:justify-between">
          <span className="text-sm text-gray-500 dark:text-gray-400 ml-4 hidden md:block">
-            Total de motoristas: {totalMotoristas}
+            Total de itens: {totalItems}
          </span>
          <div className="flex items-center">
             <button
