@@ -12,6 +12,7 @@ import Badge from "../../elements/ui/badge/Badge";
 import useDrivers from "@/hooks/useDrivers";
 import Icon from "@/elements/Icon";
 import Pagination from "./Pagination";
+import TableSkeleton from "@/elements/ui/table/TableSkeleton";
 
 export default function UserTable() {
    const { motoristas, carregando, erro, deleteDriver } = useDrivers();
@@ -42,63 +43,74 @@ export default function UserTable() {
 
    return (
       <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-white dark:border-bee-dark-400 dark:bg-bee-dark-800">
-         {carregando && <p>Carregando motoristas...</p>}
-         {erro && <p className="text-bee-alert-300">Erro: {erro}</p>}
+         {carregando && (
+            <div className="p-4">
+               <TableSkeleton />
+            </div>
+         )}
+         {erro &&  (
+            <div className="p-4">
+               <TableSkeleton />
+               <p className="text-bee-alert-300">Erro: {erro}</p>
+            </div>
+         )}
          <div className="max-w-full overflow-x-auto">
             <div>
-               <Table>
-                  {/*  table header */}
-                  <TableHeader className="border-b border-bee-dark-300 dark:border-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
-                     <TableRow>
-                        <TableCell
-                           isHeader
-                           className="px-5 py-3 text-start text-theme-xs md:table-cell"
-                        >
-                           <div
-                              onClick={() => setOrdenarPorNome((prev) => !prev)}
-                              className="cursor-pointer hover:underline w-fit"
+               {!carregando && !erro && (
+                  <Table>
+                     {/*  table header */}
+                     <TableHeader className="border-b border-bee-dark-300 dark:border-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
+                        <TableRow>
+                           <TableCell
+                              isHeader
+                              className="px-5 py-3 text-start text-theme-xs md:table-cell"
                            >
-                              Motorista
-                           </div>
-                        </TableCell>
+                              <div
+                                 onClick={() =>
+                                    setOrdenarPorNome((prev) => !prev)
+                                 }
+                                 className="cursor-pointer hover:underline w-fit"
+                              >
+                                 Motorista
+                              </div>
+                           </TableCell>
 
-                        <TableCell
-                           isHeader
-                           className="px-5 py-3 text-start text-theme-xs hidden md:table-cell"
-                        >
-                           Telefone
-                        </TableCell>
-                        <TableCell
-                           isHeader
-                           className="px-5 py-3 text-start text-theme-xs hidden md:table-cell"
-                        >
-                           <div
-                              onClick={() => {
-                                 setOrdenarPorStatus((prev) => !prev);
-                              }}
-                              className="cursor-pointer hover:underline"
+                           <TableCell
+                              isHeader
+                              className="px-5 py-3 text-start text-theme-xs hidden md:table-cell"
                            >
-                              Status
-                           </div>
-                        </TableCell>
+                              Telefone
+                           </TableCell>
+                           <TableCell
+                              isHeader
+                              className="px-5 py-3 text-start text-theme-xs hidden md:table-cell"
+                           >
+                              <div
+                                 onClick={() => {
+                                    setOrdenarPorStatus((prev) => !prev);
+                                 }}
+                                 className="cursor-pointer hover:underline"
+                              >
+                                 Status
+                              </div>
+                           </TableCell>
 
-                        <TableCell
-                           isHeader
-                           className="px-3 py-3 text-center text-theme-xs "
-                        >
-                           Vizualizar
-                        </TableCell>
-                        <TableCell
-                           isHeader
-                           className="px-3 py-3 text-center text-theme-xs"
-                        >
-                           Deletar
-                        </TableCell>
-                     </TableRow>
-                  </TableHeader>
+                           <TableCell
+                              isHeader
+                              className="px-3 py-3 text-center text-theme-xs "
+                           >
+                              Vizualizar
+                           </TableCell>
+                           <TableCell
+                              isHeader
+                              className="px-3 py-3 text-center text-theme-xs"
+                           >
+                              Deletar
+                           </TableCell>
+                        </TableRow>
+                     </TableHeader>
 
-                  {/* Table Body */}
-                  {!carregando && !erro && (
+                     {/* Table Body */}
                      <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                         {currentDrivers.map((motorista) => (
                            <TableRow
@@ -184,8 +196,8 @@ export default function UserTable() {
                            </TableRow>
                         ))}
                      </TableBody>
-                  )}
-               </Table>
+                  </Table>
+               )}
 
                {/* paginacao */}
                {!carregando && !erro && totalPages > 1 && (
