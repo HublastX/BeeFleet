@@ -4,6 +4,7 @@ import Icon from "@/elements/Icon";
 import Image from "next/image";
 import Link from "next/link";
 import Btn from "@/elements/btn";
+import withAuth from "@/utils/withAuth";
 
 function Manager() {
   const { gestor } = useAuth();
@@ -63,4 +64,4 @@ function Manager() {
   );
 }
 
-export default Manager;
+export default withAuth(Manager);
