@@ -27,22 +27,14 @@ function EditProfile() {
    }, [gestor, formData]);
 
    return (
-      <div className="min-h-screen py-8">
+      <div className="min-h-screenpy-8">
          <div className="max-w-2xl mx-auto rounded-lg shadow-md p-8">
             <h1 className="text-3xl font-bold text-white mb-8">
                Editar Perfil
             </h1>
 
-            {carregando && (
-               <div className="bg-blue-50 text-blue-500 p-4 rounded-lg mb-6">
-                  Carregando...
-               </div>
-            )}
-            {erro && (
-               <div className="bg-red-50 text-red-500 p-4 rounded-lg mb-6">
-                  {erro}
-               </div>
-            )}
+            {carregando && <div>Carregando...</div>}
+            {erro && <div>{erro}</div>}
 
             <form
                onSubmit={(e) => {
@@ -95,7 +87,7 @@ function EditProfile() {
                            onChange={(e) => {
                               const file = e.target.files[0];
                               if (file) {
-                                 setPreviewImage(URL.createObjectURL(file)); // Exibe o preview
+                                 setPreviewImage(URL.createObjectURL(file));
                                  setFormData((prev) => ({
                                     ...prev,
                                     image: file,
