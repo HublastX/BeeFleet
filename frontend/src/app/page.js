@@ -3,7 +3,6 @@ import Btn from "@/elements/btn";
 import Link from "next/link";
 import useAuth from "@/hooks/useAuth";
 import Image from "next/image";
-import withAuth from "@/utils/withAuth";
 
 function Home() {
    const { gestor, erro, carregando } = useAuth();
@@ -57,4 +56,4 @@ function Home() {
       </div>
    );
 }
-export default withAuth(Home);
+export default Home;

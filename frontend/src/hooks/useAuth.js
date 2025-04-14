@@ -6,6 +6,7 @@ export default function useAuth() {
    const [carregando, setCarregando] = useState(false);
    const [erro, setErro] = useState(null);
    const router = useRouter();
+   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
    // Função para login
    const login = async (email, password) => {
@@ -14,7 +15,7 @@ export default function useAuth() {
 
       try {
          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/managers/login`,
+            `${API_URL}/api/managers/login`,
             {
                method: "POST",
                headers: {
@@ -60,7 +61,7 @@ export default function useAuth() {
 
       try {
          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/managers/create`,
+            `${API_URL}/api/managers/create`,
             {
                method: "POST",
                headers: {
@@ -109,7 +110,7 @@ export default function useAuth() {
          if (image !== undefined) formData.append("image", image);
 
          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/managers/${id}`,
+            `${API_URL}/api/managers/${id}`,
             {
                method: "PUT",
                headers: {
@@ -152,19 +153,23 @@ export default function useAuth() {
          const id = localStorage.getItem("id");
          const name = localStorage.getItem("name");
          const email = localStorage.getItem("email");
-         const image = localStorage.getItem("image");
-   
+         let image = localStorage.getItem("image");
+      
+         if (image === "null" || image === "") {
+            image = null;
+         }
+      
          if (token && id && name && email) {
             return { id, name, email, token, image };
          }
          return null;
       };
+      
    
       const gestorData = getGestorFromStorage();
       if (gestorData) setGestor(gestorData);
    }, []);
    
-
    // Função para logout
    const logout = () => {
       localStorage.removeItem("token");
