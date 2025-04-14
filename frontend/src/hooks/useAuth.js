@@ -93,15 +93,65 @@ export default function useAuth() {
       }
    };
 
+   // Função para atualizar o gestor
+   const putManager = async (id, { name, email, image }) => {
+      setCarregando(true);
+      setErro(null);
+
+      try {
+         const token = localStorage.getItem("token");
+
+         const formData = new FormData();
+         if (name !== undefined) formData.append("name", name);
+         if (email !== undefined) formData.append("email", email);
+         if (image !== undefined) formData.append("image", image);
+
+         const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/managers/${id}`,
+            {
+               method: "PUT",
+               headers: {
+                  Authorization: `Bearer ${token}`,
+               },
+               body: formData,
+            }
+         );
+
+         if (!res.ok) throw new Error("Erro ao atualizar o gestor.");
+
+         const data = await res.json();
+
+         localStorage.setItem("name", data.data.name);
+         localStorage.setItem("email", data.data.email);
+         localStorage.setItem("image", data.data.image);
+
+         setGestor((prev) => ({
+            ...prev,
+            name: data.data.name,
+            email: data.data.email,
+            image: data.data.image,
+         }));
+
+         return data;
+      } catch (error) {
+         setErro(error.message || "Erro ao conectar ao servidor.");
+      } finally {
+         window.location.reload();
+         router.push("/profile");
+         setCarregando(false);
+      }
+   };
+
    // Pegar dados do gestor
    useEffect(() => {
       const token = localStorage.getItem("token");
       const id = localStorage.getItem("id");
       const name = localStorage.getItem("name");
       const email = localStorage.getItem("email");
+      const image = localStorage.getItem("image");
 
       if (token && id && name && email) {
-         setGestor({ id, name, email, token });
+         setGestor({ id, name, email, image, token });
       }
    }, []);
 
@@ -111,6 +161,7 @@ export default function useAuth() {
       localStorage.removeItem("id");
       localStorage.removeItem("name");
       localStorage.removeItem("email");
+      localStorage.removeItem("image");
 
       setGestor(null);
       window.location.href = "/";
@@ -123,5 +174,6 @@ export default function useAuth() {
       login,
       register,
       logout,
+      putManager,
    };
 }
