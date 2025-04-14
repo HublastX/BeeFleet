@@ -1,21 +1,10 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
-import { CreateManagerRequestBody } from "../../schemas/managerInterface";
+import bcrypt from "bcrypt";
 
-export const createManager = async (
-    req: Request<{}, {}, CreateManagerRequestBody>,
-    res: Response
-) => {
+export const createManager = async (req: Request, res: Response) => {
     try {
         const { name, email, password } = req.body;
-
-        if (!name || !email || !password) {
-            return res.status(400).json({
-                success: false,
-                message:
-                    "Missing required fields: name, email, and password are required",
-            });
-        }
 
         const existingManager = await prisma.manager.findUnique({
             where: { email },
@@ -28,11 +17,18 @@ export const createManager = async (
             });
         }
 
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const imagePath = req.file
+            ? `/${req.file.path.replace(/\\/g, "/")}`
+            : null;
+
         const manager = await prisma.manager.create({
             data: {
                 name,
                 email,
-                password: password,
+                password: hashedPassword,
+                image: imagePath,
             },
         });
 

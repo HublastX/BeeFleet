@@ -2,21 +2,21 @@ import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 import { useRouter } from "next/navigation";
 
-export default function useDrivers() {
+export default function useCar() {
    const { gestor } = useAuth();
-   const [motoristas, setMotoristas] = useState([]);
+   const [carro, setCarro] = useState([]);
    const [carregando, setCarregando] = useState(true);
    const [erro, setErro] = useState(null);
    const router = useRouter();
 
-   // Buscar motoristas
+   // Buscar carro
    useEffect(() => {
       if (!gestor?.token) return;
 
-      async function fetchDrivers() {
+      async function fetchCars() {
          try {
             const res = await fetch(
-               `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/`,
+               `${process.env.NEXT_PUBLIC_API_URL}/api/cars/`,
                {
                   headers: {
                      "Content-Type": "application/json",
@@ -25,10 +25,10 @@ export default function useDrivers() {
                }
             );
 
-            if (!res.ok) throw new Error("Erro ao buscar motoristas");
+            if (!res.ok) throw new Error("Erro ao buscar carros");
 
             const data = await res.json();
-            setMotoristas(data.data);
+            setCarro(data.data);
          } catch (err) {
             console.error("Erro na requisição:", err);
             setErro(err.message);
@@ -37,18 +37,18 @@ export default function useDrivers() {
          }
       }
 
-      fetchDrivers();
+      fetchCars();
    }, [gestor?.token]);
 
-   // Buscar Motorista individual
-   const getDriver = async (id) => {
+   // Buscar carro individual
+   const getCar = async (id) => {
       if (!gestor?.token) return;
 
       setCarregando(true);
       setErro(null);
 
       try {
-         const url = `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/${id}`;
+         const url = `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`;
          console.log("URL da requisição:", url);
 
          const res = await fetch(url, {
@@ -59,7 +59,7 @@ export default function useDrivers() {
             },
          });
 
-         if (!res.ok) throw new Error("Erro ao buscar motorista");
+         if (!res.ok) throw new Error("Erro ao buscar carro");
 
          const data = await res.json();
          console.log("Resposta da API:", data);
@@ -73,8 +73,8 @@ export default function useDrivers() {
       }
    };
 
-   // Criar motorista
-   const createDriver = async (name, phone, license) => {
+   // Criar carro
+   const createCar = async (plate, model, year, color) => {
       if (!gestor?.id) {
          setErro("ID do gestor não encontrado.");
          return;
@@ -85,7 +85,7 @@ export default function useDrivers() {
 
       try {
          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/create`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/cars/create`,
             {
                method: "POST",
                headers: {
@@ -93,23 +93,24 @@ export default function useDrivers() {
                   Authorization: `Bearer ${gestor.token}`,
                },
                body: JSON.stringify({
-                  name,
-                  phone,
-                  license,
+                  plate,
+                  model,
+                  year: parseInt(year),
+                  color,
+                  status: "AVAILABLE",
                   managerId: gestor.id,
                }),
             }
          );
 
-         if (!res.ok)
-            throw new Error("Erro ao criar motorista. Tente novamente.");
+         if (!res.ok) throw new Error("Erro ao criar carro. Tente novamente.");
 
          const data = await res.json();
-         if (data.driver) {
-            setMotoristas((prev) => [...prev, data.driver]);
-            router.push("/driverPage");
+         if (data && !data.error) {
+            setCarro((prev) => [...prev, data.car]);
+            router.push("/cars");
          } else {
-            setErro(data.error || "Erro ao criar motorista. Tente novamente.");
+            setErro(data.error || "Erro ao criar carro. Tente novamente.");
          }
       } catch (error) {
          setErro(error.message || "Erro ao conectar ao servidor.");
@@ -118,8 +119,8 @@ export default function useDrivers() {
       }
    };
 
-   // Deletar motorista
-   const deleteDriver = async (id) => {
+   // Deletar carro
+   const deleteCar = async (id) => {
       if (!gestor?.token) {
          setErro("token do gestor não encontrado.");
          return;
@@ -130,7 +131,7 @@ export default function useDrivers() {
 
       try {
          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/${id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`,
             {
                method: "DELETE",
                headers: {
@@ -141,9 +142,9 @@ export default function useDrivers() {
          );
 
          if (!res.ok)
-            throw new Error("Erro ao deletar motorista. Tente novamente.");
+            throw new Error("Erro ao deletar carro. Tente novamente.");
 
-         setMotoristas((prev) => prev.filter((driver) => driver.id !== id));
+         setCarro((prev) => prev.filter((car) => car.id !== id));
       } catch (error) {
          setErro(error.message || "Erro ao conectar ao servidor.");
       } finally {
@@ -152,11 +153,11 @@ export default function useDrivers() {
    };
 
    return {
-      motoristas,
+      carro,
       carregando,
       erro,
-      createDriver,
-      deleteDriver,
-      getDriver,
+      createCar,
+      deleteCar,
+      getCar,
    };
 }

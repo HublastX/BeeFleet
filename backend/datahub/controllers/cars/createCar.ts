@@ -7,12 +7,46 @@ export const createCar = async (
     res: Response
 ) => {
     try {
-        const { plate, model, year, color, managerId } = req.body;
-        const car = await prisma.car.create({
-            data: { plate, model, year, color, managerId },
+        const { plate, model, year, color, odometer, managerId } = req.body;
+
+        const plateExists = await prisma.car.findUnique({
+            where: { plate },
         });
-        res.json(car);
+
+        if (plateExists) {
+            return res.status(409).json({
+                success: false,
+                message: "Placa já está cadastrada",
+            });
+        }
+
+        const imagePath = req.file
+            ? `/${req.file.path.replace(/\\/g, "/")}`
+            : null;
+
+        const car = await prisma.car.create({
+            data: {
+                plate,
+                model,
+                year,
+                color,
+                odometer,
+                managerId,
+                image: imagePath,
+            },
+        });
+
+        res.status(201).json({
+            success: true,
+            message: "Carro criado com sucesso",
+            data: car,
+        });
     } catch (error: any) {
-        res.status(500).json({ error: error.message });
+        console.error("Erro ao criar carro:", error);
+        res.status(500).json({
+            success: false,
+            message: "Falha ao criar carro",
+            error: error.message,
+        });
     }
 };
