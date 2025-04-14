@@ -97,13 +97,13 @@ export default function CarTable() {
 
                            <TableCell
                               isHeader
-                              className="px-3 py-3 text-center text-theme-xs "
+                              className="px-3 md:px-1 py-3 text-center text-theme-xs "
                            >
                               Vizualizar
                            </TableCell>
                            <TableCell
                               isHeader
-                              className="px-3 py-3 text-center text-theme-xs"
+                              className="px-3 md:px-1 py-3 text-center text-theme-xs"
                            >
                               Deletar
                            </TableCell>
@@ -166,7 +166,7 @@ export default function CarTable() {
                                  </Badge>
                               </TableCell>
 
-                              <TableCell className="px-4 py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
+                              <TableCell className="py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
                                  <Link
                                     href={`/cars/${carro.id}`}
                                     className="inline-block text-bee-yellow-500 hover:text-bee-yellow-700"
@@ -179,7 +179,7 @@ export default function CarTable() {
                                  </Link>
                               </TableCell>
 
-                              <TableCell className="px-4 py-3 text-center">
+                              <TableCell className=" py-3 text-center">
                                  <Link
                                     href="/"
                                     onClick={() => deleteCar(carro.id)}
