@@ -48,7 +48,7 @@ export default function UserTable() {
                <TableSkeleton />
             </div>
          )}
-         {erro &&  (
+         {erro && (
             <div className="p-4">
                <TableSkeleton />
                <p className="text-bee-alert-300">Erro: {erro}</p>
@@ -97,13 +97,13 @@ export default function UserTable() {
 
                            <TableCell
                               isHeader
-                              className="px-3 py-3 text-center text-theme-xs "
+                              className="px-3 md:px-1 py-3 text-center text-theme-xs"
                            >
                               Vizualizar
                            </TableCell>
                            <TableCell
                               isHeader
-                              className="px-3 py-3 text-center text-theme-xs"
+                              className="px-3 md:px-1 py-3 text-center text-theme-xs"
                            >
                               Deletar
                            </TableCell>
@@ -168,7 +168,7 @@ export default function UserTable() {
                                  </Badge>
                               </TableCell>
 
-                              <TableCell className="px-4 py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
+                              <TableCell className="py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
                                  <Link
                                     href={`/drivers/${motorista.id}`}
                                     className="inline-block text-bee-yellow-500 hover:text-bee-yellow-700"
@@ -180,7 +180,7 @@ export default function UserTable() {
                                     />
                                  </Link>
                               </TableCell>
-                              <TableCell className="px-4 py-3 text-center">
+                              <TableCell className="py-3 text-center">
                                  <Link
                                     href="/"
                                     onClick={() => deleteDriver(motorista.id)}
