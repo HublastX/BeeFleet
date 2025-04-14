@@ -9,18 +9,18 @@ function Manager() {
   const { gestor } = useAuth();
   if (!gestor) return null;
 
-  const { name, photo, email } = gestor;
+  const { name, image, email } = gestor;
 
   return (
     <div className="p-4 space-y-6">
       {/* Perfil */}
       <div className="flex items-center gap-6 bg-white dark:bg-bee-dark-400 p-6 rounded-lg shadow-theme-lg">
         <div className="flex-shrink-0">
-          {!photo ? (
+          {!image ? (
             <Icon name="UserCircle" className="w-24 h-24 text-gray-400" />
           ) : (
             <Image
-              src={photo}
+              src={image}
               alt={`Foto de perfil de ${name}`}
               width={96}
               height={96}
