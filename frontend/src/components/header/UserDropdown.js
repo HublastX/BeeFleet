@@ -19,7 +19,6 @@ export default function UserDropdown() {
 
    if (!gestor) return null;
 
-   const { name, photo, email } = gestor;
 
    return (
       <div className="relative">
@@ -28,15 +27,15 @@ export default function UserDropdown() {
             className="flex items-center text-bee-dark-600 dark:text-bee-alert-500 dropdown-toggle"
          >
             <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
-               {!photo ? (
+               {!gestor.image ? (
                   <Icon name="UserCircle" />
                ) : (
-                  <Image src={photo} alt="Profile" />
+                  <Image src={gestor.image} alt="Profile" width={2} height={2} />
                )}
             </span>
 
             <span className="hidden md:block mr-1 font-medium text-theme-sm">
-               {name}
+               {gestor.name}
             </span>
 
             <Icon
@@ -54,8 +53,8 @@ export default function UserDropdown() {
             className="absolute min-w-60 px-5 right-0 mt-[17px] mr-[-15px] flex flex-col rounded-b-2xl rounded-t-none border border-bee-dark-300 bg-white p-3 shadow-theme-lg dark:border-bee-dark-600 dark:bg-bee-dark-400"
          >
             <div className="dark:text-white text-bee-dark-600">
-               <span className="block font-medium">{name}</span>
-               <span className="mt-0.5 block text-theme-xs">{email}</span>
+               <span className="block font-medium">{gestor.name}</span>
+               <span className="mt-0.5 block text-theme-xs">{gestor.email}</span>
             </div>
             <ul className="flex flex-col gap-1 pt-4 pb-3 border-b border-bee-dark-300 dark:border-bee-dark-800">
                <li>
