@@ -32,12 +32,14 @@ export default function useAuth() {
             localStorage.setItem("id", data.manager.id);
             localStorage.setItem("name", data.manager.name);
             localStorage.setItem("email", data.manager.email);
+            localStorage.setItem("image", data.manager.image);
 
             setGestor({
                id: data.manager.id,
                name: data.manager.name,
                email: data.manager.email,
                token: data.token,
+               image: data.manager.image,
             });
 
             window.location.href = "/";
@@ -120,6 +122,7 @@ export default function useAuth() {
          if (!res.ok) throw new Error("Erro ao atualizar o gestor.");
 
          const data = await res.json();
+         console.log("Resposta do PUT:", data);
 
          localStorage.setItem("name", data.data.name);
          localStorage.setItem("email", data.data.email);
@@ -144,16 +147,23 @@ export default function useAuth() {
 
    // Pegar dados do gestor
    useEffect(() => {
-      const token = localStorage.getItem("token");
-      const id = localStorage.getItem("id");
-      const name = localStorage.getItem("name");
-      const email = localStorage.getItem("email");
-      const image = localStorage.getItem("image");
-
-      if (token && id && name && email) {
-         setGestor({ id, name, email, image, token });
-      }
+      const getGestorFromStorage = () => {
+         const token = localStorage.getItem("token");
+         const id = localStorage.getItem("id");
+         const name = localStorage.getItem("name");
+         const email = localStorage.getItem("email");
+         const image = localStorage.getItem("image");
+   
+         if (token && id && name && email) {
+            return { id, name, email, token, image };
+         }
+         return null;
+      };
+   
+      const gestorData = getGestorFromStorage();
+      if (gestorData) setGestor(gestorData);
    }, []);
+   
 
    // Função para logout
    const logout = () => {
