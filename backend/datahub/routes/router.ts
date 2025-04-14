@@ -9,9 +9,6 @@ import carRoutes from "./private/cars/carsRoutes";
 
 const router: Router = express.Router();
 
-router.use("/", (req, res) => {
-    res.send("Olá bom dia , acesse api/docs para documentação com swagger!");
-});
 
 router.use(loginManagerRoute);
 router.use(managerRoutes);
