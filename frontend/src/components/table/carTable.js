@@ -12,7 +12,7 @@ import Badge from "../../elements/ui/badge/Badge";
 import useCar from "@/hooks/useCar";
 import Icon from "@/elements/Icon";
 import Pagination from "./Pagination";
-import TableSkeleton from "@/elements/ui/table/TableSkeleton";
+import TableSkeleton from "@/elements/ui/skeleton/TableSkeleton";
 
 export default function CarTable() {
    const { carro, carregando, erro, deleteCar } = useCar();
