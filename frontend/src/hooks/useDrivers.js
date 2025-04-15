@@ -49,8 +49,6 @@ export default function useDrivers() {
 
       try {
          const url = `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/${id}`;
-         console.log("URL da requisição:", url);
-
          const res = await fetch(url, {
             method: "GET",
             headers: {
@@ -62,7 +60,6 @@ export default function useDrivers() {
          if (!res.ok) throw new Error("Erro ao buscar motorista");
 
          const data = await res.json();
-         console.log("Resposta da API:", data);
 
          return data;
       } catch (err) {

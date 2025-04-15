@@ -1,6 +1,5 @@
 import React from "react";
 import {
-   HomeIcon,
    XMarkIcon,
    EllipsisHorizontalIcon,
    UserIcon,
@@ -13,7 +12,8 @@ import {
    KeyIcon,
    UserCircleIcon,
    BellIcon,
-
+   RectangleGroupIcon,
+   ClipboardDocumentCheckIcon,
 } from "@heroicons/react/24/solid";
 import {
    PlusIcon,
@@ -27,12 +27,14 @@ import {
    TrashIcon,
    ArrowLongRightIcon,
    ArrowLongLeftIcon,
+   ArrowTrendingUpIcon,
+   ArrowTrendingDownIcon,
 } from "@heroicons/react/24/outline";
 
 const icons = {
    plus: PlusIcon,
    xMark: XMarkIcon,
-   home: HomeIcon,
+   home: RectangleGroupIcon,
    search: MagnifyingGlassIcon,
    user: UserIcon,
    chat: ChatBubbleBottomCenterTextIcon,
@@ -54,6 +56,9 @@ const icons = {
    eye: EyeIcon,
    sDireita: ArrowLongRightIcon,
    sEsquerda: ArrowLongLeftIcon,
+   sCima: ArrowTrendingUpIcon,
+   sBaixo: ArrowTrendingDownIcon,
+   evento: ClipboardDocumentCheckIcon,
 };
 
 export default function Icon({ name, className, strokeWidth }) {

@@ -5,6 +5,7 @@ export default function useAuth() {
    const [gestor, setGestor] = useState(null);
    const [carregando, setCarregando] = useState(false);
    const [erro, setErro] = useState(null);
+   const [gestores, setGestores] = useState([]);
    const router = useRouter();
    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -14,16 +15,13 @@ export default function useAuth() {
       setErro(null);
 
       try {
-         const res = await fetch(
-            `${API_URL}/api/managers/login`,
-            {
-               method: "POST",
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify({ email, password }),
-            }
-         );
+         const res = await fetch(`${API_URL}/api/managers/login`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+         });
 
          if (!res.ok) throw new Error("Credenciais inválidas.");
 
@@ -60,16 +58,13 @@ export default function useAuth() {
       setErro(null);
 
       try {
-         const res = await fetch(
-            `${API_URL}/api/managers/create`,
-            {
-               method: "POST",
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify({ name, email, password }),
-            }
-         );
+         const res = await fetch(`${API_URL}/api/managers/create`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, email, password }),
+         });
 
          if (!res.ok) throw new Error("Erro ao registrar. Tente novamente.");
 
@@ -109,16 +104,13 @@ export default function useAuth() {
          if (email !== undefined) formData.append("email", email);
          if (image !== undefined) formData.append("image", image);
 
-         const res = await fetch(
-            `${API_URL}/api/managers/${id}`,
-            {
-               method: "PUT",
-               headers: {
-                  Authorization: `Bearer ${token}`,
-               },
-               body: formData,
-            }
-         );
+         const res = await fetch(`${API_URL}/api/managers/${id}`, {
+            method: "PUT",
+            headers: {
+               Authorization: `Bearer ${token}`,
+            },
+            body: formData,
+         });
 
          if (!res.ok) throw new Error("Erro ao atualizar o gestor.");
 
@@ -154,22 +146,21 @@ export default function useAuth() {
          const name = localStorage.getItem("name");
          const email = localStorage.getItem("email");
          let image = localStorage.getItem("image");
-      
+
          if (image === "null" || image === "") {
             image = null;
          }
-      
+
          if (token && id && name && email) {
             return { id, name, email, token, image };
          }
          return null;
       };
-      
-   
+
       const gestorData = getGestorFromStorage();
       if (gestorData) setGestor(gestorData);
    }, []);
-   
+
    // Função para logout
    const logout = () => {
       localStorage.removeItem("token");
@@ -182,10 +173,41 @@ export default function useAuth() {
       window.location.href = "/";
    };
 
+   // Função para mapear todos os gestores
+   useEffect(() => {
+      if (!gestor?.token) return;
+   
+      async function fetchAllManagers() {
+         try {
+            const res = await fetch(`${API_URL}/api/managers/`, {
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${gestor.token}`,
+               },
+            });
+   
+            if (!res.ok) throw new Error("Erro ao buscar gestores");
+   
+            const data = await res.json();
+            setGestores(data.data); // Agora sim, armazenando corretamente
+         } catch (err) {
+            console.error("Erro na requisição:", err);
+            setErro(err.message);
+         } finally {
+            setCarregando(false);
+         }
+      }
+   
+      fetchAllManagers();
+   }, [gestor?.token]);
+   
+   
+
    return {
       gestor,
       carregando,
       erro,
+      gestores,
       login,
       register,
       logout,
