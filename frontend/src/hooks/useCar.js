@@ -49,7 +49,6 @@ export default function useCar() {
 
       try {
          const url = `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`;
-         console.log("URL da requisição:", url);
 
          const res = await fetch(url, {
             method: "GET",
@@ -62,7 +61,6 @@ export default function useCar() {
          if (!res.ok) throw new Error("Erro ao buscar carro");
 
          const data = await res.json();
-         console.log("Resposta da API:", data);
 
          return data;
       } catch (err) {
