@@ -10,14 +10,11 @@ function CarPage() {
    const [carroData, setCarroData] = useState(null);
 
    useEffect(() => {
-      console.log("ID do carro:", id);
       if (!id || carroData) return;
 
       async function fetchCar() {
-         console.log("Buscando carro com ID:", id);
          try {
             const data = await getCar(id);
-            console.log("Carro encontrado:", data);
             setCarroData(data);
          } catch (error) {
             console.error("Erro ao buscar carro:", error);
