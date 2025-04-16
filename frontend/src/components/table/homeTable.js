@@ -29,12 +29,41 @@ const tableData = [
       data: "15/04",
       status: "finalizado",
    },
+   {
+      id: 4,
+      motorista: "aline",
+      carro: "xyz1234",
+      data: "01/03",
+      status: "em uso",
+   },
+   {
+      id: 5,
+      motorista: "joana",
+      carro: "mno7890",
+      data: "12/06",
+      status: "em uso",
+   },
+   {
+      id: 6,
+      motorista: "carlos",
+      carro: "abc4321",
+      data: "22/07",
+      status: "finalizado",
+   },
+   {
+      id: 7,
+      motorista: "marcos",
+      carro: "ghj6789",
+      data: "05/09",
+      status: "em uso",
+   },
 ];
+
 
 export default function RecentEvent() {
    return (
       <div className="px-6 max-w-full overflow-x-auto overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
-         <h1 className="my-4 text-xl font-semibold text-gray-800 dark:text-white/90">
+         <h1 className="my-3 text-xl font-semibold text-gray-800 dark:text-white/90">
             Ultimos eventos
          </h1>
 
