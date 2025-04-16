@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import withAuth from "@/utils/withAuth";
 import useCar from "@/hooks/useCar";
+import Icon from "@/elements/Icon";
+import Badge from "@/elements/ui/badge/Badge";
 
 function CarPage() {
    const { id } = useParams();
@@ -30,12 +32,51 @@ function CarPage() {
          {erro && <p>Erro: {erro}</p>}
          {!carregando && !erro && !carroData && <p>Nenhum carro encontrado.</p>}
          {carroData && (
-            <>
-               <h1>{carroData.model}</h1>
-               <p>Placa: {carroData.plate}</p>
-               <p>Ano: {carroData.year}</p>
-               <p>Cor: {carroData.color}</p>
-            </>
+            <div className="flex flex-col md:flex-row gap-4">
+               {/* card 1 com foto e placa */}
+               <div className="flex flex-col px-4 py-5 items-center  gap-4 w-1/3 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-md border border-bee-dark-300 dark:border-bee-dark-400">
+                  <div className="rounded-md bg-bee-purple-200 w-full h-40 flex items-center justify-center shadow-xs">
+                     <Icon name="truck" className="w-16 h-16" />
+                  </div>
+                  <div className="bg-gray-100 w-full p-4 rounded-md shadow-sm border-t-8 border-blue-700">
+                     <p className="text-center text-bee-dark-600 font-extrabold text-3xl">
+                        {carroData.plate}
+                     </p>
+                  </div>
+               </div>
+               {/* card 2 com dados do carro */}
+               <div className="flex flex-col px-4 py-5 gap-3 w-2/3 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-md border border-bee-dark-300 dark:border-bee-dark-400">
+                  <h1 className="text-3xl font-extrabold text-gray-800 dark:text-white/90">
+                     {carroData.model}
+                  </h1>
+                  <div className="flex row gap-2">
+                     <p className="text-bee-dak-600 dark:text-bee-alert-500">
+                        <span className="font-black">Ano:</span>{" "}
+                        {carroData.year}
+                     </p>
+                     <p className="text-bee-dak-600 dark:text-bee-alert-500">
+                        <span className="font-black">Cor:</span>{" "}
+                        {carroData.color}
+                     </p>
+                  </div>
+
+                  <p className="text-bee-dak-600 dark:text-bee-alert-500">
+                     Status:{" "}
+                     <Badge
+                        size="sm"
+                        color={
+                           carroData.status === "AVAILABLE"
+                              ? "success"
+                              : "error"
+                        }
+                     >
+                        {carroData.status === "AVAILABLE"
+                           ? "Disponível"
+                           : "Indisponível"}
+                     </Badge>
+                  </p>
+               </div>
+            </div>
          )}
       </div>
    );
