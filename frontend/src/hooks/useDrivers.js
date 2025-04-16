@@ -115,6 +115,52 @@ export default function useDrivers() {
       }
    };
 
+   // Atualizar Motorista
+   const updateDriver = async (id, name, phone, license) => {
+      if (!gestor?.token) {
+         setErro("token do gestor não encontrado.");
+         return;
+      }
+
+      setCarregando(true);
+      setErro(null);
+
+      try {
+         const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/${id}`,
+            {
+               method: "PUT",
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${gestor.token}`,
+               },
+               body: JSON.stringify({
+                  name,
+                  phone,
+                  license,
+               }),
+            }
+         );
+
+         if (!res.ok)
+            throw new Error("Erro ao atualizar motorista. Tente novamente.");
+
+         const data = await res.json();
+         if (data && !data.error) {
+            setMotoristas((prev) =>
+               prev.map((driver) => (driver.id === id ? data.driver : driver))
+            );
+            router.push("/drivers");
+         } else {
+            setErro(data.error || "Erro ao atualizar motorista. Tente novamente.");
+         }
+      } catch (error) {
+         setErro(error.message || "Erro ao conectar ao servidor.");
+      } finally {
+         setCarregando(false);
+      }
+   };
+
    // Deletar motorista
    const deleteDriver = async (id) => {
       if (!gestor?.token) {
@@ -155,5 +201,6 @@ export default function useDrivers() {
       createDriver,
       deleteDriver,
       getDriver,
+      updateDriver
    };
 }

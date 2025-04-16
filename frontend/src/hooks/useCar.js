@@ -116,6 +116,53 @@ export default function useCar() {
          setCarregando(false);
       }
    };
+   
+   // Atualizar carro
+   const updateCar = async (id, plate, model, year, color) => {
+      if (!gestor?.token) {
+         setErro("token do gestor não encontrado.");
+         return;
+      }
+
+      setCarregando(true);
+      setErro(null);
+
+      try {
+         const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`,
+            {
+               method: "PUT",
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${gestor.token}`,
+               },
+               body: JSON.stringify({
+                  plate,
+                  model,
+                  year: parseInt(year),
+                  color,
+               }),
+            }
+         );
+
+         if (!res.ok)
+            throw new Error("Erro ao atualizar carro. Tente novamente.");
+
+         const data = await res.json();
+         if (data && !data.error) {
+            setCarro((prev) =>
+               prev.map((car) => (car.id === id ? data.car : car))
+            );
+            router.push("/cars");
+         } else {
+            setErro(data.error || "Erro ao atualizar carro. Tente novamente.");
+         }
+      } catch (error) {
+         setErro(error.message || "Erro ao conectar ao servidor.");
+      } finally {
+         setCarregando(false);
+      }
+   };
 
    // Deletar carro
    const deleteCar = async (id) => {
@@ -157,5 +204,6 @@ export default function useCar() {
       createCar,
       deleteCar,
       getCar,
+      updateCar
    };
 }
