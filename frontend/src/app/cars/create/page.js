@@ -3,24 +3,27 @@ import { useState } from "react";
 import Btn from "@/elements/btn";
 import useCar from "@/hooks/useCar";
 import InputText from "@/elements/inputText";
+import { useRouter } from "next/navigation";
 
 function CreateCars() {
    const { createCar, carregando, erro } = useCar();
+   const router = useRouter();
 
    const [plate, setPlate] = useState("");
    const [model, setModel] = useState("");
    const [year, setYear] = useState("");
    const [color, setColor] = useState("");
+   const [odometer, setOdometer] = useState("");
 
    const handleSubmit = async (e) => {
       e.preventDefault();
-      await createCar(plate, model, year, color);
-      console.log({ plate, model, year, color });
+      await createCar(plate, model, year, color, odometer);
+      console.log({ plate, model, year, color, odometer });
    };
 
    return (
-      <div className="min-h-screen py-10 px-4">
-         <div className="max-w-3xl mx-auto p-8 rounded-lg shadow-md">
+      <div >
+         <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
                Cadastro de Veículo
             </h2>
@@ -91,14 +94,38 @@ function CreateCars() {
                   />
                </div>
 
-               <Btn
-                  type="submit"
-                  variant="primary"
-                  disabled={carregando}
-                  className="w-full py-3 px-4 text-lg"
-               >
-                  {carregando ? "Cadastrando..." : "Cadastrar Veículo"}
-               </Btn>
+               <div>
+                  <label htmlFor="odometer" className="block text-sm font-medium text-dark dark:text-white mb-2">
+                     Odômetro
+                  </label>
+                  <InputText
+                     type="number"
+                     id="odometer"
+                     name="odometer"
+                     value={odometer}
+                     onChange={(e) => setOdometer(e.target.value)}
+                     placeholder="Ex: 50000"
+                     required
+                  />
+               </div>
+
+               <div className="flex gap-4">
+                  <button
+                     type="button"
+                     onClick={() => router.back()}
+                     className="flex-1 py-3 px-4 text-lg border border-red-600 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                  >
+                     Cancelar
+                  </button>
+                  <Btn
+                     type="submit"
+                     variant="primary"
+                     disabled={carregando}
+                     className="flex-1 py-3 px-4 text-lg"
+                  >
+                     {carregando ? "Cadastrando..." : "Cadastrar Veículo"}
+                  </Btn>
+               </div>
             </form>
          </div>
       </div>
