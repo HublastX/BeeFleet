@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import useAuth from "@/hooks/useAuth";
 import Btn from "../../../elements/btn";
+import InputText from "../../../elements/inputText"; // Adicione este import
 
 function EditProfile() {
    const router = useRouter();
@@ -29,7 +30,7 @@ function EditProfile() {
    return (
       <div className="min-h-screenpy-8">
          <div className="max-w-2xl mx-auto rounded-lg shadow-md p-8">
-            <h1 className="text-3xl font-bold text-white mb-8">
+            <h1 className="text-3xl font-bold text-dark dark:text-white mb-8">
                Editar Perfil
             </h1>
 
@@ -100,10 +101,10 @@ function EditProfile() {
                </div>
 
                <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-dark dark:text-white mb-2">
                      Nome
                   </label>
-                  <input
+                  <InputText
                      type="text"
                      value={formData.name}
                      onChange={(e) =>
@@ -112,16 +113,16 @@ function EditProfile() {
                            name: e.target.value,
                         }))
                      }
-                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                      required
+                     autoComplete="name"
                   />
                </div>
 
                <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium text-dark dark:text-white mb-2">
                      Email
                   </label>
-                  <input
+                  <InputText
                      type="email"
                      value={formData.email}
                      onChange={(e) =>
@@ -130,8 +131,8 @@ function EditProfile() {
                            email: e.target.value,
                         }))
                      }
-                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                      required
+                     autoComplete="email"
                   />
                </div>
 
@@ -139,7 +140,7 @@ function EditProfile() {
                   <button
                      type="button"
                      onClick={() => router.back()}
-                     className="flex-1 px-4 py-2 border border-gray-300 text-white rounded-lg transition-colors"
+                     className="flex-1 px-4 py-2 border border-red-600 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
                   >
                      Cancelar
                   </button>
@@ -152,4 +153,5 @@ function EditProfile() {
       </div>
    );
 }
+
 export default withAuth(EditProfile);
