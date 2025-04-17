@@ -1,28 +1,41 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Btn from "../../../elements/btn";
 import InputText from "../../../elements/inputText";
 import { useRouter } from "next/navigation";
 import useDrivers from "@/hooks/useDrivers";
 
-function CreateUser() {
+function EditDriver({ params }) {
    const [name, setName] = useState("");
    const [phone, setPhone] = useState("");
    const [license, setLicense] = useState("");
-   const { createDriver, carregando, erro } = useDrivers();
+   const [photo, setPhoto] = useState(null);
+   const { updateDriver, getDriver, carregando, erro } = useDrivers();
    const router = useRouter();
+
+   useEffect(() => {
+      const loadDriver = async () => {
+         const driver = await getDriver(params.id);
+         if (driver) {
+            setName(driver.name);
+            setPhone(driver.phone);
+            setLicense(driver.license);
+         }
+      };
+      loadDriver();
+   }, [params.id]);
 
    const handleSubmit = async (e) => {
       e.preventDefault();
-      await createDriver(name, phone, license);
-      console.log({ name, phone, license });
+      await updateDriver(params.id, { name, phone, license, photo });
+      router.push("/drivers");
    };
 
    return (
       <div>
          <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
-               Cadastrar Motorista
+               Editar Motorista
             </h2>
             {erro && <p style={{ color: "red" }}>{erro}</p>}
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -36,9 +49,9 @@ function CreateUser() {
                      value={name}
                      onChange={(e) => setName(e.target.value)}
                      placeholder="Ex: Carlos Silva"
-
                   />
                </div>
+
                <div>
                   <label className="block text-sm font-medium mb-2">
                      Número de Telefone
@@ -49,11 +62,11 @@ function CreateUser() {
                      value={phone}
                      onChange={(e) => setPhone(e.target.value)}
                      placeholder="Ex: (11) 91234-5678"
-
                   />
                </div>
+
                <div>
-                  <label className="block text-sm font-medium  mb-2">
+                  <label className="block text-sm font-medium mb-2">
                      Licença de Motorista
                   </label>
                   <InputText
@@ -62,12 +75,12 @@ function CreateUser() {
                      value={license}
                      onChange={(e) => setLicense(e.target.value)}
                      placeholder="Ex: 123456789"
-
                   />
                </div>
+
                <div>
                   <label className="block text-sm font-medium mb-2">
-                     Foto
+                     Atualizar Foto
                   </label>
                   <InputText
                      type="file"
@@ -77,6 +90,7 @@ function CreateUser() {
                      className="file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark"
                   />
                </div>
+
                <div className="flex gap-4">
                   <button
                      type="button"
@@ -87,12 +101,11 @@ function CreateUser() {
                   </button>
                   <Btn
                      type="submit"
-                     texto=""
                      variant="primary"
                      disabled={carregando}
                      className="flex-[2] py-3 px-4 text-lg"
                   >
-                     {carregando ? "criando..." : "Cadastrar"}
+                     {carregando ? "Salvando..." : "Salvar Alterações"}
                   </Btn>
                </div>
             </form>
@@ -101,4 +114,4 @@ function CreateUser() {
    );
 }
 
-export default CreateUser;
+export default EditDriver;
