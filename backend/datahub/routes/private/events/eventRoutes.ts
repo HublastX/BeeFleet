@@ -4,7 +4,9 @@ import { createEvent } from "../../../controllers/events/createEvent";
 import { getEvent } from "../../../controllers/events/getAllEvent";
 import { getAllEvents } from "../../../controllers/events/getAllEvent";
 import { putEvent } from "../../../controllers/events/putEvent";
+import { deleteEvent } from "../../../controllers/events/deleteEvent";
 import { authenticateManager } from "../../../middlewares/auth";
+
 const eventRoutes: Router = express.Router();
 
 eventRoutes.post(
@@ -47,6 +49,16 @@ eventRoutes.put(
         next: NextFunction
     ) => void,
     putEvent as (req: Request, res: Response) => void
+);
+
+eventRoutes.delete(
+    "/events/checkout/:id",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    deleteEvent as (req: Request, res: Response) => void
 );
 
 export default eventRoutes;
