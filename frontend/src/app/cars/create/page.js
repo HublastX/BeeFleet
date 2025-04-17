@@ -2,6 +2,7 @@
 import { useState } from "react";
 import Btn from "@/elements/btn";
 import useCar from "@/hooks/useCar";
+import InputText from "@/elements/inputText";
 
 function CreateCars() {
    const { createCar, carregando, erro } = useCar();
@@ -18,22 +19,23 @@ function CreateCars() {
    };
 
    return (
-      <div className="min-h-screen py-10 px-4 ">
-         <div className="max-w-3xl mx-auto p-8 rounded-lg shadow-md ">
-            <h2 className="text-3xl font-bold mb-6 text-white">
+      <div className="min-h-screen py-10 px-4">
+         <div className="max-w-3xl mx-auto p-8 rounded-lg shadow-md">
+            <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
                Cadastro de Veículo
             </h2>
             <form onSubmit={handleSubmit} className="space-y-6">
-               {erro && <p style={{ color: "red" }}>{erro}</p>}
+               {erro && (
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+                     {erro}
+                  </div>
+               )}
 
                <div>
-                  <label
-                     htmlFor="plate"
-                     className="block text-sm font-medium text-white"
-                  >
+                  <label htmlFor="plate" className="block text-sm font-medium text-dark dark:text-white mb-2">
                      Placa
                   </label>
-                  <input
+                  <InputText
                      type="text"
                      id="plate"
                      name="plate"
@@ -41,17 +43,14 @@ function CreateCars() {
                      onChange={(e) => setPlate(e.target.value)}
                      placeholder="Ex: ABC-1234"
                      required
-                     className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                </div>
+
                <div>
-                  <label
-                     htmlFor="model"
-                     className="block text-sm font-medium text-white"
-                  >
+                  <label htmlFor="model" className="block text-sm font-medium text-dark dark:text-white mb-2">
                      Modelo
                   </label>
-                  <input
+                  <InputText
                      type="text"
                      id="model"
                      name="model"
@@ -59,17 +58,14 @@ function CreateCars() {
                      onChange={(e) => setModel(e.target.value)}
                      placeholder="Ex: Toyota Corolla"
                      required
-                     className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                </div>
+
                <div>
-                  <label
-                     htmlFor="year"
-                     className="block text-sm font-medium text-white"
-                  >
+                  <label htmlFor="year" className="block text-sm font-medium text-dark dark:text-white mb-2">
                      Ano
                   </label>
-                  <input
+                  <InputText
                      type="number"
                      id="year"
                      name="year"
@@ -77,17 +73,14 @@ function CreateCars() {
                      onChange={(e) => setYear(e.target.value)}
                      placeholder="Ex: 2023"
                      required
-                     className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                </div>
+
                <div>
-                  <label
-                     htmlFor="color"
-                     className="block text-sm font-medium text-white"
-                  >
+                  <label htmlFor="color" className="block text-sm font-medium text-dark dark:text-white mb-2">
                      Cor
                   </label>
-                  <input
+                  <InputText
                      type="text"
                      id="color"
                      name="color"
@@ -95,17 +88,16 @@ function CreateCars() {
                      onChange={(e) => setColor(e.target.value)}
                      placeholder="Ex: Preto"
                      required
-                     className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                </div>
 
                <Btn
                   type="submit"
                   variant="primary"
+                  disabled={carregando}
                   className="w-full py-3 px-4 text-lg"
                >
-                  {" "}
-                  {carregando ? "criando..." : "Cadastrar Veículo"}
+                  {carregando ? "Cadastrando..." : "Cadastrar Veículo"}
                </Btn>
             </form>
          </div>
