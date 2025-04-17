@@ -92,13 +92,11 @@ function EditDriver({ params }) {
                </div>
 
                <div className="flex gap-4">
-                  <button
-                     type="button"
-                     onClick={() => router.back()}
-                     className="flex-[1] py-3 px-4 text-lg border border-red-400 bg-red-400 hover:bg-red-500 text-white rounded-lg transition-colors"
-                  >
-                     Cancelar
-                  </button>
+                  <Btn
+                    type="button" onClick={() => router.back()}
+                    texto="Cancelar"
+                    className="flex-[1] border border-red-400 bg-red-400 hover:bg-red-500"
+                  />
                   <Btn
                      type="submit"
                      variant="primary"
