@@ -172,7 +172,7 @@ export default function CarTable() {
                                     className="inline-block text-bee-yellow-500 hover:text-bee-yellow-700"
                                  >
                                     <Icon
-                                       strokeWidth={1.5}
+                                       strokeWidth={2}
                                        name="eye"
                                        className="w-8 h-8 mx-auto"
                                     />
@@ -186,7 +186,7 @@ export default function CarTable() {
                                     className="inline-block text-bee-alert-300 hover:text-bee-alert-400"
                                  >
                                     <Icon
-                                       strokeWidth={1.5}
+                                       strokeWidth={2}
                                        name="trash"
                                        className="w-8 h-8 mx-auto"
                                     />
