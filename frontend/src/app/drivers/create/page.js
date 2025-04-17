@@ -19,15 +19,15 @@ function CreateUser() {
    };
 
    return (
-      <div className="min-h-screen py-10 px-4">
-         <div className="max-w-3xl mx-auto p-8 rounded-lg shadow-md">
+      <div>
+         <div className="max-w-3xl mx-auto">
             <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
                Cadastrar Motorista
             </h2>
             {erro && <p style={{ color: "red" }}>{erro}</p>}
             <form onSubmit={handleSubmit} className="space-y-6">
                <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium mb-2">
                      Nome
                   </label>
                   <InputText
@@ -40,7 +40,7 @@ function CreateUser() {
                   />
                </div>
                <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium mb-2">
                      Número de Telefone
                   </label>
                   <InputText
@@ -53,7 +53,7 @@ function CreateUser() {
                   />
                </div>
                <div>
-                  <label className="block text-sm font-medium text-white mb-2">
+                  <label className="block text-sm font-medium  mb-2">
                      Licença de Motorista
                   </label>
                   <InputText
@@ -65,15 +65,24 @@ function CreateUser() {
 
                   />
                </div>
-               <Btn
-                  type="submit"
-                  texto="Cadastrar"
-                  variant="primary"
-                  disabled={carregando}
-                  className="w-full py-3 px-4 text-lg"
-               >
-                  {carregando ? "criando..." : ""}
-               </Btn>
+               <div className="flex gap-4">
+                  <button
+                     type="button"
+                     onClick={() => router.back()}
+                     className="flex-1 py-3 px-4 text-lg border border-red-600 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
+                  >
+                     Cancelar
+                  </button>
+                  <Btn
+                     type="submit"
+                     texto="Cadastrar"
+                     variant="primary"
+                     disabled={carregando}
+                     className="flex-1 py-3 px-4 text-lg"
+                  >
+                     {carregando ? "criando..." : ""}
+                  </Btn>
+               </div>
             </form>
          </div>
       </div>
