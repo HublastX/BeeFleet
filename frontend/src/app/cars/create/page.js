@@ -110,21 +110,23 @@ function CreateCars() {
                </div>
 
                <div className="flex gap-4">
-                  <button
-                     type="button"
-                     onClick={() => router.back()}
-                     className="flex-1 py-3 px-4 text-lg border border-red-600 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-                  >
-                     Cancelar
-                  </button>
-                  <Btn
-                     type="submit"
-                     variant="primary"
-                     disabled={carregando}
-                     className="flex-1 py-3 px-4 text-lg"
-                  >
-                     {carregando ? "Cadastrando..." : "Cadastrar Veículo"}
-                  </Btn>
+                  <div className="w-full flex gap-4">
+                     <button
+                        type="button"
+                        onClick={() => router.back()}
+                        className="flex-[1] py-3 px-4 text-lg border border-red-400 bg-red-400 hover:bg-red-500 text-white rounded-lg transition-colors"
+                     >
+                        Cancelar
+                     </button>
+                     <Btn
+                        type="submit"
+                        variant="primary"
+                        disabled={carregando}
+                        className="flex-[2] py-3 px-4 text-lg"
+                     >
+                        {carregando ? "Cadastrando..." : "Cadastrar Veículo"}
+                     </Btn>
+                  </div>
                </div>
             </form>
          </div>

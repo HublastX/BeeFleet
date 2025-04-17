@@ -29,7 +29,7 @@ function EditProfile() {
 
    return (
       <div className="min-h-screenpy-8">
-         <div className="max-w-2xl mx-auto rounded-lg shadow-md p-8">
+         <div className="max-w-2xl mx-auto">
             <h1 className="text-3xl font-bold text-dark dark:text-white mb-8">
                Editar Perfil
             </h1>
@@ -137,16 +137,18 @@ function EditProfile() {
                </div>
 
                <div className="flex gap-4">
-                  <button
-                     type="button"
-                     onClick={() => router.back()}
-                     className="flex-1 px-4 py-2 border border-red-600 bg-red-600 hover:bg-red-700 text-white rounded-lg transition-colors"
-                  >
-                     Cancelar
-                  </button>
-                  <Btn type="submit" disabled={carregando} className="flex-1">
-                     {carregando ? "Salvando..." : "Salvar Alterações"}
-                  </Btn>
+                  <div className="w-full flex gap-4">
+                     <button
+                        type="button"
+                        onClick={() => router.back()}
+                        className="flex-[1] px-4 py-2 border border-red-400 bg-red-400 hover:bg-red-500 text-white rounded-lg transition-colors"
+                     >
+                        Cancelar
+                     </button>
+                     <Btn type="submit" disabled={carregando} className="flex-[2]">
+                        {carregando ? "Salvando..." : "Salvar Alterações"}
+                     </Btn>
+                  </div>
                </div>
             </form>
          </div>
