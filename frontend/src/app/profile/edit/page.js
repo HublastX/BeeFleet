@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import useAuth from "@/hooks/useAuth";
 import Btn from "../../../elements/btn";
-import InputText from "../../../elements/inputText"; // Adicione este import
+import InputText from "../../../elements/inputText"; 
 
 function EditProfile() {
    const router = useRouter();
