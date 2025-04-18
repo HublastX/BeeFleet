@@ -72,7 +72,7 @@ export default function useCar() {
    };
 
    // Criar carro
-   const createCar = async (plate, model, year, color) => {
+   const createCar = async (plate, model, year, color, odometer) => {
       if (!gestor?.id) {
          setErro("ID do gestor não encontrado.");
          return;
@@ -95,6 +95,7 @@ export default function useCar() {
                   model,
                   year: parseInt(year),
                   color,
+                  odometer,
                   status: "AVAILABLE",
                   managerId: gestor.id,
                }),
@@ -118,7 +119,7 @@ export default function useCar() {
    };
    
    // Atualizar carro
-   const updateCar = async (id, plate, model, year, color) => {
+   const updateCar = async (id, {plate, model, year, color, odometer, image}) => {
       if (!gestor?.token) {
          setErro("token do gestor não encontrado.");
          return;
@@ -128,20 +129,22 @@ export default function useCar() {
       setErro(null);
 
       try {
+         const formData = new FormData();
+         if(plate !== undefined) formData.append("plate", plate);
+         if(model !== undefined) formData.append("model", model);
+         if(year !== undefined) formData.append("year", year);
+         if(color !== undefined) formData.append("color", color);
+         if(odometer !== undefined) formData.append("odometer", odometer);
+         if(image !== undefined) formData.append("image", image);
+
          const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`,
             {
                method: "PUT",
                headers: {
-                  "Content-Type": "application/json",
                   Authorization: `Bearer ${gestor.token}`,
                },
-               body: JSON.stringify({
-                  plate,
-                  model,
-                  year: parseInt(year),
-                  color,
-               }),
+               body: formData,
             }
          );
 
@@ -149,9 +152,9 @@ export default function useCar() {
             throw new Error("Erro ao atualizar carro. Tente novamente.");
 
          const data = await res.json();
-         if (data && !data.error) {
+         if (data.success && data.data) {
             setCarro((prev) =>
-               prev.map((car) => (car.id === id ? data.car : car))
+               prev.map((car) => (car.id === id ? data.data : car))
             );
             router.push("/cars");
          } else {

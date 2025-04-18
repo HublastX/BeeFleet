@@ -100,11 +100,15 @@ export default function useDrivers() {
 
          if (!res.ok)
             throw new Error("Erro ao criar motorista. Tente novamente.");
+         if (res.status === 409) {
+            alert("Motorista já existe!");
+            return;
+         }
 
          const data = await res.json();
-         if (data.driver) {
+         if (data && !data.err){
             setMotoristas((prev) => [...prev, data.driver]);
-            router.push("/driverPage");
+            router.push("/drivers");
          } else {
             setErro(data.error || "Erro ao criar motorista. Tente novamente.");
          }
@@ -116,9 +120,9 @@ export default function useDrivers() {
    };
 
    // Atualizar Motorista
-   const updateDriver = async (id, name, phone, license) => {
+   const updateDriver = async (id, { name, phone, license, image }) => {
       if (!gestor?.token) {
-         setErro("token do gestor não encontrado.");
+         setErro("Token do gestor não encontrado.");
          return;
       }
 
@@ -126,29 +130,29 @@ export default function useDrivers() {
       setErro(null);
 
       try {
+         const formData = new FormData();
+         if (name !== undefined) formData.append("name", name);
+         if (phone !== undefined) formData.append("phone", phone);
+         if (license !== undefined) formData.append("license", license);
+         if (image !== undefined) formData.append("image", image);
+
          const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/${id}`,
             {
                method: "PUT",
                headers: {
-                  "Content-Type": "application/json",
                   Authorization: `Bearer ${gestor.token}`,
                },
-               body: JSON.stringify({
-                  name,
-                  phone,
-                  license,
-               }),
+               body: formData,
             }
          );
 
-         if (!res.ok)
-            throw new Error("Erro ao atualizar motorista. Tente novamente.");
+         if (!res.ok) throw new Error("Erro ao atualizar motorista. Tente novamente.");
 
          const data = await res.json();
-         if (data && !data.error) {
+         if (data.success && data.data) {
             setMotoristas((prev) =>
-               prev.map((driver) => (driver.id === id ? data.driver : driver))
+               prev.map((driver) => (driver.id === id ? data.data : driver))
             );
             router.push("/drivers");
          } else {
@@ -201,6 +205,6 @@ export default function useDrivers() {
       createDriver,
       deleteDriver,
       getDriver,
-      updateDriver
+      updateDriver,
    };
 }
