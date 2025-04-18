@@ -21,6 +21,8 @@ export default function CarTable() {
    const CarrosOrdenados = (() => {
       let copia = [...carro];
 
+      copia.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
       if (ordenarPorStatus) {
          copia.sort((a, b) => b.isAvailable - a.isAvailable);
       }
@@ -42,7 +44,7 @@ export default function CarTable() {
    );
 
    return (
-      <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-white dark:border-bee-dark-400 dark:bg-bee-dark-800">
+      <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
          {carregando && (
             <div className="p-4">
                <TableSkeleton />
