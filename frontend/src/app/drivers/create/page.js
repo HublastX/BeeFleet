@@ -1,21 +1,23 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import withAuth from "@/utils/withAuth";
 import Btn from "../../../elements/btn";
 import InputText from "../../../elements/inputText";
-import { useRouter } from "next/navigation";
 import useDrivers from "@/hooks/useDrivers";
 
 function CreateUser() {
    const [name, setName] = useState("");
    const [phone, setPhone] = useState("");
    const [license, setLicense] = useState("");
+   const [image, setImage] = useState(null);
    const { createDriver, carregando, erro } = useDrivers();
    const router = useRouter();
 
    const handleSubmit = async (e) => {
       e.preventDefault();
-      await createDriver(name, phone, license);
-      console.log({ name, phone, license });
+      await createDriver(name, phone, license, image);
+      console.log({ name, phone, license, image });
    };
 
    return (
@@ -33,7 +35,6 @@ function CreateUser() {
                   <InputText
                      type="text"
                      name="name"
-                     value={name}
                      onChange={(e) => setName(e.target.value)}
                      placeholder="Ex: Carlos Silva"
 
@@ -46,7 +47,6 @@ function CreateUser() {
                   <InputText
                      type="tel"
                      name="phone"
-                     value={phone}
                      onChange={(e) => setPhone(e.target.value)}
                      placeholder="Ex: (11) 91234-5678"
 
@@ -59,7 +59,6 @@ function CreateUser() {
                   <InputText
                      type="text"
                      name="license"
-                     value={license}
                      onChange={(e) => setLicense(e.target.value)}
                      placeholder="Ex: 123456789"
 
@@ -73,7 +72,7 @@ function CreateUser() {
                      type="file"
                      name="photo"
                      accept="image/*"
-                     onChange={(e) => setPhoto(e.target.files[0])}
+                     onChange={(e) => setImage(e.target.files[0])}
                      className="file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark"
                   />
                </div>
@@ -101,4 +100,4 @@ function CreateUser() {
    );
 }
 
-export default CreateUser;
+export default withAuth(CreateUser);
