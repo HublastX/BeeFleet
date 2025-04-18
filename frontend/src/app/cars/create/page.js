@@ -5,7 +5,7 @@ import withAuth from "@/utils/withAuth";
 import Btn from "@/elements/btn";
 import useCar from "@/hooks/useCar";
 import InputText from "@/elements/inputText";
-import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton ";
+import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
 
 function CreateCars() {
    const { createCar, carregando, erro } = useCar();

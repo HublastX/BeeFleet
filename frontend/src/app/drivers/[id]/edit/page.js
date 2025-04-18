@@ -7,7 +7,7 @@ import withAuth from "@/utils/withAuth";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Icon from "@/elements/Icon";
-import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton ";
+import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
 
 function EditDriver() {
    const { motoristas, carregando, erro, updateDriver } = useDrivers();

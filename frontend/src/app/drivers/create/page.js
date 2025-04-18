@@ -5,7 +5,7 @@ import withAuth from "@/utils/withAuth";
 import Btn from "../../../elements/btn";
 import InputText from "../../../elements/inputText";
 import useDrivers from "@/hooks/useDrivers";
-import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton ";
+import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
 
 function CreateUser() {
    const [name, setName] = useState("");
