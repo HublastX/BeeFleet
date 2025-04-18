@@ -1,9 +1,10 @@
 "use client";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import withAuth from "@/utils/withAuth";
 import Btn from "@/elements/btn";
 import useCar from "@/hooks/useCar";
 import InputText from "@/elements/inputText";
-import { useRouter } from "next/navigation";
 
 function CreateCars() {
    const { createCar, carregando, erro } = useCar();
@@ -134,4 +135,4 @@ function CreateCars() {
    );
 }
 
-export default CreateCars;
+export default withAuth(CreateCars);
