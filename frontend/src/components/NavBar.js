@@ -68,7 +68,7 @@ const NavBar = () => {
                              openSubmenu?.type === menuType &&
                              openSubmenu?.index === index
                                 ? " dark:text-bee-yellow-600 text-bee-yellow-700 bg-bee-yellow-100"
-                                : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
+                                : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
                           } ${
                              !isExpanded && !isHovered
                                 ? "lg:justify-center"
@@ -101,7 +101,7 @@ const NavBar = () => {
                         className={`menu-item group ${
                            isActive(nav.path)
                               ? " dark:text-bee-yellow-600 text-bee-yellow-700 bg-bee-yellow-100"
-                              : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
+                              : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
                         } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                         onClick={(e) => {
                            if (!gestor) e.preventDefault();
@@ -137,7 +137,7 @@ const NavBar = () => {
                                  className={`menu-dropdown-item ${
                                     isActive(subItem.path)
                                        ? " bg-bee-yellow-100 text-bee-yellow-600"
-                                       : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-600"
+                                       : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
                                  } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                                  onClick={(e) => {
                                     if (!gestor) e.preventDefault();
