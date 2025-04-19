@@ -113,11 +113,11 @@ export default function UserTable() {
                      </TableHeader>
 
                      {/* Table Body */}
-                     <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
+                     <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400">
                         {currentDrivers.map((motorista) => (
                            <TableRow
                               key={motorista.id}
-                              className="hover:bg-bee-alert-500 hover:dark:bg-bee-dark-400"
+                              className="hover:bg-bee-alert-500 hover:dark:bg-bee-alert-600"
                            >
                               <TableCell className="block md:hidden px-5 py-4 text-start">
                                  <div className="flex items-center gap-3">
@@ -144,18 +144,18 @@ export default function UserTable() {
                                        <Icon name="UserCircle" />
                                     </div>
                                     <div>
-                                       <span className="block font-medium text-bee-dark-600 text-theme-sm dark:text-bee-dark-100">
+                                       <span className="block font-medium text-bee-dark-600 text-theme-sm dark:text-bee-alert-500">
                                           {motorista.name}
                                        </span>
                                     </div>
                                  </div>
                               </TableCell>
 
-                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start font-bold dark:text-bee-dark-100">
+                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start font-bold dark:text-bee-alert-500">
                                  {motorista.phone}
                               </TableCell>
 
-                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-c font-bold dark:text-bee-dark-100">
+                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-c font-bold dark:text-bee-alert-500">
                                  <Badge
                                     size="sm"
                                     color={
