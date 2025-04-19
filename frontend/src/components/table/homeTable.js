@@ -90,14 +90,14 @@ export default function RecentEvent() {
                   </TableCell>
                   <TableCell
                      isHeader
-                     className="py-3 text-right font-medium w-auto text-gray-500  dark:text-gray-400"
+                     className="py-3 text-center font-medium w-auto text-gray-500  dark:text-gray-400"
                   >
                      Status
                   </TableCell>
                </TableRow>
             </TableHeader>
 
-            <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05] text-bee-dark-600 dark:text-bee-alert-500">
+            <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
                {tableData.map((product) => (
                   <TableRow key={product.id} className="">
                      <TableCell className="py-3">
@@ -121,7 +121,7 @@ export default function RecentEvent() {
                         </div>
                      </TableCell>
                      <TableCell className="py-3 hidden md:block">{product.data}</TableCell>
-                     <TableCell className="py-3 text-right border-l border-bee-dark-300 dark:border-bee-dark-400">
+                     <TableCell className="py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
                         <Badge
                            size="sm"
                            color={

@@ -25,20 +25,19 @@ function CreateCars() {
 
    return (
       <div>
-         {carregando ? (
-            <FormSkeleton />
-         ) : (
+         {carregando && <FormSkeleton />}
+         {erro && (
+            <div>
+               <h1 className="text-bee-alert-300 mb-5"> Erro: {erro} </h1>
+               <FormSkeleton />
+            </div>
+         )}
+         {!carregando && !erro && (
             <div className="max-w-3xl mx-auto">
                <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
                   Cadastro de Veículo
                </h2>
                <form onSubmit={handleSubmit} className="space-y-6">
-                  {erro && (
-                     <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-                        {erro}
-                     </div>
-                  )}
-
                   <div>
                      <label
                         htmlFor="plate"

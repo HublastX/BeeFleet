@@ -38,10 +38,14 @@ function EditCars() {
 
    return (
       <div className="w-full">
-         {erro && <div className="text-red-500">{erro}</div>}
-         {carregando ? (
-            <FormSkeleton />
-         ) : (
+         {carregando && <FormSkeleton />}
+         {erro && (
+            <div>
+               <h1 className="text-bee-alert-300 mb-5"> Erro: {erro} </h1>
+               <FormSkeleton />
+            </div>
+         )}
+         {!carregando && !erro && (
             <>
                <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
                   Editar Veículo

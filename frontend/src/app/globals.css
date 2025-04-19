@@ -5,8 +5,8 @@
 @tailwind utilities;
 
 :root {
-   --background: #fff;
-   --foreground: #171717;
+   --background: #fdfdfd;
+   --foreground: #2E2E2F;
    --spacing: 0.25rem;
    --radius-lg: 0.5rem;
    --text-theme-sm--line-height: 20px;
@@ -24,8 +24,8 @@
 
 @media (prefers-color-scheme: dark) {
    :root {
-      --background: #13171d;
-      --foreground: #ededed;
+      --background: #19202d;
+      --foreground: #F0F0F0;
    }
 }
 

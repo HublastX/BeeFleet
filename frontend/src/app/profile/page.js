@@ -15,7 +15,7 @@ function Manager() {
   return (
     <div className="p-4 space-y-6">
       {/* Perfil */}
-      <div className="flex items-center gap-6 bg-white dark:bg-bee-dark-400 p-6 rounded-lg shadow-theme-lg">
+      <div className="flex items-center gap-6 p-6 rounded-lg shadow-theme-lg">
         <div className="flex-shrink-0">
           {!image ? (
             <Icon name="UserCircle" className="w-24 h-24 text-gray-400" />
@@ -46,16 +46,16 @@ function Manager() {
 
       {/* Estatísticas */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-        <div className="p-6 bg-white dark:bg-bee-dark-400 rounded-lg shadow-theme-lg">
+        <div className="p-6  rounded-lg shadow-theme-lg">
           <h2 className="text-lg font-semibold mb-2">Total de motoristas adicionados</h2>
           <p className="text-4xl font-black text-bee-yellow-700">100</p>
         </div>
 
-        <div className="p-6 bg-white dark:bg-bee-dark-400 rounded-lg shadow-theme-lg">
+        <div className="p-6 rounded-lg shadow-theme-lg">
           <h2 className="text-lg font-semibold mb-2">Total de carros adicionados</h2>
           <p className="text-4xl font-black text-bee-yellow-700">50</p>
         </div>
-        <div className="p-6 bg-white dark:bg-bee-dark-400 rounded-lg shadow-theme-lg">
+        <div className="p-6 rounded-lg shadow-theme-lg">
           <h2 className="text-lg font-semibold mb-2">Total de eventos finalizados</h2>
           <p className="text-4xl font-black text-bee-yellow-700">60</p>
         </div>

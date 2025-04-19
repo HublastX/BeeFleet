@@ -23,14 +23,18 @@ function CreateUser() {
 
    return (
       <div>
-         {carregando ? (
-            <FormSkeleton />
-         ) : (
+         {carregando && <FormSkeleton />}
+         {erro && (
+            <div>
+               <h1 className="text-bee-alert-300 mb-5"> Erro: {erro} </h1>
+               <FormSkeleton />
+            </div>
+         )}
+         {!carregando && !erro && (
             <div className="max-w-3xl mx-auto">
                <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
                   Cadastrar Motorista
                </h2>
-               {erro && <p style={{ color: "red" }}>{erro}</p>}
                <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                      <label className="block text-sm font-medium mb-2">
