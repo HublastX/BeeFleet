@@ -50,19 +50,19 @@ export default function UserDropdown() {
          <Dropdown
             isOpen={isOpen}
             onClose={closeDropdown}
-            className="absolute min-w-60 px-5 right-0 mt-[17px] mr-[-15px] flex flex-col rounded-b-2xl rounded-t-none border border-bee-dark-300 bg-white p-3 shadow-theme-lg dark:border-bee-dark-600 dark:bg-bee-dark-400"
+            className="absolute min-w-60 px-5 right-0 mt-[18px] mr-[-15px] flex flex-col rounded-b-2xl rounded-t-none border border-bee-dark-300 bg-bee-dark-100 p-3 shadow-theme-lg dark:border-bee-dark-400 dark:bg-bee-dark-800"
          >
-            <div className="dark:text-white text-bee-dark-600">
+            <div className="dark:text-bee-alert-500 text-bee-dark-600">
                <span className="block font-medium">{gestor.name}</span>
                <span className="mt-0.5 block text-theme-xs">{gestor.email}</span>
             </div>
-            <ul className="flex flex-col gap-1 pt-4 pb-3 border-b border-bee-dark-300 dark:border-bee-dark-800">
+            <ul className="flex flex-col gap-1 pt-4 pb-3 border-b border-bee-dark-300 dark:border-bee-dark-400">
                <li>
                   <DropdownItem
                      onItemClick={closeDropdown}
                      tag="a"
                      href="/profile"
-                     className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-600 dark:text-white dark:hover:bg-bee-alert-600"
+                     className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
                   >
                      <Icon
                         name="UserCircle"
@@ -75,7 +75,7 @@ export default function UserDropdown() {
             </ul>
             <button
                onClick={() => logout()} 
-               className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-600 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
+               className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
             >
                <Icon name="sair" className="w-6 h-6" strokeWidth={1.5} />
                Sair
