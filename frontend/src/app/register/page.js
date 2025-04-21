@@ -5,20 +5,22 @@ import InputText from "../../elements/inputText";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import useAuth from "@/hooks/useAuth";
 
 function Register() {
    const [show, setShow] = useState(false);
+   const { register, carregando, erro } = useAuth();
    const [name, setName] = useState("");
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const [confirmPassword, setConfirmPassword] = useState("");
-   const [erro, setErro] = useState(null);
-   const [carregando, setCarregando] = useState(false);
+   const [errors, setErrors] = useState({});
    const router = useRouter();
 
    useEffect(() => {
       setTimeout(() => setShow(true), 10);
    }, []);
+
    useEffect(() => {
       const handleKeyDown = (e) => {
          if (e.key === "Escape") {
@@ -32,58 +34,56 @@ function Register() {
 
    const handleSubmit = async (e) => {
       e.preventDefault();
-      setCarregando(true);
-      setErro(null);
+      setErrors({});
+      const newErrors = {};
+
+      if (name.trim().split(" ").length < 2) {
+         newErrors.name = "O nome deve conter pelo menos duas palavras.";
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+         newErrors.email = "Email inválido.";
+      }
+
+      if (password.length < 8) {
+         newErrors.password = "A senha deve conter no mínimo 8 caracteres.";
+      }
 
       if (password !== confirmPassword) {
-         setErro("As senhas não coincidem.");
-         setCarregando(false);
-         return;
+         newErrors.confirmPassword = "As senhas não coincidem.";
       }
 
-      try {
-         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/managers/create`,
-            {
-               method: "POST",
-               headers: {
-                  "Content-Type": "application/json",
-               },
-               body: JSON.stringify({ name, email, password }),
-            }
-         );
+      setErrors(newErrors);
 
-         const data = await res.json();
+      if (Object.keys(newErrors).length > 0) return;
 
-         if (res.ok) {
-            router.push("/login");
-         } else {
-            setErro(data.error || "Erro ao registrar. Tente novamente.");
-         }
-      } catch (error) {
-         setErro("Erro ao conectar ao servidor. Tente novamente.");
-      } finally {
-         setCarregando(false);
-      }
+      await register(name, email, password);
    };
 
    return (
       <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-50 backdrop-blur-sm">
          <div
-            className={`relative bg-bee-dark-100 rounded-lg shadow-sm dark:bg-bee-dark-400 text-bee-dark-600 dark:text-white p-8 w-96 md:w-[36rem] lg:w-[38rem] transform transition-all duration-300 ease-out ${show ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+            className={`relative bg-bee-dark-100 rounded-lg shadow-sm dark:bg-bee-dark-400 text-bee-dark-600 dark:text-white p-8 w-96 md:w-[36rem] lg:w-[38rem] transform transition-all duration-300 ease-out ${
+               show ? "opacity-100 scale-100" : "opacity-0 scale-95"
+            }`}
          >
             {/* header */}
             <div className="flex items-center justify-between border-b pb-3">
                <h3 className="text-xl font-semibold">Registro</h3>
-               <Link href="/">
-                  <button className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                     <Icon name="xMark" />
-                  </button>
-               </Link>
+               <button
+                  onClick={() => {
+                     setShow(false);
+                     router.push("/");
+                  }}
+                  className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+               >
+                  <Icon name="xMark" />
+               </button>
             </div>
 
+            {erro && <p className="text-sm text-red-500 mt-2">{erro}</p>}
+
             {/* formulário */}
-            {erro && <p style={{ color: "red" }}>{erro}</p>}
             <div className="mt-5">
                <form
                   className="space-y-4 text-sm font-medium"
@@ -103,8 +103,14 @@ function Register() {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         autoComplete="off"
+                        className={errors.name ? "border-red-500 dark:border-red-500" : ""}
                         required
                      />
+                     {errors.name && (
+                        <p className="text-sm text-red-500 mt-1">
+                           {errors.name}
+                        </p>
+                     )}
                   </div>
                   <div>
                      <label htmlFor="email" className="block mb-2">
@@ -116,12 +122,18 @@ function Register() {
                         type="email"
                         name="email"
                         id="email"
-                        placeholder="Ex: exemploemail@email.com"
+                        placeholder="Ex: exemplo@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         autoComplete="off"
+                        className={errors.email ? "border-red-500 dark:border-red-500" : ""}
                         required
                      />
+                     {errors.email && (
+                        <p className="text-sm text-red-500 mt-1">
+                           {errors.email}
+                        </p>
+                     )}
                   </div>
                   <div>
                      <label htmlFor="password" className="block mb-2">
@@ -137,8 +149,14 @@ function Register() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         autoComplete="new-password"
+                        className={errors.password ? "border-red-500 dark:border-red-500" : ""}
                         required
                      />
+                     {errors.password && (
+                        <p className="text-sm text-red-500 mt-1">
+                           {errors.password}
+                        </p>
+                     )}
                   </div>
                   <div>
                      <label htmlFor="confirm-password" className="block mb-2">
@@ -154,8 +172,16 @@ function Register() {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         autoComplete="new-password"
+                        className={
+                           errors.confirmPassword ? "border-red-500 dark:border-red-500" : ""
+                        }
                         required
                      />
+                     {errors.confirmPassword && (
+                        <p className="text-sm text-red-500 mt-1">
+                           {errors.confirmPassword}
+                        </p>
+                     )}
                   </div>
                   <Btn
                      variant="primary"
