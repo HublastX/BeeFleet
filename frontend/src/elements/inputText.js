@@ -12,7 +12,7 @@ const InputText = ({ placeholder, className, name, type, variant, icon, value, o
          <input
             type={type}
             placeholder={placeholder}
-            className={`bg-white border rounded-lg outline-0 font-normal border-bee-dark-300 text-bee-dark-600 text-md block w-full p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400 dark:text-white dark:focus:ring-bee-purple-400 dark:focus:border-bee-purple-400 autofill:bg-white dark:autofill:bg-bee-dark-800 dark:autofill:text-white ${
+            className={`bg-white border rounded-lg outline-0 font-normal border-bee-dark-300 text-bee-dark-600 text-md block w-full p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400 dark:text-white focus:ring-bee-purple-400 focus:border-bee-purple-400 autofill:bg-white dark:autofill:bg-bee-dark-800 dark:autofill:text-white ${
                variant === "withIcon" ? "pl-10" : ""
             } ${className}`}
             name={name}
