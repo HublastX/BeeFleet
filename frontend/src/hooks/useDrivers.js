@@ -7,6 +7,7 @@ export default function useDrivers() {
    const [motoristas, setMotoristas] = useState([]);
    const [carregando, setCarregando] = useState(true);
    const [erro, setErro] = useState(null);
+   const [erro500, setErro500] = useState(false);
    const router = useRouter();
 
    // Buscar motoristas
@@ -25,7 +26,10 @@ export default function useDrivers() {
                }
             );
 
-            if (!res.ok) throw new Error("Erro ao buscar motoristas");
+            if (!res.ok) {
+               if (res.status === 500) setErro500(true);
+               throw new Error("Erro ao buscar motoristas");
+            }            
 
             const data = await res.json();
             setMotoristas(data.data);
