@@ -1,4 +1,5 @@
 "use client";
+import Toast from '@/elements/toast/ Toast';
 import Btn from "@/elements/btn";
 import Link from "next/link";
 import Card from "@/elements/card";
@@ -14,6 +15,12 @@ function Home() {
 
    return (
       <>
+         <Toast
+            message="⚠️ Área restrita"
+            description="Faça login para acessar outras funcionalidades."
+            type="warning"
+         />
+
          {!gestor ? (
             <div className="flex flex-col items-center justify-center gap-4">
                <p className="text-xl font-bold text-red-500 flex items-center gap-2">
@@ -22,9 +29,10 @@ function Home() {
                <p className="text-gray-600 dark:text-gray-100 text-center">
                   Para acessar, realize o login!
                </p>
-               <Link href="/login">
-                  <Btn>Fazer Login</Btn>
-               </Link>
+               <Link href="/login" id="login-btn">
+                <Btn>Fazer Login</Btn>
+                </Link>
+
             </div>
          ) : (
             <div className="grid grid-cols-12 gap-4 md:gap-6">
