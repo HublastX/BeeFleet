@@ -75,6 +75,7 @@ function CreateUser() {
                      </label>
                      <InputText
                         type="file"
+                        variant="file"
                         name="photo"
                         accept="image/*"
                         onChange={(e) => setImage(e.target.files[0])}
