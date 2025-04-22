@@ -134,10 +134,10 @@ function CreateCars() {
                      </label>
                      <InputText
                         type="file"
+                        variant="file"
                         name="photo"
                         accept="image/*"
                         onChange={(e) => setImage(e.target.files[0])}
-                        className="file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark"
                      />
                   </div>
                   

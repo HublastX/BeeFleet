@@ -34,6 +34,13 @@ function EditCars() {
          });
       }
    }, [carro, id]);
+   let imageSrc;
+
+   if (formData.image && typeof formData.image !== "string") {
+      imageSrc = URL.createObjectURL(formData.image);
+   } else {
+      imageSrc = formData.image !== "null" ? formData.image : null;
+   }
    console.log("FormData", formData);
 
    return (
@@ -50,7 +57,7 @@ function EditCars() {
                <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
                   Editar Veículo
                </h2>
-               <div className="flex flex-col-reverse md:flex-row justify-between w-full">
+               <div className="flex flex-col-reverse md:flex-row justify-between gap-10 w-full">
                   <form
                      onSubmit={(e) => {
                         e.preventDefault();
@@ -66,7 +73,7 @@ function EditCars() {
                            console.error("Campos obrigatórios não preenchidos");
                         }
                      }}
-                     className="space-y-6 md:w-3/4"
+                     className="space-y-6 w-full"
                   >
                      <div>
                         <label
@@ -187,6 +194,7 @@ function EditCars() {
                            type="file"
                            name="image"
                            accept="image/*"
+                           variant="file"
                            onChange={(e) => {
                               const file = e.target.files[0];
                               if (file) {
@@ -196,7 +204,6 @@ function EditCars() {
                                  }));
                               }
                            }}
-                           className="file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark"
                         />
                      </div>
 
@@ -219,26 +226,17 @@ function EditCars() {
                         </div>
                      </div>
                   </form>
-                  <div className="hidden md:flex sticky mb-6 md:mb-0 md:flex-col md:w-1/5 h-fit border font-bold bg-bee-dark-100 border-bee-dark-300 dark:bg-gray-800 dark:border-gray-500 p-4 rounded-lg">
+                  <div className="hidden sticky md:flex md:flex-col min-w-65 h-fit border font-bold bg-bee-dark-100 border-bee-dark-300 dark:bg-gray-800 dark:border-gray-500 p-4 rounded-lg">
                      <div className="flex justify-center items-center md:mb-4 bg-bee-purple-200 rounded-md p-3">
-                        {formData.image != "null" ? (
-                           typeof formData.image === "string" ? (
-                              <Image
-                                 src={formData.image}
-                                 alt="Imagem do carro"
-                                 width={128}
-                                 height={128}
-                                 className="w-32 h-32 rounded-full object-cover"
-                              />
-                           ) : (
-                              <Image
-                                 src={formData.image}
-                                 alt="Nova imagem do carro"
-                                 width={128}
-                                 height={128}
-                                 className="w-32 h-32 rounded-full object-cover"
-                              />
-                           )
+                        {imageSrc ? (
+                           <Image
+                              src={imageSrc}
+                              alt="Imagem do Carro"
+                              width={128}
+                              height={128}
+                              unoptimized
+                              className="w-32 h-32 rounded-full object-cover"
+                           />
                         ) : (
                            <Icon name="truck" className="size-32 text-white" />
                         )}
