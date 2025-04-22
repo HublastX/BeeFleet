@@ -14,7 +14,7 @@ const InputText = ({ placeholder, className, name, type, variant, icon, value, o
             placeholder={placeholder}
             className={`bg-white border rounded-lg outline-0 font-normal border-bee-dark-300 text-bee-dark-600 text-md block w-full p-2.5 dark:bg-gray-800 dark:border-gray-500 dark:placeholder:text-gray-400 dark:text-white focus:ring-bee-purple-400 focus:border-bee-purple-400 autofill:bg-white dark:autofill:bg-bee-dark-800 dark:autofill:text-white ${
                variant === "withIcon" ? "pl-10" : ""
-            } ${className}`}
+            } ${variant === "file" ? "file:mr-4 file:py-2 file:px-4 file:text-sm file:font-medium" : ""} ${className}`}
             name={name}
             value={value}
             onChange={onChange}
