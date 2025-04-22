@@ -4,6 +4,7 @@ import "./globals.css";
 import { useNavBar } from "@/components/navbar/navBarContext";
 import { NavBarProvider } from "@/components/navbar/navBarContext";
 import { metadata } from "./metadata";
+import { ToastProvider } from "@/utils/ToastContext";
 
 // componentes
 import Header from "../components/Header";
@@ -17,6 +18,7 @@ const karla = Karla({
 
 export default function RootLayout({ children }) {
    return (
+      <ToastProvider>
       <NavBarProvider>
          <html lang="pt-br">
             <head>
@@ -31,10 +33,13 @@ export default function RootLayout({ children }) {
                   <NavBar />
                </div>
 
-               <MainContent>{children}</MainContent>
+               <MainContent>
+                  {children}
+               </MainContent>
             </body>
          </html>
       </NavBarProvider>
+      </ToastProvider>
    );
 }
 
