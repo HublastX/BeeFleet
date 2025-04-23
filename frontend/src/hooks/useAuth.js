@@ -54,7 +54,7 @@ export default function useAuth() {
                name: data.manager.name,
                email: data.manager.email,
                token: data.token,
-               image: data.manager.image,
+               image: `${API_URL}api${data.manager.image}`,
             });
 
             localStorage.setItem(
@@ -74,7 +74,7 @@ export default function useAuth() {
    };
 
    // Registro
-   const register = async (name, email, password) => {
+   const register = async (name, email, password, image) => {
       setCarregando(true);
       setErro(null);
 
@@ -90,10 +90,15 @@ export default function useAuth() {
       }
 
       try {
+         const formData = new FormData();
+         formData.append("name", name);
+         formData.append("email", email);
+         formData.append("password", password);
+         formData.append("image", image);
+   
          const res = await fetch(`${API_URL}/api/managers/create`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password }),
+            body: formData,
          });
 
          if (!res.ok)
@@ -178,12 +183,13 @@ export default function useAuth() {
          const name = localStorage.getItem("name");
          const email = localStorage.getItem("email");
          let image = localStorage.getItem("image");
-
          if (image === "null" || image === "") image = null;
-
+         else image = `${API_URL}/api${image}`;
+         
          if (token && id && name && email) {
             return { id, name, email, token, image };
          }
+         
          return null;
       };
 
@@ -221,7 +227,7 @@ export default function useAuth() {
             const data = await res.json();
             setGestores(data.data);
          } catch (err) {
-            handleError(err, "Erro ao conectar ao servidor.", "warning");
+            handleError("Erro ao conectar ao servidor.", "warning");
          } finally {
             setCarregando(false);
          }

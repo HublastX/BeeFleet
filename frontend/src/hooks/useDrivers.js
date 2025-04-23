@@ -7,7 +7,6 @@ export default function useDrivers() {
    const [motoristas, setMotoristas] = useState([]);
    const [carregando, setCarregando] = useState(true);
    const [erro, setErro] = useState(null);
-   const [erro500, setErro500] = useState(false);
    const router = useRouter();
 
    // Buscar motoristas
@@ -27,12 +26,20 @@ export default function useDrivers() {
             );
 
             if (!res.ok) {
-               if (res.status === 500) setErro500(true);
                throw new Error("Erro ao buscar motoristas");
-            }            
+            }
 
             const data = await res.json();
-            setMotoristas(data.data);
+
+            const motoristasFormatados = data.data.map((motorista) => ({
+               ...motorista,
+               image:
+                  motorista.image && motorista.image !== "null"
+                     ? `${process.env.NEXT_PUBLIC_API_URL}/api${motorista.image}`
+                     : null,
+            }));
+
+            setMotoristas(motoristasFormatados);
          } catch (err) {
             console.error("Erro na requisição:", err);
             setErro(err.message);
@@ -75,7 +82,7 @@ export default function useDrivers() {
    };
 
    // Criar motorista
-   const createDriver = async (name, phone, license) => {
+   const createDriver = async (name, phone, license, image) => {
       if (!gestor?.id) {
          setErro("ID do gestor não encontrado.");
          return;
@@ -85,20 +92,21 @@ export default function useDrivers() {
       setErro(null);
 
       try {
+         const formData = new FormData();
+         formData.append("name", name);
+         formData.append("phone", phone);
+         formData.append("license", license);
+         formData.append("image", image);
+         formData.append("managerId", gestor.id);
+
          const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/create`,
             {
                method: "POST",
                headers: {
-                  "Content-Type": "application/json",
                   Authorization: `Bearer ${gestor.token}`,
                },
-               body: JSON.stringify({
-                  name,
-                  phone,
-                  license,
-                  managerId: gestor.id,
-               }),
+               body: formData,
             }
          );
 
@@ -110,7 +118,7 @@ export default function useDrivers() {
          }
 
          const data = await res.json();
-         if (data && !data.err){
+         if (data && !data.err) {
             setMotoristas((prev) => [...prev, data.driver]);
             router.push("/drivers");
          } else {
@@ -151,7 +159,8 @@ export default function useDrivers() {
             }
          );
 
-         if (!res.ok) throw new Error("Erro ao atualizar motorista. Tente novamente.");
+         if (!res.ok)
+            throw new Error("Erro ao atualizar motorista. Tente novamente.");
 
          const data = await res.json();
          if (data.success && data.data) {
@@ -160,7 +169,9 @@ export default function useDrivers() {
             );
             router.push("/drivers");
          } else {
-            setErro(data.error || "Erro ao atualizar motorista. Tente novamente.");
+            setErro(
+               data.error || "Erro ao atualizar motorista. Tente novamente."
+            );
          }
       } catch (error) {
          setErro(error.message || "Erro ao conectar ao servidor.");
