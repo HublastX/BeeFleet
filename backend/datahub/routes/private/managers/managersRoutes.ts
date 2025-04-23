@@ -1,5 +1,4 @@
 import express, { Router } from "express";
-import { uploadManagerImage } from "../../../config/storage/managerStorage";
 import { createManager } from "../../../controllers/managers/createManager";
 import {
     getManager,
@@ -9,6 +8,9 @@ import { putManager } from "../../../controllers/managers/putManager";
 import { deleteManager } from "../../../controllers/managers/deleteManager";
 import { validate } from "../../../middlewares/validate";
 import { managerSchema } from "../../../schemas/managerInterface";
+import { createImageUploader } from "./../../../config/storage/storage";
+
+export const uploadManagerImage = createImageUploader("uploads/managers");
 const managerRoutes: Router = express.Router();
 
 managerRoutes.post(

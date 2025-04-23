@@ -14,6 +14,7 @@ import {
    BellIcon,
    RectangleGroupIcon,
    ClipboardDocumentCheckIcon,
+   CameraIcon,
 } from "@heroicons/react/24/solid";
 import {
    PlusIcon,
@@ -59,6 +60,7 @@ const icons = {
    sCima: ArrowTrendingUpIcon,
    sBaixo: ArrowTrendingDownIcon,
    evento: ClipboardDocumentCheckIcon,
+   camera: CameraIcon,
 };
 
 export default function Icon({ name, className, strokeWidth }) {

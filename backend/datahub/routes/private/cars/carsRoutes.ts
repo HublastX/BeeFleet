@@ -1,6 +1,5 @@
 import express, { Router } from "express";
 import { Request, Response, NextFunction } from "express";
-import { uploadCarImage } from "../../../config/storage/carStorage";
 import { createCar } from "../../../controllers/cars/createCar";
 import { getCar } from "../../../controllers/cars/getAllCar";
 import { getAllCars } from "../../../controllers/cars/getAllCar";
@@ -10,6 +9,10 @@ import { authenticateManager } from "../../../middlewares/auth";
 import { CreateCarRequestBody } from "../../../schemas/carInterface";
 import { validate } from "../../../middlewares/validate";
 import { carSchema, updateCarSchema } from "../../../schemas/carInterface";
+
+import { createImageUploader } from "./../../../config/storage/storage";
+
+export const uploadCarImage = createImageUploader("uploads/cars");
 
 const carRoutes: Router = express.Router();
 
