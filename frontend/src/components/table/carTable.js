@@ -13,6 +13,7 @@ import useCar from "@/hooks/useCar";
 import Icon from "@/elements/Icon";
 import Pagination from "./Pagination";
 import TableSkeleton from "@/elements/ui/skeleton/TableSkeleton";
+import Image from "next/image";
 
 export default function CarTable() {
    const { carro, carregando, erro, deleteCar } = useCar();
@@ -122,7 +123,17 @@ export default function CarTable() {
                               <TableCell className="block md:hidden px-5 py-4 text-start">
                                  <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 overflow-hidden rounded-full">
-                                       <Icon name="truck" />
+                                       {!carro.image ? (
+                                          <Icon name="truck" />
+                                       ) : (
+                                          <Image
+                                             src={carro.image}
+                                             width={200}
+                                             height={200}
+                                             className="w-full h-full object-cover"
+                                             alt="img do carro"
+                                          />
+                                       )}
                                     </div>
                                     <div>
                                        <span
@@ -140,8 +151,18 @@ export default function CarTable() {
 
                               <TableCell className="hidden md:table-cell px-5 py-4 sm:px-6 text-start">
                                  <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 overflow-hidden rounded-full">
-                                       <Icon name="truck" />
+                                    <div className="w-12 h-12 overflow-hidden rounded-full">
+                                       {!carro.image ? (
+                                          <Icon name="truck" />
+                                       ) : (
+                                          <Image
+                                             src={carro.image}
+                                             width={200}
+                                             height={200}
+                                             className="w-full h-full object-cover"
+                                             alt="img do carro"
+                                          />
+                                       )}
                                     </div>
                                     <div>
                                        <span className="block font-medium text-bee-dark-600 text-theme-sm dark:text-bee-alert-500">

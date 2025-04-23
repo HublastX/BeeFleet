@@ -28,7 +28,16 @@ export default function useCar() {
             if (!res.ok) throw new Error("Erro ao buscar carros");
 
             const data = await res.json();
-            setCarro(data.data);
+
+            const carroFormatado = data.data.map((carro) => ({
+               ...carro,
+               image:
+                  carro.image && carro.image !== "null"
+                     ? `${process.env.NEXT_PUBLIC_API_URL}/api${carro.image}`
+                     : null,
+            }));
+
+            setCarro(carroFormatado);
          } catch (err) {
             console.error("Erro na requisição:", err);
             setErro(err.message);
@@ -62,7 +71,17 @@ export default function useCar() {
 
          const data = await res.json();
 
-         return data;
+         const carroData = data.data || data;
+
+         const carroFormatado = {
+            ...carroData,
+            image:
+               carroData.image && carroData.image !== "null"
+                  ? `${process.env.NEXT_PUBLIC_API_URL}/api${carroData.image}`
+                  : null,
+         };
+
+         return carroFormatado;
       } catch (err) {
          console.error("Erro na requisição:", err);
          setErro(err.message);
@@ -72,7 +91,7 @@ export default function useCar() {
    };
 
    // Criar carro
-   const createCar = async (plate, model, year, color, odometer) => {
+   const createCar = async (plate, model, year, color, odometer, image) => {
       if (!gestor?.id) {
          setErro("ID do gestor não encontrado.");
          return;
@@ -82,23 +101,23 @@ export default function useCar() {
       setErro(null);
 
       try {
+         const formData = new FormData();
+         formData.append("plate", plate);
+         formData.append("model", model);
+         formData.append("year", year);
+         formData.append("color", color);
+         formData.append("odometer", odometer);
+         formData.append("image", image);
+         formData.append("status", "AVAILABLE");
+         formData.append("managerId", gestor.id);
          const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/cars/create`,
             {
                method: "POST",
                headers: {
-                  "Content-Type": "application/json",
                   Authorization: `Bearer ${gestor.token}`,
                },
-               body: JSON.stringify({
-                  plate,
-                  model,
-                  year: parseInt(year),
-                  color,
-                  odometer,
-                  status: "AVAILABLE",
-                  managerId: gestor.id,
-               }),
+               body: formData,
             }
          );
 
@@ -117,9 +136,12 @@ export default function useCar() {
          setCarregando(false);
       }
    };
-   
+
    // Atualizar carro
-   const updateCar = async (id, {plate, model, year, color, odometer, image}) => {
+   const updateCar = async (
+      id,
+      { plate, model, year, color, odometer, image }
+   ) => {
       if (!gestor?.token) {
          setErro("token do gestor não encontrado.");
          return;
@@ -130,12 +152,12 @@ export default function useCar() {
 
       try {
          const formData = new FormData();
-         if(plate !== undefined) formData.append("plate", plate);
-         if(model !== undefined) formData.append("model", model);
-         if(year !== undefined) formData.append("year", year);
-         if(color !== undefined) formData.append("color", color);
-         if(odometer !== undefined) formData.append("odometer", odometer);
-         if(image !== undefined) formData.append("image", image);
+         if (plate !== undefined) formData.append("plate", plate);
+         if (model !== undefined) formData.append("model", model);
+         if (year !== undefined) formData.append("year", year);
+         if (color !== undefined) formData.append("color", color);
+         if (odometer !== undefined) formData.append("odometer", odometer);
+         if (image !== undefined) formData.append("image", image);
 
          const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`,
@@ -207,6 +229,6 @@ export default function useCar() {
       createCar,
       deleteCar,
       getCar,
-      updateCar
+      updateCar,
    };
 }

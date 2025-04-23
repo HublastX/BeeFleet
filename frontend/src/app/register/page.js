@@ -14,7 +14,7 @@ function Register() {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const [confirmPassword, setConfirmPassword] = useState("");
-   const [profileImage, setProfileImage] = useState("");
+   const [image, setProfileImage] = useState("null");
    const [errors, setErrors] = useState({});
    const router = useRouter();
 
@@ -58,13 +58,13 @@ function Register() {
 
       if (Object.keys(newErrors).length > 0) return;
 
-      await register(name, email, password);
+      await register(name, email, password, image);
    };
 
    return (
       <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-50 backdrop-blur-sm">
          <div
-            className={`relative bg-bee-dark-100 rounded-lg shadow-sm dark:bg-bee-dark-400 text-bee-dark-600 dark:text-white p-8 w-96 md:w-[36rem] lg:w-[38rem] transform transition-all duration-300 ease-out ${
+            className={`relative bg-bee-dark-100 rounded-lg shadow-sm dark:bg-bee-dark-400 text-bee-dark-600 dark:text-white p-8 w-96 md:w-[36rem] lg:w-[38rem] max-h-screen transform transition-all duration-300 ease-out ${
                show ? "opacity-100 scale-100" : "opacity-0 scale-95"
             }`}
          >
@@ -87,7 +87,7 @@ function Register() {
             {/* formulário */}
             <div className="mt-5">
                <form
-                  className="space-y-4 text-sm font-medium"
+                  className="space-y-4 text-sm font-medium overflow-y-auto"
                   onSubmit={handleSubmit}
                >
                   <div>

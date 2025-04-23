@@ -16,11 +16,12 @@ function CreateCars() {
    const [year, setYear] = useState("");
    const [color, setColor] = useState("");
    const [odometer, setOdometer] = useState("");
+   const [image, setImage] = useState(null);
 
    const handleSubmit = async (e) => {
       e.preventDefault();
-      await createCar(plate, model, year, color, odometer);
-      console.log({ plate, model, year, color, odometer });
+      await createCar(plate, model, year, color, odometer, image);
+      console.log({ plate, model, year, color, odometer, image });
    };
 
    return (

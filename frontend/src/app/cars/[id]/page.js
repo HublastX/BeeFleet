@@ -5,6 +5,7 @@ import withAuth from "@/utils/withAuth";
 import useCar from "@/hooks/useCar";
 import Icon from "@/elements/Icon";
 import Badge from "@/elements/ui/badge/Badge";
+import Image from "next/image";
 
 function CarPage() {
    const { id } = useParams();
@@ -22,7 +23,6 @@ function CarPage() {
             console.error("Erro ao buscar carro:", error);
          }
       }
-
       fetchCar();
    }, [id, getCar, carroData]);
 
@@ -36,7 +36,17 @@ function CarPage() {
                {/* card 1 com foto e placa */}
                <div className="flex flex-col px-4 py-5 items-center  gap-4 w-1/3 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-md border border-bee-dark-300 dark:border-bee-dark-400">
                   <div className="rounded-md bg-bee-purple-200 w-full h-40 flex items-center justify-center shadow-xs">
-                     <Icon name="truck" className="w-16 h-16" />
+                     {carroData.image ? (
+                        <Image
+                           src={carroData.image}
+                           alt={`Imagem do carro ${carroData.model}`}
+                           width={100}
+                           height={100}
+                           className="rounded-md"
+                        />
+                     ) : (
+                        <Icon name="truck" className="w-16 h-16" />
+                     )}
                   </div>
                   <div className="bg-gray-100 w-full p-4 rounded-md shadow-sm border-t-8 border-blue-700">
                      <p className="text-center text-bee-dark-600 font-extrabold text-3xl">

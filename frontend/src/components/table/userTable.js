@@ -11,6 +11,7 @@ import Link from "next/link";
 import Badge from "../../elements/ui/badge/Badge";
 import useDrivers from "@/hooks/useDrivers";
 import Icon from "@/elements/Icon";
+import Image from "next/image";
 import Pagination from "./Pagination";
 import TableSkeleton from "@/elements/ui/skeleton/TableSkeleton";
 
@@ -122,7 +123,17 @@ export default function UserTable() {
                               <TableCell className="block md:hidden px-5 py-4 text-start">
                                  <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 overflow-hidden rounded-full">
-                                       <Icon name="UserCircle" />
+                                       {!motorista.image ? (
+                                          <Icon name="UserCircle" />
+                                       ) : (
+                                          <Image
+                                             src={motorista.image}
+                                             width={100}
+                                             height={100}
+                                             alt="img do motorista"
+                                          />
+                                       )}
+
                                     </div>
                                     <div>
                                        <span
@@ -141,7 +152,17 @@ export default function UserTable() {
                               <TableCell className="hidden md:table-cell px-5 py-4 sm:px-6 text-start">
                                  <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 overflow-hidden rounded-full">
-                                       <Icon name="UserCircle" />
+                                    {!motorista.image ? (
+                                          <Icon name="UserCircle" />
+                                       ) : (
+                                          <Image
+                                             src={motorista.image}
+                                             width={200}
+                                             height={200}
+                                             className="w-full h-full object-cover"
+                                             alt="img do motorista"
+                                          />
+                                       )}
                                     </div>
                                     <div>
                                        <span className="block font-medium text-bee-dark-600 text-theme-sm dark:text-bee-alert-500">
