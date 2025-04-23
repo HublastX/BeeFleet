@@ -1,62 +1,23 @@
-import { useEffect, useState } from "react";
-
-export default function Toast({
-   message,
-   description,
-   type = "success",
-   autoClose = true,
-   timeout = 3000,
-}) {
-   const [visible, setVisible] = useState(false);
-
-   const borderColors = {
-      success: "border-[#512DA8]",
-      error: "border-[#512DA8]",
-      warning: "border-[#512DA8]",
+import Icon from "./Icon";
+export default function Toast({ message, description, type = "success", onClose }) {
+   const colors = {
+      success: "border-green-500",
+      error: "border-red-500",
+      warning: "border-orange-400",
    };
-
-   useEffect(() => {
-      const handleClick = (e) => {
-         const isLogin = e.target.closest("#login-btn");
-         const isRegister = e.target.closest("#register-btn");
-
-         if (!isLogin && !isRegister) {
-            setVisible(true);
-         }
-      };
-
-      document.addEventListener("click", handleClick);
-      return () => document.removeEventListener("click", handleClick);
-   }, []);
-
-   useEffect(() => {
-      if (visible && autoClose) {
-         const timer = setTimeout(() => {
-            setVisible(false);
-         }, timeout);
-         return () => clearTimeout(timer);
-      }
-   }, [visible, autoClose, timeout]);
-
-   if (!visible) return null;
 
    return (
       <div className="fixed top-5 right-5 z-50">
          <div
-            className={`px-4 py-3 rounded-md bg-white border ${borderColors[type]} text-black shadow-lg transition-all duration-300`}
+            className={`px-4 py-3 border-2 bg-white dark:bg-bee-dark-400 rounded-lg shadow-lg transition-all duration-300 ${colors[type]}`}
          >
-            <div className="flex items-start justify-between gap-3">
+            <div className="flex items-center justify-between gap-3">
                <div className="flex flex-col">
-                  <span className="font-semibold text-sm">{message}</span>
-                  {description && (
-                     <span className="text-xs text-gray-600">{description}</span>
-                  )}
+                  <span className="font-semibold text-2xl">{message}</span>
+                  {description && <span>{description}</span>}
                </div>
-               <button
-                  onClick={() => setVisible(false)}
-                  className="text-lg font-bold ml-2 leading-none"
-               >
-                  ×
+               <button onClick={onClose ?? (() => {})} className="font-bold ml-2 text-lg leading-none">
+                  <Icon name="xMark" className="size-6 hover:text-gray-400"/>
                </button>
             </div>
          </div>
