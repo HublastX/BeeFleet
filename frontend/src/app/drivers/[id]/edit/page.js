@@ -31,14 +31,6 @@ function EditDriver() {
       }
    }, [motoristas, id]);
 
-   let imageSrc;
-
-   if (formData.image && typeof formData.image !== "string") {
-      imageSrc = URL.createObjectURL(formData.image);
-   } else {
-      imageSrc = formData.image !== "null" ? formData.image : null;
-   }
-
    console.log("FormData", formData);
 
    return (
@@ -76,7 +68,7 @@ function EditDriver() {
                            Nome
                         </label>
                         <InputText
-                          type ="text"
+                           type="text"
                            name="name"
                            value={formData.name}
                            onChange={(e) =>
@@ -168,15 +160,26 @@ function EditDriver() {
                   </form>
                   <div className="hidden sticky md:flex md:flex-col min-w-65 h-fit border font-bold bg-bee-dark-100 border-bee-dark-300 dark:bg-gray-800 dark:border-gray-500 p-4 rounded-lg">
                      <div className="flex justify-center items-center md:mb-4 bg-bee-purple-200 rounded-md p-3">
-                        {imageSrc ? (
-                           <Image
-                              src={imageSrc}
-                              alt="Imagem do motorista"
-                              width={128}
-                              height={128}
-                              unoptimized 
-                              className="w-32 h-32 rounded-full object-cover"
-                           />
+                        {formData.image ? (
+                           typeof formData.image === "string" ? (
+                              <Image
+                                 src={formData.image}
+                                 alt="Imagem do motorista"
+                                 width={128}
+                                 height={128}
+                                 unoptimized
+                                 className="w-32 h-32 rounded-full object-cover"
+                              />
+                           ) : (
+                              <Image
+                                 src={URL.createObjectURL(formData.image)}
+                                 alt="Imagem do motorista"
+                                 width={128}
+                                 height={128}
+                                 unoptimized
+                                 className="w-32 h-32 rounded-full object-cover"
+                              />
+                           )
                         ) : (
                            <Icon name="user" className="size-32 text-white" />
                         )}
