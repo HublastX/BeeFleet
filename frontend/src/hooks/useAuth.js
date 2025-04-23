@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/utils/ToastContext";
 
 export default function useAuth() {
    const [gestor, setGestor] = useState(null);
@@ -7,9 +8,22 @@ export default function useAuth() {
    const [erro, setErro] = useState(null);
    const [gestores, setGestores] = useState([]);
    const router = useRouter();
+   const { showToast } = useToast();
    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-   // Função para login
+   // Utilitário para exibir erro
+   const handleError = (
+      error,
+      fallbackMessage = "Erro inesperado.",
+      type = "error"
+   ) => {
+      const msg =
+         typeof error === "string" ? error : error.message || fallbackMessage;
+      setErro(msg);
+      showToast("Erro", type, msg, 5000);
+   };
+
+   // Login
    const login = async (email, password) => {
       setCarregando(true);
       setErro(null);
@@ -17,15 +31,17 @@ export default function useAuth() {
       try {
          const res = await fetch(`${API_URL}/api/managers/login`, {
             method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
          });
 
-         if (!res.ok) throw new Error("Credenciais inválidas.");
+         if (!res.ok)
+            throw new Error(
+               "Credenciais inválidas. Verifique e tente novamente."
+            );
 
          const data = await res.json();
+
          if (data.token) {
             localStorage.setItem("token", data.token);
             localStorage.setItem("id", data.manager.id);
@@ -41,57 +57,70 @@ export default function useAuth() {
                image: data.manager.image,
             });
 
+            localStorage.setItem(
+               "toastMessage",
+               "Login realizado com sucesso!"
+            );
+            localStorage.setItem("toastType", "success");
             window.location.href = "/";
          } else {
-            setErro("Erro no login. Tente novamente.");
+            throw new Error("Erro inesperado ao fazer login.");
          }
       } catch (error) {
-         setErro(error.message);
+         handleError(error, "Erro ao fazer login.");
       } finally {
          setCarregando(false);
       }
    };
 
-   // Função para registro
+   // Registro
    const register = async (name, email, password) => {
       setCarregando(true);
       setErro(null);
 
+
+      const existingManager = gestores.find(
+         (manager) => manager.email === email
+      );
+      if (existingManager) {
+         setErro("Email já cadastrado.");
+         showToast("Erro", "error", "Email já cadastrado.", 5000);
+         setCarregando(false);
+         return;
+      }
+
       try {
          const res = await fetch(`${API_URL}/api/managers/create`, {
             method: "POST",
-            headers: {
-               "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, email, password }),
          });
 
-         if (!res.ok) throw new Error("Erro ao registrar. Tente novamente.");
+         if (!res.ok)
+            throw new Error(
+               "Erro ao registrar. Verifique os dados e tente novamente."
+            );
 
          const data = await res.json();
-         if (data.manager) {
-            localStorage.setItem("id", data.manager.id);
-            localStorage.setItem("name", data.manager.name);
-            localStorage.setItem("email", data.manager.email);
+         if (res.ok) {
 
-            setGestor({
-               id: data.manager.id,
-               name: data.manager.name,
-               email: data.manager.email,
-            });
-
+            localStorage.setItem(
+               "toastMessage",
+               "Gestor registrado com sucesso!"
+            );
+            localStorage.setItem("toastType", "success");
             router.push("/login");
          } else {
-            setErro(data.error || "Erro ao registrar. Tente novamente.");
+            throw new Error(data.error || "Erro inesperado ao registrar.");
          }
       } catch (error) {
-         setErro(error.message || "Erro ao conectar ao servidor.");
+         handleError(error, "Erro ao conectar ao servidor.", "warning");
       } finally {
          setCarregando(false);
       }
    };
 
-   // Função para atualizar o gestor
+   // Atualizar gestor
    const putManager = async (id, { name, email, image }) => {
       setCarregando(true);
       setErro(null);
@@ -106,16 +135,13 @@ export default function useAuth() {
 
          const res = await fetch(`${API_URL}/api/managers/${id}`, {
             method: "PUT",
-            headers: {
-               Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` },
             body: formData,
          });
 
-         if (!res.ok) throw new Error("Erro ao atualizar o gestor.");
+         if (!res.ok) throw new Error("Erro ao atualizar dados do gestor.");
 
          const data = await res.json();
-         console.log("Resposta do PUT:", data);
 
          localStorage.setItem("name", data.data.name);
          localStorage.setItem("email", data.data.email);
@@ -128,17 +154,23 @@ export default function useAuth() {
             image: data.data.image,
          }));
 
+         showToast(
+            "Sucesso",
+            "success",
+            "Gestor atualizado com sucesso!",
+            5000
+         );
+
+         router.push("/profile");
          return data;
       } catch (error) {
-         setErro(error.message || "Erro ao conectar ao servidor.");
+         handleError(error, "Erro ao atualizar o gestor.", "warning");
       } finally {
-         window.location.reload();
-         router.push("/profile");
          setCarregando(false);
       }
    };
 
-   // Pegar dados do gestor
+   // Pegar gestor do localStorage
    useEffect(() => {
       const getGestorFromStorage = () => {
          const token = localStorage.getItem("token");
@@ -147,9 +179,7 @@ export default function useAuth() {
          const email = localStorage.getItem("email");
          let image = localStorage.getItem("image");
 
-         if (image === "null" || image === "") {
-            image = null;
-         }
+         if (image === "null" || image === "") image = null;
 
          if (token && id && name && email) {
             return { id, name, email, token, image };
@@ -161,7 +191,7 @@ export default function useAuth() {
       if (gestorData) setGestor(gestorData);
    }, []);
 
-   // Função para logout
+   // Logout
    const logout = () => {
       localStorage.removeItem("token");
       localStorage.removeItem("id");
@@ -173,10 +203,10 @@ export default function useAuth() {
       window.location.href = "/";
    };
 
-   // Função para mapear todos os gestores
+   // Listar gestores
    useEffect(() => {
       if (!gestor?.token) return;
-   
+
       async function fetchAllManagers() {
          try {
             const res = await fetch(`${API_URL}/api/managers/`, {
@@ -185,23 +215,36 @@ export default function useAuth() {
                   Authorization: `Bearer ${gestor.token}`,
                },
             });
-   
-            if (!res.ok) throw new Error("Erro ao buscar gestores");
-   
+
+            if (!res.ok) throw new Error("Erro ao buscar lista de gestores.");
+
             const data = await res.json();
-            setGestores(data.data); // Agora sim, armazenando corretamente
+            setGestores(data.data);
          } catch (err) {
-            console.error("Erro na requisição:", err);
-            setErro(err.message);
+            handleError(err, "Erro ao conectar ao servidor.", "warning");
          } finally {
             setCarregando(false);
          }
       }
-   
+
       fetchAllManagers();
    }, [gestor?.token]);
-   
-   
+
+   useEffect(() => {
+      const toastMessage = localStorage.getItem("toastMessage");
+      const toastType = localStorage.getItem("toastType");
+
+      if (toastMessage && toastType) {
+         showToast(
+            toastType === "success" ? "Sucesso" : "Aviso",
+            toastType,
+            toastMessage,
+            5000
+         );
+         localStorage.removeItem("toastMessage");
+         localStorage.removeItem("toastType");
+      }
+   }, []);
 
    return {
       gestor,
