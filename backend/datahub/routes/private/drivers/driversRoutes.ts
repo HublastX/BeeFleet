@@ -1,6 +1,5 @@
 import express, { Router } from "express";
 import { Request, Response, NextFunction } from "express";
-import { uploadDriverImage } from "../../../config/storage/driverStorage";
 import { createDriver } from "../../../controllers/drivers/createDriver";
 import { getDriver } from "../../../controllers/drivers/getAllDriver";
 import { getAllDrivers } from "../../../controllers/drivers/getAllDriver";
@@ -12,6 +11,9 @@ import {
     driverSchema,
     updateDriverSchema,
 } from "../../../schemas/driverInterface";
+import { createImageUploader } from "./../../../config/storage/storage";
+
+export const uploadDriverImage = createImageUploader("uploads/drivers");
 const driverRoutes: Router = express.Router();
 
 driverRoutes.post(
