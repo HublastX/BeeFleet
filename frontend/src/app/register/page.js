@@ -14,6 +14,7 @@ function Register() {
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
    const [confirmPassword, setConfirmPassword] = useState("");
+   const [profileImage, setProfileImage] = useState("");
    const [errors, setErrors] = useState({});
    const router = useRouter();
 
@@ -182,6 +183,21 @@ function Register() {
                            {errors.confirmPassword}
                         </p>
                      )}
+                  </div>
+                  <div>
+                     <label htmlFor="profile-image" className="block mb-2">
+                        Foto de Perfil
+                     </label>
+                     <InputText
+                        variant="withIcon"
+                        icon="camera"
+                        type="file"
+                        name="profile-image"
+                        id="profile-image"
+                        accept="image/*"
+                        onChange={(e) => setProfileImage(e.target.files[0])}
+                        className="file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm  file:text-bee-dark-600 dark:file:text-white "
+                     />
                   </div>
                   <Btn
                      variant="primary"
