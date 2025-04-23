@@ -6,10 +6,15 @@ import { PORT_DATAHUB } from "./config/constantes";
 import { listRoutes } from "./services/printRoutes/printRoutes";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./docs/swagger";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const app: Application = express();
 
 setupMiddlewares(app);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(
     "/api/docs",
@@ -37,6 +42,7 @@ app.use(
 );
 
 app.use("/api", router);
+app.use("/api/uploads", express.static(path.join(__dirname, "./uploads")));
 
 app.use(errorHandler);
 
