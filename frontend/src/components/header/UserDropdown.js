@@ -30,7 +30,7 @@ export default function UserDropdown() {
                {!gestor.image ? (
                   <Icon name="UserCircle" />
                ) : (
-                  <Image src={`${process.env.NEXT_PUBLIC_API_URL}${gestor.image}`} alt="Profile" width={2} height={2} unoptimized />
+                  <Image src={gestor.image} alt="Profile" width={100} height={100} />
                )}
             </span>
 

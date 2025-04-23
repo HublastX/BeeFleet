@@ -20,11 +20,11 @@ function Manager() {
           {!image ? (
             <Icon name="UserCircle" className="w-24 h-24 text-gray-400" />
           ) : (
-            <Image
+          <Image
               src={image}
               alt={`Foto de perfil de ${name}`}
-              width={96}
-              height={96}
+              width={100}
+              height={100}
               className="rounded-full object-cover w-24 h-24"
             />
           )}
