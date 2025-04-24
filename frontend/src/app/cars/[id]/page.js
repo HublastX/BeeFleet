@@ -35,17 +35,17 @@ function CarPage() {
             <div className="flex flex-col md:flex-row gap-4">
                {/* card 1 com foto e placa */}
                <div className="flex flex-col px-4 py-5 items-center  gap-4 w-1/3 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-md border border-bee-dark-300 dark:border-bee-dark-400">
-                  <div className="rounded-md bg-bee-purple-200 w-full h-40 flex items-center justify-center shadow-xs">
+                  <div className="relative w-full h-40 rounded-md overflow-hidden">
                      {carroData.image ? (
                         <Image
                            src={carroData.image}
                            alt={`Imagem do carro ${carroData.model}`}
-                           width={100}
-                           height={100}
-                           className="rounded-md"
+                           layout="fill"
+                           objectFit="cover"
+                           className="rounded"
                         />
                      ) : (
-                        <Icon name="truck" className="w-16 h-16" />
+                     <Icon name="truck" className="w-full h-full bg-bee-purple-300 text-bee-alert-500" />
                      )}
                   </div>
                   <div className="bg-gray-100 w-full p-4 rounded-md shadow-sm border-t-8 border-blue-700">
@@ -67,6 +67,10 @@ function CarPage() {
                      <p className="text-bee-dak-600 dark:text-bee-alert-500">
                         <span className="font-black">Cor:</span>{" "}
                         {carroData.color}
+                     </p>
+                     <p className="text-bee-dak-600 dark:text-bee-alert-500">
+                        <span className="font-black">Quilometragem:</span>{" "}
+                        {carroData.odometer}km
                      </p>
                   </div>
 

@@ -66,7 +66,7 @@ export default function UserTable() {
                         <TableRow>
                            <TableCell
                               isHeader
-                              className="px-5 py-3 text-start text-theme-xs md:table-cell"
+                              className="px-5 py-3 text-start md:table-cell"
                            >
                               <div
                                  onClick={() =>
@@ -80,13 +80,13 @@ export default function UserTable() {
 
                            <TableCell
                               isHeader
-                              className="px-5 py-3 text-start text-theme-xs hidden md:table-cell"
+                              className="px-5 py-3 text-start hidden md:table-cell"
                            >
                               Telefone
                            </TableCell>
                            <TableCell
                               isHeader
-                              className="px-5 py-3 text-start text-theme-xs hidden md:table-cell"
+                              className="px-5 py-3 text-start hidden md:table-cell"
                            >
                               <div
                                  onClick={() => {
@@ -100,13 +100,13 @@ export default function UserTable() {
 
                            <TableCell
                               isHeader
-                              className="px-3 md:px-1 py-3 text-center text-theme-xs"
+                              className="px-3 md:px-1 py-3 text-center"
                            >
                               Vizualizar
                            </TableCell>
                            <TableCell
                               isHeader
-                              className="px-3 md:px-1 py-3 text-center text-theme-xs"
+                              className="px-3 md:px-1 py-3 text-center"
                            >
                               Deletar
                            </TableCell>
@@ -122,7 +122,7 @@ export default function UserTable() {
                            >
                               <TableCell className="block md:hidden px-5 py-4 text-start">
                                  <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 overflow-hidden rounded-full">
+                                    <div className="w-12 h-12 overflow-hidden rounded-full">
                                        {!motorista.image ? (
                                           <Icon name="UserCircle" />
                                        ) : (
@@ -130,6 +130,7 @@ export default function UserTable() {
                                              src={motorista.image}
                                              width={100}
                                              height={100}
+                                             className="w-full h-full object-cover"
                                              alt="img do motorista"
                                           />
                                        )}
@@ -137,7 +138,7 @@ export default function UserTable() {
                                     </div>
                                     <div>
                                        <span
-                                          className={`font-medium text-theme-sm ${
+                                          className={`font-medium  ${
                                              motorista.isAvailable
                                                 ? "text-green-600 dark:text-green-400"
                                                 : "text-red-600 dark:text-red-400"
@@ -165,18 +166,18 @@ export default function UserTable() {
                                        )}
                                     </div>
                                     <div>
-                                       <span className="block font-medium text-bee-dark-600 text-theme-sm dark:text-bee-alert-500">
+                                       <span className="block  text-bee-dark-600 dark:text-bee-alert-500">
                                           {motorista.name}
                                        </span>
                                     </div>
                                  </div>
                               </TableCell>
 
-                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start font-bold dark:text-bee-alert-500">
+                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start  dark:text-bee-alert-500">
                                  {motorista.phone}
                               </TableCell>
 
-                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-c font-bold dark:text-bee-alert-500">
+                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 dark:text-bee-alert-500">
                                  <Badge
                                     size="sm"
                                     color={
