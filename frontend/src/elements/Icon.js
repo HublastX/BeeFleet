@@ -15,6 +15,8 @@ import {
    RectangleGroupIcon,
    ClipboardDocumentCheckIcon,
    CameraIcon,
+   SignalSlashIcon,
+
 } from "@heroicons/react/24/solid";
 import {
    PlusIcon,
@@ -30,6 +32,9 @@ import {
    ArrowLongLeftIcon,
    ArrowTrendingUpIcon,
    ArrowTrendingDownIcon,
+   CheckIcon,
+   ExclamationTriangleIcon,
+
 } from "@heroicons/react/24/outline";
 
 const icons = {
@@ -61,6 +66,9 @@ const icons = {
    sBaixo: ArrowTrendingDownIcon,
    evento: ClipboardDocumentCheckIcon,
    camera: CameraIcon,
+   check: CheckIcon,
+   error: ExclamationTriangleIcon,
+   warning: SignalSlashIcon
 };
 
 export default function Icon({ name, className, strokeWidth }) {
