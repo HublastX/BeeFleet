@@ -16,6 +16,9 @@ import {
    ClipboardDocumentCheckIcon,
    CameraIcon,
    SignalSlashIcon,
+   TableCellsIcon,
+   IdentificationIcon,
+
 
 } from "@heroicons/react/24/solid";
 import {
@@ -34,6 +37,7 @@ import {
    ArrowTrendingDownIcon,
    CheckIcon,
    ExclamationTriangleIcon,
+
 
 } from "@heroicons/react/24/outline";
 
@@ -68,7 +72,9 @@ const icons = {
    camera: CameraIcon,
    check: CheckIcon,
    error: ExclamationTriangleIcon,
-   warning: SignalSlashIcon
+   warning: SignalSlashIcon,
+   table: TableCellsIcon,
+   identidade: IdentificationIcon,
 };
 
 export default function Icon({ name, className, strokeWidth }) {
