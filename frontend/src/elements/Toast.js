@@ -39,4 +39,5 @@ export default function Toast({
          </div>
       </div>
    );
+
 }
