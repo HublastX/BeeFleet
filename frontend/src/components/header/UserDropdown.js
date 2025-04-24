@@ -30,7 +30,7 @@ export default function UserDropdown() {
                {!gestor.image ? (
                   <Icon name="UserCircle" />
                ) : (
-                  <Image src={gestor.image} alt="Profile" width={100} height={100} />
+                  <Image src={gestor.image} alt="Profile" width={100} height={100} className="object-cover h-full w-full" />
                )}
             </span>
 
