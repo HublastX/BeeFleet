@@ -40,18 +40,23 @@ function Home() {
          <div className="grid grid-cols-12 gap-4 md:gap-6">
             <div className="col-span-12 space-y-5 xl:col-span-6">
                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6">
-                  <Card
-                     titulo="Motoristas"
-                     icone="user"
-                     estado="baixa"
-                     quantidade={motoristas.length}
-                  />
-                  <Card
-                     titulo="Carros"
-                     icone="truck"
-                     estado="aumento"
-                     quantidade={carro.length}
-                  />
+                  <Link href="/drivers">
+                     <Card
+                        titulo="Motoristas"
+                        icone="user"
+                        estado="baixa"
+                        quantidade={motoristas.length}
+                     />
+                  </Link>
+                  <Link href="/cars">
+                     <Card
+                        titulo="Carros"
+                        icone="truck"
+                        estado="aumento"
+                        quantidade={carro.length}
+                     />
+                  </Link>
+
                   <Card
                      titulo="Gestores"
                      icone="suport"
