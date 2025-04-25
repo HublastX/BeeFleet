@@ -1,4 +1,6 @@
 import React from "react";
+import CarPlus from "@/styles/CustomCarIconPlus";
+import Car from "@/styles/CustomCarIcon";
 import {
    XMarkIcon,
    EllipsisHorizontalIcon,
@@ -18,8 +20,6 @@ import {
    SignalSlashIcon,
    TableCellsIcon,
    IdentificationIcon,
-
-
 } from "@heroicons/react/24/solid";
 import {
    PlusIcon,
@@ -37,8 +37,6 @@ import {
    ArrowTrendingDownIcon,
    CheckIcon,
    ExclamationTriangleIcon,
-
-
 } from "@heroicons/react/24/outline";
 
 const icons = {
@@ -75,6 +73,8 @@ const icons = {
    warning: SignalSlashIcon,
    table: TableCellsIcon,
    identidade: IdentificationIcon,
+   carPlus: CarPlus,
+   car: Car
 };
 
 export default function Icon({ name, className, strokeWidth }) {
