@@ -38,7 +38,10 @@ model Driver {
 
 model Car {
     id          String    @id @default(uuid())
+    renavam     String    @unique
+    chassis     String    @unique
     plate       String    @unique
+    brand       String
     model       String
     year        Int
     image       String?
