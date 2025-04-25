@@ -8,8 +8,7 @@ export const getAllCarsUsageReport = async (req: Request, res: Response) => {
 
         if (!managerId || typeof managerId !== "string") {
             return res
-                .status(400)
-                .json({ error: "Manager ID is required and must be a string" });
+                .status(400).json({ error: "Manager ID is required and must be a string" });
         }
 
         const cars = await prisma.car.findMany({
@@ -39,7 +38,10 @@ export const getAllCarsUsageReport = async (req: Request, res: Response) => {
 
             return {
                 id: car.id,
+                renavam: car.renavam,
+                chassis: car.chassis,
                 plate: car.plate,
+                brand: car.brand,
                 model: car.model,
                 year: car.year,
                 color: car.color,
