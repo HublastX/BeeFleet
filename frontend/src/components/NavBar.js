@@ -19,7 +19,7 @@ const navItem = [
       path: "/drivers",
    },
    {
-      icon: "truck",
+      icon: "car",
       name: "Carros",
       path: "/cars",
    },

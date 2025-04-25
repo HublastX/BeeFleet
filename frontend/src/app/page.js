@@ -51,7 +51,7 @@ function Home() {
                   <Link href="/cars">
                      <Card
                         titulo="Carros"
-                        icone="truck"
+                        icone="car"
                         estado="aumento"
                         quantidade={carro.length}
                      />

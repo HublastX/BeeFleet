@@ -45,7 +45,7 @@ function CarPage() {
                            className="rounded"
                         />
                      ) : (
-                     <Icon name="truck" className="w-full h-full bg-bee-purple-300 text-bee-alert-500" />
+                     <Icon name="car" className="w-full h-full bg-bee-purple-300 text-bee-alert-500" />
                      )}
                   </div>
                   <div className="bg-gray-100 w-full p-4 rounded-md shadow-sm border-t-8 border-blue-700">

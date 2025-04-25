@@ -112,7 +112,7 @@ export default function RecentEvent() {
                      </TableCell>
                      <TableCell className="py-3">
                         <div className="flex items-center gap-3">
-                           <Icon name="truck" className="w-8 h-8 hidden md:block" />
+                           <Icon name="car" className="w-8 h-8 hidden md:block" />
                            <div>
                               <p >
                                  {product.carro}
