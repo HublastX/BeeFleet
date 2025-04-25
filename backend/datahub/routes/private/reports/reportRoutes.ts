@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 import { Request, Response, NextFunction } from "express";
 import { authenticateManager } from "../../../middlewares/auth";
-import { getVehicleUsageReport } from "../../../controllers/reports/getVehicleUsageReport";
+import { getCarUsageReport } from "../../../controllers/reports/getCarUsageReport";
 import { getDriverUsageReport } from "../../../controllers/reports/getDriverUsageReport";
 import { getAllCarsUsageReport } from "../../../controllers/reports/getAllCarsUsageReport";
 import { getAllDriversUsageReport } from "../../../controllers/reports/getAllDriversUsageReport";
@@ -9,13 +9,13 @@ import { getAllDriversUsageReport } from "../../../controllers/reports/getAllDri
 const reportRoutes: Router = express.Router();
 
 reportRoutes.get(
-    "/report/vehicle-usage",
+    "/report/car-usage",
     authenticateManager as (
         req: Request,
         res: Response,
         next: NextFunction
     ) => void,
-    (req: Request, res: Response) => getVehicleUsageReport(req, res)
+    (req: Request, res: Response) => getCarUsageReport(req, res)
 );
 
 reportRoutes.get(
@@ -43,6 +43,7 @@ reportRoutes.get(
         }
     }
 );
+
 reportRoutes.get(
     "/report/all-drivers",
     authenticateManager as (
