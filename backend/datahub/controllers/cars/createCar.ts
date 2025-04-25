@@ -7,7 +7,7 @@ export const createCar = async (
     res: Response
 ) => {
     try {
-        const { plate, model, year, color, odometer, managerId } = req.body;
+        const { renavam, chassis, plate, brand, model, year, color, odometer, managerId } = req.body;
 
         const plateExists = await prisma.car.findUnique({
             where: { plate },
@@ -26,7 +26,10 @@ export const createCar = async (
 
         const car = await prisma.car.create({
             data: {
+                renavam,
+                chassis,
                 plate,
+                brand,
                 model,
                 year,
                 color,
