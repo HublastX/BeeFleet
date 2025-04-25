@@ -61,6 +61,9 @@ export const getCarUsageReport = async (req, res) => {
                     plate: event.car.plate,
                     brand: event.car.brand,
                     model: event.car.model,
+                    year: event.car.year,
+                    color: event.car.color,
+                    status: event.car.status,
                     usageCount: 1,
                     totalOdometer: event.odometer,
                 });
