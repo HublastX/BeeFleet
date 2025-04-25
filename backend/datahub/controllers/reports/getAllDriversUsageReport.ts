@@ -54,6 +54,9 @@ export const getAllDriversUsageReport = async (req: Request, res: Response) => {
                     plate: car.plate,
                     brand: car.brand,
                     model: car.model,
+                    year: car.year,
+                    color: car.color,
+                    status: car.status,
                     usageTimes: carEvents.length,
                     totalOdometerChange: carEvents.reduce(
                         (acc, event) => acc + event.odometer,
