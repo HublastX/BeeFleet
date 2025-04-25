@@ -130,7 +130,7 @@ export default function CarTable() {
                                  <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 overflow-hidden rounded-full">
                                        {!carro.image ? (
-                                          <Icon name="truck" />
+                                          <Icon name="car" />
                                        ) : (
                                           <Image
                                              src={carro.image}
@@ -159,7 +159,7 @@ export default function CarTable() {
                                  <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 overflow-hidden rounded-full">
                                        {!carro.image ? (
-                                          <Icon name="truck" />
+                                          <Icon name="car" />
                                        ) : (
                                           <Image
                                              src={carro.image}

@@ -243,7 +243,7 @@ function EditCars() {
                               />
                            )
                         ) : (
-                           <Icon name="truck" className="size-32 text-white" />
+                           <Icon name="car" className="size-32 text-white" />
                         )}
                      </div>
                      <div className="pl-3 gap-3 flex flex-col">
