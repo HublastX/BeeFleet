@@ -141,16 +141,16 @@ function CreateCars() {
                         onChange={(e) => setImage(e.target.files[0])}
                      />
                   </div>
-                  
+
                   <div className="flex gap-4">
                      <div className="w-full flex gap-4">
-                        <button
+                        <Btn
                            type="button"
                            onClick={() => router.back()}
+                           texto="Cancelar"
+                           variant="danger"
                            className="flex-[1] py-3 px-4 text-lg border border-red-400 bg-red-400 hover:bg-red-500 text-white rounded-lg transition-colors"
-                        >
-                           Cancelar
-                        </button>
+                        />
                         <Btn
                            type="submit"
                            variant="primary"

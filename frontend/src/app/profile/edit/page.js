@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import useAuth from "@/hooks/useAuth";
 import Btn from "../../../elements/btn";
-import InputText from "../../../elements/inputText"; 
+import InputText from "../../../elements/inputText";
 
 function EditProfile() {
    const router = useRouter();
@@ -138,13 +138,13 @@ function EditProfile() {
 
                <div className="flex gap-4">
                   <div className="w-full flex gap-4">
-                     <button
+                     <Btn
                         type="button"
                         onClick={() => router.back()}
+                        texto="Cancelar"
+                        variant="danger"
                         className="flex-[1] px-4 py-2 border border-red-400 bg-red-400 hover:bg-red-500 text-white rounded-lg transition-colors"
-                     >
-                        Cancelar
-                     </button>
+                     />
                      <Btn type="submit" disabled={carregando} className="flex-[2]">
                         {carregando ? "Salvando..." : "Salvar Alterações"}
                      </Btn>
