@@ -11,6 +11,13 @@ export const carSchema = z.object({
         .transform((plate) => {
             return `${plate.slice(0, 3)}-${plate.slice(3)}`.toUpperCase();
         }),
+    renavam: z
+        .string()
+        .regex(/^\d{11}$/, "Renavam deve conter exatamente 11 dígitos (ex: 12345678901)"),
+    chassis: z
+        .string()
+        .regex(/^[A-HJ-NPR-Z0-9]{17}$/, "Chassi deve conter 17 caracteres alfanuméricos válidos"),
+    brand: z.string().min(1, "Marca é obrigatória"),
     model: z.string().min(1, "Modelo é obrigatório"),
     year: z.coerce
         .number()
