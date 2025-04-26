@@ -1,6 +1,9 @@
 export interface CarUsageReport {
     id: string;
+    renavam: string;
+    chassis: string;
     plate: string;
+    brand: string;
     model: string;
     year: number;
     color: string;
@@ -19,8 +22,14 @@ export interface DriverEvent {
     createdAt: Date;
     car: {
         id: string;
+        renavam: string;
+        chassis: string;
         plate: string;
+        brand: string;
         model: string;
+        year: number;
+        color: string;
+        status: string;
     };
 }
 
@@ -34,8 +43,14 @@ export interface Driver {
 
 export interface CarUsageDetail {
     carId: string;
+    renavam: string;
+    chassis: string;
     plate: string;
+    brand: string;
     model: string;
+    year: number;
+    color: string;
+    status: string;
     usageTimes: number;
     totalOdometerChange: number;
 }
@@ -64,7 +79,7 @@ export interface DriverUsage {
     name: string;
     phone: string;
     usageCount: number;
-    vehicles: string[];
+    cars: string[];
     totalOdometer: number;
 }
 
@@ -73,24 +88,30 @@ export interface DriverUsageReport {
     drivers: DriverUsage[];
 }
 
-export interface VehicleUsageReportRequest {
+export interface CarUsageReportRequest {
     startDate: string;
     endDate: string;
     carId?: string;
     managerId?: string;
 }
 
-export interface VehicleUsageReportResponse {
+export interface CarUsageReportResponse {
     totalEvents: number;
-    vehicles: VehicleUsage[];
+    cars: CarUsage[];
     startDate: Date;
     endDate: Date;
 }
 
-export interface VehicleUsage {
+export interface CarUsage {
     carId: string;
+    renavam: string;
+    chassis: string;
     plate: string;
+    brand: string;
     model: string;
+    year: number;
+    color: string;
+    status: string;
     usageCount: number;
     totalOdometer: number;
 }
