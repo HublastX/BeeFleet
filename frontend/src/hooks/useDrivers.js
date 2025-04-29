@@ -35,7 +35,7 @@ export default function useDrivers() {
                ...motorista,
                image:
                   motorista.image && motorista.image !== "null"
-                     ? `${process.env.NEXT_PUBLIC_API_URL}/api${motorista.image}`
+                     ? getImageUrl(motorista.image)
                      : null,
             }));
 
@@ -211,6 +211,13 @@ export default function useDrivers() {
       } finally {
          setCarregando(false);
       }
+   };
+
+   const getImageUrl = (image) => {
+      if (image && process.env.NEXT_PUBLIC_API_URL) {
+         return `${process.env.NEXT_PUBLIC_API_URL}/api${image}`;
+      }
+      return `/images/${image}`;
    };
 
    return {
