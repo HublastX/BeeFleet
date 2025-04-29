@@ -14,6 +14,8 @@ import Icon from "@/elements/Icon";
 import Pagination from "./Pagination";
 import TableSkeleton from "@/elements/ui/skeleton/TableSkeleton";
 import Image from "next/image";
+import DeleteConfirmation from "../ConfirmDeleteModal";
+import Btn from "@/elements/btn";
 
 export default function CarTable() {
    const { carro, carregando, erro, deleteCar } = useCar();
@@ -43,6 +45,22 @@ export default function CarTable() {
       startIndex,
       startIndex + itemsPerPage
    );
+
+   const [modalAberto, setModalAberto] = useState(false);
+   const [carroParaDeletar, setCarroParaDeletar] = useState(null);
+
+   function abrirModalDeletar(carro) {
+      setCarroParaDeletar(carro);
+      setModalAberto(true);
+   }
+
+   function confirmarDelete() {
+      if (carroParaDeletar) {
+         deleteCar(carroParaDeletar.id);
+         setModalAberto(false);
+         setCarroParaDeletar(null);
+      }
+   }
 
    return (
       <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
@@ -88,7 +106,7 @@ export default function CarTable() {
                               isHeader
                               className="px-5 py-3 text-start hidden md:table-cell"
                            >
-                              Odometro  
+                              Odometro
                            </TableCell>
                            <TableCell
                               isHeader
@@ -212,17 +230,16 @@ export default function CarTable() {
                               </TableCell>
 
                               <TableCell className=" py-3 text-center">
-                                 <Link
-                                    href="/"
-                                    onClick={() => deleteCar(carro.id)}
-                                    className="inline-block text-bee-alert-300 hover:text-bee-alert-400"
+                                 <button
+                                    onClick={() => abrirModalDeletar(carro)}
+                                    className="inline-block text-bee-alert-300 hover:text-bee-alert-400 bg-transparent hover:bg-transparent shadow-transparent cursor-pointer"
                                  >
                                     <Icon
                                        strokeWidth={2}
                                        name="trash"
                                        className="w-8 h-8 mx-auto"
                                     />
-                                 </Link>
+                                 </button>
                               </TableCell>
                            </TableRow>
                         ))}
@@ -243,6 +260,13 @@ export default function CarTable() {
                )}
             </div>
          </div>
+         {modalAberto && (
+            <DeleteConfirmation
+               link={confirmarDelete}
+               tipo="carro"
+               onClose={() => setModalAberto(false)}
+            />
+         )}
       </div>
    );
 }

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/utils/ToastContext";
 
 export default function useCar() {
    const { gestor } = useAuth();
@@ -8,6 +9,26 @@ export default function useCar() {
    const [carregando, setCarregando] = useState(true);
    const [erro, setErro] = useState(null);
    const router = useRouter();
+   const { showToast } = useToast();
+
+   const getImageUrl = (image) => {
+      if (image && process.env.NEXT_PUBLIC_API_URL) {
+         return `${process.env.NEXT_PUBLIC_API_URL}/api${image}`;
+      }
+      return `/images/${image}`;
+   };
+
+   // Utilitário para exibir erro
+   const handleError = (
+      error,
+      fallbackMessage = "Erro inesperado.",
+      type = "error"
+   ) => {
+      const msg =
+         typeof error === "string" ? error : error.message || fallbackMessage;
+      setErro(msg);
+      showToast("Erro", type, msg, 5000);
+   };
 
    // Buscar carro
    useEffect(() => {
@@ -32,8 +53,8 @@ export default function useCar() {
             const carroFormatado = data.data.map((carro) => ({
                ...carro,
                image:
-                  carro.image && carro.image !== "null"
-                     ? `${process.env.NEXT_PUBLIC_API_URL}/api${carro.image}`
+                  carro.image && carro.image !== "null" && carro.image !== null
+                     ? getImageUrl(carro.image)
                      : null,
             }));
 
@@ -77,7 +98,7 @@ export default function useCar() {
             ...carroData,
             image:
                carroData.image && carroData.image !== "null"
-                  ? `${process.env.NEXT_PUBLIC_API_URL}/api${carroData.image}`
+                  ? getImageUrl(carroData.image)
                   : null,
          };
 
@@ -91,14 +112,43 @@ export default function useCar() {
    };
 
    // Criar carro
-   const createCar = async (plate, model, year, color, odometer, image) => {
+   const createCar = async (
+      plate,
+      model,
+      year,
+      color,
+      odometer,
+      image,
+      renavam,
+      chassis,
+      brand
+   ) => {
       if (!gestor?.id) {
          setErro("ID do gestor não encontrado.");
+         showToast("Erro", "warning", "Gestor não encontrado");
          return;
       }
 
       setCarregando(true);
       setErro(null);
+
+      const existingCar = carro.find(
+         (car) =>
+            car.plate === plate ||
+            car.chassis === chassis ||
+            car.renavam === renavam
+      );
+      if (existingCar) {
+         setErro("Carro ja cadastrado");
+         showToast(
+            "Erro",
+            "error",
+            "Algum desses dados ja foram cadastrados antes",
+            5000
+         );
+         setCarregando(false);
+         return;
+      }
 
       try {
          const formData = new FormData();
@@ -108,6 +158,9 @@ export default function useCar() {
          formData.append("color", color);
          formData.append("odometer", odometer);
          formData.append("image", image);
+         formData.append("renavam", renavam);
+         formData.append("chassis", chassis);
+         formData.append("brand", brand);
          formData.append("status", "AVAILABLE");
          formData.append("managerId", gestor.id);
          const res = await fetch(
@@ -124,6 +177,17 @@ export default function useCar() {
          if (!res.ok) throw new Error("Erro ao criar carro. Tente novamente.");
 
          const data = await res.json();
+
+         if (res.ok) {
+            localStorage.setItem(
+               "toastMessage",
+               "carro adicionado com sucesso!"
+            );
+            localStorage.setItem("toastType", "success");
+         } else {
+            throw new Error(data.error || "Erro inesperado ao criar carro.");
+         }
+
          if (data && !data.error) {
             setCarro((prev) => [...prev, data.car]);
             router.push("/cars");
@@ -132,6 +196,7 @@ export default function useCar() {
          }
       } catch (error) {
          setErro(error.message || "Erro ao conectar ao servidor.");
+         handleError(error, "Erro ao conectar ao servidor.", "warning");
       } finally {
          setCarregando(false);
       }
@@ -140,10 +205,11 @@ export default function useCar() {
    // Atualizar carro
    const updateCar = async (
       id,
-      { plate, model, year, color, odometer, image }
+      { plate, model, year, color, odometer, image, renavam, chassis, brand }
    ) => {
       if (!gestor?.token) {
          setErro("token do gestor não encontrado.");
+         showToast("Erro", "warning", "Gestor não encontrado");
          return;
       }
 
@@ -158,6 +224,9 @@ export default function useCar() {
          if (color !== undefined) formData.append("color", color);
          if (odometer !== undefined) formData.append("odometer", odometer);
          if (image !== undefined) formData.append("image", image);
+         if (renavam !== undefined) formData.append("renavam", renavam);
+         if (chassis !== undefined) formData.append("chassis", chassis);
+         if (brand !== undefined) formData.append("brand", brand);
 
          const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`,
@@ -170,20 +239,23 @@ export default function useCar() {
             }
          );
 
-         if (!res.ok)
-            throw new Error("Erro ao atualizar carro. Tente novamente.");
-
          const data = await res.json();
+
          if (data.success && data.data) {
             setCarro((prev) =>
                prev.map((car) => (car.id === id ? data.data : car))
             );
+            localStorage.setItem(
+               "toastMessage",
+               "Carro atualizado com sucesso!"
+            );
+            localStorage.setItem("toastType", "success");
             router.push("/cars");
          } else {
             setErro(data.error || "Erro ao atualizar carro. Tente novamente.");
          }
       } catch (error) {
-         setErro(error.message || "Erro ao conectar ao servidor.");
+         handleError(error, "Erro ao conectar ao servidor.", "warning");
       } finally {
          setCarregando(false);
       }
@@ -221,6 +293,22 @@ export default function useCar() {
          setCarregando(false);
       }
    };
+
+   useEffect(() => {
+      const toastMessage = localStorage.getItem("toastMessage");
+      const toastType = localStorage.getItem("toastType");
+
+      if (toastMessage && toastType) {
+         showToast(
+            toastType === "success" ? "Sucesso" : "Aviso",
+            toastType,
+            toastMessage,
+            5000
+         );
+         localStorage.removeItem("toastMessage");
+         localStorage.removeItem("toastType");
+      }
+   }, [showToast]);
 
    return {
       carro,
