@@ -27,7 +27,9 @@ export default function CarCard() {
                         className="rounded-lg"
                      />
                   ) : (
-                     <Icon name="car" className="w-full h-full bg-bee-purple-300 text-bee-alert-500" />
+                     <div className="w-full h-full bg-bee-purple-300 text-bee-alert-500 text-center flex justify-center">
+                        <Icon name="car"/>
+                     </div>
                   )}
 
                   <h1 className="absolute top-1 right-1 w-5 h-5 rounded-full border-2 border-white dark:border-gray-800 bg-bee-alert-100"></h1>
