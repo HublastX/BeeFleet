@@ -1,37 +1,36 @@
-import { useState } from 'react';
-
-export default function DeleteConfirmation() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleDelete = () => {
-
-    console.log('Item apagado!');
-    setIsOpen(false);
-  };
-
-  return (
-    <div>
-      <button onClick={() => setIsOpen(true)} className="bg-red-500 text-white px-4 py-2 rounded">
-        Apagar
-      </button>
-
-      {isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-6 rounded shadow-lg text-center">
-            <div className="text-5xl text-red-500 mb-4">✖️</div>
-            <h2 className="text-xl font-bold mb-2">Tem certeza?</h2>
-            <p className="text-gray-600 mb-6">Você realmente deseja excluir estes registros? Este processo não pode ser desfeito..</p>
-            <div className="flex justify-center gap-4">
-              <button onClick={() => setIsOpen(false)} className="bg-gray-300 text-black px-4 py-2 rounded">
-                Cancel
-              </button>
-              <button onClick={handleDelete} className="bg-red-500 text-white px-4 py-2 rounded">
-                Delete
-              </button>
+import Btn from "@/elements/btn";
+import Icon from "@/elements/Icon";
+export default function DeleteConfirmation({ link, tipo, onClose }) {
+   return (
+      <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50">
+         <div className="bg-white dark:bg-bee-dark-800 dark:border-bee-dark-400 dark:border-1 py-5 px-10 rounded shadow-lg text-center">
+            <div className="text-5xl text-red-500 mb-4 text-center flex justify-center">
+               <Icon
+                  name="xMark"
+                  className="size-25 text-red-500"
+                  strokeWidth={3}
+               />
             </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+            <h2 className="text-xl font-bold mb-2">
+               Tem certeza que deseja apagar?
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+               Você realmente deseja excluir este {tipo}? Este processo não pode
+               ser desfeito...
+            </p>
+            <div className="flex justify-center gap-4">
+               <Btn
+                  texto="Cancelar"
+                  onClick={onClose}
+                  className="dark:bg-gray-600 dark:hover:bg-gray-500 bg-gray-400 hover:bg-gray-500 text-black"
+              />
+               <Btn
+               texto="Deletar"
+                  onClick={link}
+                  className="bg-red-600 hover:bg-red-500"
+               />
+            </div>
+         </div>
+      </div>
+   );
 }
