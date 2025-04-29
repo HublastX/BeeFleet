@@ -54,7 +54,7 @@ export default function useAuth() {
                name: data.manager.name,
                email: data.manager.email,
                token: data.token,
-               image: `${API_URL}api${data.manager.image}`,
+               image: getImageUrl(data.manager.image),
             });
 
             localStorage.setItem(
@@ -78,7 +78,6 @@ export default function useAuth() {
       setCarregando(true);
       setErro(null);
 
-
       const existingManager = gestores.find(
          (manager) => manager.email === email
       );
@@ -95,7 +94,7 @@ export default function useAuth() {
          formData.append("email", email);
          formData.append("password", password);
          formData.append("image", image);
-   
+
          const res = await fetch(`${API_URL}/api/managers/create`, {
             method: "POST",
             body: formData,
@@ -108,7 +107,6 @@ export default function useAuth() {
 
          const data = await res.json();
          if (res.ok) {
-
             localStorage.setItem(
                "toastMessage",
                "Gestor registrado com sucesso!"
@@ -185,11 +183,11 @@ export default function useAuth() {
          let image = localStorage.getItem("image");
          if (image === "null" || image === "") image = null;
          else image = `${API_URL}/api${image}`;
-         
+
          if (token && id && name && email) {
             return { id, name, email, token, image };
          }
-         
+
          return null;
       };
 
@@ -251,6 +249,13 @@ export default function useAuth() {
          localStorage.removeItem("toastType");
       }
    }, []);
+
+   const getImageUrl = (image) => {
+      if (image && API_URL) {
+         return `${API_URL}/api${image}`;
+      }
+      return `/images/${image}`;
+   };
 
    return {
       gestor,
