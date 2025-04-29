@@ -223,10 +223,13 @@ export default function useCar() {
          if (year !== undefined) formData.append("year", year);
          if (color !== undefined) formData.append("color", color);
          if (odometer !== undefined) formData.append("odometer", odometer);
-         if (image !== undefined) formData.append("image", image);
          if (renavam !== undefined) formData.append("renavam", renavam);
          if (chassis !== undefined) formData.append("chassis", chassis);
          if (brand !== undefined) formData.append("brand", brand);
+         if (image instanceof File) {
+            formData.append("image", image);
+         }
+         
 
          const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`,
