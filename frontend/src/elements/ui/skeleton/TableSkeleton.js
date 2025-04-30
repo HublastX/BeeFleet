@@ -8,9 +8,8 @@ const TableSkeleton = () => {
          setColumns(window.innerWidth < 640 ? 3 : 5);
       };
 
-      updateColumns(); // checa logo ao montar
+      updateColumns();
       window.addEventListener("resize", updateColumns);
-
       return () => window.removeEventListener("resize", updateColumns);
    }, []);
 
@@ -20,17 +19,25 @@ const TableSkeleton = () => {
             <tr>
                {[...Array(columns)].map((_, i) => (
                   <th key={i} className="px-5 py-3 text-left text-gray-400">
-                     <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-2/4 animate-pulse"></div>
+                     <div className="h-4 bg-gray-300 dark:bg-gray-600 rounded w-2/4 animate-pulse" />
                   </th>
                ))}
             </tr>
          </thead>
          <tbody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400">
             {[...Array(4)].map((_, rowIdx) => (
-               <tr key={rowIdx} className="animate-pulse">
+               <tr key={rowIdx}>
                   {[...Array(columns)].map((_, colIdx) => (
                      <td key={colIdx} className="px-5 py-4">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-500 rounded w-full"></div>
+                        <div
+                           className={`h-4 rounded animate-pulse ${
+                              (colIdx + rowIdx) % 3 === 0
+                                 ? "bg-gray-200 dark:bg-gray-500 w-1/2"
+                                 : (colIdx + rowIdx) % 3 === 1
+                                 ? "bg-gray-300 dark:bg-gray-600 w-3/4"
+                                 : "bg-gray-200 dark:bg-gray-500 w-full"
+                           }`}
+                        />
                      </td>
                   ))}
                </tr>
