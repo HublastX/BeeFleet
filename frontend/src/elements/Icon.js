@@ -19,6 +19,7 @@ import {
    SignalSlashIcon,
    TableCellsIcon,
    IdentificationIcon,
+   MagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
 import {
    PlusIcon,
@@ -27,7 +28,6 @@ import {
    ChevronDownIcon,
    XMarkIcon,
    ArrowLeftStartOnRectangleIcon,
-   MagnifyingGlassIcon,
    FunnelIcon,
    EyeIcon,
    TrashIcon,
