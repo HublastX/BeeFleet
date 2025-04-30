@@ -14,22 +14,42 @@ function Cars() {
 
    return (
       <div>
-         <div className="p-2 mb-3 flex md:gap-6 gap-4 items-center">
-            <Link href="/cars/create">
-               <Btn>
-                  <Icon name="carPlus" className="size-6" />
-               </Btn>
-            </Link>
-            <div className="w-full">
+         <div className="p-2 mb-3 flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
+            {/* Botão e ícones (lado esquerdo e direito no desktop) */}
+            <div className="flex items-center justify-between md:justify-start gap-2 md:gap-4 w-full md:w-auto">
+               <Link href="/cars/create">
+                  <Btn
+                     texto="Novo carro"
+                     variant="primary"
+                     className="flex gap-3 text-nowrap"
+                  >
+                     <Icon name="carPlus" className="size-6" />
+                  </Btn>
+               </Link>
+
+               {/* Ícones no mobile */}
+               <div className="flex gap-2 md:hidden">
+                  <Btn variant="secondary" onClick={() => setView("table")}>
+                     <Icon name="table" className="size-6" />
+                  </Btn>
+                  <Btn variant="secondary" onClick={() => setView("cards")}>
+                     <Icon name="identidade" className="size-6" />
+                  </Btn>
+               </div>
+            </div>
+
+            {/* Input que cresce no desktop */}
+            <div className="w-full md:flex-1">
                <InputText
                   variant="withIcon"
                   icon="search"
-                  className="w-full"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                />
             </div>
-            <div className="flex gap-2">
+
+            {/* Ícones no desktop */}
+            <div className="hidden md:flex gap-2">
                <Btn variant="secondary" onClick={() => setView("table")}>
                   <Icon name="table" className="size-8" />
                </Btn>
