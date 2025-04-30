@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
    Table,
    TableBody,
@@ -15,9 +15,8 @@ import Pagination from "./Pagination";
 import TableSkeleton from "@/elements/ui/skeleton/TableSkeleton";
 import Image from "next/image";
 import DeleteConfirmation from "../ConfirmDeleteModal";
-import Btn from "@/elements/btn";
 
-export default function CarTable() {
+export default function CarTable({ searchTerm }) {
    const { carro, carregando, erro, deleteCar } = useCar();
    const [ordenarPorStatus, setOrdenarPorStatus] = useState(false);
    const [ordenarPorNome, setOrdenarPorNome] = useState(false);
@@ -37,11 +36,20 @@ export default function CarTable() {
       return copia;
    })();
 
+   const carrosFiltrados = CarrosOrdenados.filter((carro) => {
+      if (!searchTerm) return true;
+      const termo = searchTerm.toLowerCase();
+      return (
+         carro.model.toLowerCase().includes(termo) ||
+         carro.plate.toLowerCase().includes(termo)
+      );
+   });
+
    const [currentPage, setCurrentPage] = useState(1);
    const itemsPerPage = 5;
-   const totalPages = Math.ceil((carro?.length || 0) / itemsPerPage);
+   const totalPages = Math.ceil(carrosFiltrados.length / itemsPerPage);
    const startIndex = (currentPage - 1) * itemsPerPage;
-   const currentCar = CarrosOrdenados.slice(
+   const currentCar = carrosFiltrados.slice(
       startIndex,
       startIndex + itemsPerPage
    );
@@ -61,6 +69,10 @@ export default function CarTable() {
          setCarroParaDeletar(null);
       }
    }
+
+   useEffect(() => {
+      setCurrentPage(1);
+   }, [searchTerm]);
 
    return (
       <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
@@ -147,16 +159,17 @@ export default function CarTable() {
                               <TableCell className="block md:hidden px-5 py-4 text-start">
                                  <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 overflow-hidden rounded-full">
-                                       {!carro.image ? (
-                                          <Icon name="car" />
-                                       ) : (
+                                       {carro.image ? (
                                           <Image
                                              src={carro.image}
-                                             width={200}
-                                             height={200}
+                                             alt={`Imagem do carro ${carro.model}`}
+                                             width={100}
+                                             height={100}
+                                             objectFit="cover"
                                              className="w-full h-full object-cover"
-                                             alt="img do carro"
                                           />
+                                       ) : (
+                                          <Icon name="car" />
                                        )}
                                     </div>
                                     <div>
@@ -176,16 +189,17 @@ export default function CarTable() {
                               <TableCell className="hidden md:table-cell px-5 py-4 sm:px-6 text-start">
                                  <div className="flex items-center gap-3">
                                     <div className="w-12 h-12 overflow-hidden rounded-full">
-                                       {!carro.image ? (
-                                          <Icon name="car" />
-                                       ) : (
+                                       {carro.image ? (
                                           <Image
                                              src={carro.image}
-                                             width={200}
-                                             height={200}
+                                             alt={`Imagem do carro ${carro.model}`}
+                                             width={100}
+                                             height={100}
+                                             objectFit="cover"
                                              className="w-full h-full object-cover"
-                                             alt="img do carro"
                                           />
+                                       ) : (
+                                          <Icon name="car" />
                                        )}
                                     </div>
                                     <div>
