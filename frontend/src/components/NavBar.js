@@ -158,8 +158,11 @@ const NavBar = () => {
    const [openSubmenu, setOpenSubmenu] = useState(null);
    const [subMenuHeight, setSubMenuHeight] = useState({});
    const subMenuRefs = useRef({});
-   const isActive = useCallback((path) => path === pathname, [pathname]);
-
+   const isActive = useCallback(
+      (path) => pathname === path || pathname.startsWith(`${path}/`),
+      [pathname]
+   );
+   
    useEffect(() => {
       let submenuMatched = false;
       ["main", "others"].forEach((menuType) => {
