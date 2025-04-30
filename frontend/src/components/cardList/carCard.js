@@ -2,6 +2,7 @@ import useCar from "@/hooks/useCar";
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "@/elements/Icon";
+import CardSkeleton from "@/elements/ui/skeleton/CardSkeleton";
 export default function CarCard({ searchTerm }) {
    const { carro, erro, carregando } = useCar();
    const carrosFiltrados = carro.filter((carro) => {
@@ -14,7 +15,7 @@ export default function CarCard({ searchTerm }) {
    });
    
 
-   if (carregando) return <p className="p-4">Carregando...</p>;
+   if (carregando) return <CardSkeleton />;
    return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
          {carrosFiltrados.map((car) => (
