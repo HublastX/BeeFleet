@@ -2,16 +2,22 @@ import useCar from "@/hooks/useCar";
 import Image from "next/image";
 import Link from "next/link";
 import Icon from "@/elements/Icon";
-export default function CarCard() {
+export default function CarCard({ searchTerm }) {
    const { carro, erro, carregando } = useCar();
+   const carrosFiltrados = carro.filter((carro) => {
+      if (!searchTerm) return true;
+      const termo = searchTerm.toLowerCase();
+      return (
+         carro.model.toLowerCase().includes(termo) ||
+         carro.plate.toLowerCase().includes(termo)
+      );
+   });
+   
 
    if (carregando) return <p className="p-4">Carregando...</p>;
-   if (erro)
-      return <p className="p-4 text-red-500">Erro ao carregar os carros</p>;
-
    return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
-         {carro.map((car) => (
+         {carrosFiltrados.map((car) => (
             <Link
                href={`cars/${car.id}`}
                key={car.id}
@@ -28,7 +34,7 @@ export default function CarCard() {
                      />
                   ) : (
                      <div className="w-full h-full bg-bee-purple-300 text-bee-alert-500 text-center flex justify-center">
-                        <Icon name="car"/>
+                        <Icon name="car" />
                      </div>
                   )}
 
