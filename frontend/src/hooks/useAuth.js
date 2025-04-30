@@ -11,6 +11,13 @@ export default function useAuth() {
    const { showToast } = useToast();
    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
+   const getImageUrl = (image) => {
+      if (image && API_URL) {
+         return `${API_URL}/api${image}`;
+      }
+      return `/images/${image}`;
+   };
+
    // Utilitário para exibir erro
    const handleError = (
       error,
@@ -142,7 +149,7 @@ export default function useAuth() {
             body: formData,
          });
 
-         if (!res.ok) throw new Error("Erro ao atualizar dados do gestor.");
+         if (!res.ok) throw new Error("Erro ao atualizar dados do perfil.");
 
          const data = await res.json();
 
@@ -154,13 +161,13 @@ export default function useAuth() {
             ...prev,
             name: data.data.name,
             email: data.data.email,
-            image: data.data.image,
+            image: getImageUrl(data.data.image),
          }));
 
          showToast(
             "Sucesso",
             "success",
-            "Gestor atualizado com sucesso!",
+            "Perfil atualizado com sucesso!",
             5000
          );
 
@@ -249,13 +256,6 @@ export default function useAuth() {
          localStorage.removeItem("toastType");
       }
    }, []);
-
-   const getImageUrl = (image) => {
-      if (image && API_URL) {
-         return `${API_URL}/api${image}`;
-      }
-      return `/images/${image}`;
-   };
 
    return {
       gestor,
