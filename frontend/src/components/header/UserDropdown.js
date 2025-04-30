@@ -61,7 +61,7 @@ export default function UserDropdown() {
                   <DropdownItem
                      onItemClick={closeDropdown}
                      tag="a"
-                     href="/profile"
+                     href="/profile/edit"
                      className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
                   >
                      <Icon
