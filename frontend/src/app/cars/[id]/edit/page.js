@@ -22,7 +22,7 @@ function EditCars() {
       color: "",
       odometer: "",
       renavam: "",
-      chassis: "",
+      // chassis: "",
       brand: "",
       image: null,
    });
@@ -37,7 +37,7 @@ function EditCars() {
             color: car.color || "",
             odometer: car.odometer || "",
             renavam: car.renavam || "",
-            chassis: car.chassis || "",
+            // chassis: car.chassis || "",
             brand: car.brand || "",
             image: null,
          });
@@ -53,7 +53,7 @@ function EditCars() {
       if (!formData.brand) newErrors.brand = "Campo obrigatório";
       if (!formData.model) newErrors.model = "Campo obrigatório";
       if (!formData.year) newErrors.year = "Campo obrigatório";
-      if (!formData.chassis) newErrors.chassis = "Campo obrigatório";
+      // if (!formData.chassis) newErrors.chassis = "Campo obrigatório";
       if (!formData.odometer) newErrors.odometer = "Campo obrigatório";
       if (!formData.renavam) newErrors.renavam = "Campo obrigatório";
       if (!formData.color) newErrors.color = "Campo obrigatório";
@@ -105,12 +105,12 @@ function EditCars() {
          placeholder: "Ex: 82754432011",
          type: "number",
       },
-      {
-         label: "Chassi",
-         id: "chassis",
-         placeholder: "Ex: 9XbZ3DvWVvNSU1551",
-         type: "text",
-      },
+      // {
+      //    label: "Chassi",
+      //    id: "chassis",
+      //    placeholder: "Ex: 9XbZ3DvWVvNSU1551",
+      //    type: "text",
+      // },
       {
          label: "Cor",
          id: "color",
@@ -141,7 +141,6 @@ function EditCars() {
                            id,
                            placeholder,
                            type,
-                           required,
                            transform,
                         }) => (
                            <div key={id}>
