@@ -83,8 +83,15 @@ export default function CarTable({ searchTerm }) {
          )}
          {erro && (
             <div className="p-4">
-               <TableSkeleton />
                <p className="text-bee-alert-300">Erro: {erro}</p>
+               <TableSkeleton />
+            </div>
+         )}
+         {currentCar.length === 0 && !erro && !carregando && (
+            <div className="flex items-center justify-center p-6 w-full h-full">
+               <div className="text-center font-semibold text-xl ">
+                  Nenhum carro foi encontrado
+               </div>
             </div>
          )}
          <div className="max-w-full overflow-x-auto">

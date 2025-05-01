@@ -138,18 +138,25 @@ export default function useCar() {
             car.chassis === chassis ||
             car.renavam === renavam
       );
+      
       if (existingCar) {
-         setErro("Carro ja cadastrado");
-         showToast(
-            "Erro",
-            "error",
-            "Algum desses dados ja foram cadastrados antes",
-            5000
-         );
+         const duplicatedFields = [];
+      
+         if (existingCar.plate === plate) duplicatedFields.push("Placa");
+         if (existingCar.chassis === chassis) duplicatedFields.push("Chassi");
+         if (existingCar.renavam === renavam) duplicatedFields.push("Renavam");
+      
+         const message =
+            duplicatedFields.length === 1
+               ? `${duplicatedFields[0]} já cadastrada.`
+               : `${duplicatedFields.join(", ")} já cadastrados.`;
+      
+         setErro("Carro já cadastrado");
+         showToast("Erro", "error", message, 5000);
          setCarregando(false);
          return;
       }
-
+      
       try {
          const formData = new FormData();
          formData.append("plate", plate);
@@ -163,6 +170,7 @@ export default function useCar() {
          formData.append("brand", brand);
          formData.append("status", "AVAILABLE");
          formData.append("managerId", gestor.id);
+
          const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/cars/create`,
             {
@@ -196,7 +204,7 @@ export default function useCar() {
          }
       } catch (error) {
          setErro(error.message || "Erro ao conectar ao servidor.");
-         handleError(error, "Erro ao conectar ao servidor.", "warning");
+         handleError(error, "warning", "Erro ao conectar ao servidor.");
       } finally {
          setCarregando(false);
       }
@@ -230,7 +238,6 @@ export default function useCar() {
             formData.append("image", image);
          }
          
-
          const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`,
             {
@@ -258,7 +265,7 @@ export default function useCar() {
             setErro(data.error || "Erro ao atualizar carro. Tente novamente.");
          }
       } catch (error) {
-         handleError(error, "Erro ao conectar ao servidor.", "warning");
+         handleError(error, "warning", "Erro ao conectar ao servidor.");
       } finally {
          setCarregando(false);
       }

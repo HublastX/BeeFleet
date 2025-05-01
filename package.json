@@ -23,6 +23,7 @@
     "husky": "^9.1.7"
   },
   "dependencies": {
+    "datahub": "file:backend/datahub",
     "react-loading-skeleton": "^3.5.0"
   }
 }

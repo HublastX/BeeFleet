@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 import { useRouter } from "next/navigation";
+import { useToast } from "@/utils/ToastContext";
 
 export default function useDrivers() {
    const { gestor } = useAuth();
@@ -8,6 +9,26 @@ export default function useDrivers() {
    const [carregando, setCarregando] = useState(true);
    const [erro, setErro] = useState(null);
    const router = useRouter();
+   const { showToast } = useToast();
+
+   const getImageUrl = (image) => {
+      if (image && process.env.NEXT_PUBLIC_API_URL) {
+         return `${process.env.NEXT_PUBLIC_API_URL}/api${image}`;
+      }
+      return `/images/${image}`;
+   };
+
+   // Utilitário para exibir erro
+   const handleError = (
+      error,
+      fallbackMessage = "Erro inesperado.",
+      type = "error"
+   ) => {
+      const msg =
+         typeof error === "string" ? error : error.message || fallbackMessage;
+      setErro(msg);
+      showToast("Erro", type, msg, 5000);
+   };
 
    // Buscar motoristas
    useEffect(() => {
@@ -34,7 +55,9 @@ export default function useDrivers() {
             const motoristasFormatados = data.data.map((motorista) => ({
                ...motorista,
                image:
-                  motorista.image && motorista.image !== "null"
+                  motorista.image &&
+                  motorista.image !== "null" &&
+                  motorista.image !== null
                      ? getImageUrl(motorista.image)
                      : null,
             }));
@@ -72,7 +95,17 @@ export default function useDrivers() {
 
          const data = await res.json();
 
-         return data;
+         const motoristaData = data.data || data;
+
+         const motoristasFormatados = {
+            ...motoristaData,
+            image:
+               motoristaData.image && motoristaData.image !== "null"
+                  ? getImageUrl(motoristaData.image)
+                  : null,
+         };
+
+         return motoristasFormatados;
       } catch (err) {
          console.error("Erro na requisição:", err);
          setErro(err.message);
@@ -85,11 +118,33 @@ export default function useDrivers() {
    const createDriver = async (name, phone, license, image) => {
       if (!gestor?.id) {
          setErro("ID do gestor não encontrado.");
+         showToast("Erro", "warning", "Gestor não encontrado");
          return;
       }
 
       setCarregando(true);
       setErro(null);
+
+      const existingDriver = motoristas.find(
+         (driver) => driver.license === license || driver.phone === phone
+      );
+
+      if (existingDriver) {
+         const duplicatedFields = [];
+
+         if (existingDriver.phone === phone) duplicatedFields.push("Telefone");
+         if (existingDriver.license === license) duplicatedFields.push("CNH");
+
+         const message =
+            duplicatedFields.length === 1
+               ? `${duplicatedFields[0]} já cadastrada.`
+               : `${duplicatedFields.join(", ")} já cadastrados.`;
+
+         setErro("Motorista já cadastrado");
+         showToast("Erro", "error", message, 5000);
+         setCarregando(false);
+         return;
+      }
 
       try {
          const formData = new FormData();
@@ -112,12 +167,21 @@ export default function useDrivers() {
 
          if (!res.ok)
             throw new Error("Erro ao criar motorista. Tente novamente.");
-         if (res.status === 409) {
-            alert("Motorista já existe!");
-            return;
-         }
 
          const data = await res.json();
+
+         if (res.ok) {
+            localStorage.setItem(
+               "toastMessage",
+               "Motorista adicionado com sucesso!"
+            );
+            localStorage.setItem("toastType", "success");
+         } else {
+            throw new Error(
+               data.error || "Erro inesperado ao criar motorista."
+            );
+         }
+
          if (data && !data.err) {
             setMotoristas((prev) => [...prev, data.driver]);
             router.push("/drivers");
@@ -126,6 +190,7 @@ export default function useDrivers() {
          }
       } catch (error) {
          setErro(error.message || "Erro ao conectar ao servidor.");
+         handleError(error, "warning", "Erro ao conectar ao servidor");
       } finally {
          setCarregando(false);
       }
@@ -135,6 +200,7 @@ export default function useDrivers() {
    const updateDriver = async (id, { name, phone, license, image }) => {
       if (!gestor?.token) {
          setErro("Token do gestor não encontrado.");
+         showToast("Erro", "warning", "Gestor não encontrado");
          return;
       }
 
@@ -146,7 +212,9 @@ export default function useDrivers() {
          if (name !== undefined) formData.append("name", name);
          if (phone !== undefined) formData.append("phone", phone);
          if (license !== undefined) formData.append("license", license);
-         if (image !== undefined) formData.append("image", image);
+         if (image instanceof File) {
+            formData.append("image", image);
+         }
 
          const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/${id}`,
@@ -159,14 +227,17 @@ export default function useDrivers() {
             }
          );
 
-         if (!res.ok)
-            throw new Error("Erro ao atualizar motorista. Tente novamente.");
-
          const data = await res.json();
+
          if (data.success && data.data) {
             setMotoristas((prev) =>
                prev.map((driver) => (driver.id === id ? data.data : driver))
             );
+            localStorage.setItem(
+               "toastMessage",
+               "Motorista atualizado com sucesso!"
+            );
+            localStorage.setItem("toastType", "success");
             router.push("/drivers");
          } else {
             setErro(
@@ -174,7 +245,7 @@ export default function useDrivers() {
             );
          }
       } catch (error) {
-         setErro(error.message || "Erro ao conectar ao servidor.");
+         handleError(error, "warning", "Erro ao conectar ao servidor.");
       } finally {
          setCarregando(false);
       }
@@ -213,12 +284,21 @@ export default function useDrivers() {
       }
    };
 
-   const getImageUrl = (image) => {
-      if (image && process.env.NEXT_PUBLIC_API_URL) {
-         return `${process.env.NEXT_PUBLIC_API_URL}/api${image}`;
+   useEffect(() => {
+      const toastMessage = localStorage.getItem("toastMessage");
+      const toastType = localStorage.getItem("toastType");
+
+      if (toastMessage && toastType) {
+         showToast(
+            toastType === "success" ? "Sucesso" : "Aviso",
+            toastType,
+            toastMessage,
+            5000
+         );
+         localStorage.removeItem("toastMessage");
+         localStorage.removeItem("toastType");
       }
-      return `/images/${image}`;
-   };
+   }, [showToast]);
 
    return {
       motoristas,
