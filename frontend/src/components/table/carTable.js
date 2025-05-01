@@ -89,8 +89,8 @@ export default function CarTable({ searchTerm }) {
          )}
          {currentCar.length === 0 && !erro && !carregando && (
             <div className="flex items-center justify-center p-6 w-full h-full">
-               <div className="text-center font-semibold text-xl text-bee-dark-600 dark:text-bee-light-300">
-                  Nenhum motorista foi encontrado.
+               <div className="text-center font-semibold text-xl ">
+                  Nenhum carro foi encontrado
                </div>
             </div>
          )}

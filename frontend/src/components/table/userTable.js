@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
    Table,
    TableBody,
@@ -14,8 +14,9 @@ import Icon from "@/elements/Icon";
 import Image from "next/image";
 import Pagination from "./Pagination";
 import TableSkeleton from "@/elements/ui/skeleton/TableSkeleton";
+import DeleteConfirmation from "../ConfirmDeleteModal";
 
-export default function UserTable() {
+export default function UserTable({ searchTerm }) {
    const { motoristas, carregando, erro, deleteDriver } = useDrivers();
    const [ordenarPorStatus, setOrdenarPorStatus] = useState(false);
    const [ordenarPorNome, setOrdenarPorNome] = useState(false);
@@ -35,14 +36,44 @@ export default function UserTable() {
       return copia;
    })();
 
+   const motoristaFiltrado = motoristasOrdenados.filter((motorista) => {
+      if (!searchTerm) return true;
+      const termo = searchTerm.toLowerCase();
+      return (
+         motorista.name.toLowerCase().includes(termo) ||
+         motorista.phone.toLowerCase().includes(termo) ||
+         motorista.license.toLowerCase().includes(termo)
+      );
+   });
+
    const [currentPage, setCurrentPage] = useState(1);
    const itemsPerPage = 5;
    const totalPages = Math.ceil((motoristas?.length || 0) / itemsPerPage);
    const startIndex = (currentPage - 1) * itemsPerPage;
-   const currentDrivers = motoristasOrdenados.slice(
+   const currentDrivers = motoristaFiltrado.slice(
       startIndex,
       startIndex + itemsPerPage
    );
+
+   const [modalAberto, setModalAberto] = useState(false);
+   const [motoristaParaDeletar, setMotoristaParaDeletar] = useState(null);
+
+   function abrirModalDeletar(motorista) {
+      setMotoristaParaDeletar(motorista);
+      setModalAberto(true);
+   }
+
+   function confirmarDelete() {
+      if (motoristaParaDeletar) {
+         deleteDriver(motoristaParaDeletar.id);
+         setModalAberto(false);
+         setMotoristaParaDeletar(null);
+      }
+   }
+
+   useEffect(() => {
+      setCurrentPage(1);
+   }, [searchTerm]);
 
    return (
       <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
@@ -59,8 +90,8 @@ export default function UserTable() {
          )}
          {currentDrivers.length === 0 && !erro && !carregando && (
             <div className="flex items-center justify-center p-6 w-full h-full">
-               <div className="text-center font-semibold text-xl text-bee-dark-600 dark:text-bee-light-300">
-                  Nenhum motorista foi encontrado.
+               <div className="text-center font-semibold text-xl">
+                  Nenhum motorista foi encontrado
                </div>
             </div>
          )}
@@ -212,17 +243,16 @@ export default function UserTable() {
                                  </Link>
                               </TableCell>
                               <TableCell className="py-3 text-center">
-                                 <Link
-                                    href="/"
-                                    onClick={() => deleteDriver(motorista.id)}
-                                    className="inline-block text-bee-alert-300 hover:text-bee-alert-400"
+                                 <button
+                                    onClick={() => abrirModalDeletar(motorista)}
+                                    className="inline-block text-bee-alert-300 hover:text-bee-alert-400 bg-transparent hover:bg-transparent shadow-transparent cursor-pointer"
                                  >
                                     <Icon
                                        strokeWidth={2}
                                        name="trash"
                                        className="w-8 h-8 mx-auto"
                                     />
-                                 </Link>
+                                 </button>
                               </TableCell>
                            </TableRow>
                         ))}
@@ -243,6 +273,14 @@ export default function UserTable() {
                )}
             </div>
          </div>
+
+         {modalAberto && (
+            <DeleteConfirmation
+               link={confirmarDelete}
+               tipo="motorista"
+               onClose={() => setModalAberto(false)}
+            />
+         )}
       </div>
    );
 }
