@@ -53,10 +53,18 @@ export default function UserTable() {
          )}
          {erro && (
             <div className="p-4">
-               <TableSkeleton />
                <p className="text-bee-alert-300">Erro: {erro}</p>
+               <TableSkeleton />
             </div>
          )}
+         {currentDrivers.length === 0 && !erro && !carregando && (
+            <div className="flex items-center justify-center p-6 w-full h-full">
+               <div className="text-center font-semibold text-xl text-bee-dark-600 dark:text-bee-light-300">
+                  Nenhum motorista foi encontrado.
+               </div>
+            </div>
+         )}
+
          <div className="max-w-full overflow-x-auto">
             <div>
                {!carregando && !erro && (
@@ -134,7 +142,6 @@ export default function UserTable() {
                                              alt="img do motorista"
                                           />
                                        )}
-
                                     </div>
                                     <div>
                                        <span
@@ -153,7 +160,7 @@ export default function UserTable() {
                               <TableCell className="hidden md:table-cell px-5 py-4 sm:px-6 text-start">
                                  <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 overflow-hidden rounded-full">
-                                    {!motorista.image ? (
+                                       {!motorista.image ? (
                                           <Icon name="UserCircle" />
                                        ) : (
                                           <Image
