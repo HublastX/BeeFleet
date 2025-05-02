@@ -20,6 +20,7 @@ import {
    IdentificationIcon,
    MagnifyingGlassIcon,
    CameraIcon,
+   PencilIcon,
 } from "@heroicons/react/24/solid";
 import {
    PlusIcon,
@@ -74,7 +75,8 @@ const icons = {
    identidade: IdentificationIcon,
    carPlus: CarPlus,
    car: Car,
-   camera: CameraIcon
+   camera: CameraIcon,
+   lapis: PencilIcon
 };
 
 export default function Icon({ name, className, strokeWidth }) {
