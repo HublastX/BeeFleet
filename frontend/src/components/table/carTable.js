@@ -74,26 +74,25 @@ export default function CarTable({ searchTerm }) {
       setCurrentPage(1);
    }, [searchTerm]);
 
+   if (carregando) return <TableSkeleton />;
+   if (erro)
+      return (
+         <div className="text-center font-bold text-xl">
+            <p className="text-bee-alert-300 mb-6">Erro: {erro}</p>{" "}
+            <TableSkeleton />{" "}
+         </div>
+      );
+   if (currentCar.length === 0)
+      return (
+         <div className="flex items-center justify-center p-6 w-full h-full">
+            <div className="text-center font-semibold text-xl ">
+               Nenhum gestor foi encontrado
+            </div>
+         </div>
+      );
+
    return (
       <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
-         {carregando && (
-            <div className="p-4">
-               <TableSkeleton />
-            </div>
-         )}
-         {erro && (
-            <div className="p-4">
-               <p className="text-bee-alert-300">Erro: {erro}</p>
-               <TableSkeleton />
-            </div>
-         )}
-         {currentCar.length === 0 && !erro && !carregando && (
-            <div className="flex items-center justify-center p-6 w-full h-full">
-               <div className="text-center font-semibold text-xl ">
-                  Nenhum carro foi encontrado
-               </div>
-            </div>
-         )}
          <div className="max-w-full overflow-x-auto">
             <div>
                {!carregando && !erro && (
