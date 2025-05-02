@@ -21,7 +21,7 @@ function Home() {
 
    return (
       <>
-         {(carregando || erro) ? (            
+         {carregando || erro ? (
             <HomeSkeleton />
          ) : (
             <>
@@ -60,12 +60,15 @@ function Home() {
                            />
                         </Link>
 
-                        <Card
-                           titulo="Gestores"
-                           icone="suport"
-                           estado="aumento"
-                           quantidade={gestores.length}
-                        />
+                        <Link href="/managers">
+                           <Card
+                              titulo="Gestores"
+                              icone="suport"
+                              estado="aumento"
+                              quantidade={gestores.length}
+                           />
+                        </Link>
+
                         <Card
                            titulo="Eventos"
                            icone="evento"
