@@ -200,7 +200,7 @@ export default function useAuth() {
 
       const gestorData = getGestorFromStorage();
       if (gestorData) setGestor(gestorData);
-   }, []);
+   }, [API_URL]);
 
    // Logout
    const logout = () => {
@@ -230,7 +230,16 @@ export default function useAuth() {
             if (!res.ok) throw new Error("Erro ao buscar lista de gestores.");
 
             const data = await res.json();
-            setGestores(data.data);
+
+            const gestorFormatado = data.data.map((gestor) => ({
+               ...gestor,
+               image:
+               gestor.image && gestor.image !== "null" && gestor.image !== null
+                     ? getImageUrl(gestor.image)
+                     : null,
+            }));
+
+            setGestores(gestorFormatado);
          } catch (err) {
             handleError("Erro ao conectar ao servidor.", "warning");
          } finally {
@@ -239,7 +248,7 @@ export default function useAuth() {
       }
 
       fetchAllManagers();
-   }, [gestor?.token]);
+   }, [gestor?.token, API_URL]);
 
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
@@ -255,7 +264,7 @@ export default function useAuth() {
          localStorage.removeItem("toastMessage");
          localStorage.removeItem("toastType");
       }
-   }, []);
+   }, [showToast]);
 
    return {
       gestor,
