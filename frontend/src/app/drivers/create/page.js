@@ -6,69 +6,108 @@ import Btn from "../../../elements/btn";
 import InputText from "../../../elements/inputText";
 import useDrivers from "@/hooks/useDrivers";
 import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
+import { useToast } from "@/utils/ToastContext";
 
 function CreateUser() {
+   const { createDriver, carregando, erro } = useDrivers();
+   const router = useRouter();
+   const [erros, setErros] = useState({});
+   const { showToast } = useToast();
+
    const [name, setName] = useState("");
    const [phone, setPhone] = useState("");
    const [license, setLicense] = useState("");
    const [image, setImage] = useState(null);
-   const { createDriver, carregando, erro } = useDrivers();
-   const router = useRouter();
 
    const handleSubmit = async (e) => {
       e.preventDefault();
+
+      const newErros = {};
+
+      if (!name) newErros.name = "Campo obrigatorio";
+      if (!phone) newErros.phone = "Campo obrigatorio";
+      if (!license) newErros.license = "Campo obrigatorio";
+
+      if (name && name.trim().split(" ").length < 2) {
+         newErros.name = "Nome deve conter pelo menos nome e sobrenome";
+      }
+
+      if (phone && !/^\(?\d{2}\)?[\s-]?\d{4,5}-?\d{4}$/.test(phone)) {
+         newErros.phone = "Telefone inválido";
+      }
+
+      if (license && !/^\d{11}$/.test(license)) {
+         newErros.license = "CNH deve conter 11 números";
+      }
+
+      setErros(newErros);
+
+      if (Object.keys(newErros).length > 0) {
+         showToast("Erro!", "error", "Corrija os erros no formulário.", 5000);
+         return;
+      }
       await createDriver(name, phone, license, image);
       console.log({ name, phone, license, image });
    };
 
+   const formList = [
+      {
+         label: "Nome",
+         id: "name",
+         type: "text",
+         setValue: setName,
+         error: erros.name,
+         placeholder: "Ex: Carlos Silva",
+      },
+      {
+         label: "Número de Telefone",
+         type: "text",
+         id: "phone",
+         setValue: setPhone,
+         error: erros.phone,
+         placeholder: "Ex: (11) 91234-5678a",
+      },
+      {
+         label: "Licença de Motorista",
+         type: "text",
+         id: "license",
+         setValue: setLicense,
+         error: erros.license,
+         placeholder: "Ex: 123456789",
+      },
+   ];
+
    return (
       <div>
          {carregando && <FormSkeleton />}
-         {erro && (
-            <div>
-               <h1 className="text-bee-alert-300 mb-5"> Erro: {erro} </h1>
-               <FormSkeleton />
-            </div>
-         )}
-         {!carregando && !erro && (
+         {!carregando && (
             <div className="max-w-3xl mx-auto">
                <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
                   Cadastrar Motorista
                </h2>
                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                     <label className="block text-sm font-medium mb-2">
-                        Nome
-                     </label>
-                     <InputText
-                        type="text"
-                        name="name"
-                        onChange={(e) => setName(e.target.value)}
-                        placeholder="Ex: Carlos Silva"
-                     />
-                  </div>
-                  <div>
-                     <label className="block text-sm font-medium mb-2">
-                        Número de Telefone
-                     </label>
-                     <InputText
-                        type="tel"
-                        name="phone"
-                        onChange={(e) => setPhone(e.target.value)}
-                        placeholder="Ex: (11) 91234-5678"
-                     />
-                  </div>
-                  <div>
-                     <label className="block text-sm font-medium  mb-2">
-                        Licença de Motorista
-                     </label>
-                     <InputText
-                        type="text"
-                        name="license"
-                        onChange={(e) => setLicense(e.target.value)}
-                        placeholder="Ex: 123456789"
-                     />
-                  </div>
+                  {formList.map(
+                     ({ label, setValue, type, error, placeholder, id }) => (
+                        <div key={label}>
+                           <label className="block text-sm font-medium mb-2">
+                              {label}
+                           </label>
+                           <InputText
+                              type={type}
+                              name={id}
+                              onChange={(e) => setValue(e.target.value)}
+                              placeholder={placeholder}
+                              required
+                              className={`${error ? "border-red-500 dark:border-red-500 border-2" : ""}`}
+                           />
+                           {error && (
+                              <p className="text-red-500 text-sm font-bold">
+                                 {error}
+                              </p>
+                           )}
+                        </div>
+                     )
+                  )}
                   <div>
                      <label className="block text-sm font-medium mb-2">
                         Foto
@@ -92,12 +131,11 @@ function CreateUser() {
                      />
                      <Btn
                         type="submit"
-                        texto=""
                         variant="primary"
                         disabled={carregando}
                         className="flex-[2] py-3 px-4 text-lg"
                      >
-                        {carregando ? "criando..." : "Cadastrar"}
+                        {carregando ? "cadastrando..." : "Cadastrar motorista"}
                      </Btn>
                   </div>
                </form>
