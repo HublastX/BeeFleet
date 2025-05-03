@@ -90,7 +90,7 @@ function CreateCars() {
          type: "text",
       },
       {
-         label: "Odômetro",
+         label: "Hodômetro",
          id: "odometer",
          value: odometer,
          setValue: setOdometer,
@@ -114,13 +114,30 @@ function CreateCars() {
       if (!renavam) newErrors.renavam = "Campo obrigatório";
       if (!color) newErrors.color = "Campo obrigatório";
 
-      if (plate && !/^([A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})$/.test(plate)) {
-         newErrors.plate = "Placa inválida (formatos aceitos: ABC1234 ou ABC1D23)";
+      if (
+         plate &&
+         !/^([A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})$/.test(plate)
+      ) {
+         newErrors.plate =
+            "Placa inválida (formatos aceitos: ABC1234 ou ABC1D23)";
       }
 
       if (year && Number(year) < 1900) {
-         newErrors.year = "Ano inválido";
+         newErrors.year = "Ano inválido, apenas maior que 1900";
       }
+
+      if (renavam && !/^\d{11}$/.test(renavam)) {
+         newErrors.renavam =
+            "Renavam deve conter exatamente 11 dígitos (ex: 12345678901)";
+      }
+
+      if (chassis && !/^[A-HJ-NPR-Z0-9]{17}$/.test(chassis)) {
+         newErrors.chassis =
+            "Chassi deve conter exatamente 17 caracteres alfanuméricos (exceto I, O e Q)";
+      }
+
+      if (odometer && Number(odometer) < 0)
+         newErrors.odometer = "Hodômetro não pode ser negativo";
 
       setErrors(newErrors);
 
@@ -140,6 +157,7 @@ function CreateCars() {
          chassis,
          brand
       );
+
    };
 
    return (
@@ -151,7 +169,6 @@ function CreateCars() {
                   Cadastro de Veículo
                </h2>
                <form onSubmit={handleSubmit} className="space-y-6">
-
                   {formList.map(
                      ({
                         label,
@@ -188,7 +205,9 @@ function CreateCars() {
                               className={`${error ? "border-red-500 dark:border-red-500 border-2" : ""}`}
                            />
                            {error && (
-                              <p className="text-red-500 text-sm font-bold">{error}</p>
+                              <p className="text-red-500 text-sm font-bold">
+                                 {error}
+                              </p>
                            )}
                         </div>
                      )
