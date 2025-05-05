@@ -128,7 +128,11 @@ function EditProfile() {
                         variant="danger"
                         className="flex-[1] px-4 py-2 border border-red-400 bg-red-400 hover:bg-red-500 text-white rounded-lg transition-colors"
                      />
-                     <Btn type="submit" disabled={carregando} className="flex-[2]">
+                     <Btn
+                        type="submit"
+                        disabled={carregando}
+                        className="flex-[2]"
+                     >
                         {carregando ? "Salvando..." : "Salvar Alterações"}
                      </Btn>
                   </div>

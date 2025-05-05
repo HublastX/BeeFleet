@@ -157,7 +157,6 @@ function CreateCars() {
          chassis,
          brand
       );
-
    };
 
    return (

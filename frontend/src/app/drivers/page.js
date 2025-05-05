@@ -1,17 +1,15 @@
 "use client";
-import React, { useState } from "react";
 import withAuth from "@/utils/withAuth";
 import Link from "next/link";
 import Btn from "@/elements/btn";
 import Table from "../../components/table/userTable";
-import Icon from "@/elements/Icon";
-import Cards from "../../components/cardList/driverCard";
+import { useState } from "react";
 import InputText from "@/elements/inputText";
-
-function Drivers() {
+import Icon from "@/elements/Icon";
+import Cards from "@/components/cardList/driverCard";
+function Driver() {
    const [view, setView] = useState("cards");
    const [searchTerm, setSearchTerm] = useState("");
-
    return (
       <div>
          <div className="p-2 mb-3 flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
@@ -19,11 +17,11 @@ function Drivers() {
             <div className="flex items-center justify-between md:justify-start gap-2 md:gap-4 w-full md:w-auto">
                <Link href="/drivers/create">
                   <Btn
-                     texto="Novo motorista"
+                     texto="Novo Motorista"
                      variant="primary"
-                     className="flex gap-3 text-nowrap"
+                     className="flex gap-3 text-nowrap cursor-pointer"
                   >
-                     <Icon name="user" className="size-6" />
+                     <Icon name="addUser" className="size-6" />
                   </Btn>
                </Link>
 
@@ -66,5 +64,4 @@ function Drivers() {
       </div>
    );
 }
-
-export default withAuth(Drivers);
+export default withAuth(Driver);

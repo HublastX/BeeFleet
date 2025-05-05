@@ -8,17 +8,21 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Icon from "@/elements/Icon";
 import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
+import { useToast } from "@/utils/ToastContext";
 
 function EditDriver() {
    const { motoristas, carregando, erro, updateDriver } = useDrivers();
    const { id } = useParams();
    const router = useRouter();
+   const [erros, setErros] = useState({});
+   const { showToast } = useToast();
    const [formData, setFormData] = useState({
       name: "",
       phone: "",
       license: "",
       image: null,
    });
+
    useEffect(() => {
       const driver = motoristas.find((driver) => driver.id === id);
       if (driver) {
@@ -26,99 +30,92 @@ function EditDriver() {
             name: driver.name || "",
             phone: driver.phone || "",
             license: driver.license || "",
-            image: driver.image || null,
+            image: null,
          });
       }
    }, [motoristas, id]);
 
-   console.log("FormData", formData);
+   const handleSubmit = async (e) => {
+      e.preventDefault();
+      const newErros = {};
+
+      if (!formData.name) newErros.name = "Campo obrigatório";
+      if (!formData.phone) newErros.phone = "Campo obrigatório";
+      if (!formData.license) newErros.license = "Campo obrigatório";
+
+      if (formData.name && formData.name.trim().split(" ").length < 2) {
+         newErros.name = "Nome deve conter pelo menos nome e sobrenome";
+      }
+
+      if (
+         formData.phone &&
+         !/^\(?\d{2}\)?[\s-]?\d{4,5}-?\d{4}$/.test(formData.phone)
+      ) {
+         newErros.phone = "Telefone inválido";
+      }
+
+      if (formData.license && !/^\d{11}$/.test(formData.license)) {
+         newErros.license = "CNH deve conter 11 números";
+      }
+
+      setErros(newErros);
+
+      if (Object.keys(newErros).length > 0) {
+         showToast("Erro!", "error", "Corrija os erros no formulário.", 5000);
+         return;
+      }
+
+      await updateDriver(id, formData);
+   };
+
+   const formList = [
+      { label: "Nome", id: "name", type: "text" },
+      { label: "Número de Telefone", id: "phone", type: "text" },
+      { label: "Licença de Motorista", id: "license", type: "text" },
+   ];
 
    return (
       <div className="w-full">
          {carregando && <FormSkeleton />}
-         {erro && (
-            <div>
-               <h1 className="text-bee-alert-300 mb-5"> Erro: {erro} </h1>
-               <FormSkeleton />
-            </div>
-         )}
-         {!carregando && !erro && (
+         {!carregando && (
             <>
                <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
                   Editar Motorista
                </h2>
                <div className="flex flex-col-reverse md:flex-row justify-between gap-10 w-full">
-                  <form
-                     onSubmit={(e) => {
-                        e.preventDefault();
-                        if (
-                           formData.name &&
-                           formData.phone &&
-                           formData.license
-                        ) {
-                           updateDriver(id, formData);
-                        } else {
-                           console.error("Campos obrigatórios não preenchidos");
-                        }
-                     }}
-                     className="space-y-6 w-full"
-                  >
-                     <div>
-                        <label className="block text-sm font-medium mb-2">
-                           Nome
-                        </label>
-                        <InputText
-                           type="text"
-                           name="name"
-                           value={formData.name}
-                           onChange={(e) =>
-                              setFormData((prev) => ({
-                                 ...prev,
-                                 name: e.target.value,
-                              }))
-                           }
-                           required
-                           autoComplete="name"
-                        />
-                     </div>
-
-                     <div>
-                        <label className="block text-sm font-medium mb-2">
-                           Número de Telefone
-                        </label>
-                        <InputText
-                           type="tel"
-                           name="phone"
-                           value={formData.phone}
-                           onChange={(e) =>
-                              setFormData((prev) => ({
-                                 ...prev,
-                                 phone: e.target.value,
-                              }))
-                           }
-                           required
-                           autoComplete="phone"
-                        />
-                     </div>
-
-                     <div>
-                        <label className="block text-sm font-medium mb-2">
-                           Licença de Motorista
-                        </label>
-                        <InputText
-                           type="text"
-                           name="license"
-                           value={formData.license}
-                           onChange={(e) =>
-                              setFormData((prev) => ({
-                                 ...prev,
-                                 license: e.target.value,
-                              }))
-                           }
-                           required
-                           autoComplete="license"
-                        />
-                     </div>
+                  <form onSubmit={handleSubmit} className="space-y-6 w-full">
+                     {formList.map(({ label, id, type }) => (
+                        <div key={id}>
+                           <label
+                              htmlFor={id}
+                              className="block text-sm font-medium mb-2"
+                           >
+                              {label}
+                           </label>
+                           <InputText
+                              type={type}
+                              name={id}
+                              value={formData[id]}
+                              onChange={(e) =>
+                                 setFormData((prev) => ({
+                                    ...prev,
+                                    [id]: e.target.value,
+                                 }))
+                              }
+                              required
+                              className={
+                                 erros[id]
+                                    ? "border-red-500 dark:border-red-500 border-2"
+                                    : ""
+                              }
+                           />
+                           {erros[id] && (
+                              <p className="text-red-500 text-sm font-bold">
+                                 {erros[id]}
+                              </p>
+                           )}
+                        </div>
+                     ))}
 
                      <div>
                         <label className="block text-sm font-medium mb-2">
@@ -159,7 +156,7 @@ function EditDriver() {
                      </div>
                   </form>
                   <div className="hidden sticky md:flex md:flex-col min-w-65 h-fit border font-bold bg-bee-dark-100 border-bee-dark-300 dark:bg-gray-800 dark:border-gray-500 p-4 rounded-lg">
-                     <div className="flex justify-center items-center md:mb-4 bg-bee-purple-200 rounded-md p-3">
+                     <div className="flex justify-center items-center rounded-md p-3">
                         {formData.image ? (
                            typeof formData.image === "string" ? (
                               <Image
@@ -168,7 +165,7 @@ function EditDriver() {
                                  width={128}
                                  height={128}
                                  unoptimized
-                                 className="w-32 h-32 rounded-full object-cover"
+                                 className="w-32 h-32 rounded object-cover"
                               />
                            ) : (
                               <Image
@@ -177,15 +174,15 @@ function EditDriver() {
                                  width={128}
                                  height={128}
                                  unoptimized
-                                 className="w-32 h-32 rounded-full object-cover"
+                                 className="w-32 h-32 rounded object-cover"
                               />
                            )
                         ) : (
-                           <Icon name="user" className="size-32 text-white" />
+                           <Icon name="user" className="size-32" />
                         )}
                      </div>
-                     <div className="pl-3 gap-3 flex flex-col">
-                        <h1>Nome: {formData.name}</h1>
+                     <div className="pl-2 pt-5 gap-3 flex flex-col border-t-2 border-bee-dark-300 dark:border-bee-dark-400">
+                        <p>Nome: {formData.name}</p>
                         <p>Telefone: {formData.phone}</p>
                         <p>CNH: {formData.license}</p>
                      </div>

@@ -21,9 +21,7 @@ export default function CarCard({ searchTerm }) {
             <div className="p-6 text-center font-semibold text-xl">
                <p className="text-bee-alert-300">
                   Ocorreu um problema ao carregar os carros. <br />
-                  <span className="text-sm">
-                     Detalhes: {erro}
-                  </span>
+                  <span className="text-sm">Detalhes: {erro}</span>
                </p>
             </div>
             <CardSkeleton />
@@ -70,7 +68,7 @@ export default function CarCard({ searchTerm }) {
                               {car.plate}
                            </h2>
                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                            {car.brand} {" "} {car.model}
+                              {car.brand} {car.model}
                            </p>
                            <p className="text-sm font-medium text-bee-primary-500">
                               {car.odometer}km
