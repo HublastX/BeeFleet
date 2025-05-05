@@ -61,7 +61,7 @@ function EditCars() {
          newErrors.plate = "Placa inválida (formatos aceitos: ABC1234 ou ABC1D23)";
       }
 
-      if (year && Number(year) < 1900) {
+      if (formData.year < 1900) {
          newErrors.year = "Ano inválido";
       }
 
