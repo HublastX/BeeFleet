@@ -5,9 +5,9 @@ import withAuth from "@/utils/withAuth";
 import useCar from "@/hooks/useCar";
 import useAuth from "@/hooks/useAuth";
 import Icon from "@/elements/Icon";
-import Badge from "@/elements/ui/badge/Badge";
 import Image from "next/image";
 import Btn from "@/elements/btn";
+import Link from "next/link";
 import DetailCarTable from "@/components/table/detailCarTable";
 
 function formatarData(dataISO) {
@@ -82,12 +82,14 @@ function CarPage() {
                         <h1 className="text-3xl font-extrabold text-gray-800 dark:text-white/90">
                            {carroData.model}
                         </h1>
-                        <Btn
-                           texto="Editar Carro"
-                           className="flex text-nowrap flex-row-reverse gap-2 items-center"
-                        >
-                           <Icon name="lapis" className="size-5" />
-                        </Btn>
+                        <Link href={`/cars/${id}/edit`}>
+                           <Btn
+                              texto="Editar Carro"
+                              className="flex text-nowrap flex-row-reverse gap-2 items-center"
+                           >
+                              <Icon name="lapis" className="size-5" />
+                           </Btn>
+                        </Link>
                      </div>
 
                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
