@@ -93,5 +93,4 @@ export default function DriverCard({ searchTerm }) {
          </div>
       </>
    );
-
 }

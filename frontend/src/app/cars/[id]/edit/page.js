@@ -1,77 +1,130 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import withAuth from "@/utils/withAuth";
+import useCar from "@/hooks/useCar";
 import Btn from "@/elements/btn";
 import InputText from "@/elements/inputText";
-import useDrivers from "@/hooks/useDrivers";
-import withAuth from "@/utils/withAuth";
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import Icon from "@/elements/Icon";
 import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
 import { useToast } from "@/utils/ToastContext";
 
-function EditDriver() {
-   const { motoristas, carregando, erro, updateDriver } = useDrivers();
+function EditCars() {
    const { id } = useParams();
    const router = useRouter();
-   const [erros, setErros] = useState({});
+   const { carro, carregando, updateCar } = useCar();
    const { showToast } = useToast();
+   const [errors, setErrors] = useState({});
+
    const [formData, setFormData] = useState({
-      name: "",
-      phone: "",
-      license: "",
+      plate: "",
+      model: "",
+      year: "",
+      color: "",
+      odometer: "",
+      renavam: "",
+      // chassis: "",
+      brand: "",
       image: null,
    });
 
    useEffect(() => {
-      const driver = motoristas.find((driver) => driver.id === id);
-      if (driver) {
+      const car = carro.find((car) => car.id === id);
+      if (car) {
          setFormData({
-            name: driver.name || "",
-            phone: driver.phone || "",
-            license: driver.license || "",
+            plate: car.plate || "",
+            model: car.model || "",
+            year: car.year || "",
+            color: car.color || "",
+            odometer: car.odometer || "",
+            renavam: car.renavam || "",
+            // chassis: car.chassis || "",
+            brand: car.brand || "",
             image: null,
          });
       }
-   }, [motoristas, id]);
+   }, [carro, id]);
 
    const handleSubmit = async (e) => {
       e.preventDefault();
-      const newErros = {};
+      const newErrors = {};
 
-      if (!formData.name) newErros.name = "Campo obrigatório";
-      if (!formData.phone) newErros.phone = "Campo obrigatório";
-      if (!formData.license) newErros.license = "Campo obrigatório";
-
-      if (formData.name && formData.name.trim().split(" ").length < 2) {
-         newErros.name = "Nome deve conter pelo menos nome e sobrenome";
+      // Validações
+      if (!formData.plate) newErrors.plate = "Campo obrigatório";
+      if (!formData.brand) newErrors.brand = "Campo obrigatório";
+      if (!formData.model) newErrors.model = "Campo obrigatório";
+      if (!formData.year) newErrors.year = "Campo obrigatório";
+      // if (!formData.chassis) newErrors.chassis = "Campo obrigatório";
+      if (!formData.odometer) newErrors.odometer = "Campo obrigatório";
+      if (!formData.renavam) newErrors.renavam = "Campo obrigatório";
+      if (!formData.color) newErrors.color = "Campo obrigatório";
+      if (formData.plate && !/^([A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})$/.test(formData.plate)) {
+         newErrors.plate = "Placa inválida (formatos aceitos: ABC1234 ou ABC1D23)";
       }
 
-      if (
-         formData.phone &&
-         !/^\(?\d{2}\)?[\s-]?\d{4,5}-?\d{4}$/.test(formData.phone)
-      ) {
-         newErros.phone = "Telefone inválido";
+      if (year && Number(year) < 1900) {
+         newErrors.year = "Ano inválido";
       }
 
-      if (formData.license && !/^\d{11}$/.test(formData.license)) {
-         newErros.license = "CNH deve conter 11 números";
-      }
+      setErrors(newErrors);
 
-      setErros(newErros);
-
-      if (Object.keys(newErros).length > 0) {
+      if (Object.keys(newErrors).length > 0) {
          showToast("Erro!", "error", "Corrija os erros no formulário.", 5000);
          return;
       }
 
-      await updateDriver(id, formData);
+      await updateCar(id, formData);
    };
 
    const formList = [
-      { label: "Nome", id: "name", type: "text" },
-      { label: "Número de Telefone", id: "phone", type: "text" },
-      { label: "Licença de Motorista", id: "license", type: "text" },
+      {
+         label: "Placa",
+         id: "plate",
+         placeholder: "Ex: ABC1234",
+         type: "text",
+         transform: (v) => v.toUpperCase(),
+      },
+      {
+         label: "Marca",
+         id: "brand",
+         placeholder: "Ex: Toyota",
+         type: "text",
+      },
+      {
+         label: "Modelo",
+         id: "model",
+         placeholder: "Ex: Corolla",
+         type: "text",
+      },
+      {
+         label: "Ano",
+         id: "year",
+         placeholder: "Ex: 2023",
+         type: "number",
+      },
+      {
+         label: "Renavam",
+         id: "renavam",
+         placeholder: "Ex: 82754432011",
+         type: "number",
+      },
+      // {
+      //    label: "Chassi",
+      //    id: "chassis",
+      //    placeholder: "Ex: 9XbZ3DvWVvNSU1551",
+      //    type: "text",
+      // },
+      {
+         label: "Cor",
+         id: "color",
+         placeholder: "Ex: Preto",
+         type: "text",
+      },
+      {
+         label: "Odômetro",
+         id: "odometer",
+         placeholder: "Ex: 50000",
+         type: "number",
+      },
    ];
 
    return (
@@ -80,52 +133,67 @@ function EditDriver() {
          {!carregando && (
             <>
                <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
-                  Editar Motorista
+                  Editar Veículo
                </h2>
                <div className="flex flex-col-reverse md:flex-row justify-between gap-10 w-full">
                   <form onSubmit={handleSubmit} className="space-y-6 w-full">
-                     {formList.map(({ label, id, type }) => (
-                        <div key={id}>
-                           <label
-                              htmlFor={id}
-                              className="block text-sm font-medium mb-2"
-                           >
-                              {label}
-                           </label>
-                           <InputText
-                              type={type}
-                              name={id}
-                              value={formData[id]}
-                              onChange={(e) =>
-                                 setFormData((prev) => ({
-                                    ...prev,
-                                    [id]: e.target.value,
-                                 }))
-                              }
-                              required
-                              className={
-                                 erros[id]
-                                    ? "border-red-500 dark:border-red-500 border-2"
-                                    : ""
-                              }
-                           />
-                           {erros[id] && (
-                              <p className="text-red-500 text-sm font-bold">
-                                 {erros[id]}
-                              </p>
-                           )}
-                        </div>
-                     ))}
+                     {formList.map(
+                        ({
+                           label,
+                           id,
+                           placeholder,
+                           type,
+                           transform,
+                        }) => (
+                           <div key={id}>
+                              <label
+                                 htmlFor={id}
+                                 className="block text-sm font-medium text-dark dark:text-white mb-2"
+                              >
+                                 {label}
+                              </label>
+                              <InputText
+                                 type={type}
+                                 id={id}
+                                 name={id}
+                                 value={formData[id]}
+                                 onChange={(e) =>
+                                    setFormData((prev) => ({
+                                       ...prev,
+                                       [id]: transform
+                                          ? transform(e.target.value)
+                                          : e.target.value,
+                                    }))
+                                 }
+                                 placeholder={placeholder}
+                                 required
+                                 className={
+                                    errors[id]
+                                       ? "border-red-500 dark:border-red-500 border-2"
+                                       : ""
+                                 }
+                              />
+                              {errors[id] && (
+                                 <p className="text-red-500 text-sm font-bold">
+                                    {errors[id]}
+                                 </p>
+                              )}
+                           </div>
+                        )
+                     )}
 
                      <div>
-                        <label className="block text-sm font-medium mb-2">
+                        <label
+                           htmlFor="image"
+                           className="block text-sm font-medium mb-2"
+                        >
                            Atualizar Foto
                         </label>
                         <InputText
-                           name="image"
-                           variant="file"
                            type="file"
+                           name="image"
                            accept="image/*"
+                           variant="file"
                            onChange={(e) => {
                               const file = e.target.files[0];
                               if (file) {
@@ -141,8 +209,8 @@ function EditDriver() {
                      <div className="flex gap-4">
                         <Btn
                            type="button"
-                           texto="Cancelar"
                            onClick={() => router.back()}
+                           texto="Cancelar"
                            className="flex-[1] border border-red-400 bg-red-400 hover:bg-red-500"
                         />
                         <Btn
@@ -155,38 +223,41 @@ function EditDriver() {
                         </Btn>
                      </div>
                   </form>
-                  <div className="hidden sticky md:flex md:flex-col min-w-65 h-fit border font-bold bg-bee-dark-100 border-bee-dark-300 dark:bg-gray-800 dark:border-gray-500 p-4 rounded-lg">
-                     <div className="flex justify-center items-center rounded-md p-3">
+
+                  {/* <div className="hidden sticky md:flex md:flex-col min-w-65 h-fit border font-bold bg-bee-dark-100 border-bee-dark-300 dark:bg-gray-800 dark:border-gray-500 p-4 rounded-lg">
+                     <div className="flex justify-center items-center md:mb-4 bg-bee-purple-200 rounded-md p-3">
                         {formData.image ? (
                            typeof formData.image === "string" ? (
                               <Image
                                  src={formData.image}
-                                 alt="Imagem do motorista"
+                                 alt="Imagem do carro"
                                  width={128}
                                  height={128}
                                  unoptimized
-                                 className="w-32 h-32 rounded object-cover"
+                                 className="w-32 h-32 rounded-full object-cover"
                               />
                            ) : (
                               <Image
                                  src={URL.createObjectURL(formData.image)}
-                                 alt="Imagem do motorista"
+                                 alt="Imagem do carro"
                                  width={128}
                                  height={128}
                                  unoptimized
-                                 className="w-32 h-32 rounded object-cover"
+                                 className="w-32 h-32 rounded-full object-cover"
                               />
                            )
                         ) : (
-                           <Icon name="user" className="size-32" />
+                           <Icon name="car" className="size-32 text-white" />
                         )}
                      </div>
-                     <div className="pl-2 pt-5 gap-3 flex flex-col border-t-2 border-bee-dark-300 dark:border-bee-dark-400">
-                        <p>Nome: {formData.name}</p>
-                        <p>Telefone: {formData.phone}</p>
-                        <p>CNH: {formData.license}</p>
+                     <div className="pl-3 gap-3 flex flex-col">
+                        <h1>Modelo: {formData.model}</h1>
+                        <p>Placa: {formData.plate}</p>
+                        <p>Cor: {formData.color}</p>
+                        <p>Ano: {formData.year}</p>
+                        <p>Odômetro: {formData.odometer}</p>
                      </div>
-                  </div>
+                  </div> */}
                </div>
             </>
          )}
@@ -194,4 +265,4 @@ function EditDriver() {
    );
 }
 
-export default withAuth(EditDriver);
+export default withAuth(EditCars);
