@@ -7,9 +7,10 @@ const Badge = ({
    startIcon,
    endIcon,
    children,
+   className
 }) => {
    const baseStyles =
-      "inline-flex items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium";
+      " items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium";
 
    // Define size styles
    const sizeStyles = {
@@ -35,7 +36,7 @@ const Badge = ({
    const colorStyles = variants[variant][color];
 
    return (
-      <span className={`${baseStyles} ${sizeClass} ${colorStyles}`}>
+      <span className={`${baseStyles} ${sizeClass} ${colorStyles} ${className}`}>
          {startIcon && <span className="mr-1">{startIcon}</span>}
          {children}
          {endIcon && <span className="ml-1">{endIcon}</span>}
