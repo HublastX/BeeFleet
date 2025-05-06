@@ -124,7 +124,7 @@ export default function useAuth() {
             throw new Error(data.error || "Erro inesperado ao registrar.");
          }
       } catch (error) {
-         handleError(error, "Erro ao conectar ao servidor.", "warning");
+         handleError(error, "warning", "Erro ao conectar ao servidor.");
       } finally {
          setCarregando(false);
       }
@@ -171,10 +171,11 @@ export default function useAuth() {
             5000
          );
 
-         router.push("/profile");
+         window.location.href = "/profile";
+
          return data;
       } catch (error) {
-         handleError(error, "Erro ao atualizar o gestor.", "warning");
+         handleError(error, "Erro ao atualizar o gestor.", "error");
       } finally {
          setCarregando(false);
       }
@@ -234,14 +235,16 @@ export default function useAuth() {
             const gestorFormatado = data.data.map((gestor) => ({
                ...gestor,
                image:
-               gestor.image && gestor.image !== "null" && gestor.image !== null
+                  gestor.image &&
+                  gestor.image !== "null" &&
+                  gestor.image !== null
                      ? getImageUrl(gestor.image)
                      : null,
             }));
 
             setGestores(gestorFormatado);
          } catch (err) {
-            handleError("Erro ao conectar ao servidor.", "warning");
+            handleError("Erro!", "warning", "Erro ao conectar ao servidor.");
          } finally {
             setCarregando(false);
          }
