@@ -46,7 +46,7 @@ function Home() {
                         <Link href="/drivers">
                            <Card
                               titulo="Motoristas"
-                              icone="user"
+                              icone="users"
                               estado="baixa"
                               quantidade={motoristas.length}
                            />
