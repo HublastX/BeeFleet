@@ -38,9 +38,10 @@ function Register() {
       setErrors({});
       const newErrors = {};
 
-      if (name.trim().split(" ").length < 2) {
-         newErrors.name = "O nome deve conter pelo menos duas palavras.";
+      if (name && name.trim().split(/\s+/).length < 2) {
+         newErrors.name = "Nome deve conter pelo menos nome e sobrenome";
       }
+      
 
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
          newErrors.email = "Email inválido.";
