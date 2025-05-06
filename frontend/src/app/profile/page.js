@@ -20,7 +20,7 @@ function Manager() {
           {!image ? (
             <Icon name="UserCircle" className="w-24 h-24 text-gray-400" />
           ) : (
-          <Image
+            <Image
               src={image}
               alt={`Foto de perfil de ${name}`}
               width={100}
@@ -35,11 +35,16 @@ function Manager() {
           <p className="text-sm text-gray-600 dark:text-gray-300">{email}</p>
         </div>
 
-        <Link
-          href="profile/edit"
-        >
-          <Btn texto="Editar perfil" />
-        </Link>
+        <div className="flex gap-2">
+          <Link href="profile/edit">
+            <Btn texto="Editar perfil" />
+          </Link>
+
+          <Btn
+            texto="Deletar Gestor"
+            className="bg-red-600 hover:bg-red-700"
+          />
+        </div>
       </div>
 
       <hr className="py-4" />
@@ -55,6 +60,7 @@ function Manager() {
           <h2 className="text-lg font-semibold mb-2">Total de carros adicionados</h2>
           <p className="text-4xl font-black text-bee-yellow-700">50</p>
         </div>
+
         <div className="p-6 rounded-lg shadow-theme-lg">
           <h2 className="text-lg font-semibold mb-2">Total de eventos finalizados</h2>
           <p className="text-4xl font-black text-bee-yellow-700">60</p>
