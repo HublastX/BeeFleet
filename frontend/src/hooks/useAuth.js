@@ -171,7 +171,8 @@ export default function useAuth() {
             5000
          );
 
-         router.push("/profile");
+         window.location.href = "/profile";
+
          return data;
       } catch (error) {
          handleError(error, "Erro ao atualizar o gestor.", "warning");
