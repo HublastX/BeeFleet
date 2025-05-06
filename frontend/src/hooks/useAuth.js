@@ -253,6 +253,38 @@ export default function useAuth() {
       fetchAllManagers();
    }, [gestor?.token, API_URL]);
 
+   // Deletar gestor
+   const deleteManager = async (id) => {
+      if (!gestor?.token) {
+         setErro("Token do gestor não encontrado.");
+         return;
+      }
+   
+      setCarregando(true);
+      setErro(null);
+   
+      try {
+         const res = await fetch(`${API_URL}/api/managers/${id}`, {
+            method: "DELETE",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+   
+         if (!res.ok)
+            throw new Error("Erro ao deletar gestor. Tente novamente.");
+   
+         showToast("Sucesso", "success", "Conta deletada com sucesso!", 5000);
+         logout(); 
+      } catch (error) {
+         setErro(error.message || "Erro ao conectar ao servidor.");
+      } finally {
+         setCarregando(false);
+      }
+   };
+   
+
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
       const toastType = localStorage.getItem("toastType");
@@ -278,5 +310,6 @@ export default function useAuth() {
       register,
       logout,
       putManager,
+      deleteManager,
    };
 }
