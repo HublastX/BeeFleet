@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import withAuth from "@/utils/withAuth";
 import useCar from "@/hooks/useCar";
 import useAuth from "@/hooks/useAuth";
+import Badge from "@/elements/ui/badge/Badge";
 import Icon from "@/elements/Icon";
 import Image from "next/image";
 import Btn from "@/elements/btn";
@@ -77,11 +78,20 @@ function CarPage() {
                   </div>
 
                   {/* Card 2: Detalhes do carro */}
-                  <div className="flex flex-col px-4 py-5 gap-6 w-full bg-bee-dark-100 dark:bg-bee-dark-800 rounded-md border border-bee-dark-300 dark:border-bee-dark-400">
+                  <div className="flex flex-col w-full md:px-4 px-0 py-5 gap-6 bg-transparent md:bg-bee-dark-100 md:dark:bg-bee-dark-800 rounded-md md:border border-bee-dark-300 dark:border-bee-dark-400">
                      <div className="flex justify-between items-center pb-3 text-center border-b-2 dark:border-bee-dark-400">
                         <h1 className="text-3xl font-extrabold text-gray-800 dark:text-white/90">
                            {carroData.model}
                         </h1>
+                        <Badge
+                           className="lg:inline-flex hidden"
+                           size="sm"
+                           color={carroData.isAvailable ? "success" : "error"}
+                        >
+                           {carroData.isAvailable
+                              ? "Disponível"
+                              : "Indisponível"}
+                        </Badge>
                         <Link href={`/cars/${id}/edit`}>
                            <Btn
                               texto="Editar Carro"
@@ -91,7 +101,6 @@ function CarPage() {
                            </Btn>
                         </Link>
                      </div>
-
                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
                            <span className="text-sm">Ano</span>
@@ -135,6 +144,15 @@ function CarPage() {
                               {gestorDoCarro?.name || "Gestor não encontrado"}
                            </h1>
                         </div>
+                        <Badge
+                           className="lg:hidden inline-flex"
+                           size="sm"
+                           color={carroData.isAvailable ? "success" : "error"}
+                        >
+                           {carroData.isAvailable
+                              ? "Disponível"
+                              : "Indisponível"}
+                        </Badge>
                      </div>
                   </div>
                </div>
