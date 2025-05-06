@@ -86,10 +86,12 @@ function Home() {
                                  <strong>gerenciamento de eventos</strong>.
                               </p>
                            </div>
+                           <Link href="/event">
                            <Btn
                               texto="Gerenciar evento"
                               className="self-start sm:self-auto"
                            />
+                           </Link>
                         </div>
                      </div>
                   </div>
