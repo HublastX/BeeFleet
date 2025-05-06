@@ -24,6 +24,11 @@ const navItem = [
       path: "/cars",
    },
    {
+      icon: "suport",
+      name: "Gestores",
+      path: "/managers",
+   },
+   {
       name: "Graficos",
       icon: "graficoPizza",
       subItems: [

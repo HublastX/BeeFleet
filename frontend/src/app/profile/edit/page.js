@@ -23,7 +23,7 @@ function EditProfile() {
          setFormData({
             name: gestor.name || "",
             email: gestor.email || "",
-            image: null,
+            image: gestor.image || null,
          });
       }
    }, [gestor, formData]);
