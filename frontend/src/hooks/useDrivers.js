@@ -230,9 +230,20 @@ export default function useDrivers() {
          const data = await res.json();
 
          if (data.success && data.data) {
+            const motoristaAtualizado = {
+               ...data.data,
+               image:
+                  data.data.image && data.data.image !== "null"
+                     ? getImageUrl(data.data.image)
+                     : null,
+            };
+
             setMotoristas((prev) =>
-               prev.map((driver) => (driver.id === id ? data.data : driver))
+               prev.map((driver) =>
+                  driver.id === id ? motoristaAtualizado : driver
+               )
             );
+
             localStorage.setItem(
                "toastMessage",
                "Motorista atualizado com sucesso!"
