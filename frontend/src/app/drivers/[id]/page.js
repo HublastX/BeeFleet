@@ -88,9 +88,9 @@ function DiverPage() {
                         <h1 className="text-3xl text-left font-extrabold text-gray-800 dark:text-white/90">
                            {motoristaData.name}
                         </h1>
-                        <Link href={`/cars/${id}/edit`}>
+                        <Link href={`/drivers/${id}/edit`}>
                            <Btn
-                              texto="Editar Carro"
+                              texto="Editar motorista"
                               className="flex text-nowrap flex-row-reverse gap-2 items-center"
                            >
                               <Icon name="lapis" className="size-5" />
