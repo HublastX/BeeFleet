@@ -30,6 +30,13 @@ export default function useCar() {
       showToast("Erro", type, msg, 5000);
    };
 
+   // Utilitário para fitrar carro por gestor
+   const getCarByManager = () => {
+      if (!gestor?.id) return [];
+
+      return carro.filter((car) => car.managerId === gestor.id);
+   };
+
    // Buscar carro
    useEffect(() => {
       if (!gestor?.token) return;
@@ -138,25 +145,25 @@ export default function useCar() {
             car.chassis === chassis ||
             car.renavam === renavam
       );
-      
+
       if (existingCar) {
          const duplicatedFields = [];
-      
+
          if (existingCar.plate === plate) duplicatedFields.push("Placa");
          if (existingCar.chassis === chassis) duplicatedFields.push("Chassi");
          if (existingCar.renavam === renavam) duplicatedFields.push("Renavam");
-      
+
          const message =
             duplicatedFields.length === 1
                ? `${duplicatedFields[0]} já cadastrada.`
                : `${duplicatedFields.join(", ")} já cadastrados.`;
-      
+
          setErro("Carro já cadastrado");
          showToast("Erro", "error", message, 5000);
          setCarregando(false);
          return;
       }
-      
+
       try {
          const formData = new FormData();
          formData.append("plate", plate);
@@ -237,7 +244,7 @@ export default function useCar() {
          if (image instanceof File) {
             formData.append("image", image);
          }
-         
+
          const res = await fetch(
             `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`,
             {
@@ -328,5 +335,7 @@ export default function useCar() {
       deleteCar,
       getCar,
       updateCar,
+      getCarByManager,
+      countCarsByManager: getCarByManager().length,
    };
 }

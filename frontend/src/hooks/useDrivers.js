@@ -30,6 +30,13 @@ export default function useDrivers() {
       showToast("Erro", type, msg, 5000);
    };
 
+    // Utilitário para fitrar motorista por gestor
+   const getDriversByManager = () => {
+      if (!gestor?.id) return [];
+
+      return motoristas.filter(driver => driver.managerId === gestor.id);
+   };
+
    // Buscar motoristas
    useEffect(() => {
       if (!gestor?.token) return;
@@ -311,6 +318,7 @@ export default function useDrivers() {
       }
    }, [showToast]);
 
+
    return {
       motoristas,
       carregando,
@@ -319,5 +327,7 @@ export default function useDrivers() {
       deleteDriver,
       getDriver,
       updateDriver,
+      getDriversByManager,
+      countDriversByManager: getDriversByManager().length,
    };
 }
