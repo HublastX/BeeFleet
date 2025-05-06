@@ -30,7 +30,7 @@ function EditDriver() {
             name: driver.name || "",
             phone: driver.phone || "",
             license: driver.license || "",
-            image: null,
+            image: driver.image || null,
          });
       }
    }, [motoristas, id]);
