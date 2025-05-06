@@ -76,13 +76,21 @@ function Home() {
                            quantidade="0"
                         />
                      </div>
-                     <div className="overflow-hidden rounded-2xl px-5 pt-5 sm:px-6 sm:pt-6 border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
-                        <div>
-                           <h1 className="text-lg font-semibold text-bee-dark-600 dark:text-bee-alert-500">
-                              Gerar Relatorio
-                           </h1>
+                     <div className="overflow-hidden rounded-2xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800 p-6">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                           <div className="text-sm sm:text-base max-w-lg">
+                              <p>
+                                 Para registrar a <strong>chegada</strong> ou{" "}
+                                 <strong>saída</strong> de um carro, acesse a
+                                 página de{" "}
+                                 <strong>gerenciamento de eventos</strong>.
+                              </p>
+                           </div>
+                           <Btn
+                              texto="Gerenciar evento"
+                              className="self-start sm:self-auto"
+                           />
                         </div>
-                        <div>Nao Lembro oq vai em relatorio</div>
                      </div>
                   </div>
                   <div className="col-span-12 xl:col-span-6">
