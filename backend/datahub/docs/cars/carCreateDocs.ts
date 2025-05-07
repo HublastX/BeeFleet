@@ -3,14 +3,14 @@ export const DOCS_CAR_CREATE = {
      * @swagger
      * tags:
      *   - name: Cars
-     *     description: Gestão de veículos
+     *     description: Endpoints para gestão de veículos
      *
      * /api/cars/create:
      *   post:
      *     tags:
      *       - Cars
      *     summary: Cria um novo veículo
-     *     description: Rota protegida que requer autenticação JWT
+     *     description: Cria um novo veículo vinculado a um gestor, requer autenticação e dados obrigatórios como placa, chassi e odômetro, podendo ter imagem opcional.
      *     security:
      *       - bearerAuth: []
      *     consumes:
@@ -22,16 +22,28 @@ export const DOCS_CAR_CREATE = {
      *           schema:
      *             type: object
      *             required:
+     *               - renavam
+     *               - chassis
      *               - plate
+     *               - brand
      *               - model
      *               - year
      *               - color
      *               - odometer
      *               - managerId
      *             properties:
+     *               renavam:
+     *                 type: string
+     *                 example: "12345678901"
+     *               chassis:
+     *                 type: string
+     *                 example: "9BWZZZ377VT004251"
      *               plate:
      *                 type: string
      *                 example: "ABC1D23"
+     *               brand:
+     *                 type: string
+     *                 example: "Fiat"
      *               model:
      *                 type: string
      *                 example: "Fiat Toro"
@@ -69,7 +81,13 @@ export const DOCS_CAR_CREATE = {
      *                   properties:
      *                     id:
      *                       type: string
+     *                     renavam:
+     *                       type: string
+     *                     chassis:
+     *                       type: string
      *                     plate:
+     *                       type: string
+     *                     brand:
      *                       type: string
      *                     model:
      *                       type: string
