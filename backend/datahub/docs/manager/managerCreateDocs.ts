@@ -10,12 +10,35 @@ export const DOCS_MANAGER_CREATE = {
      *     tags:
      *       - Manager
      *     summary: Cria um novo gestor
+     *     description: Cria um novo gestor com nome, e-mail, senha e imagem opcional
      *     consumes:
      *       - multipart/form-data
      *     requestBody:
      *       required: true
      *       content:
      *         multipart/form-data:
+     *           schema:
+     *             type: object
+     *             required:
+     *               - name
+     *               - email
+     *               - password
+     *             properties:
+     *               name:
+     *                 type: string
+     *                 example: João da Silva
+     *               email:
+     *                 type: string
+     *                 format: email
+     *                 example: joao@email.com
+     *               password:
+     *                 type: string
+     *                 format: password
+     *                 example: senhaSegura123
+     *               image:
+     *                 type: string
+     *                 format: binary
+     *         application/json:
      *           schema:
      *             type: object
      *             required:

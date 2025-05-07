@@ -32,6 +32,20 @@ export const DOCS_MANAGER_UPDATE = {
      *               image:
      *                 type: string
      *                 format: binary
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               name:
+     *                 type: string
+     *                 example: "Novo Nome"
+     *               email:
+     *                 type: string
+     *                 format: email
+     *                 example: "novo@email.com"
+     *               image:
+     *                 type: string
+     *                 format: binary
      *     responses:
      *       200:
      *         description: Gestor atualizado com sucesso
