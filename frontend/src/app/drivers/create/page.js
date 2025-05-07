@@ -135,7 +135,7 @@ function CreateUser() {
                         disabled={carregando}
                         className="flex-[2] py-3 px-4 text-lg"
                      >
-                        {carregando ? "cadastrando..." : "Cadastrar motorista"}
+                        {carregando ? "cadastrando..." : "Cadastrar"}
                      </Btn>
                   </div>
                </form>

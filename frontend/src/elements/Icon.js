@@ -40,6 +40,7 @@ import {
    ArrowTrendingDownIcon,
    CheckIcon,
    ExclamationTriangleIcon,
+   ListBulletIcon,
 } from "@heroicons/react/24/outline";
 
 const icons = {
@@ -80,7 +81,8 @@ const icons = {
    carPlus: CarPlus,
    car: Car,
    camera: CameraIcon,
-   lapis: PencilIcon
+   lapis: PencilIcon,
+   menuMobile: ListBulletIcon
 };
 
 export default function Icon({ name, className, strokeWidth }) {

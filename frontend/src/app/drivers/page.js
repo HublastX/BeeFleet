@@ -12,31 +12,17 @@ function Driver() {
    const [searchTerm, setSearchTerm] = useState("");
    return (
       <div>
-         <div className="p-2 mb-3 flex flex-col gap-4 md:flex-row md:items-center md:gap-6">
-            {/* Botão e ícones (lado esquerdo e direito no desktop) */}
-            <div className="flex items-center justify-between md:justify-start gap-2 md:gap-4 w-full md:w-auto">
-               <Link href="/drivers/create">
-                  <Btn
-                     texto="Novo Motorista"
-                     variant="primary"
-                     className="flex gap-3 text-nowrap cursor-pointer"
-                  >
-                     <Icon name="addUser" className="size-6" />
-                  </Btn>
-               </Link>
+         <div className="p-2 mb-3 flex flex-row items-center gap-6">
+            <Link href="/drivers/create" className="hidden md:flex">
+               <Btn
+                  texto="Novo Motorista"
+                  variant="primary"
+                  className="flex gap-3 text-nowrap cursor-pointer"
+               >
+                  <Icon name="addUser" className="size-6" />
+               </Btn>
+            </Link>
 
-               {/* Ícones no mobile */}
-               <div className="flex gap-2 md:hidden">
-                  <Btn variant="secondary" onClick={() => setView("table")}>
-                     <Icon name="table" className="size-6" />
-                  </Btn>
-                  <Btn variant="secondary" onClick={() => setView("cards")}>
-                     <Icon name="identidade" className="size-6" />
-                  </Btn>
-               </div>
-            </div>
-
-            {/* Input que cresce no desktop */}
             <div className="w-full md:flex-1">
                <InputText
                   variant="withIcon"
@@ -46,8 +32,7 @@ function Driver() {
                />
             </div>
 
-            {/* Ícones no desktop */}
-            <div className="hidden md:flex gap-2">
+            <div className="flex gap-2">
                <Btn variant="secondary" onClick={() => setView("table")}>
                   <Icon name="table" className="size-8" />
                </Btn>
@@ -61,6 +46,12 @@ function Driver() {
             {view === "table" && <Table searchTerm={searchTerm} />}
             {view === "cards" && <Cards searchTerm={searchTerm} />}
          </div>
+
+         <Link href="/drivers/create" className="md:hidden flex">
+            <span className="fixed bottom-0 right-0 m-4 z-50 p-6 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300">
+               <Icon name="addUser" className="size-6" />
+            </span>
+         </Link>
       </div>
    );
 }
