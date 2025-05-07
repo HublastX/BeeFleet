@@ -43,19 +43,31 @@ function CarPage() {
       ? gestores.find((g) => g.id === carroData.managerId)
       : null;
 
+   const [menuAberto, setMenuAberto] = useState(false);
+
+   const alternarMenu = () => {
+      setMenuAberto(!menuAberto);
+   };
+
    return (
       <div className="p-6">
          {carregando && <p>Carregando...</p>}
          {erro && (
-              <div className="flex items-start gap-3 bg-white border border-[1px] border-black text-red-500 p-4 rounded-lg shadow max-w-xl mx-auto mt-8">
-            <span className="text-2xl">🚫</span>
-            <div>
-              <p className="font-semibold text-lg">Não foi possível encontrar o carro.</p>
-              <p className="text-sm">Tente novamente mais tarde ou verifique a conexão.</p>
-              <p className="text-xs mt-1 text-red-500">Detalhes técnicos: {erro}</p>
+            <div className="flex items-start gap-3 bg-white border border-[1px] border-black text-red-500 p-4 rounded-lg shadow max-w-xl mx-auto mt-8">
+               <span className="text-2xl">🚫</span>
+               <div>
+                  <p className="font-semibold text-lg">
+                     Não foi possível encontrar o carro.
+                  </p>
+                  <p className="text-sm">
+                     Tente novamente mais tarde ou verifique a conexão.
+                  </p>
+                  <p className="text-xs mt-1 text-red-500">
+                     Detalhes técnicos: {erro}
+                  </p>
+               </div>
             </div>
-        </div>
-    )}
+         )}
 
          {!carregando && !erro && !carroData && <p>Nenhum carro encontrado.</p>}
 
@@ -102,7 +114,10 @@ function CarPage() {
                               ? "Disponível"
                               : "Indisponível"}
                         </Badge>
-                        <Link href={`/cars/${id}/edit`}>
+                        <Link
+                           href={`/cars/${id}/edit`}
+                           className="hidden md:flex"
+                        >
                            <Btn
                               texto="Editar Carro"
                               className="flex text-nowrap flex-row-reverse gap-2 items-center"
@@ -112,6 +127,15 @@ function CarPage() {
                         </Link>
                      </div>
                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                     <Badge
+                           className="lg:hidden inline-flex"
+                           size="sm"
+                           color={carroData.isAvailable ? "success" : "error"}
+                        >
+                           {carroData.isAvailable
+                              ? "Disponível"
+                              : "Indisponível"}
+                        </Badge>
                         <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
                            <span className="text-sm">Ano</span>
                            <h1 className="font-black">{carroData.year}</h1>
@@ -154,16 +178,43 @@ function CarPage() {
                               {gestorDoCarro?.name || "Gestor não encontrado"}
                            </h1>
                         </div>
-                        <Badge
-                           className="lg:hidden inline-flex"
-                           size="sm"
-                           color={carroData.isAvailable ? "success" : "error"}
-                        >
-                           {carroData.isAvailable
-                              ? "Disponível"
-                              : "Indisponível"}
-                        </Badge>
                      </div>
+                  </div>
+                  <div className="fixed md:hidden bottom-0 right-0 m-4 z-50">
+                     <button
+                        onClick={alternarMenu}
+                        className="p-5  bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300"
+                     >
+                        <Icon
+                           name="menuMobile"
+                           className="size-7"
+                           strokeWidth={2}
+                        />
+                     </button>
+                     {menuAberto && (
+                        <div className="absolute bottom-21 right-0 shadow-lg rounded-md p-4 w-48">
+                           <ul className="flex flex-col gap-2">
+                              <li>
+                                 <Link href={`/cars/${id}/edit`}>
+                                    <span className="flex items-center gap-2">
+                                       <Icon name="lapis" className="size-4" />
+                                       Editar
+                                    </span>
+                                 </Link>
+                              </li>
+                              <li>
+                                 <Link href="/event">
+                                    <span className="flex items-center gap-2">
+                                       <Icon name="evento" className="size-4" />
+                                       {carroData.status === "AVAILABLE"
+                                          ? "Marcar Saída"
+                                          : "Marcar Chegada"}
+                                    </span>
+                                 </Link>
+                              </li>
+                           </ul>
+                        </div>
+                     )}
                   </div>
                </div>
                <DetailCarTable />
