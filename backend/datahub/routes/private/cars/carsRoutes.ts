@@ -1,10 +1,10 @@
 import express, { Router } from "express";
 import { Request, Response, NextFunction } from "express";
 import { createCar } from "../../../controllers/cars/createCar";
-import { getCar } from "../../../controllers/cars/getAllCar";
+import { getCar } from "../../../controllers/cars/getCar";
 import { getAllCars } from "../../../controllers/cars/getAllCar";
 import { putCar } from "../../../controllers/cars/putCar";
-import { deleteCar } from "../../../controllers/cars/delete.Car";
+import { deleteCar } from "../../../controllers/cars/deleteCar";
 import { authenticateManager } from "../../../middlewares/auth";
 import { CreateCarRequestBody } from "../../../schemas/carInterface";
 import { validate } from "../../../middlewares/validate";
