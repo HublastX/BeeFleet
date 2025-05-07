@@ -1,9 +1,7 @@
 import express, { Router } from "express";
 import { createManager } from "../../../controllers/managers/createManager";
-import {
-    getManager,
-    getAllManagers,
-} from "../../../controllers/managers/getAllManager";
+import { getManager } from "../../../controllers/managers/getManager";
+import { getAllManagers } from "../../../controllers/managers/getAllManager";
 import { putManager } from "../../../controllers/managers/putManager";
 import { deleteManager } from "../../../controllers/managers/deleteManager";
 import { validate } from "../../../middlewares/validate";
