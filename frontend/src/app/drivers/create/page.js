@@ -65,7 +65,7 @@ function CreateUser() {
          id: "phone",
          setValue: setPhone,
          error: erros.phone,
-         placeholder: "Ex: (11) 91234-5678a",
+         placeholder: "Ex: (11) 91234-5678",
       },
       {
          label: "Licença de Motorista",
