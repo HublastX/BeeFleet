@@ -3,14 +3,14 @@ export const DOCS_DRIVER_CREATE = {
      * @swagger
      * tags:
      *   - name: Drivers
-     *     description: Gestão de motoristas
+     *     description: Endpoints para gestão de motoristas
      *
      * /api/drivers/create:
      *   post:
      *     tags:
      *       - Drivers
      *     summary: Cria um novo motorista
-     *     description: Rota protegida que requer autenticação JWT de gestor
+     *     description: Cria um novo motorista vinculado a um gestor, requer autenticação e dados obrigatórios como nome, telefone e CNH, podendo ter imagem opcional.
      *     security:
      *       - bearerAuth: []
      *     consumes:
