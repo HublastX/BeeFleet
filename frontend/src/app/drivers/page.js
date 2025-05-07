@@ -27,6 +27,7 @@ function Driver() {
                <InputText
                   variant="withIcon"
                   icon="search"
+                  placeholder="Pesquise por nome/telefone ou CNH do motorista"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                />
