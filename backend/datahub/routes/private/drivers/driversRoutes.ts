@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 import { Request, Response, NextFunction } from "express";
 import { createDriver } from "../../../controllers/drivers/createDriver";
-import { getDriver } from "../../../controllers/drivers/getAllDriver";
+import { getDriver } from "../../../controllers/drivers/getDriver";
 import { getAllDrivers } from "../../../controllers/drivers/getAllDriver";
 import { putDriver } from "../../../controllers/drivers/putDriver";
 import { deleteDriver } from "../../../controllers/drivers/deleteDriver";
