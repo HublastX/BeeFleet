@@ -1,7 +1,7 @@
 import express, { Router } from "express";
 import { Request, Response, NextFunction } from "express";
 import { createEvent } from "../../../controllers/events/createEvent";
-import { getEvent } from "../../../controllers/events/getAllEvent";
+import { getEvent } from "../../../controllers/events/getEvent";
 import { getAllEvents } from "../../../controllers/events/getAllEvent";
 import { putEvent } from "../../../controllers/events/putEvent";
 import { deleteEvent } from "../../../controllers/events/deleteEvent";
