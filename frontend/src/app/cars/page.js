@@ -28,6 +28,7 @@ function Cars() {
                <InputText
                   variant="withIcon"
                   icon="search"
+                  placeholder="Pesquise por placa ou modelo do veículo"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                />
