@@ -21,8 +21,10 @@ import {
    MagnifyingGlassIcon,
    CameraIcon,
    PencilIcon,
+   ClipboardDocumentListIcon,
 } from "@heroicons/react/24/solid";
 import {
+   ChevronUpIcon,
    PlusIcon,
    ChatBubbleBottomCenterTextIcon,
    Bars3BottomLeftIcon,
@@ -50,6 +52,7 @@ const icons = {
    closeLeft: Bars3BottomLeftIcon,
    reticencias: EllipsisHorizontalIcon,
    prabaixo: ChevronDownIcon,
+   pracima: ChevronUpIcon,
    graficoPizza: ChartPieIcon,
    suport: ExclamationCircleIcon,
    users: UsersIcon,
@@ -68,6 +71,7 @@ const icons = {
    sCima: ArrowTrendingUpIcon,
    sBaixo: ArrowTrendingDownIcon,
    evento: ClipboardDocumentCheckIcon,
+   eventoL: ClipboardDocumentListIcon,
    check: CheckIcon,
    error: ExclamationTriangleIcon,
    warning: SignalSlashIcon,
