@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE `Event` MODIFY `eventType` ENUM('CHECKOUT', 'REPAIR', 'RETURN') NOT NULL;
+
+-- AlterTable
+ALTER TABLE `Report` MODIFY `eventType` ENUM('CHECKOUT', 'REPAIR', 'RETURN') NOT NULL;
