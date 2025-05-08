@@ -53,8 +53,8 @@ function Login() {
             </div>
 
             {/* Formulário */}
-            {erroLogin && <p style={{ color: "red" }}>{erroLogin}</p>}
-            {erro && <p style={{ color: "red" }}>{erro}</p>}
+            {/* {erroLogin && <p style={{ color: "red" }}>{erroLogin}</p>}
+            {erro && <p style={{ color: "red" }}>{erro}</p>} */}
             <div className="mt-6">
                <form
                   className="space-y-6 text-base font-medium"
