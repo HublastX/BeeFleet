@@ -9,7 +9,7 @@ export const carSchema = z.object({
             "Placa deve estar no formato Mercosul (ex: ABC1D23 ou ABC1234)"
         )
         .transform((plate) => {
-            return `${plate.slice(0, 3)}-${plate.slice(3)}`.toUpperCase();
+            return `${plate.slice(0, 3)}${plate.slice(3)}`.toUpperCase();
         }),
     renavam: z
         .string()
