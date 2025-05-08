@@ -5,8 +5,6 @@ import InputText from "@/elements/inputText";
 import useDrivers from "@/hooks/useDrivers";
 import withAuth from "@/utils/withAuth";
 import { useState, useEffect } from "react";
-import Image from "next/image";
-import Icon from "@/elements/Icon";
 import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
 import { useToast } from "@/utils/ToastContext";
 
@@ -22,6 +20,13 @@ function EditDriver() {
       license: "",
       image: null,
    });
+
+   const valideImageType = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/jpg",
+   ];
 
    useEffect(() => {
       const driver = motoristas.find((driver) => driver.id === id);
@@ -56,6 +61,14 @@ function EditDriver() {
 
       if (formData.license && !/^\d{11}$/.test(formData.license)) {
          newErros.license = "CNH deve conter 11 números";
+      }
+
+      if (
+         formData.image instanceof File &&
+         !valideImageType.includes(formData.type)
+      ) {
+         newErros.image =
+            "Formato da imagem não aceito. Apenas png, jpeg, jpg e gif";
       }
 
       setErros(newErros);
@@ -126,6 +139,7 @@ function EditDriver() {
                            variant="file"
                            type="file"
                            accept="image/*"
+                           className={`file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark ${erros.image ? "border-red-500 dark:border-red-500 border-2" : ""}`}
                            onChange={(e) => {
                               const file = e.target.files[0];
                               if (file) {
@@ -136,6 +150,11 @@ function EditDriver() {
                               }
                            }}
                         />
+                        {erros.image && (
+                           <p className="text-red-500 text-sm font-bold">
+                              {erros.image}
+                           </p>
+                        )}
                      </div>
 
                      <div className="flex gap-4">
@@ -155,7 +174,7 @@ function EditDriver() {
                         </Btn>
                      </div>
                   </form>
-                  <div className="hidden sticky md:flex md:flex-col min-w-65 h-fit border font-bold bg-bee-dark-100 border-bee-dark-300 dark:bg-gray-800 dark:border-gray-500 p-4 rounded-lg">
+                  {/* <div className="hidden sticky md:flex md:flex-col min-w-65 h-fit border font-bold bg-bee-dark-100 border-bee-dark-300 dark:bg-gray-800 dark:border-gray-500 p-4 rounded-lg">
                      <div className="flex justify-center items-center rounded-md p-3">
                         {formData.image ? (
                            typeof formData.image === "string" ? (
@@ -186,7 +205,7 @@ function EditDriver() {
                         <p>Telefone: {formData.phone}</p>
                         <p>CNH: {formData.license}</p>
                      </div>
-                  </div>
+                  </div> */}
                </div>
             </>
          )}

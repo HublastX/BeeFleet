@@ -14,7 +14,6 @@ function EditCars() {
    const { carro, carregando, updateCar } = useCar();
    const { showToast } = useToast();
    const [errors, setErrors] = useState({});
-
    const [formData, setFormData] = useState({
       plate: "",
       model: "",
@@ -26,6 +25,13 @@ function EditCars() {
       brand: "",
       image: null,
    });
+
+   const valideImageType = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/jpg",
+   ];
 
    useEffect(() => {
       const car = carro.find((car) => car.id === id);
@@ -48,7 +54,6 @@ function EditCars() {
       e.preventDefault();
       const newErrors = {};
 
-      // Validações
       if (!formData.plate) newErrors.plate = "Campo obrigatório";
       if (!formData.brand) newErrors.brand = "Campo obrigatório";
       if (!formData.model) newErrors.model = "Campo obrigatório";
@@ -57,12 +62,30 @@ function EditCars() {
       if (!formData.odometer) newErrors.odometer = "Campo obrigatório";
       if (!formData.renavam) newErrors.renavam = "Campo obrigatório";
       if (!formData.color) newErrors.color = "Campo obrigatório";
-      if (formData.plate && !/^([A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})$/.test(formData.plate)) {
-         newErrors.plate = "Placa inválida (formatos aceitos: ABC1234 ou ABC1D23)";
+
+      if (
+         formData.plate &&
+         !/^([A-Z]{3}[0-9]{4}|[A-Z]{3}[0-9][A-Z][0-9]{2})$/.test(formData.plate)
+      ) {
+         newErrors.plate =
+            "Placa inválida (formatos aceitos: ABC1234 ou ABC1D23)";
       }
 
       if (formData.year < 1900) {
          newErrors.year = "Ano inválido";
+      }
+
+      if (formData.renavam && !/^\d{11}$/.test(formData.renavam)) {
+         newErrors.renavam =
+            "Renavam deve conter exatamente 11 dígitos (ex: 12345678901)";
+      }
+
+      if (
+         formData.image instanceof File &&
+         !valideImageType.includes(formData.type)
+      ) {
+         newErrors.image =
+            "Formato da imagem não aceito. Apenas png, jpeg, jpg e gif";
       }
 
       setErrors(newErrors);
@@ -138,13 +161,7 @@ function EditCars() {
                <div className="flex flex-col-reverse md:flex-row justify-between gap-10 w-full">
                   <form onSubmit={handleSubmit} className="space-y-6 w-full">
                      {formList.map(
-                        ({
-                           label,
-                           id,
-                           placeholder,
-                           type,
-                           transform,
-                        }) => (
+                        ({ label, id, placeholder, type, transform }) => (
                            <div key={id}>
                               <label
                                  htmlFor={id}
@@ -194,6 +211,7 @@ function EditCars() {
                            name="image"
                            accept="image/*"
                            variant="file"
+                           className={`file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark ${errors.image ? "border-red-500 dark:border-red-500 border-2" : ""}`}
                            onChange={(e) => {
                               const file = e.target.files[0];
                               if (file) {
@@ -204,6 +222,11 @@ function EditCars() {
                               }
                            }}
                         />
+                        {errors.image && (
+                           <p className="text-red-500 text-sm font-bold">
+                              {errors.image}
+                           </p>
+                        )}
                      </div>
 
                      <div className="flex gap-4">
