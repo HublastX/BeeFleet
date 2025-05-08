@@ -24,6 +24,13 @@ function CreateCars() {
    const [brand, setBrand] = useState("");
    const [image, setImage] = useState(null);
 
+   const valideImageType = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/jpg",
+   ];
+
    const formList = [
       {
          label: "Placa",
@@ -31,7 +38,7 @@ function CreateCars() {
          value: plate,
          setValue: setPlate,
          error: errors.plate,
-         placeholder: "Ex: ABC-1234",
+         placeholder: "Ex: ABC1234",
          type: "text",
          transform: (v) => v.toUpperCase(),
       },
@@ -102,7 +109,6 @@ function CreateCars() {
 
    const handleSubmit = async (e) => {
       e.preventDefault();
-
       const newErrors = {};
 
       if (!plate) newErrors.plate = "Campo obrigatório";
@@ -138,6 +144,11 @@ function CreateCars() {
 
       if (odometer && Number(odometer) < 0)
          newErrors.odometer = "Hodômetro não pode ser negativo";
+
+      if (image instanceof File && !valideImageType.includes(image.type)) {
+         newErrors.image =
+            "Formato da imagem não aceito. Apenas png, jpeg, jpg e gif";
+      }
 
       setErrors(newErrors);
 
@@ -222,7 +233,13 @@ function CreateCars() {
                         name="photo"
                         accept="image/*"
                         onChange={(e) => setImage(e.target.files[0])}
+                        className={`file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark ${errors.image ? "border-red-500 dark:border-red-500 border-2" : ""}`}
                      />
+                     {errors.image && (
+                        <p className="text-red-500 text-sm font-bold">
+                           {errors.image}
+                        </p>
+                     )}
                   </div>
 
                   {/* Botões */}
