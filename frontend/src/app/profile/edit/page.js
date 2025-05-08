@@ -31,7 +31,7 @@ function EditProfile() {
       }
    }, [gestor, formData]);
 
-   const valideImageType = ["image/jpeg", "image/png", "image/gif"];
+   const valideImageType = ["image/jpeg", "image/png", "image/gif", "image/jpg"];
 
    const handleSubmit = async (e) => {
       e.preventDefault();
