@@ -9,6 +9,7 @@ import Badge from "@/elements/ui/badge/Badge";
 import Icon from "@/elements/Icon";
 import Btn from "@/elements/btn";
 import Image from "next/image";
+import DetailDriverTable from "@/components/table/detailDriverTable";
 
 function formatarData(dataISO) {
    const data = new Date(dataISO);
