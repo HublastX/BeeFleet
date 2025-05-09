@@ -105,7 +105,7 @@ export default function Saida() {
                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                   Você pode pesquisar pelo nome, telefone ou CNH
                </p>
-               <div className="flex gap-3 w-full">
+               <div className="flex gap-3 w-full flex-wrap">
                   <label className="font-medium flex items-center">
                      Buscar por:
                   </label>
@@ -118,7 +118,7 @@ export default function Saida() {
                         setMotoristaError(false);
                         setMotoristaStatusError("");
                      }}
-                     className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-bee-dark-800"
+                     className="border border-bee-dark-300 dark:border-bee-dark-400 rounded px-3 py-2 bg-white dark:bg-bee-dark-800 w-full md:w-fit"
                   >
                      <option value="name">Nome</option>
                      <option value="phone">Telefone</option>
@@ -191,14 +191,14 @@ export default function Saida() {
             <hr className="border-bee-dark-300 dark:border-bee-dark-400" />
 
             {/* Carro */}
-            <div className="w-full">
+            <div className="w-full relative">
                <h2 className="text-2xl font-bold flex gap-2">
                   <Icon name="car" className="size-6" /> Carro
                </h2>
                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                   Você pode pesquisar por placa, RENAVAM ou chassi
                </p>
-               <div className="flex w-full gap-3">
+               <div className="flex gap-3 w-full flex-wrap">
                   <label className="font-medium flex items-center">
                      Buscar por:
                   </label>
@@ -211,7 +211,7 @@ export default function Saida() {
                         setCarroError(false);
                         setCarroStatusError("");
                      }}
-                     className="border border-gray-300 dark:border-gray-600 rounded px-3 py-2 bg-white dark:bg-bee-dark-800"
+                     className="border border-bee-dark-300 dark:border-bee-dark-400 rounded px-3 py-2 bg-white dark:bg-bee-dark-800 w-full md:w-fit"
                   >
                      <option value="plate">Placa</option>
                      <option value="renavam">RENAVAM</option>

@@ -8,9 +8,7 @@ export const carSchema = z.object({
             /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/,
             "Placa deve estar no formato Mercosul (ex: ABC1D23 ou ABC1234)"
         )
-        .transform((plate) => {
-            return `${plate.slice(0, 3)}-${plate.slice(3)}`.toUpperCase();
-        }),
+        .transform((plate) => plate.toUpperCase()),
     renavam: z
         .string()
         .regex(/^\d{11}$/, "Renavam deve conter exatamente 11 dígitos (ex: 12345678901)"),
