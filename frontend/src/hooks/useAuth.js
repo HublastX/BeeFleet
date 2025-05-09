@@ -244,7 +244,7 @@ export default function useAuth() {
 
             setGestores(gestorFormatado);
          } catch (err) {
-            handleError("Erro!", "warning", "Erro ao conectar ao servidor.");
+            showToast("Erro!","warning", "Erro no servidor");
          } finally {
             setCarregando(false);
          }
@@ -259,10 +259,10 @@ export default function useAuth() {
          setErro("Token do gestor não encontrado.");
          return;
       }
-   
+
       setCarregando(true);
       setErro(null);
-   
+
       try {
          const res = await fetch(`${API_URL}/api/managers/${id}`, {
             method: "DELETE",
@@ -271,19 +271,20 @@ export default function useAuth() {
                Authorization: `Bearer ${gestor.token}`,
             },
          });
-   
+
          if (!res.ok)
             throw new Error("Erro ao deletar gestor. Tente novamente.");
-   
+
          showToast("Sucesso", "success", "Conta deletada com sucesso!", 5000);
-         logout(); 
+         setTimeout(() => {
+            logout();
+         }, 1000);
       } catch (error) {
          setErro(error.message || "Erro ao conectar ao servidor.");
       } finally {
          setCarregando(false);
       }
    };
-   
 
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
