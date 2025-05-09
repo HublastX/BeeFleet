@@ -44,12 +44,12 @@ function Home() {
                <div className="grid grid-cols-12 gap-4 md:gap-6">
                   <div className="col-span-12 space-y-5 xl:col-span-6">
                      {/* <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:gap-6"> */}
-                     <div className="flex row gap-5 overflow-x-scroll md:grid grid-cols-1 sm:grid-cols-2 md:gap-6">
+                     <div className="flex row gap-5 overflow-x-scroll md:grid grid-cols-1 sm:grid-cols-2 md:gap-6 no-scrollbar">
                         <Link href="/drivers">
                            <Card
                               titulo="Motoristas"
                               icone="users"
-                              estado="baixa"
+                              // estado="baixa"
                               quantidade={motoristas.length}
                            />
                         </Link>
@@ -57,7 +57,7 @@ function Home() {
                            <Card
                               titulo="Carros"
                               icone="car"
-                              estado="aumento"
+                              // estado="aumento"
                               quantidade={carro.length}
                            />
                         </Link>
@@ -66,7 +66,7 @@ function Home() {
                            <Card
                               titulo="Gestores"
                               icone="suport"
-                              estado="aumento"
+                              // estado="aumento"
                               quantidade={gestores.length}
                            />
                         </Link>
@@ -74,7 +74,7 @@ function Home() {
                         <Card
                            titulo="Eventos"
                            icone="evento"
-                           estado="baixa"
+                           // estado="baixa"
                            quantidade="0"
                         />
                      </div>
