@@ -30,11 +30,10 @@ export default function useDrivers() {
       showToast("Erro", type, msg, 5000);
    };
 
-    // Utilitário para fitrar motorista por gestor
+   // Utilitário para fitrar motorista por gestor
    const getDriversByManager = () => {
       if (!gestor?.id) return [];
-
-      return motoristas.filter(driver => driver.managerId === gestor.id);
+      return motoristas.filter((driver) => driver?.managerId === gestor.id);
    };
 
    // Buscar motoristas
@@ -61,6 +60,7 @@ export default function useDrivers() {
 
             const motoristasFormatados = data.data.map((motorista) => ({
                ...motorista,
+               managerId: motorista.managerId || gestor.id,
                image:
                   motorista.image &&
                   motorista.image !== "null" &&
@@ -106,6 +106,7 @@ export default function useDrivers() {
 
          const motoristasFormatados = {
             ...motoristaData,
+            managerId: motoristaData.managerId || gestor.id,
             image:
                motoristaData.image && motoristaData.image !== "null"
                   ? getImageUrl(motoristaData.image)
@@ -317,7 +318,6 @@ export default function useDrivers() {
          localStorage.removeItem("toastType");
       }
    }, [showToast]);
-
 
    return {
       motoristas,

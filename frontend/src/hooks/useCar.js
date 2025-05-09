@@ -33,8 +33,7 @@ export default function useCar() {
    // Utilitário para fitrar carro por gestor
    const getCarByManager = () => {
       if (!gestor?.id) return [];
-
-      return carro.filter((car) => car.managerId === gestor.id);
+      return carro.filter((car) => car?.managerId === gestor.id);
    };
 
    // Buscar carro
@@ -59,6 +58,7 @@ export default function useCar() {
 
             const carroFormatado = data.data.map((carro) => ({
                ...carro,
+               managerId: carro.managerId || null,
                image:
                   carro.image && carro.image !== "null" && carro.image !== null
                      ? getImageUrl(carro.image)
@@ -103,6 +103,7 @@ export default function useCar() {
 
          const carroFormatado = {
             ...carroData,
+            managerId: carroData.managerId || gestor.id,
             image:
                carroData.image && carroData.image !== "null"
                   ? getImageUrl(carroData.image)
