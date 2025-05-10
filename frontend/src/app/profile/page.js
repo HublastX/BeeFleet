@@ -14,21 +14,35 @@ function Manager() {
    const { gestor, deleteManager } = useAuth();
    const { countDriversByManager } = useDrivers();
    const { countCarsByManager } = useCar();
+
    const [modalAberto, setModalAberto] = useState(false);
+   const [managerParaDeletar, setManagerParaDeletar] = useState(null);
 
    if (!gestor) return null;
-   const { name, image, email } = gestor;
+   const { name, image, email, id } = gestor;
 
    const myDriversCount = countDriversByManager;
    const myCarsCount = countCarsByManager;
 
-   function abrirModalDeletar() {
+
+   function abrirModalDeletar(managerId) {
+      setManagerParaDeletar(managerId);
       setModalAberto(true);
    }
-   function confirmarDelete() {
-      deleteManager(gestor.id);
-      setModalAberto(false);
+
+   async function confirmarDelete() {
+      if (managerParaDeletar) {
+         try {
+            await deleteManager(managerParaDeletar);
+            setModalAberto(false);
+            setManagerParaDeletar(null);
+            // setCarroData(null);
+         } catch (error) {
+            console.error("Erro ao deletar perfil:", error);
+         }
+      }
    }
+
 
    return (
       <div className="p-4 space-y-6">
@@ -61,7 +75,7 @@ function Manager() {
                </Link>
 
                <Btn
-                  onClick={() => abrirModalDeletar()}
+                  onClick={() => abrirModalDeletar(id)}
                   texto="Deletar Perfil"
                   className="bg-red-600 hover:bg-red-700"
                />
