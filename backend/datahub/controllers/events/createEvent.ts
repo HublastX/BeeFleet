@@ -156,6 +156,13 @@ export const createEvent = async (
                 },
             });
 
+            await prisma.car.update({
+                where: { id: carId },
+                data: {
+                    odometer: odometer,
+                },
+            });
+
             await prisma.driver.update({
                 where: { id: driverId },
                 data: {
