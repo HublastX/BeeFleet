@@ -26,6 +26,23 @@ function CreateUser() {
       "image/jpg",
    ];
 
+   const formatPhoneNumber = (value) => {
+      const cleaned = value.replace(/\D/g, "").slice(0, 11);
+      const match = cleaned.match(/^(\d{0,2})(\d{0,5})(\d{0,4})$/);
+
+      if (!match) return value;
+
+      const [, ddd, parte1, parte2] = match;
+
+      let formatted = "";
+      if (ddd) formatted += `(${ddd}`;
+      if (ddd && ddd.length === 2) formatted += ") ";
+      if (parte1) formatted += parte1;
+      if (parte2) formatted += `-${parte2}`;
+
+      return formatted;
+   };
+
    const handleSubmit = async (e) => {
       e.preventDefault();
       const newErros = {};
@@ -105,7 +122,12 @@ function CreateUser() {
                            <InputText
                               type={type}
                               name={id}
-                              onChange={(e) => setValue(e.target.value)}
+                              value={id === "phone" ? phone : undefined}
+                              onChange={(e) =>
+                                 id === "phone"
+                                    ? setPhone(formatPhoneNumber(e.target.value))
+                                    : setValue(e.target.value)
+                              }
                               placeholder={placeholder}
                               required
                               className={`${error ? "border-red-500 dark:border-red-500 border-2" : ""}`}
