@@ -53,7 +53,7 @@ export default function DriverCard({ searchTerm }) {
             </div>
          )}
          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-4">
-         {!carregando && !erro && (
+            {!carregando && !erro && (
                <>
                   {motoristasFiltrados.map((driver) => (
                      <Link
@@ -75,8 +75,13 @@ export default function DriverCard({ searchTerm }) {
                                  <Icon name="user" />
                               </div>
                            )}
-
-                           <h1 className="absolute top-1 right-1 w-5 h-5 rounded-full border-2 border-white dark:border-gray-800 bg-bee-alert-100"></h1>
+                           <h1
+                              className={`absolute top-1 right-1 w-5 h-5 rounded-full border-2 border-white dark:border-gray-800 ${
+                                 driver.isAvailable
+                                    ? "bg-bee-alert-100"
+                                    :  "bg-bee-alert-300"
+                              }`}
+                           ></h1>
                         </div>
                         <div className="flex flex-col gap-1">
                            <h2 className="text-lg font-semibold">

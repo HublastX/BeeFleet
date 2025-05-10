@@ -62,10 +62,10 @@ function EditDriver() {
       if (formData.license && !/^\d{11}$/.test(formData.license)) {
          newErros.license = "CNH deve conter 11 números";
       }
-
+      
       if (
          formData.image instanceof File &&
-         !valideImageType.includes(formData.type)
+         !valideImageType.includes(formData.image.type)
       ) {
          newErros.image =
             "Formato da imagem não aceito. Apenas png, jpeg, jpg e gif";

@@ -82,7 +82,7 @@ function EditCars() {
 
       if (
          formData.image instanceof File &&
-         !valideImageType.includes(formData.type)
+         !valideImageType.includes(formData.image.type)
       ) {
          newErrors.image =
             "Formato da imagem não aceito. Apenas png, jpeg, jpg e gif";
