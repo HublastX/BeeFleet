@@ -24,7 +24,7 @@ const navItem = [
       path: "/cars",
    },
    {
-      icon: "suport",
+      icon: "gestor",
       name: "Gestores",
       path: "/managers",
    },
