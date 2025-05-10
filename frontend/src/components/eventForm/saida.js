@@ -5,11 +5,13 @@ import InputText from "@/elements/inputText";
 import useCar from "@/hooks/useCar";
 import useDrivers from "@/hooks/useDrivers";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function Saida() {
    const { motoristas } = useDrivers();
    const { carro } = useCar();
+   const searchParams = useSearchParams();
 
    const [motoristaInput, setMotoristaInput] = useState("");
    const [selectedMotorista, setSelectedMotorista] = useState(null);
@@ -93,6 +95,24 @@ export default function Saida() {
    const toggleInfoSection = () => {
       setShowInfo(!showInfo);
    };
+
+   useEffect(() => {
+      const motoristaId = searchParams.get("motoristaId");
+      if (motoristaId && motoristas) {
+         const motorista = motoristas.find((m) => m.id === motoristaId);
+         if (motorista) selecionarMotorista(motorista);
+      }
+   }, [motoristas, searchParams]);
+
+   useEffect(() => {
+      const carroId = searchParams.get("carroId");
+      if (carroId && carro) {
+         const carroSelecionado = carro.find((c) => c.id === carroId);
+         if (carroSelecionado) {
+            selecionarCarro(carroSelecionado);
+         }
+      }
+   }, [carro, searchParams]);
 
    return (
       <form className="space-y-8 mt-6">
