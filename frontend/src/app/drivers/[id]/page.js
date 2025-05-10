@@ -21,7 +21,7 @@ function formatarData(dataISO) {
 
 function DiverPage() {
    const { id } = useParams();
-   const { getDriver, carregando, erro , deleteDriver } = useDrivers();
+   const { getDriver, carregando, erro, deleteDriver } = useDrivers();
    const [motoristaData, setMotoristaData] = useState(null);
    const { gestores } = useAuth();
 
@@ -89,7 +89,8 @@ function DiverPage() {
                   </p>
                </div>
             </div>
-         )}         {!carregando && !erro && !motoristaData && (
+         )}{" "}
+         {!carregando && !erro && !motoristaData && (
             <p>Nenhum motorista encontrado.</p>
          )}
          {motoristaData && (
@@ -190,7 +191,7 @@ function DiverPage() {
                            </Link>
                         </li>
                         <li>
-                           <Link href="/event">
+                           <Link href={`/event?tipo=saida&motoristaId=${id}`}>
                               <span className="flex items-center gap-2">
                                  <Icon name="evento" className="size-4" />
                                  {motoristaData.isAvailable

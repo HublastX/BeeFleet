@@ -216,7 +216,7 @@ function CarPage() {
                            </Link>
                         </li>
                         <li>
-                           <Link href="/event">
+                           <Link href={`/event?tipo=saida&carroId=${id}`}>
                               <span className="flex items-center gap-2">
                                  <Icon name="evento" className="size-4" />
                                  {carroData.status === "AVAILABLE"
