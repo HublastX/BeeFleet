@@ -94,11 +94,14 @@ model Report {
 enum EventType {
     CHECKOUT
     RETURN
+    REPAIR
+    REPAIR_RETURN
 }
 
 enum CarStatus {
     AVAILABLE
     IN_USE
+    IN_REPAIR
 }
 
 enum EventStatus {
