@@ -9,11 +9,13 @@ import Btn from "@/elements/btn";
 import withAuth from "@/utils/withAuth";
 import DeleteConfirmation from "@/components/ConfirmDeleteModal";
 import { useState } from "react";
+import useEvents from "@/hooks/useEvent";
 
 function Manager() {
    const { gestor, deleteManager } = useAuth();
    const { countDriversByManager } = useDrivers();
    const { countCarsByManager } = useCar();
+   const {countEventsByManager} = useEvents();
 
    const [modalAberto, setModalAberto] = useState(false);
    const [managerParaDeletar, setManagerParaDeletar] = useState(null);
@@ -23,6 +25,7 @@ function Manager() {
 
    const myDriversCount = countDriversByManager;
    const myCarsCount = countCarsByManager;
+   const myEventsCount = countEventsByManager;
 
 
    function abrirModalDeletar(managerId) {
@@ -117,7 +120,7 @@ function Manager() {
                <h2 className="text-lg font-semibold mb-2">
                   Total de eventos finalizados
                </h2>
-               <p className="text-4xl font-black text-bee-yellow-700">60</p>
+               <p className="text-4xl font-black text-bee-yellow-700">{myEventsCount}</p>
             </Link>
          </div>
 

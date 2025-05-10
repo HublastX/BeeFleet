@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Icon from "@/elements/Icon";
 import CardSkeleton from "@/elements/ui/skeleton/CardSkeleton";
+import { useNavBar } from "../navbar/navBarContext";
 
 function formatarTelefone(telefone) {
    if (!telefone) return "";
@@ -29,6 +30,13 @@ export default function DriverCard({ searchTerm }) {
       );
    });
 
+   const { isExpanded, isHovered } = useNavBar();
+   const isNavOpen = isExpanded || isHovered;
+
+   const gridClass = `grid transition-all duration-300 ease-in-out grid-cols-1 md:grid-cols-3 ${
+      isNavOpen ? "lg:grid-cols-4" : "lg:grid-cols-5"
+   }`;
+
    if (carregando) return <CardSkeleton />;
    if (erro)
       return (
@@ -52,7 +60,7 @@ export default function DriverCard({ searchTerm }) {
                </div>
             </div>
          )}
-         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-4">
+         <div className={`${gridClass} gap-6 p-4`}>
             {!carregando && !erro && (
                <>
                   {motoristasFiltrados.map((driver) => (
@@ -79,7 +87,7 @@ export default function DriverCard({ searchTerm }) {
                               className={`absolute top-1 right-1 w-5 h-5 rounded-full border-2 border-white dark:border-gray-800 ${
                                  driver.isAvailable
                                     ? "bg-bee-alert-100"
-                                    :  "bg-bee-alert-300"
+                                    : "bg-bee-alert-300"
                               }`}
                            ></h1>
                         </div>

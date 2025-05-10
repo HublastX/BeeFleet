@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Icon from "@/elements/Icon";
 import CardSkeleton from "@/elements/ui/skeleton/CardSkeleton";
+import { useNavBar } from "../navbar/navBarContext";
 export default function CarCard({ searchTerm }) {
    const { carro, erro, carregando } = useCar();
    const carrosFiltrados = carro.filter((carro) => {
@@ -13,6 +14,13 @@ export default function CarCard({ searchTerm }) {
          carro.plate.toLowerCase().includes(termo)
       );
    });
+
+   const { isExpanded, isHovered } = useNavBar();
+   const isNavOpen = isExpanded || isHovered;
+
+   const gridClass = `grid transition-all duration-300 ease-in-out grid-cols-1 md:grid-cols-3 ${
+      isNavOpen ? "lg:grid-cols-4" : "lg:grid-cols-5"
+   }`;
 
    if (carregando) return <CardSkeleton />;
    if (erro)
@@ -37,7 +45,7 @@ export default function CarCard({ searchTerm }) {
                </div>
             </div>
          )}
-         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-4">
+         <div className={`${gridClass} gap-6 p-4`}>
             {!carregando && !erro && (
                <>
                   {carrosFiltrados.map((car) => (
@@ -66,8 +74,8 @@ export default function CarCard({ searchTerm }) {
                                  car.status === "IN_USE"
                                     ? "bg-bee-alert-300"
                                     : car.status === "AVAILABLE"
-                                    ? "bg-bee-alert-100"
-                                    : "bg-bee-alert-700"
+                                      ? "bg-bee-alert-100"
+                                      : "bg-bee-alert-700"
                               }`}
                            ></h1>
                         </div>
