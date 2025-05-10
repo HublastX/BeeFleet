@@ -7,7 +7,7 @@ WORKDIR /app
 
 COPY package.json package-lock.json ./
 
-COPY .env ./
+
 
 RUN npm install --omit=dev
 
@@ -15,7 +15,7 @@ COPY . .
 
 
 
-EXPOSE 3001
+EXPOSE 5004
 
 
 CMD ["npm", "run", 'dev']

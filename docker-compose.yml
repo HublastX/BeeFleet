@@ -3,18 +3,20 @@ services:
         image: mysql:8.0
         container_name: bee-fleet-mysql
         restart: always
+        env_file:
+            - .env
         environment:
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
             MYSQL_DATABASE: ${MYSQL_DATABASE}
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         ports:
-            - "3306:3306"
+            - "3306:3307"
         volumes:
             - mysql_data:/var/lib/mysql
         command: --default-authentication-plugin=mysql_native_password --innodb-flush-log-at-trx-commit=0
         networks:
-            - bee-fleet-network
+            - project_network
         healthcheck:
             test:
                 [
@@ -35,17 +37,19 @@ services:
         image: phpmyadmin/phpmyadmin
         container_name: bee-fleet-phpmyadmin
         restart: always
+        env_file:
+            - .env
         environment:
             PMA_HOST: ${PMA_HOST}
             PMA_PORT: ${PMA_PORT}
             MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
         ports:
-            - "8080:80"
+            - "5003:5003"
         depends_on:
             mysql:
                 condition: service_healthy
         networks:
-            - bee-fleet-network
+            - project_network
 
     bee-fleet-datahub:
         build:
@@ -62,12 +66,12 @@ services:
             DB_PASSWORD: ${MYSQL_PASSWORD}
             DB_NAME: ${MYSQL_DATABASE}
         ports:
-            - "3001:3001"
+            - "5004:5004"
         depends_on:
             mysql:
                 condition: service_healthy
         networks:
-            - bee-fleet-network
+            - project_network
         command: sh -c "npx prisma migrate deploy && npm run dev"
 
 
@@ -76,9 +80,11 @@ services:
             context: ./backend/bot
             dockerfile: Dockerfile
         ports:
-            - "3002:3002"
+            - "5005:5005"
         volumes:
             - .:/app
+        env_file:
+            - .env
         environment:
             - PYTHONUNBUFFERED=1
         develop:
@@ -92,14 +98,28 @@ services:
         depends_on:
             - mysql
         networks:
-            - bee-fleet-network
+            - project_network
         restart: always
 
+    bee_fleet_frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        restart: always
+        ports:
+            - "5006:5006"
+        env_file:
+            - .env
+        depends_on:
+            - bee-fleet-datahub
+        networks:
+            - project_network
 
 networks:
-    bee-fleet-network:
-        driver: bridge
+  project_network:
+    external: true
 
 volumes:
     mysql_data:
         name: bee_fleet_mysql_data
+
