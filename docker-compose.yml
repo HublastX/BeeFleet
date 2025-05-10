@@ -68,7 +68,7 @@ services:
                 condition: service_healthy
         networks:
             - bee-fleet-network
-        command: sh -c "npx prisma migrate dev && npm run dev"
+        command: sh -c "npx prisma migrate deploy && npm run dev"
 
 
     backend-bee-fleet-bot:
