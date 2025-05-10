@@ -7,9 +7,9 @@ import useAuth from "@/hooks/useAuth";
 import Badge from "@/elements/ui/badge/Badge";
 import Icon from "@/elements/Icon";
 import Image from "next/image";
-import Btn from "@/elements/btn";
 import Link from "next/link";
 import DetailCarTable from "@/components/table/detailCarTable";
+import DeleteConfirmation from "@/components/ConfirmDeleteModal";
 
 function formatarData(dataISO) {
    const data = new Date(dataISO);
@@ -21,7 +21,7 @@ function formatarData(dataISO) {
 
 function CarPage() {
    const { id } = useParams();
-   const { getCar, carregando, erro } = useCar();
+   const { getCar, carregando, erro, deleteCar } = useCar();
    const [carroData, setCarroData] = useState(null);
    const { gestores } = useAuth();
 
@@ -49,11 +49,32 @@ function CarPage() {
       setMenuAberto(!menuAberto);
    };
 
+   const [modalAberto, setModalAberto] = useState(false);
+   const [carroParaDeletar, setCarroParaDeletar] = useState(null);
+
+   function abrirModalDeletar(carroId) {
+      setCarroParaDeletar(carroId);
+      setModalAberto(true);
+   }
+
+   async function confirmarDelete() {
+      if (carroParaDeletar) {
+         try {
+            await deleteCar(carroParaDeletar);
+            setModalAberto(false);
+            setCarroParaDeletar(null);
+            setCarroData(null);
+         } catch (error) {
+            console.error("Erro ao deletar carro:", error);
+         }
+      }
+   }
+
    return (
       <div className="p-6">
          {carregando && <p>Carregando...</p>}
          {erro && (
-            <div className="flex items-start gap-3 bg-white border border-[1px] border-black text-red-500 p-4 rounded-lg shadow max-w-xl mx-auto mt-8">
+            <div className="flex items-start gap-3 bg-white border border-black text-red-500 p-4 rounded-lg shadow max-w-xl mx-auto mt-8">
                <span className="text-2xl">🚫</span>
                <div>
                   <p className="font-semibold text-lg">
@@ -114,20 +135,9 @@ function CarPage() {
                               ? "Disponível"
                               : "Indisponível"}
                         </Badge>
-                        <Link
-                           href={`/cars/${id}/edit`}
-                           className="hidden md:flex"
-                        >
-                           <Btn
-                              texto="Editar Carro"
-                              className="flex text-nowrap flex-row-reverse gap-2 items-center"
-                           >
-                              <Icon name="lapis" className="size-5" />
-                           </Btn>
-                        </Link>
                      </div>
                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                     <Badge
+                        <Badge
                            className="lg:hidden inline-flex"
                            size="sm"
                            color={carroData.isAvailable ? "success" : "error"}
@@ -180,10 +190,10 @@ function CarPage() {
                         </div>
                      </div>
                   </div>
-                  <div className="fixed md:hidden bottom-0 right-0 m-4 z-50">
+                  <div className="fixed bottom-0 right-0 m-4 z-50">
                      <button
                         onClick={alternarMenu}
-                        className="p-5  bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300"
+                        className="p-5 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300"
                      >
                         <Icon
                            name="menuMobile"
@@ -191,33 +201,53 @@ function CarPage() {
                            strokeWidth={2}
                         />
                      </button>
-                     {menuAberto && (
-                        <div className="absolute bottom-21 right-0 shadow-lg rounded-md p-4 w-48">
-                           <ul className="flex flex-col gap-2">
-                              <li>
-                                 <Link href={`/cars/${id}/edit`}>
-                                    <span className="flex items-center gap-2">
-                                       <Icon name="lapis" className="size-4" />
-                                       Editar
-                                    </span>
-                                 </Link>
-                              </li>
-                              <li>
-                                 <Link href="/event">
-                                    <span className="flex items-center gap-2">
-                                       <Icon name="evento" className="size-4" />
-                                       {carroData.status === "AVAILABLE"
-                                          ? "Marcar Saída"
-                                          : "Marcar Chegada"}
-                                    </span>
-                                 </Link>
-                              </li>
-                           </ul>
-                        </div>
-                     )}
                   </div>
                </div>
                <DetailCarTable />
+               {menuAberto && (
+                  <div className="absolute bottom-23 right-1 shadow-lg rounded-md p-4 w-48 bg-bee-dark-100 dark:bg-bee-dark-800 border border-bee-dark-300 dark:border-bee-dark-400">
+                     <ul className="flex flex-col gap-2">
+                        <li>
+                           <Link href={`/cars/${id}/edit`}>
+                              <span className="flex items-center gap-2">
+                                 <Icon name="lapis" className="size-4" />
+                                 Editar
+                              </span>
+                           </Link>
+                        </li>
+                        <li>
+                           <Link href="/event">
+                              <span className="flex items-center gap-2">
+                                 <Icon name="evento" className="size-4" />
+                                 {carroData.status === "AVAILABLE"
+                                    ? "Marcar Saída"
+                                    : "Marcar Chegada"}
+                              </span>
+                           </Link>
+                        </li>
+                        <li>
+                           <button onClick={() => abrirModalDeletar(id)}>
+                              <span className="flex items-center gap-2 cursor-pointer">
+                                 <Icon
+                                    name="trash"
+                                    className="size-4"
+                                    strokeWidth={3}
+                                 />
+                                 Deletar Carro
+                              </span>
+                           </button>
+                        </li>
+                     </ul>
+                  </div>
+               )}
+
+               {modalAberto && (
+                  <DeleteConfirmation
+                     link={confirmarDelete}
+                     tipo="carro"
+                     onClose={() => setModalAberto(false)}
+                  />
+               )}
             </div>
          )}
       </div>

@@ -7,9 +7,9 @@ import Link from "next/link";
 import useAuth from "@/hooks/useAuth";
 import Badge from "@/elements/ui/badge/Badge";
 import Icon from "@/elements/Icon";
-import Btn from "@/elements/btn";
 import Image from "next/image";
 import DetailDriverTable from "@/components/table/detailDriverTable";
+import DeleteConfirmation from "@/components/ConfirmDeleteModal";
 
 function formatarData(dataISO) {
    const data = new Date(dataISO);
@@ -21,7 +21,7 @@ function formatarData(dataISO) {
 
 function DiverPage() {
    const { id } = useParams();
-   const { getDriver, carregando, erro } = useDrivers();
+   const { getDriver, carregando, erro , deleteDriver } = useDrivers();
    const [motoristaData, setMotoristaData] = useState(null);
    const { gestores } = useAuth();
 
@@ -50,11 +50,46 @@ function DiverPage() {
       setMenuAberto(!menuAberto);
    };
 
+   const [modalAberto, setModalAberto] = useState(false);
+   const [motoristaParaDeletar, setMotristaParaDeletar] = useState(null);
+
+   function abrirModalDeletar(motoristaId) {
+      setMotristaParaDeletar(motoristaId);
+      setModalAberto(true);
+   }
+
+   async function confirmarDelete() {
+      if (motoristaParaDeletar) {
+         try {
+            await deleteDriver(motoristaParaDeletar);
+            setModalAberto(false);
+            setMotristaParaDeletar(null);
+            setMotoristaData(null);
+         } catch (error) {
+            console.error("Erro ao deletar motorista:", error);
+         }
+      }
+   }
+
    return (
       <div>
          {carregando && <p>Carregando...</p>}
-         {erro && <p>Erro: {erro}</p>}
-         {!carregando && !erro && !motoristaData && (
+         {erro && (
+            <div className="flex items-start gap-3 bg-white border border-black text-red-500 p-4 rounded-lg shadow max-w-xl mx-auto mt-8">
+               <span className="text-2xl">🚫</span>
+               <div>
+                  <p className="font-semibold text-lg">
+                     Não foi possível encontrar o motorista.
+                  </p>
+                  <p className="text-sm">
+                     Tente novamente mais tarde ou verifique a conexão.
+                  </p>
+                  <p className="text-xs mt-1 text-red-500">
+                     Detalhes técnicos: {erro}
+                  </p>
+               </div>
+            </div>
+         )}         {!carregando && !erro && !motoristaData && (
             <p>Nenhum motorista encontrado.</p>
          )}
          {motoristaData && (
@@ -95,17 +130,6 @@ function DiverPage() {
                         <h1 className="text-3xl text-left font-extrabold text-gray-800 dark:text-white/90">
                            {motoristaData.name}
                         </h1>
-                        <Link
-                           href={`/drivers/${id}/edit`}
-                           className="hidden md:flex"
-                        >
-                           <Btn
-                              texto="Editar motorista"
-                              className="flex text-nowrap flex-row-reverse gap-2 items-center"
-                           >
-                              <Icon name="lapis" className="size-5" />
-                           </Btn>
-                        </Link>
                      </div>
                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
@@ -140,38 +164,64 @@ function DiverPage() {
                      </div>
                   </div>
                </div>
-               <div className="fixed md:hidden bottom-0 right-0 m-4 z-50">
+               <div className="fixed bottom-0 right-0 m-4 z-50">
                   <button
                      onClick={alternarMenu}
                      className="p-5 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300"
                   >
-                     <Icon name="menuMobile" className="size-7" strokeWidth={2}/>
+                     <Icon
+                        name="menuMobile"
+                        className="size-7"
+                        strokeWidth={2}
+                     />
                   </button>
-                  {menuAberto && (
-                     <div className="absolute bottom-21 right-0 shadow-lg rounded-md p-4 w-48">
-                        <ul className="flex flex-col gap-2">
-                           <li>
-                              <Link href={`/drivers/${id}/edit`}>
-                                 <span className="flex items-center gap-2">
-                                    <Icon name="lapis" className="size-4" />
-                                    Editar
-                                 </span>
-                              </Link>
-                           </li>
-                           <li>
-                              <Link href="/event">
-                                 <span className="flex items-center gap-2">
-                                    <Icon name="evento" className="size-4" />
-                                    {motoristaData.isAvailable
-                                       ? "Marcar Saída"
-                                       : "Marcar Chegada"}
-                                 </span>
-                              </Link>
-                           </li>
-                        </ul>
-                     </div>
-                  )}
                </div>
+               <DetailDriverTable />
+
+               {menuAberto && (
+                  <div className="absolute bottom-23 right-1 shadow-lg rounded-md p-4 w-48 bg-bee-dark-100 dark:bg-bee-dark-800 border border-bee-dark-300 dark:border-bee-dark-400">
+                     <ul className="flex flex-col gap-2">
+                        <li>
+                           <Link href={`/drivers/${id}/edit`}>
+                              <span className="flex items-center gap-2">
+                                 <Icon name="lapis" className="size-4" />
+                                 Editar Motorista
+                              </span>
+                           </Link>
+                        </li>
+                        <li>
+                           <Link href="/event">
+                              <span className="flex items-center gap-2">
+                                 <Icon name="evento" className="size-4" />
+                                 {motoristaData.isAvailable
+                                    ? "Marcar Saída"
+                                    : "Marcar Chegada"}
+                              </span>
+                           </Link>
+                        </li>
+                        <li>
+                           <button onClick={() => abrirModalDeletar(id)}>
+                              <span className="flex items-center gap-2 cursor-pointer">
+                                 <Icon
+                                    name="trash"
+                                    className="size-4"
+                                    strokeWidth={3}
+                                 />
+                                 Deletar Motorista
+                              </span>
+                           </button>
+                        </li>
+                     </ul>
+                  </div>
+               )}
+
+               {modalAberto && (
+                  <DeleteConfirmation
+                     link={confirmarDelete}
+                     tipo="carro"
+                     onClose={() => setModalAberto(false)}
+                  />
+               )}
             </div>
          )}
       </div>

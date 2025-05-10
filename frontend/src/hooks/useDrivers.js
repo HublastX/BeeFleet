@@ -292,6 +292,10 @@ export default function useDrivers() {
             }
          );
 
+         localStorage.setItem("toastMessage", "Motorista deletado com sucesso!");
+         localStorage.setItem("toastType", "success");
+         router.push("/drivers");
+
          if (!res.ok)
             throw new Error("Erro ao deletar motorista. Tente novamente.");
 
