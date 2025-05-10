@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
-export default function Saida() {
+export default function Chegada() {
    const { motoristas } = useDrivers();
    const { carro } = useCar();
    const searchParams = useSearchParams();
@@ -65,9 +65,9 @@ export default function Saida() {
    }, [carroInput, carrosFiltrados]);
 
    const selecionarMotorista = (m) => {
-      if (m.isAvailable != true) {
+      if (m.isAvailable === true) {
          setMotoristaStatusError(
-            "Este motorista não está disponível no momento"
+            "Este motorista não está com um carro no momento"
          );
          setSelectedMotorista(null);
          setMotoristaInput("");
@@ -80,8 +80,8 @@ export default function Saida() {
    };
 
    const selecionarCarro = (c) => {
-      if (c.status !== "AVAILABLE") {
-         setCarroStatusError("Este carro não está disponível no momento");
+      if (c.status === "AVAILABLE") {
+         setCarroStatusError("Este carro não está com um motorista no momento");
          setSelectedCarro(null);
          setCarroInput("");
       } else {
@@ -182,7 +182,7 @@ export default function Saida() {
                                        : criterioMotorista === "phone"
                                          ? m.phone
                                          : m.license}
-                                    {m.isAvailable !== true &&
+                                    {m.isAvailable === true &&
                                        " (Indisponível)"}
                                  </li>
                               ))}
@@ -275,7 +275,7 @@ export default function Saida() {
                                        : criterioCarro === "renavam"
                                          ? c.renavam
                                          : c.chassis}
-                                    {c.status !== "AVAILABLE" &&
+                                    {c.status === "AVAILABLE" &&
                                        " (Indisponível)"}
                                  </li>
                               ))}
@@ -296,6 +296,18 @@ export default function Saida() {
                      {carroStatusError}
                   </p>
                )}
+               <div className="flex gap-3 w-full flex-wrap mt-7">
+                  <label className="font-medium flex items-center">
+                     Atualizar hodômetro:
+                  </label>
+                  <div className="relative felx-1">
+                     <InputText
+                        placeholder="Atualizar hodômetro"
+                        require
+                        className={`${carroError || carroStatusError ? "border-red-500" : ""} w-full`}
+                     />
+                  </div>
+               </div>
             </div>
          </div>
 
@@ -385,7 +397,10 @@ export default function Saida() {
                onClick={() => router.back()}
                className="flex-[1] border border-red-400 bg-red-400 hover:bg-red-500"
             />
-            <Btn texto="Aprovar Saida" className="flex-[2] py-3 px-4 text-lg" />
+            <Btn
+               texto="Marcar Chegada"
+               className="flex-[2] py-3 px-4 text-lg"
+            />
          </div>
       </form>
    );

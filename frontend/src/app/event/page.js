@@ -1,16 +1,27 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import withAuth from "@/utils/withAuth";
 import Saida from "@/components/eventForm/saida";
+import Chegada from "@/components/eventForm/chegada";
+import { useSearchParams } from "next/navigation";
 
 function Events() {
    const [tipoEvento, setTipoEvento] = useState("");
+   const searchParams = useSearchParams();
 
+   useEffect(() => {
+      const tipo = searchParams.get("tipo");
+      if (["saida", "chegada"].includes(tipo)) {
+         setTipoEvento(tipo);
+      } else {
+         setTipoEvento("");
+      }
+   }, [searchParams]);
    return (
       <div>
-         <div className="flex justify-between border-b items-center border-bee-dark-300 dark:border-bee-dark-400 pb-3">
-            <h2 className="text-3xl font-bold mb-6">Gerenciar Evento</h2>
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-5">
+         <div className="md:flex justify-between border-b items-center border-bee-dark-300 dark:border-bee-dark-400 pb-3">
+            <h2 className="text-3xl font-bold md:mb-0 mb-3">Gerenciar Evento</h2>
+            <div className="flex items-start gap-2">
                <h1 className="text-base font-medium text-bee-dark-700 dark:text-white">
                   Tipo de evento:
                </h1>
@@ -47,6 +58,7 @@ function Events() {
          )}
 
          {tipoEvento === "saida" && <Saida />}
+         {tipoEvento === "chegada" && <Chegada />}
       </div>
    );
 }
