@@ -8,4 +8,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "3002", "--app-dir", "backend/bot"]
+EXPOSE 5005
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5005", "--app-dir", "backend/bot"]
