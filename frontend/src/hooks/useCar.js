@@ -300,6 +300,9 @@ export default function useCar() {
                },
             }
          );
+         localStorage.setItem("toastMessage", "Carro deletado com sucesso!");
+         localStorage.setItem("toastType", "success");
+         router.push("/cars");
 
          if (!res.ok)
             throw new Error("Erro ao deletar carro. Tente novamente.");
