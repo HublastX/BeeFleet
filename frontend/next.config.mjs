@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+   basePath: "/beefleet",
    images: {
-      domains: ["localhost", "192.168.1.102"],
-   },                           
+      domains: ["localhost"],
+   },
 };
 
 export default nextConfig;
