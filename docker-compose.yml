@@ -11,7 +11,7 @@ services:
             MYSQL_USER: ${MYSQL_USER}
             MYSQL_PASSWORD: ${MYSQL_PASSWORD}
         ports:
-            - "3306:3307"
+            - "3406:3306"
         volumes:
             - mysql_data:/var/lib/mysql
         command: --default-authentication-plugin=mysql_native_password --innodb-flush-log-at-trx-commit=0
@@ -61,7 +61,7 @@ services:
         restart: always
         environment:
             DB_HOST: mysql
-            DB_PORT: 3306
+            DB_PORT: 3406
             DB_USER: ${MYSQL_USER}
             DB_PASSWORD: ${MYSQL_PASSWORD}
             DB_NAME: ${MYSQL_DATABASE}

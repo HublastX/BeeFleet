@@ -20,7 +20,7 @@ jobs:
                   key: ${{ secrets.KEY }}
                   port: 22
                   source: "."
-                  target: "/root/Hublast/Hublast-Hub"
+                  target: "/root/Hublast/BeeFleet"
 
             - name: Deploy Application
               uses: appleboy/ssh-action@v1.2.1
@@ -30,5 +30,5 @@ jobs:
                   key: ${{ secrets.KEY }}
                   port: 22
                   script: |
-                      cd /root/Hublast/Hublast-Hub
+                      cd /root/Hublast/BeeFleet
                       docker compose up --build -d
