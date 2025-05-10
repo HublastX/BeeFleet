@@ -22,6 +22,7 @@ import {
    CameraIcon,
    PencilIcon,
    ClipboardDocumentListIcon,
+   QuestionMarkCircleIcon,
 } from "@heroicons/react/24/solid";
 import {
    ChevronUpIcon,
@@ -55,7 +56,7 @@ const icons = {
    prabaixo: ChevronDownIcon,
    pracima: ChevronUpIcon,
    graficoPizza: ChartPieIcon,
-   suport: ExclamationCircleIcon,
+   gestor: ExclamationCircleIcon,
    users: UsersIcon,
    truck: TruckIcon,
    addUser: UserPlusIcon,
@@ -82,7 +83,8 @@ const icons = {
    car: Car,
    camera: CameraIcon,
    lapis: PencilIcon,
-   menuMobile: ListBulletIcon
+   menuMobile: ListBulletIcon,
+   suport: QuestionMarkCircleIcon
 };
 
 export default function Icon({ name, className, strokeWidth }) {

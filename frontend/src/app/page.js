@@ -65,7 +65,7 @@ function Home() {
                         <Link href="/managers">
                            <Card
                               titulo="Gestores"
-                              icone="suport"
+                              icone="gestor"
                               // estado="aumento"
                               quantidade={gestores.length}
                            />
