@@ -9,7 +9,11 @@ export default function useAuth() {
    const [gestores, setGestores] = useState([]);
    const router = useRouter();
    const { showToast } = useToast();
-   const API_URL = process.env.NEXT_PUBLIC_API_URL;
+   const API_URL =
+      typeof window !== "undefined"
+         ? window.location.origin
+         : process.env.NEXT_PUBLIC_API_URL;
+   console.log("Using API URL:", API_URL);
 
    const getImageUrl = (image) => {
       if (image && API_URL) {
@@ -18,7 +22,6 @@ export default function useAuth() {
       return `/images/${image}`;
    };
 
-   // Utilitário para exibir erro
    const handleError = (
       error,
       fallbackMessage = "Erro inesperado.",
@@ -36,7 +39,7 @@ export default function useAuth() {
       setErro(null);
 
       try {
-         const res = await fetch(`${API_URL}/api/managers/login`, {
+         const res = await fetch("/api/managers/login", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),
@@ -244,7 +247,7 @@ export default function useAuth() {
 
             setGestores(gestorFormatado);
          } catch (err) {
-            showToast("Erro!","warning", "Erro no servidor");
+            showToast("Erro!", "warning", "Erro no servidor");
          } finally {
             setCarregando(false);
          }

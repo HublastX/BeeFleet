@@ -1,9 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-   images: {
-      domains: ["localhost", "hublast.com"],
+   rewrites: async () => {
+      return [
+         {
+            source: "/api/:path*",
+            destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`,
+         },
+      ];
    },
-   basePath: process.env.NODE_ENV === "production" ? "/beefleet" : "",
 };
 
 export default nextConfig;
