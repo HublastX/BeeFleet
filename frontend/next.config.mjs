@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: "/beefleet",
-  assetPrefix: "/beefleet",
-  images: {
-    domains: ["localhost"],
-  },
+   images: {
+      domains: ["localhost", "hublast.com"],
+   },
+   basePath: process.env.NODE_ENV === "production" ? "/beefleet" : "",
 };
 
 export default nextConfig;
