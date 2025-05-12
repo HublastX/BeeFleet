@@ -57,7 +57,7 @@ services:
             context: ./backend/datahub
         env_file:
             - .env
-        container_name: bee-fleet-service
+        container_name: bee-fleet-datahub
         restart: always
         environment:
             DB_HOST: mysql
@@ -102,9 +102,12 @@ services:
         restart: always
 
     bee_fleet_frontend:
+        container_name: bee-fleet-frontend
         build:
             context: ./frontend
             dockerfile: Dockerfile
+        environment:
+            - NEXT_PUBLIC_API_URL=http://bee-fleet-datahub:5004
         restart: always
         ports:
             - "5006:5006"

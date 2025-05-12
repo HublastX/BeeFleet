@@ -1,17 +1,28 @@
 import express, { Application } from "express";
 import router from "./routes/router";
-import { setupMiddlewares } from "./middlewares/setupMiddlewares";
 import { errorHandler } from "./middlewares/errorHandler";
 import { PORT_DATAHUB } from "./config/constantes";
 import { listRoutes } from "./services/printRoutes/printRoutes";
 import swaggerUi from "swagger-ui-express";
 import swaggerSpec from "./docs/swagger";
 import path from "path";
+import cors from "cors";
 import { fileURLToPath } from "url";
 
 const app: Application = express();
 
-setupMiddlewares(app);
+app.use(
+    cors({
+        origin: ["http://localhost:5006", "http://localhost:3000"], // Add any other origins as needed
+        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
+        credentials: true,
+    })
+);
+
+// Add these lines to parse JSON and form data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
