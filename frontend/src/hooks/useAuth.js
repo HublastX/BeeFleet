@@ -39,7 +39,7 @@ export default function useAuth() {
       setErro(null);
 
       try {
-         const res = await fetch("/api/managers/login", {
+         const res = await fetch(`${API_URL}/api/managers/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ email, password }),

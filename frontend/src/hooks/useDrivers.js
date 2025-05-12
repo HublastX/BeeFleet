@@ -10,10 +10,15 @@ export default function useDrivers() {
    const [erro, setErro] = useState(null);
    const router = useRouter();
    const { showToast } = useToast();
+   const API_URL =
+      typeof window !== "undefined"
+         ? window.location.origin
+         : process.env.NEXT_PUBLIC_API_URL;
+   console.log("Using API URL:", API_URL);
 
    const getImageUrl = (image) => {
-      if (image && process.env.NEXT_PUBLIC_API_URL) {
-         return `${process.env.NEXT_PUBLIC_API_URL}/api${image}`;
+      if (image && API_URL) {
+         return `${API_URL}/api${image}`;
       }
       return `/images/${image}`;
    };
@@ -42,7 +47,7 @@ export default function useDrivers() {
 
       async function fetchDrivers() {
          try {
-            const res = await fetch("/api/drivers/", {
+            const res = await fetch(`${API_URL}/api/drivers/`, {
                headers: {
                   "Content-Type": "application/json",
                   Authorization: `Bearer ${gestor.token}`,
@@ -86,7 +91,7 @@ export default function useDrivers() {
       setErro(null);
 
       try {
-         const url = `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/${id}`;
+         const url = `${API_URL}/api/drivers/${id}`;
          const res = await fetch(url, {
             method: "GET",
             headers: {
@@ -160,7 +165,7 @@ export default function useDrivers() {
          formData.append("managerId", gestor.id);
 
          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/create`,
+            `${API_URL}/api/drivers/create`,
             {
                method: "POST",
                headers: {
@@ -222,7 +227,7 @@ export default function useDrivers() {
          }
 
          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/${id}`,
+            `${API_URL}/api/drivers/${id}`,
             {
                method: "PUT",
                headers: {
@@ -279,7 +284,7 @@ export default function useDrivers() {
 
       try {
          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/${id}`,
+            `${API_URL}/api/drivers/${id}`,
             {
                method: "DELETE",
                headers: {
