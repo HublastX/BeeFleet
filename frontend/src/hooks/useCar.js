@@ -10,10 +10,15 @@ export default function useCar() {
    const [erro, setErro] = useState(null);
    const router = useRouter();
    const { showToast } = useToast();
+   const API_URL =
+      typeof window !== "undefined"
+         ? window.location.origin
+         : process.env.NEXT_PUBLIC_API_URL;
+   console.log("Using API URL:", API_URL);
 
    const getImageUrl = (image) => {
-      if (image && process.env.NEXT_PUBLIC_API_URL) {
-         return `${process.env.NEXT_PUBLIC_API_URL}/api${image}`;
+      if (image && API_URL) {
+         return `${API_URL}/api${image}`;
       }
       return `/images/${image}`;
    };
@@ -43,7 +48,7 @@ export default function useCar() {
       async function fetchCars() {
          try {
             const res = await fetch(
-               `${process.env.NEXT_PUBLIC_API_URL}/api/cars/`,
+               `${API_URL}/api/cars/`,
                {
                   headers: {
                      "Content-Type": "application/json",
@@ -85,7 +90,7 @@ export default function useCar() {
       setErro(null);
 
       try {
-         const url = `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`;
+         const url = `${API_URL}/api/cars/${id}`;
 
          const res = await fetch(url, {
             method: "GET",
@@ -180,7 +185,7 @@ export default function useCar() {
          formData.append("managerId", gestor.id);
 
          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/cars/create`,
+            `${API_URL}/api/cars/create`,
             {
                method: "POST",
                headers: {
@@ -291,7 +296,7 @@ export default function useCar() {
 
       try {
          const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/cars/${id}`,
+            `${API_URL}/api/cars/${id}`,
             {
                method: "DELETE",
                headers: {

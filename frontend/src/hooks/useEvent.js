@@ -14,6 +14,11 @@ export default function useEvents() {
    const [erro, setErro] = useState(null);
    const router = useRouter();
    const { showToast } = useToast();
+   const API_URL =
+      typeof window !== "undefined"
+         ? window.location.origin
+         : process.env.NEXT_PUBLIC_API_URL;
+   console.log("Using API URL:", API_URL);
 
    // Função para dados de motorista e carro
    const enrichEvents = (events) => {
@@ -61,7 +66,7 @@ export default function useEvents() {
       async function fetchEvents() {
          try {
             const res = await fetch(
-               `${process.env.NEXT_PUBLIC_API_URL}/api/events/checkout`,
+               `${API_URL}/api/events/checkout`,
                {
                   headers: {
                      "Content-Type": "application/json",
@@ -96,7 +101,7 @@ export default function useEvents() {
       setErro(null);
 
       try {
-         const url = `${process.env.NEXT_PUBLIC_API_URL}/api/events/checkout/${id}`;
+         const url = `${API_URL}/api/events/checkout/${id}`;
 
          const res = await fetch(url, {
             method: "GET",
@@ -164,7 +169,7 @@ export default function useEvents() {
          };
 
          const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/events/checkout`,
+            `${API_URL}/api/events/checkout`,
             {
                method: "POST",
                headers: {
