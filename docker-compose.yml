@@ -72,7 +72,7 @@ services:
                 condition: service_healthy
         networks:
             - project_network
-        command: sh -c "npx prisma migrate deploy && npm run dev"
+        command: sh -c "npx prisma generate && npx prisma migrate deploy && npm run dev"
 
 
     backend-bee-fleet-bot:
@@ -101,19 +101,19 @@ services:
             - project_network
         restart: always
 
-    bee_fleet_frontend:
-        build:
-            context: ./frontend
-            dockerfile: Dockerfile
-        restart: always
-        ports:
-            - "5006:5006"
-        env_file:
-            - .env
-        depends_on:
-            - bee-fleet-datahub
-        networks:
-            - project_network
+    # bee_fleet_frontend:
+    #     build:
+    #         context: ./frontend
+    #         dockerfile: Dockerfile
+    #     restart: always
+    #     ports:
+    #         - "5006:5006"
+    #     env_file:
+    #         - .env
+    #     depends_on:
+    #         - bee-fleet-datahub
+    #     networks:
+    #         - project_network
 
 networks:
   project_network:
