@@ -42,15 +42,12 @@ export default function useDrivers() {
 
       async function fetchDrivers() {
          try {
-            const res = await fetch(
-               `${process.env.NEXT_PUBLIC_API_URL}/api/drivers/`,
-               {
-                  headers: {
-                     "Content-Type": "application/json",
-                     Authorization: `Bearer ${gestor.token}`,
-                  },
-               }
-            );
+            const res = await fetch("/api/drivers/", {
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${gestor.token}`,
+               },
+            });
 
             if (!res.ok) {
                throw new Error("Erro ao buscar motoristas");
@@ -292,7 +289,10 @@ export default function useDrivers() {
             }
          );
 
-         localStorage.setItem("toastMessage", "Motorista deletado com sucesso!");
+         localStorage.setItem(
+            "toastMessage",
+            "Motorista deletado com sucesso!"
+         );
          localStorage.setItem("toastType", "success");
          router.push("/drivers");
 

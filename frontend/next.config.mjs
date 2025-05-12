@@ -1,8 +1,13 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-   images: {
-      domains: ["localhost", "192.168.1.102"],
-   },                           
+   rewrites: async () => {
+      return [
+         {
+            source: "/api/:path*",
+            destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`,
+         },
+      ];
+   },
 };
 
 export default nextConfig;
