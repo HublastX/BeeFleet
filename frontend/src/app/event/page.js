@@ -53,9 +53,10 @@ function Events() {
          </div>
          {!tipoEvento && (
             <div className="mt-4 text-bee-dark-600 dark:text-bee-light-200">
-               aqui vem uma pequena explicacao de como funciona um evento
-            </div>
-         )}
+                Nesta tela, você pode gerenciar os eventos de <strong>chegada</strong> e <strong>saída</strong> de motoristas.
+                Selecione uma das opções acima para visualizar ou registrar os dados correspondentes e manter o controle das operações em tempo real.
+             </div>
+        )}
 
          {tipoEvento === "saida" && <Saida />}
          {tipoEvento === "chegada" && <Chegada />}
