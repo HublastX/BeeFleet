@@ -29,6 +29,15 @@ const navItem = [
       path: "/managers",
    },
    {
+      icon: "evento",
+      name: "Eventos",
+      subItems: [
+         {name: "Inicio", path: "/event"},
+         {name: "Saída", path: "/event?tipo=saida"},
+         {name: "Chegada", path: "/event?tipo=chegada"},
+      ],
+   },
+   {
       name: "Graficos",
       icon: "graficoPizza",
       subItems: [
@@ -230,7 +239,7 @@ const NavBar = () => {
          onMouseLeave={() => setIsHovered(false)}
       >
          <div
-            className={`py-8 flex ${
+            className={`py-4 flex ${
                !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
             }`}
          >
@@ -260,7 +269,7 @@ const NavBar = () => {
          </div>
          <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
             <nav className="mb-6">
-               <div className="flex flex-col gap-4">
+               <div className="flex flex-col gap-3">
                   <div>
                      <h2
                         className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
