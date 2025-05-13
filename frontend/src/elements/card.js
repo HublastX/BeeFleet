@@ -2,7 +2,7 @@ import Icon from "./Icon";
 import Badge from "./ui/badge/Badge";
 const Card = ({ icone, titulo, quantidade, estado }) => {
    return (
-      <div className="p-5 min-w-60 md:min-w-auto rounded-2xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
+      <div className="p-5 items-center gap-5 min-w-60 flex md:min-w-auto rounded-2xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800">
             <Icon
                className="text-bee-dark-600 size-6 dark:text-bee-alert-500"
@@ -10,7 +10,7 @@ const Card = ({ icone, titulo, quantidade, estado }) => {
             />
          </div>
 
-         <div className="mt-5 flex items-end justify-between">
+         <div className="mt-2 flex items-end justify-between">
             <div>
                <span className="text-sm font-semibold text-bee-dark-600 dark:text-gray-400">
                   {titulo}

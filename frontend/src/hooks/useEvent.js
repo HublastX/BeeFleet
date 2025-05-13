@@ -65,15 +65,12 @@ export default function useEvents() {
 
       async function fetchEvents() {
          try {
-            const res = await fetch(
-               `${API_URL}/api/events/checkout`,
-               {
-                  headers: {
-                     "Content-Type": "application/json",
-                     Authorization: `Bearer ${gestor.token}`,
-                  },
-               }
-            );
+            const res = await fetch(`${API_URL}/api/events/checkout`, {
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${gestor.token}`,
+               },
+            });
 
             if (!res.ok) throw new Error("Erro ao buscar eventos");
 
@@ -144,20 +141,28 @@ export default function useEvents() {
       setErro(null);
 
       try {
-         const hasActiveEvent = events.some(
-            (event) =>
-               event.status === "ACTIVE" &&
-               (event.carId === carId || event.driverId === driverId)
-         );
+         // if (eventType === "CHECKOUT") {
+         //    const hasActiveEvent = events.some(
+         //       (event) =>
+         //          event.status === "ACTIVE" &&
+         //          ((eventType === "CHECKOUT" && event.carId === carId) ||
+         //             (eventType === "CHECKOUT" && event.driverId === driverId))
+         //    );
 
-         if (hasActiveEvent) {
-            handleError(
-               "Já existe um evento ativo para este carro ou motorista",
-               "warning"
-            );
-            setCarregando(false);
-            return;
-         }
+         //    if (hasActiveEvent) {
+         //       const conflict = events.find(
+         //          (e) => e.carId === carId && e.status === "ACTIVE"
+         //       )
+         //          ? "carro"
+         //          : "motorista";
+         //       handleError(
+         //          `Já existe um checkout ativo para este ${conflict}`,
+         //          "warning"
+         //       );
+         //       setCarregando(false);
+         //       return;
+         //    }
+         // }
 
          const payload = {
             eventType,
@@ -168,17 +173,14 @@ export default function useEvents() {
             ...(eventType === "RETURN" && { checkoutEventId }),
          };
 
-         const response = await fetch(
-            `${API_URL}/api/events/checkout`,
-            {
-               method: "POST",
-               headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${gestor.token}`,
-               },
-               body: JSON.stringify(payload),
-            }
-         );
+         const response = await fetch(`${API_URL}/api/events/checkout`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+            body: JSON.stringify(payload),
+         });
 
          const data = await response.json();
 

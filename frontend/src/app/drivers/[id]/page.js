@@ -10,6 +10,8 @@ import Icon from "@/elements/Icon";
 import Image from "next/image";
 import DetailDriverTable from "@/components/table/detailDriverTable";
 import DeleteConfirmation from "@/components/ConfirmDeleteModal";
+import useCar from "@/hooks/useCar";
+import useEvents from "@/hooks/useEvent";
 
 function formatarData(dataISO) {
    const data = new Date(dataISO);
@@ -24,7 +26,15 @@ function DiverPage() {
    const { getDriver, carregando, erro, deleteDriver } = useDrivers();
    const [motoristaData, setMotoristaData] = useState(null);
    const { gestores } = useAuth();
-
+   const { carro } = useCar();
+   const { events } = useEvents();
+   const activeEvent = events.find(
+      (event) => event.driverId === id && event.isActive
+   );
+   const carroAtualId = activeEvent ? activeEvent.carId : null;
+   const carroAtual = carroAtualId
+      ? carro.find((carro) => carro.id === carroAtualId)?.plate
+      : null;
    useEffect(() => {
       if (!id || motoristaData) return;
 
@@ -97,7 +107,7 @@ function DiverPage() {
             <div className="gap-5 flex flex-col">
                <div className="flex flex-col md:flex-row gap-6">
                   {/* Card 1: Imagem e status */}
-                  <div className="flex flex-col px-4 py-5 items-center gap-4 w-full  md:w-80 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-md border border-bee-dark-300 dark:border-bee-dark-400">
+                  <div className="flex flex-col px-4 py-5 items-center gap-4 w-full h-fit  md:w-80 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-md border border-bee-dark-300 dark:border-bee-dark-400">
                      <div className="relative w-full h-40 rounded-md overflow-hidden">
                         {motoristaData.image ? (
                            <Image
@@ -162,6 +172,14 @@ function DiverPage() {
                                  "Gestor não encontrado"}
                            </h1>
                         </div>
+                        {motoristaData.isAvailable === false && (
+                           <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
+                              <span className="text-sm">Placa do carro</span>
+                              <h1 className="font-black">
+                                 {carroAtual || "Carro não encontrado"}
+                              </h1>
+                           </div>
+                        )}
                      </div>
                   </div>
                </div>
@@ -191,7 +209,11 @@ function DiverPage() {
                            </Link>
                         </li>
                         <li>
-                           <Link href={`/event?tipo=saida&motoristaId=${id}`}>
+                           <Link
+                              href={`/event?tipo=${
+                                 motoristaData.isAvailable ? "saida" : "chegada"
+                              }&motoristaId=${id}`}
+                           >
                               <span className="flex items-center gap-2">
                                  <Icon name="evento" className="size-4" />
                                  {motoristaData.isAvailable

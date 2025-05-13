@@ -8,11 +8,13 @@ import useDrivers from "@/hooks/useDrivers";
 import RecentEvent from "@/components/table/homeTable";
 import HomeSkeleton from "@/elements/ui/skeleton/HomeSkeleton";
 import Icon from "@/elements/Icon";
+import useEvents from "@/hooks/useEvent";
 
 function Home() {
    const { gestor, erro, carregando, gestores } = useAuth();
    const { carro } = useCar();
    const { motoristas } = useDrivers();
+   const { events } = useEvents();
 
    let show = "hidden";
 
@@ -75,13 +77,13 @@ function Home() {
                            titulo="Eventos"
                            icone="evento"
                            // estado="baixa"
-                           quantidade="0"
+                           quantidade={events.length}
                         />
                      </div>
                      <div className="overflow-hidden rounded-2xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800 p-6">
                         <div className="flex flex-col gap-4">
                            <div className="flex items-center gap-3 text-bee-primary-500 dark:text-white">
-                              <Icon name="eventoL" className="size-7"/>
+                              <Icon name="eventoL" className="size-7" />
                               <h2 className="text-xl font-bold">
                                  Gerenciar Eventos
                               </h2>

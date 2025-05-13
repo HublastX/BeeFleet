@@ -10,6 +10,9 @@ import Image from "next/image";
 import Link from "next/link";
 import DetailCarTable from "@/components/table/detailCarTable";
 import DeleteConfirmation from "@/components/ConfirmDeleteModal";
+import { useNavBar } from "@/components/navbar/navBarContext";
+import useEvents from "@/hooks/useEvent";
+import useDrivers from "@/hooks/useDrivers";
 
 function formatarData(dataISO) {
    const data = new Date(dataISO);
@@ -24,6 +27,15 @@ function CarPage() {
    const { getCar, carregando, erro, deleteCar } = useCar();
    const [carroData, setCarroData] = useState(null);
    const { gestores } = useAuth();
+   const {motoristas} = useDrivers();
+   const { events } = useEvents();
+   const activeEvent = events.find(
+      (event) => event.carId === id && event.isActive
+   );
+   const motoristaAtualId = activeEvent ? activeEvent.driverId : null;
+   const motoristaAtual = motoristaAtualId
+      ? motoristas.find((motorista) => motorista.id === motoristaAtualId)?.name
+      : null;
 
    useEffect(() => {
       if (!id || carroData) return;
@@ -38,6 +50,7 @@ function CarPage() {
       }
       fetchCar();
    }, [id, getCar, carroData]);
+
 
    const gestorDoCarro = carroData
       ? gestores.find((g) => g.id === carroData.managerId)
@@ -70,6 +83,13 @@ function CarPage() {
       }
    }
 
+   const { isExpanded, isHovered } = useNavBar();
+   const isNavOpen = isExpanded || isHovered;
+
+   const gridClass = `grid transition-all duration-300 ease-in-out grid grid-cols-1 md:grid-cols-2  gap-4 ${
+      isNavOpen ? "lg:grid-cols-3" : "lg:grid-cols-3 xl:grid-cols-4"
+   }`;
+
    return (
       <div className="p-6">
          {carregando && <p>Carregando...</p>}
@@ -96,7 +116,7 @@ function CarPage() {
             <div className="gap-5 flex flex-col">
                <div className="flex flex-col md:flex-row gap-6">
                   {/* Card 1: Imagem e placa */}
-                  <div className="flex flex-col px-4 py-5 items-center gap-4 w-full  md:w-80 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-md border border-bee-dark-300 dark:border-bee-dark-400">
+                  <div className="flex flex-col px-4 py-5 items-center gap-4 w-full h-fit md:w-80 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-md border border-bee-dark-300 dark:border-bee-dark-400">
                      <div className="relative w-full h-40 rounded-md overflow-hidden">
                         {carroData.image ? (
                            <Image
@@ -136,7 +156,7 @@ function CarPage() {
                               : "Indisponível"}
                         </Badge>
                      </div>
-                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                     <div className={` ${gridClass}`}>
                         <Badge
                            className="lg:hidden inline-flex"
                            size="sm"
@@ -188,6 +208,14 @@ function CarPage() {
                               {gestorDoCarro?.name || "Gestor não encontrado"}
                            </h1>
                         </div>
+                        {carroData.isAvailable === false && (
+                           <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
+                              <span className="text-sm">Sendo usado por</span>
+                              <h1 className="font-black">
+                                 {motoristaAtual || "Motorista não encontrado"}
+                              </h1>
+                           </div>
+                        )}
                      </div>
                   </div>
                   <div className="fixed bottom-0 right-0 m-4 z-50">
@@ -216,7 +244,9 @@ function CarPage() {
                            </Link>
                         </li>
                         <li>
-                           <Link href={`/event?tipo=saida&carroId=${id}`}>
+                           <Link
+                              href={`/event?tipo=${carroData.status === "AVAILABLE" ? "saida" : "chegada"}&carroId=${id}`}
+                           >
                               <span className="flex items-center gap-2">
                                  <Icon name="evento" className="size-4" />
                                  {carroData.status === "AVAILABLE"
