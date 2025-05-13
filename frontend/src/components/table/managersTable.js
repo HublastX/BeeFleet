@@ -11,6 +11,7 @@ import useAuth from "@/hooks/useAuth";
 import Image from "next/image";
 import TableSkeleton from "@/elements/ui/skeleton/TableSkeleton";
 import Icon from "@/elements/Icon";
+import useEvents from "@/hooks/useEvent";
 
 function formatarData(dataISO) {
    const data = new Date(dataISO);
@@ -21,6 +22,13 @@ function formatarData(dataISO) {
 }
 export default function ManagersTable() {
    const { gestores, carregando, erro } = useAuth();
+   const { events } = useEvents();
+
+   const countByManager =
+      events?.reduce((acc, event) => {
+         acc[event.managerId] = (acc[event.managerId] || 0) + 1;
+         return acc;
+      }, {}) || {};
 
    if (carregando) return <TableSkeleton />;
    if (erro)
@@ -62,7 +70,7 @@ export default function ManagersTable() {
                         isHeader
                         className="px-3 py-2 sm:px-5 sm:py-3 text-start whitespace-nowrap"
                      >
-                        Total de eventos
+                        Eventos
                      </TableCell>
                      <TableCell
                         isHeader
@@ -103,8 +111,8 @@ export default function ManagersTable() {
                         <TableCell className="px-3 py-2 sm:px-4 sm:py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 whitespace-nowrap">
                            {gestor.email}
                         </TableCell>
-                        <TableCell className="px-3 py-2 sm:px-4 sm:py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 whitespace-nowrap">
-                           {gestor.event}
+                        <TableCell className="px-0 py-2 sm:px-4 sm:py-3 w-fit text-bee-dark-600 text-start dark:text-bee-alert-500 whitespace-nowrap">
+                           {countByManager[gestor.id] || 0}
                         </TableCell>
                         <TableCell className="px-3 py-2 sm:px-4 sm:py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 whitespace-nowrap">
                            {formatarData(gestor.createdAt)}
