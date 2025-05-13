@@ -22,7 +22,7 @@ export default function RecentEvent() {
 
    return (
       <div className="px-6 max-w-full overflow-x-auto overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
-         <h1 className="my-3 text-xl font-semibold text-gray-800 dark:text-white/90">
+         <h1 className="mt-3 text-xl font-semibold text-gray-800 dark:text-white/90">
             Últimos eventos
          </h1>
 
@@ -63,57 +63,62 @@ export default function RecentEvent() {
 
                <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
                   {events.length > 0 ? (
-                     events.map((event) => {
-                        return (
-                           <TableRow key={event.id} className="">
-                              <TableCell className="py-3">
-                                 <div className="flex items-center gap-3">
-                                    <Icon
-                                       name="UserCircle"
-                                       className="w-8 h-8 hidden md:block"
-                                    />
-                                    <div>
-                                       <p>
-                                          {event.driver?.name ||
-                                             "Motorista não informado"}
-                                       </p>
+                     events
+                        .sort(
+                           (a, b) =>
+                              new Date(b.createdAt) - new Date(a.createdAt)
+                        ) .slice(0,7)
+                        .map((event) => {
+                           return (
+                              <TableRow key={event.id} className="">
+                                 <TableCell className="py-3">
+                                    <div className="flex items-center gap-3">
+                                       <Icon
+                                          name="UserCircle"
+                                          className="w-8 h-8 hidden md:block"
+                                       />
+                                       <div>
+                                          <p>
+                                             {event.driver?.name ||
+                                                "Motorista não informado"}
+                                          </p>
+                                       </div>
                                     </div>
-                                 </div>
-                              </TableCell>
-                              <TableCell className="py-3">
-                                 <div className="flex items-center gap-3">
-                                    <Icon
-                                       name="car"
-                                       className="w-8 h-8 hidden md:block"
-                                    />
-                                    <div>
-                                       <p>
-                                          {event.car?.plate ||
-                                             "Carro não informado"}
-                                       </p>
+                                 </TableCell>
+                                 <TableCell className="py-3">
+                                    <div className="flex items-center gap-3">
+                                       <Icon
+                                          name="car"
+                                          className="w-8 h-8 hidden md:block"
+                                       />
+                                       <div>
+                                          <p>
+                                             {event.car?.plate ||
+                                                "Carro não informado"}
+                                          </p>
+                                       </div>
                                     </div>
-                                 </div>
-                              </TableCell>
-                              <TableCell className="py-3 hidden md:block">
-                                 {formatDate(event.createdAt)}
-                              </TableCell>
-                              <TableCell className="py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
-                                 <Badge
-                                    size="sm"
-                                    color={
-                                       event.eventType !== "CHECKOUT"
-                                          ? "success"
-                                          : "erro"
-                                    }
-                                 >
-                                    {event.eventType === "CHECKOUT"
-                                       ? "Em uso"
-                                       : "Finalizado"}
-                                 </Badge>
-                              </TableCell>
-                           </TableRow>
-                        );
-                     })
+                                 </TableCell>
+                                 <TableCell className="py-3 hidden md:block">
+                                    {formatDate(event.createdAt)}
+                                 </TableCell>
+                                 <TableCell className="py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
+                                    <Badge
+                                       size="sm"
+                                       color={
+                                          event.eventType !== "CHECKOUT"
+                                             ? "success"
+                                             : "error"
+                                       }
+                                    >
+                                       {event.eventType === "CHECKOUT"
+                                          ? "Em uso"
+                                          : "Finalizado"}
+                                    </Badge>
+                                 </TableCell>
+                              </TableRow>
+                           );
+                        })
                   ) : (
                      <TableRow>
                         <TableCell colSpan={4} className="py-4 text-center">
