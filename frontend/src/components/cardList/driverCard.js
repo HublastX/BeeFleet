@@ -20,15 +20,17 @@ function formatarTelefone(telefone) {
 
 export default function DriverCard({ searchTerm }) {
    const { motoristas, erro, carregando } = useDrivers();
-   const motoristasFiltrados = motoristas.filter((motoristas) => {
-      if (!searchTerm) return true;
-      const termo = searchTerm.toLowerCase();
-      return (
-         motoristas.name.toLowerCase().includes(termo) ||
-         motoristas.phone.toLowerCase().includes(termo) ||
-         motoristas.license.toLowerCase().includes(termo)
-      );
-   });
+   const motoristasFiltrados = motoristas
+      .filter((motoristas) => {
+         if (!searchTerm) return true;
+         const termo = searchTerm.toLowerCase();
+         return (
+            motoristas.name.toLowerCase().includes(termo) ||
+            motoristas.phone.toLowerCase().includes(termo) ||
+            motoristas.license.toLowerCase().includes(termo)
+         );
+      })
+      .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt)); 
 
    const { isExpanded, isHovered } = useNavBar();
    const isNavOpen = isExpanded || isHovered;

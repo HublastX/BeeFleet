@@ -72,13 +72,14 @@ function Home() {
                               quantidade={gestores.length}
                            />
                         </Link>
-
-                        <Card
-                           titulo="Eventos"
-                           icone="evento"
-                           // estado="baixa"
-                           quantidade={events.length}
-                        />
+                        <Link href="/event">
+                           <Card
+                              titulo="Eventos"
+                              icone="evento"
+                              // estado="baixa"
+                              quantidade={events.length}
+                           />
+                        </Link>
                      </div>
                      <div className="overflow-hidden rounded-2xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800 p-6">
                         <div className="flex flex-col gap-4">
