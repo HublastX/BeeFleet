@@ -76,12 +76,12 @@ function Manager() {
                <Link href="profile/edit">
                   <Btn texto="Editar perfil" />
                </Link>
-
+{/* 
                <Btn
                   onClick={() => abrirModalDeletar(id)}
                   texto="Deletar Perfil"
                   className="bg-red-600 hover:bg-red-700"
-               />
+               /> */}
             </div>
          </div>
 
@@ -118,7 +118,7 @@ function Manager() {
                className="p-6 rounded-lg shadow-theme-lg"
             >
                <h2 className="text-lg font-semibold mb-2">
-                  Total de eventos finalizados
+                  Total de eventos criados
                </h2>
                <p className="text-4xl font-black text-bee-yellow-700">{myEventsCount}</p>
             </Link>
