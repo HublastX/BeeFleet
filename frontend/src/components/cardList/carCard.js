@@ -6,14 +6,16 @@ import CardSkeleton from "@/elements/ui/skeleton/CardSkeleton";
 import { useNavBar } from "../navbar/navBarContext";
 export default function CarCard({ searchTerm }) {
    const { carro, erro, carregando } = useCar();
-   const carrosFiltrados = carro.filter((carro) => {
-      if (!searchTerm) return true;
-      const termo = searchTerm.toLowerCase();
-      return (
-         carro.model.toLowerCase().includes(termo) ||
-         carro.plate.toLowerCase().includes(termo)
-      );
-   });
+   const carrosFiltrados = carro
+      .filter((carro) => {
+         if (!searchTerm) return true;
+         const termo = searchTerm.toLowerCase();
+         return (
+            carro.model.toLowerCase().includes(termo) ||
+            carro.plate.toLowerCase().includes(termo)
+         );
+      })
+      .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
    const { isExpanded, isHovered } = useNavBar();
    const isNavOpen = isExpanded || isHovered;
