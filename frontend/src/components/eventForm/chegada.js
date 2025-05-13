@@ -4,14 +4,18 @@ import Icon from "@/elements/Icon";
 import InputText from "@/elements/inputText";
 import useCar from "@/hooks/useCar";
 import useDrivers from "@/hooks/useDrivers";
+import useEvents from "@/hooks/useEvent";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function Chegada() {
    const { motoristas } = useDrivers();
-   const { carro } = useCar();
+   const { carro, updateCar } = useCar();
+   const { createEvent, carregando, events } = useEvents();
    const searchParams = useSearchParams();
+   const router = useRouter();
 
    const [motoristaInput, setMotoristaInput] = useState("");
    const [selectedMotorista, setSelectedMotorista] = useState(null);
@@ -25,6 +29,8 @@ export default function Chegada() {
    const [carroError, setCarroError] = useState(false);
    const [carroStatusError, setCarroStatusError] = useState("");
 
+   const [odometro, setOdometro] = useState("");
+   const [odometroError, setOdometroError] = useState(false);
    const [showInfo, setShowInfo] = useState(false);
 
    const motoristasFiltrados = motoristas?.filter((m) => {
@@ -49,7 +55,7 @@ export default function Chegada() {
    });
 
    useEffect(() => {
-      if (!motoristasFiltrados.length && motoristaInput) {
+      if (!motoristasFiltrados?.length && motoristaInput) {
          setMotoristaError(true);
       } else {
          setMotoristaError(false);
@@ -57,7 +63,7 @@ export default function Chegada() {
    }, [motoristaInput, motoristasFiltrados]);
 
    useEffect(() => {
-      if (!carrosFiltrados.length && carroInput) {
+      if (!carrosFiltrados?.length && carroInput) {
          setCarroError(true);
       } else {
          setCarroError(false);
@@ -65,7 +71,7 @@ export default function Chegada() {
    }, [carroInput, carrosFiltrados]);
 
    const selecionarMotorista = (m) => {
-      if (m.isAvailable === true) {
+      if (m.isAvailable !== false) {
          setMotoristaStatusError(
             "Este motorista não está com um carro no momento"
          );
@@ -80,7 +86,7 @@ export default function Chegada() {
    };
 
    const selecionarCarro = (c) => {
-      if (c.status === "AVAILABLE") {
+      if (c.status !== "IN_USE") {
          setCarroStatusError("Este carro não está com um motorista no momento");
          setSelectedCarro(null);
          setCarroInput("");
@@ -89,6 +95,7 @@ export default function Chegada() {
          setCarroInput(c[criterioCarro]);
          setCarroError(false);
          setCarroStatusError("");
+         setOdometro(c.odometer || "");
       }
    };
 
@@ -114,10 +121,82 @@ export default function Chegada() {
       }
    }, [carro, searchParams]);
 
+   const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      if (!selectedCarro?.id || !selectedMotorista?.id) {
+         setCarroError(!selectedCarro?.id);
+         setMotoristaError(!selectedMotorista?.id);
+         return;
+      }
+
+      if (Number(odometro) <= Number(selectedCarro.odometer)) {
+         setOdometroError(true);
+         return;
+      }
+
+      const checkoutEvent = events.find(
+         (e) =>
+            e.carId === selectedCarro.id &&
+            e.driverId === selectedMotorista.id &&
+            e.eventType === "CHECKOUT" &&
+            e.status === "ACTIVE"
+      );
+
+      if (!checkoutEvent) {
+         alert("Nenhum checkout ativo encontrado para esta combinação!");
+         return;
+      }
+
+      try {
+         await updateCar(selectedCarro.id, odometro);
+
+         await createEvent(
+            selectedCarro.id,
+            selectedMotorista.id,
+            "RETURN",
+            odometro,
+            checkoutEvent.id
+         );
+
+         router.push("/");
+      } catch (error) {
+         console.error("Erro ao registrar chegada:", error);
+      }
+   };
+
+   useEffect(() => {
+      if (selectedCarro || selectedMotorista) {
+         const eventoAtivo = events.find(
+            (e) =>
+               (selectedCarro && e.carId === selectedCarro.id) ||
+               (selectedMotorista &&
+                  e.driverId === selectedMotorista.id &&
+                  e.status === "ACTIVE" &&
+                  e.eventType === "CHECKOUT")
+         );
+
+         if (eventoAtivo) {
+            if (selectedCarro && !selectedMotorista) {
+               const motorista = motoristas.find(
+                  (m) => m.id === eventoAtivo.driverId
+               );
+               if (motorista) selecionarMotorista(motorista);
+            }
+
+            if (selectedMotorista && !selectedCarro) {
+               const carroEncontrado = carro.find(
+                  (c) => c.id === eventoAtivo.carId
+               );
+               if (carroEncontrado) selecionarCarro(carroEncontrado);
+            }
+         }
+      }
+   }, [selectedCarro, selectedMotorista, events, motoristas, carro]);
+
    return (
-      <form className="space-y-8 mt-6">
+      <form onSubmit={handleSubmit} className="space-y-8 mt-6">
          <div className="flex flex-col gap-10">
-            {/* Motorista */}
             <div className="w-full relative">
                <h2 className="text-2xl font-bold flex gap-2">
                   <Icon name="user" className="size-6" /> Motorista
@@ -172,7 +251,7 @@ export default function Chegada() {
                                     key={m.id}
                                     onClick={() => selecionarMotorista(m)}
                                     className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                                       m.status !== "AVAILABLE"
+                                       m.isAvailable !== false
                                           ? "text-gray-400"
                                           : ""
                                     }`}
@@ -182,7 +261,7 @@ export default function Chegada() {
                                        : criterioMotorista === "phone"
                                          ? m.phone
                                          : m.license}
-                                    {m.isAvailable === true &&
+                                    {m.isAvailable !== false &&
                                        " (Indisponível)"}
                                  </li>
                               ))}
@@ -210,7 +289,6 @@ export default function Chegada() {
 
             <hr className="border-bee-dark-300 dark:border-bee-dark-400" />
 
-            {/* Carro */}
             <div className="w-full relative">
                <h2 className="text-2xl font-bold flex gap-2">
                   <Icon name="car" className="size-6" /> Carro
@@ -265,7 +343,7 @@ export default function Chegada() {
                                     key={c.id}
                                     onClick={() => selecionarCarro(c)}
                                     className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                                       c.status !== "AVAILABLE"
+                                       c.status === "AVAILABLE"
                                           ? "text-gray-400"
                                           : ""
                                     }`}
@@ -300,12 +378,29 @@ export default function Chegada() {
                   <label className="font-medium flex items-center">
                      Atualizar hodômetro:
                   </label>
-                  <div className="relative felx-1">
+                  <div className="relative flex-1">
                      <InputText
-                        placeholder="Atualizar hodômetro"
-                        require
-                        className={`${carroError || carroStatusError ? "border-red-500" : ""} w-full`}
+                        type="number"
+                        value={odometro}
+                        onChange={(e) => {
+                           setOdometro(e.target.value);
+                           setOdometroError(false);
+                        }}
+                        placeholder="Digite o novo valor do hodômetro"
+                        required
+                        className={`${odometroError ? "border-red-500" : ""} w-full`}
                      />
+                     {odometroError && (
+                        <p className="text-red-500 text-sm font-bold mt-2">
+                           O hodômetro deve ser maior que o valor atual (
+                           {selectedCarro?.odometer || 0})
+                        </p>
+                     )}
+                     {selectedCarro && (
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                           Hodômetro atual: {selectedCarro.odometer}
+                        </p>
+                     )}
                   </div>
                </div>
             </div>
@@ -398,8 +493,16 @@ export default function Chegada() {
                className="flex-[1] border border-red-400 bg-red-400 hover:bg-red-500"
             />
             <Btn
-               texto="Marcar Chegada"
+               type="submit"
+               texto={carregando ? "Processando..." : "Marcar Chegada"}
                className="flex-[2] py-3 px-4 text-lg"
+               disabled={
+                  !selectedCarro ||
+                  !selectedMotorista ||
+                  !odometro ||
+                  carregando ||
+                  odometroError
+               }
             />
          </div>
       </form>

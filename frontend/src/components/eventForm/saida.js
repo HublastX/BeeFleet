@@ -4,14 +4,19 @@ import Icon from "@/elements/Icon";
 import InputText from "@/elements/inputText";
 import useCar from "@/hooks/useCar";
 import useDrivers from "@/hooks/useDrivers";
+import useEvents from "@/hooks/useEvent";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function Saida() {
    const { motoristas } = useDrivers();
+   const { createEvent, carregando } = useEvents();
    const { carro } = useCar();
+   const [odometro, setOdometro] = useState("");
    const searchParams = useSearchParams();
+   const router = useRouter();
 
    const [motoristaInput, setMotoristaInput] = useState("");
    const [selectedMotorista, setSelectedMotorista] = useState(null);
@@ -87,6 +92,7 @@ export default function Saida() {
       } else {
          setSelectedCarro(c);
          setCarroInput(c[criterioCarro]);
+         setOdometro(c.odometer);
          setCarroError(false);
          setCarroStatusError("");
       }
@@ -110,12 +116,46 @@ export default function Saida() {
          const carroSelecionado = carro.find((c) => c.id === carroId);
          if (carroSelecionado) {
             selecionarCarro(carroSelecionado);
+            setOdometro(carroSelecionado.odometro);
          }
       }
    }, [carro, searchParams]);
 
+   const handleSubmit = async (e) => {
+      e.preventDefault();
+
+      if (!selectedCarro?.id || !selectedMotorista?.id) {
+         setCarroError(!selectedCarro?.id);
+         setMotoristaError(!selectedMotorista?.id);
+         return;
+      }
+
+      if (selectedCarro.status !== "AVAILABLE") {
+         setCarroStatusError("O carro selecionado não está disponível");
+         return;
+      }
+
+      if (selectedMotorista.isAvailable !== true) {
+         setMotoristaStatusError("O motorista selecionado não está disponível");
+         return;
+      }
+
+      try {
+         await createEvent(
+            selectedCarro.id,
+            selectedMotorista.id,
+            "CHECKOUT",
+            odometro,
+            null
+         );
+
+         router.push("/");
+      } catch (error) {
+         console.error("Erro no handleSubmit:", error);
+      }
+   };
    return (
-      <form className="space-y-8 mt-6">
+      <form onSubmit={handleSubmit} className="space-y-8 mt-6">
          <div className="flex flex-col gap-10">
             {/* Motorista */}
             <div className="w-full relative">
@@ -385,7 +425,12 @@ export default function Saida() {
                onClick={() => router.back()}
                className="flex-[1] border border-red-400 bg-red-400 hover:bg-red-500"
             />
-            <Btn texto="Aprovar Saida" className="flex-[2] py-3 px-4 text-lg" />
+            <Btn
+               texto={carregando ? "Processando..." : "Aprovar Saída"}
+               className="flex-[2] py-3 px-4 text-lg"
+               onClick={handleSubmit}
+               disabled={!selectedCarro || !selectedMotorista || carregando}
+            />
          </div>
       </form>
    );
