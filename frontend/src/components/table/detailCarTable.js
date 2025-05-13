@@ -43,7 +43,7 @@ export default function DetailCarTable() {
       return eventType === "CHECKOUT" ? "Saída" : "Entrada";
    };
 
-   return (
+   return carEvents.length > 0 ? (
       <div className="hidden md:flex overflow-x-auto rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
          <Table className="min-w-[500px] text-sm sm:text-base">
             {/* Table Header */}
@@ -100,5 +100,8 @@ export default function DetailCarTable() {
             </TableBody>
          </Table>
       </div>
-   );
+   ) : (
+      <div className="text-center text-bee-dark-600 dark:text-bee-alert-500 py-4">
+         Ainda não há nenhum evento registrado com este carro.
+      </div>);
 }
