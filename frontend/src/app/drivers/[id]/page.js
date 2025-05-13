@@ -198,39 +198,53 @@ function DiverPage() {
                <DetailDriverTable />
 
                {menuAberto && (
-                  <div className="absolute bottom-23 right-1 shadow-lg rounded-md p-4 w-48 bg-bee-dark-100 dark:bg-bee-dark-800 border border-bee-dark-300 dark:border-bee-dark-400">
-                     <ul className="flex flex-col gap-2">
+                  <div className="absolute bottom-23 right-1 shadow-xl rounded-lg p-2 w-56 bg-white dark:bg-bee-dark-800 border border-gray-200 dark:border-bee-dark-600 z-50 animate-fade-in">
+                     <ul className="flex flex-col gap-1">
                         <li>
-                           <Link href={`/drivers/${id}/edit`}>
-                              <span className="flex items-center gap-2">
-                                 <Icon name="lapis" className="size-4" />
-                                 Editar Motorista
+                           <Link href={`/drivers/${id}/edit`} className="block">
+                              <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
+                                 <Icon
+                                    name="lapis"
+                                    className="size-4 text-bee-primary"
+                                 />
+                                 <span className="text-gray-800 dark:text-gray-200">
+                                    Editar Motorista
+                                 </span>
                               </span>
                            </Link>
                         </li>
                         <li>
                            <Link
-                              href={`/event?tipo=${
-                                 motoristaData.isAvailable ? "saida" : "chegada"
-                              }&motoristaId=${id}`}
+                              href={`/event?tipo=${motoristaData.isAvailable ? "saida" : "chegada"}&motoristaId=${id}`}
+                              className="block"
                            >
-                              <span className="flex items-center gap-2">
-                                 <Icon name="evento" className="size-4" />
-                                 {motoristaData.isAvailable
-                                    ? "Marcar Saída"
-                                    : "Marcar Chegada"}
+                              <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
+                                 <Icon
+                                    name="evento"
+                                    className="size-4 text-bee-primary"
+                                 />
+                                 <span className="text-gray-800 dark:text-gray-200">
+                                    {motoristaData.isAvailable
+                                       ? "Marcar Saída"
+                                       : "Marcar Chegada"}
+                                 </span>
                               </span>
                            </Link>
                         </li>
-                        <li>
-                           <button onClick={() => abrirModalDeletar(id)}>
-                              <span className="flex items-center gap-2 cursor-pointer">
+                        <li className="border-t border-gray-200 dark:border-bee-dark-600 mt-1 pt-1">
+                           <button
+                              onClick={() => abrirModalDeletar(id)}
+                              className="w-full text-left"
+                           >
+                              <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200">
                                  <Icon
                                     name="trash"
-                                    className="size-4"
+                                    className="size-4 text-red-500 dark:text-red-400"
                                     strokeWidth={3}
                                  />
-                                 Deletar Motorista
+                                 <span className="text-red-600 dark:text-red-400">
+                                    Deletar Motorista
+                                 </span>
                               </span>
                            </button>
                         </li>
