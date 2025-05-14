@@ -70,7 +70,7 @@ function Register() {
          >
             {/* header */}
             <div className="flex items-center justify-between border-b pb-3">
-               <h3 className="text-xl font-semibold">Registro</h3>
+               <h3 className="text-xl font-semibold">Cadastro</h3>
                <button
                   onClick={() => {
                      setShow(false);
@@ -96,7 +96,7 @@ function Register() {
                   <form className="space-y-4 text-sm font-medium">
                      <div>
                         <label htmlFor="name" className="block mb-2">
-                           Nome
+                           Nome completo
                         </label>
                         <InputText
                            variant="withIcon"
@@ -123,7 +123,7 @@ function Register() {
                      </div>
                      <div>
                         <label htmlFor="email" className="block mb-2">
-                           Email
+                           E-mail
                         </label>
                         <InputText
                            variant="withIcon"
@@ -158,7 +158,7 @@ function Register() {
                            type="password"
                            name="password"
                            id="password"
-                           placeholder="********"
+                           placeholder="Mínimo de 8 caracteres"
                            value={password}
                            onChange={(e) => setPassword(e.target.value)}
                            autoComplete="new-password"
@@ -180,7 +180,7 @@ function Register() {
                            htmlFor="confirm-password"
                            className="block mb-2"
                         >
-                           Confirmar Senha
+                           Confirmar senha
                         </label>
                         <InputText
                            variant="withIcon"
@@ -207,7 +207,7 @@ function Register() {
                      </div>
                      <div>
                         <label htmlFor="profile-image" className="block mb-2">
-                           Foto de Perfil
+                           Foto de perfil
                         </label>
                         <InputText
                            variant="withIcon"
@@ -231,11 +231,11 @@ function Register() {
                      className="w-full text-lg"
                      onClick={handleSubmit}
                   >
-                     {carregando ? "Registrando..." : "Registrar"}
+                     {carregando ? "Registrando..." : "Cadastrar"}
                   </Btn>
                   <div className="mt-3 text-center">
                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Já tem uma conta?{" "}
+                        Já possui uma conta?{" "}
                         <Link
                            href="/login"
                            className="text-blue-600 hover:underline dark:text-blue-400"
