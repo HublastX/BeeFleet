@@ -206,6 +206,40 @@ export default function useEvents() {
       }
    };
 
+   // Deletar evento
+   const deleteEvent = async (id) => {
+      if (!gestor?.token) {
+         handleError("Gestor não autenticado", "warning");
+         return;
+      }
+
+      setCarregando(true);
+      setErro(null);
+
+      try {
+         const response = await fetch(`${API_URL}/api/events/checkout/${id}`, {
+            method: "DELETE",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+
+         if (!response.ok) {
+            const data = await response.json();
+            throw new Error(data.error || "Erro ao deletar evento");
+         }
+
+         setEvents((prev) => prev.filter((event) => event.id !== id));
+         showToast("Sucesso", "success", "Evento deletado com sucesso!", 5000);
+         router.refresh();
+      } catch (error) {
+         handleError(error, "Erro ao deletar evento");
+      } finally {
+         setCarregando(false);
+      }
+   };
+
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
       const toastType = localStorage.getItem("toastType");
@@ -230,5 +264,6 @@ export default function useEvents() {
       getEvent,
       getEventsByManager,
       countEventsByManager: getEventsByManager().length,
+      deleteEvent, // <-- adicionado aqui
    };
 }
