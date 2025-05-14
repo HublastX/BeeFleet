@@ -33,35 +33,43 @@ function Login() {
    const handleSubmit = async (e) => {
       e.preventDefault();
       setErroLogin(null);
-
       await login(email, password);
    };
 
    return (
-      <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-50 backdrop-blur-sm">
+      <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center z-50 backdrop-blur-sm p-4">
          <div
-            className={`relative bg-bee-dark-100 rounded-lg shadow-sm dark:bg-bee-dark-400 text-bee-dark-600 dark:text-white p-8 w-96 md:w-[36rem] lg:w-[38rem] transform transition-all duration-300 ease-out ${show ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+            className={`relative bg-bee-dark-100 rounded-lg shadow-sm dark:bg-bee-dark-400 text-bee-dark-600 dark:text-white p-6 w-full max-w-md transform transition-all duration-300 ease-out ${
+               show ? "opacity-100 scale-100" : "opacity-0 scale-95"
+            }`}
          >
             {/* Header */}
-            <div className="flex items-center justify-between border-b pb-4">
-               <h3 className="text-2xl font-semibold">Login</h3>
-               <Link href="/">
-                  <button className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
-                     <Icon name="xMark" />
-                  </button>
-               </Link>
+            <div className="flex items-center justify-between border-b pb-3">
+               <h3 className="text-xl font-semibold">Login</h3>
+               <button
+                  onClick={() => {
+                     setShow(false);
+                     router.push("/");
+                  }}
+                  className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+               >
+                  <Icon name="xMark" />
+               </button>
             </div>
 
-            {/* Formulário */}
-            {/* {erroLogin && <p style={{ color: "red" }}>{erroLogin}</p>}
-            {erro && <p style={{ color: "red" }}>{erro}</p>} */}
-            <div className="mt-6">
+            {erro && (
+               <div className="flex items-start gap-2 p-2 mt-2 text-sm text-center text-red-600 bg-red-50 rounded-lg dark:bg-red-900/30 dark:text-red-400">
+                  <Icon name="gestor" className="size-6 mt-0.5 flex-shrink-0" />
+                  <span className="h-full self-center text-center">{erro}</span>
+               </div>
+            )}
+            <div className="mt-4 max-h-[60vh] overflow-y-auto pr-2">
                <form
-                  className="space-y-6 text-base font-medium"
+                  className="space-y-4 text-sm font-medium"
                   onSubmit={handleSubmit}
                >
                   <div>
-                     <label htmlFor="email" className="block mb-2 text-lg">
+                     <label htmlFor="email" className="block mb-2">
                         Email
                      </label>
                      <InputText
@@ -70,16 +78,15 @@ function Login() {
                         type="email"
                         name="email"
                         id="email"
-                        placeholder="Ex: exemploemail@email.com"
+                        placeholder="Ex: exemplo@email.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         autoComplete="off"
                         required
-                        className="h-12 text-lg"
                      />
                   </div>
                   <div>
-                     <label htmlFor="password" className="block mb-2 text-lg">
+                     <label htmlFor="password" className="block mb-2">
                         Senha
                      </label>
                      <InputText
@@ -93,20 +100,23 @@ function Login() {
                         onChange={(e) => setPassword(e.target.value)}
                         autoComplete="current-password"
                         required
-                        className="h-12 text-lg"
                      />
                   </div>
-                  <Btn
-                     variant="primary"
-                     type="submit"
-                     disabled={carregando}
-                     className="mt-5 w-full text-xl h-12"
-                  >
-                     {carregando ? "Entrando..." : "Entrar"}
-                  </Btn>
                </form>
-               <div className="mt-6 text-center">
-                  <p className="text-base text-gray-500 dark:text-gray-400">
+            </div>
+
+            <div className="mt-4">
+               <Btn
+                  variant="primary"
+                  type="submit"
+                  disabled={carregando}
+                  className="w-full text-lg"
+                  onClick={handleSubmit}
+               >
+                  {carregando ? "Entrando..." : "Entrar"}
+               </Btn>
+               <div className="mt-3 text-center">
+                  <p className="text-sm text-gray-500 dark:text-gray-400">
                      Não tem uma conta?{" "}
                      <Link
                         href="/register"

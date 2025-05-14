@@ -22,16 +22,21 @@ export default function useAuth() {
       return `/images/${image}`;
    };
 
-   const handleError = (
-      error,
-      fallbackMessage = "Erro inesperado.",
-      type = "error"
-   ) => {
-      const msg =
-         typeof error === "string" ? error : error.message || fallbackMessage;
-      setErro(msg);
-      showToast("Erro", type, msg, 5000);
-   };
+const handleError = (
+   error,
+   fallbackMessage = "Erro inesperado.",
+   type = "error"
+) => {
+   if (["error", "warning", "success", "info"].includes(fallbackMessage)) {
+      type = fallbackMessage;
+      fallbackMessage = "Erro inesperado.";
+   }
+   
+   const msg =
+      typeof error === "string" ? error : error.message || fallbackMessage;
+   setErro(msg);
+   showToast("Erro", type, msg, 5000);
+};
 
    // Login
    const login = async (email, password) => {
@@ -127,7 +132,7 @@ export default function useAuth() {
             throw new Error(data.error || "Erro inesperado ao registrar.");
          }
       } catch (error) {
-         handleError(error, "warning", "Erro ao conectar ao servidor.");
+         handleError(error, "Erro ao conectar ao servidor.", "warning");
       } finally {
          setCarregando(false);
       }
