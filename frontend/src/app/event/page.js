@@ -51,10 +51,18 @@ function Events() {
             </div>
          </div>
          {!tipoEvento && (
-            <div className="mt-4 text-bee-dark-600 dark:text-bee-light-200">
-                Nesta tela, você pode gerenciar os eventos de <strong>chegada</strong> e <strong>saída</strong> de motoristas.
-                Selecione uma das opções acima para visualizar ou registrar os dados correspondentes e manter o controle das operações em tempo real.
-             </div>
+             <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 shadow-sm text-sm text-gray-700 mt-6">
+                 <p className="mb-2">
+                    1. Esta área é onde você gerencia os eventos de <span className="font-semibold text-black">chegada</span> e <span className="font-semibold text-black">saída</span> dos motoristas.
+                </p>
+                 <p className="mb-2">
+                    2. Use o filtro no topo da página para escolher qual tipo de evento você quer visualizar. Isso ajuda a manter o controle das operações de forma organizada e prática.
+                </p>
+                <p>
+                    3. Não esquece de revisar os dados com frequência pra garantir que tudo esteja atualizado e certinho com a operação da frota.
+                </p>
+            </div>
+
         )}
 
          {tipoEvento === "saida" && <Saida />}
