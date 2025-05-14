@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import withAuth from "@/utils/withAuth";
 import Saida from "@/components/eventForm/saida";
 import Chegada from "@/components/eventForm/chegada";
 import { useSearchParams } from "next/navigation";
@@ -64,4 +63,4 @@ function Events() {
    );
 }
 
-export default withAuth(Events);
+export default Events;
