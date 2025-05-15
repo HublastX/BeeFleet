@@ -18,7 +18,6 @@ export default function useEvents() {
       typeof window !== "undefined"
          ? window.location.origin
          : process.env.NEXT_PUBLIC_API_URL;
-   console.log("Using API URL:", API_URL);
 
    // Função para dados de motorista e carro
    const enrichEvents = (events) => {
