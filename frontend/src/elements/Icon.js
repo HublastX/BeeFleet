@@ -23,6 +23,8 @@ import {
    PencilIcon,
    ClipboardDocumentListIcon,
    QuestionMarkCircleIcon,
+   DocumentIcon,
+   CalendarIcon,
 } from "@heroicons/react/24/solid";
 import {
    ChevronUpIcon,
@@ -84,7 +86,9 @@ const icons = {
    camera: CameraIcon,
    lapis: PencilIcon,
    menuMobile: ListBulletIcon,
-   suport: QuestionMarkCircleIcon
+   suport: QuestionMarkCircleIcon,
+   reports: DocumentIcon,
+   calendar: CalendarIcon
 };
 
 export default function Icon({ name, className, strokeWidth }) {

@@ -38,8 +38,8 @@ export function ToastProvider({ children }) {
                   <Toast
                      key={toast.id}
                      message={toast.message}
-                     description={toast.description}
                      type={toast.type}
+                     description={toast.description}
                      onClose={() => handleClose(toast.id)}
                   />
                ))}

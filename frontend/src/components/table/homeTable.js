@@ -21,7 +21,7 @@ export default function RecentEvent() {
    };
 
    return (
-      <div className="px-6 max-w-full overflow-x-auto overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
+      <div className="px-6 max-w-full overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
          <h1 className="mt-3 text-xl font-semibold text-gray-800 dark:text-white/90">
             Últimos eventos
          </h1>
@@ -31,103 +31,89 @@ export default function RecentEvent() {
          ) : erro ? (
             <div className="py-4 text-center text-red-500">{erro}</div>
          ) : (
-            <Table>
-               <TableHeader className="border-b border-bee-dark-300 dark:border-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
-                  <TableRow>
-                     <TableCell
-                        isHeader
-                        className="py-3 font-medium text-gray-500 text-start dark:text-gray-400"
-                     >
-                        Motorista
-                     </TableCell>
-                     <TableCell
-                        isHeader
-                        className="py-3 font-medium text-gray-500 text-start  dark:text-gray-400"
-                     >
-                        Carro
-                     </TableCell>
-                     <TableCell
-                        isHeader
-                        className="hidden md:block py-3 font-medium text-gray-500 text-start dark:text-gray-400"
-                     >
-                        Data
-                     </TableCell>
-                     <TableCell
-                        isHeader
-                        className="py-3 text-center font-medium w-auto text-gray-500  dark:text-gray-400"
-                     >
-                        Status
-                     </TableCell>
-                  </TableRow>
-               </TableHeader>
-
-               <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
-                  {events.length > 0 ? (
-                     events
-                        .sort(
-                           (a, b) =>
-                              new Date(b.createdAt) - new Date(a.createdAt)
-                        ) .slice(0,7)
-                        .map((event) => {
-                           return (
-                              <TableRow key={event.id} className="">
-                                 <TableCell className="py-3">
-                                    <div className="flex items-center gap-3">
-                                       <Icon
-                                          name="UserCircle"
-                                          className="w-8 h-8 hidden md:block"
-                                       />
-                                       <div>
-                                          <p>
-                                             {event.driver?.name ||
-                                                "Motorista não informado"}
-                                          </p>
-                                       </div>
-                                    </div>
-                                 </TableCell>
-                                 <TableCell className="py-3">
-                                    <div className="flex items-center gap-3">
-                                       <Icon
-                                          name="car"
-                                          className="w-8 h-8 hidden md:block"
-                                       />
-                                       <div>
-                                          <p>
-                                             {event.car?.plate ||
-                                                "Carro não informado"}
-                                          </p>
-                                       </div>
-                                    </div>
-                                 </TableCell>
-                                 <TableCell className="py-3 hidden md:block">
-                                    {formatDate(event.createdAt)}
-                                 </TableCell>
-                                 <TableCell className="py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
-                                    <Badge
-                                       size="sm"
-                                       color={
-                                          event.eventType !== "CHECKOUT"
-                                             ? "success"
-                                             : "error"
-                                       }
-                                    >
-                                       {event.eventType === "CHECKOUT"
-                                          ? "Em uso"
-                                          : "Finalizado"}
-                                    </Badge>
-                                 </TableCell>
-                              </TableRow>
-                           );
-                        })
-                  ) : (
+            <div className="relative overflow-x-auto w-full">
+               <Table className="">
+                  <TableHeader className="border-b border-bee-dark-300 dark:border-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
                      <TableRow>
-                        <TableCell colSpan={4} className="py-4 text-center">
-                           Nenhum evento recente encontrado
+                        <TableCell
+                           isHeader
+                           className="py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[180px]"
+                        >
+                           Motorista
+                        </TableCell>
+                        <TableCell
+                           isHeader
+                           className="py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[120px]"
+                        >
+                           Carro
+                        </TableCell>
+                        <TableCell
+                           isHeader
+                           className="table-cell py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[80px]"
+                        >
+                           Data
+                        </TableCell>
+                        <TableCell
+                           isHeader
+                           className="sticky right-0 bg-bee-dark-100 dark:bg-bee-dark-800 py-3 px-2 text-center font-medium  text-gray-500 dark:text-gray-400"
+                        >
+                           Status
                         </TableCell>
                      </TableRow>
-                  )}
-               </TableBody>
-            </Table>
+                  </TableHeader>
+
+                  <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
+                     {events.length > 0 ? (
+                        events
+                           .sort(
+                              (a, b) =>
+                                 new Date(b.createdAt) - new Date(a.createdAt)
+                           )
+                           .slice(0, 7)
+                           .map((event) => {
+                              return (
+                                 <TableRow
+                                    key={event.id}
+                                    className="hover:bg-bee-dark-300 dark:hover:bg-bee-dark-400"
+                                 >
+                                    <TableCell className="table-cell py-3 pl-1 max-w-[80px] truncate">
+                                       {event.driver?.name ||
+                                          "Motorista não informado"}
+                                    </TableCell>
+                                    <TableCell className="table-cell py-3 max-w-[80px] truncate">
+                                       {event.car?.plate ||
+                                          "Carro não informado"}
+                                    </TableCell>
+                                    <TableCell className="table-cell py-3 max-w-[80px] truncate">
+                                       {formatDate(event.createdAt)}
+                                    </TableCell>
+                                    <TableCell className="sticky right-0 px-2 bg-bee-dark-100 dark:bg-bee-dark-800 py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
+                                       <Badge
+                                          size="sm"
+                                          color={
+                                             event.eventType !== "CHECKOUT"
+                                                ? "success"
+                                                : "error"
+                                          }
+                                       >
+                                          {event.eventType === "CHECKOUT"
+                                             ? "Em uso"
+                                             : "Finalizado"}
+                                       </Badge>
+                                    </TableCell>
+                                 </TableRow>
+                              );
+                           })
+                     ) : (
+                        <TableRow>
+                           <TableCell colSpan={4} className="py-4 text-center">
+                              Nenhum evento recente encontrado
+                           </TableCell>
+                        </TableRow>
+                     )}
+                  </TableBody>
+               </Table>
+            </div>
          )}
       </div>
    );

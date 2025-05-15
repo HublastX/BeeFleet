@@ -91,7 +91,7 @@ function Register() {
                   <span className="h-full self-center text-center">{erro}</span>
                </div>
             )}
-            <div className="flex flex-col h-[70vh]">
+            <div className="flex flex-col h-[70vh] lg:h-fit">
                <div className="flex-1 overflow-y-auto pr-2 mt-2">
                   <form className="space-y-4 text-sm font-medium">
                      <div>
