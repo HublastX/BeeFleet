@@ -248,6 +248,19 @@ function CarPage() {
                            </Link>
                         </li>
                         <li>
+                           <Link href="/report" className="block">
+                              <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
+                                 <Icon
+                                    name="reports"
+                                    className="size-4 text-bee-primary"
+                                 />
+                                 <span className="text-gray-800 dark:text-gray-200">
+                                    Gerar relatorio
+                                 </span>
+                              </span>
+                           </Link>
+                        </li>
+                        <li>
                            <Link
                               href={`/event?tipo=${carroData.status === "AVAILABLE" ? "saida" : "chegada"}&carroId=${id}`}
                               className="block"
