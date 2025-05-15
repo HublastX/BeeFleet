@@ -1,0 +1,412 @@
+"use client";
+import Btn from "@/elements/btn";
+import Icon from "@/elements/Icon";
+import InputText from "@/elements/inputText";
+import useCar from "@/hooks/useCar";
+import useReports from "@/hooks/useReports";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+
+export default function ReportCar() {
+   const { carro } = useCar();
+   const { getCarUsageReport, carregando, erro } = useReports();
+   const [reportType, setReportType] = useState("single");
+   const [timePeriodEnabled, setTimePeriodEnabled] = useState(false);
+   const [startDateOption, setStartDateOption] = useState("creation");
+   const [endDateOption, setEndDateOption] = useState("current");
+   const [customStartDate, setCustomStartDate] = useState("");
+   const [customEndDate, setCustomEndDate] = useState("");
+
+   const [criterioCarro, setCriterioCarro] = useState("plate");
+   const [carroInput, setCarroInput] = useState("");
+   const [selectedCarro, setSelectedCarro] = useState(null);
+   const [carroError, setCarroError] = useState(false);
+   const [carroStatusError, setCarroStatusError] = useState("");
+   const [formError, setFormError] = useState("");
+
+   const carrosFiltrados = carro?.filter((c) => {
+      const valor = carroInput.toLowerCase();
+      if (criterioCarro === "plate")
+         return c.plate.toLowerCase().includes(valor);
+      if (criterioCarro === "renavam")
+         return c.renavam?.toLowerCase().includes(valor);
+      if (criterioCarro === "chassi")
+         return c.chassis?.toLowerCase().includes(valor);
+      return false;
+   });
+
+   useEffect(() => {
+      if (!carrosFiltrados?.length && carroInput) {
+         setCarroError(true);
+      } else {
+         setCarroError(false);
+      }
+   }, [carroInput, carrosFiltrados]);
+
+   const selecionarCarro = (c) => {
+      setSelectedCarro(c);
+      setCarroInput(c[criterioCarro]);
+      setCarroError(false);
+      setCarroStatusError("");
+   };
+
+   const handleSubmit = async (e) => {
+      e.preventDefault();
+      setFormError("");
+
+      if (reportType === "single" && !selectedCarro) {
+         setCarroStatusError("Por favor, selecione um carro válido");
+         return;
+      }
+
+      let startDate, endDate;
+
+      if (timePeriodEnabled) {
+         if (startDateOption === "creation" && reportType === "single") {
+            startDate = selectedCarro.createdAt;
+         } else if (startDateOption === "custom" && customStartDate) {
+            startDate = customStartDate;
+         } else {
+            const defaultDate = new Date();
+            defaultDate.setDate(defaultDate.getDate() - 30);
+            startDate = defaultDate.toISOString().split("T")[0];
+         }
+
+         if (endDateOption === "current") {
+            endDate = new Date().toISOString().split("T")[0];
+         } else if (endDateOption === "custom" && customEndDate) {
+            endDate = customEndDate;
+         } else {
+            endDate = new Date().toISOString().split("T")[0];
+         }
+      } else {
+         const endDateObj = new Date();
+         const startDateObj = new Date();
+         startDateObj.setDate(startDateObj.getDate() - 30);
+
+         startDate = startDateObj.toISOString().split("T")[0];
+         endDate = endDateObj.toISOString().split("T")[0];
+      }
+
+      if (new Date(startDate) > new Date(endDate)) {
+         setFormError("A data final deve ser maior que a data inicial");
+         return;
+      }
+
+      try {
+         const result = await getCarUsageReport({
+            startDate,
+            endDate,
+            carId: reportType === "single" ? selectedCarro.id : null,
+         });
+
+         if (!result) {
+            setFormError("Não foi possível gerar o relatório");
+            return;
+         }
+
+         if (result instanceof Blob) {
+            const url = window.URL.createObjectURL(result);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `relatorio-${reportType === "single" ? selectedCarro.plate : "todos"}-${startDate}_${endDate}.${result.type.split("/")[1]}`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            a.remove();
+         } else if (typeof result === "object") {
+            console.log("Relatório gerado:", result);
+         } else {
+            console.log("Resposta da API:", result);
+         }
+      } catch (error) {
+         console.error("Erro ao gerar relatório:", error);
+         setFormError(error.message || "Erro ao processar o relatório");
+      }
+   };
+
+   return (
+      <form
+         className="space-y-6 md:space-y-8 mt-4 md:mt-6"
+         onSubmit={handleSubmit}
+      >
+         <div className="flex flex-col gap-6 md:gap-8">
+            <div className="w-full">
+               <h2 className="text-xl md:text-2xl font-bold flex gap-2 items-center">
+                  <Icon name="report" className="size-5 md:size-6" /> Tipo de
+                  Relatório
+               </h2>
+               <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3 md:mb-4">
+                  Selecione se deseja um relatório de um carro específico ou de
+                  todos os carros
+               </p>
+               <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                  <label className="inline-flex items-center">
+                     <input
+                        type="radio"
+                        className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
+                        name="reportType"
+                        value="single"
+                        checked={reportType === "single"}
+                        onChange={() => setReportType("single")}
+                     />
+                     <span className="ml-2">Carro específico</span>
+                  </label>
+                  <label className="inline-flex items-center">
+                     <input
+                        type="radio"
+                        className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
+                        name="reportType"
+                        value="all"
+                        checked={reportType === "all"}
+                        onChange={() => setReportType("all")}
+                     />
+                     <span className="ml-2">Todos os carros</span>
+                  </label>
+               </div>
+            </div>
+
+            {reportType === "single" && (
+               <div className="w-full relative">
+                  <h2 className="text-xl md:text-2xl font-bold flex gap-2 items-center">
+                     <Icon name="car" className="size-5 md:size-6" /> Carro
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mt-1 mb-3 md:mb-4">
+                     Você pode pesquisar por placa, RENAVAM ou chassi
+                  </p>
+                  <div className="flex flex-col md:flex-row gap-3 w-full items-start md:items-end">
+                     <div className="w-full md:w-auto flex flex-col">
+                        <label className="font-medium mb-1">Buscar por:</label>
+                        <select
+                           value={criterioCarro}
+                           onChange={(e) => {
+                              setCriterioCarro(e.target.value);
+                              setCarroInput("");
+                              setSelectedCarro(null);
+                              setCarroError(false);
+                              setCarroStatusError("");
+                           }}
+                           className="border border-bee-dark-300 dark:border-bee-dark-400 rounded px-3 py-2 bg-white dark:bg-bee-dark-800 w-full md:w-40"
+                        >
+                           <option value="plate">Placa</option>
+                           <option value="renavam">RENAVAM</option>
+                           <option value="chassi">Chassi</option>
+                        </select>
+                     </div>
+                     <div className="relative flex-1 w-full min-w-0">
+                        <InputText
+                           type="text"
+                           value={carroInput}
+                           onChange={(e) => {
+                              setCarroInput(e.target.value);
+                              setSelectedCarro(null);
+                              setCarroError(false);
+                              setCarroStatusError("");
+                           }}
+                           placeholder={`Digite a ${
+                              criterioCarro === "plate"
+                                 ? "placa"
+                                 : criterioCarro === "renavam"
+                                   ? "RENAVAM"
+                                   : "chassi"
+                           } do carro`}
+                           className={`${carroError || carroStatusError ? "border-red-500" : ""} w-full`}
+                        />
+                        {carroInput &&
+                           !selectedCarro &&
+                           carrosFiltrados?.length > 0 && (
+                              <ul className="absolute z-20 top-full left-0 right-0 bg-bee-dark-100 dark:bg-bee-dark-800 border border-bee-dark-300 dark:border-bee-dark-400 rounded shadow mt-1 max-h-48 overflow-auto">
+                                 {carrosFiltrados.map((c) => (
+                                    <li
+                                       key={c.id}
+                                       onClick={() => selecionarCarro(c)}
+                                       className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    >
+                                       {criterioCarro === "plate"
+                                          ? c.plate
+                                          : criterioCarro === "renavam"
+                                            ? c.renavam
+                                            : c.chassis}
+                                    </li>
+                                 ))}
+                              </ul>
+                           )}
+                     </div>
+                  </div>
+                  {carroError && (
+                     <p className="text-red-500 text-sm font-bold mt-2">
+                        Esse carro ainda não foi cadastrado. Deseja adicionar?{" "}
+                        <Link
+                           href="cars/create"
+                           className="text-bee-purple-500"
+                        >
+                           Adicione agora
+                        </Link>
+                     </p>
+                  )}
+                  {carroStatusError && (
+                     <p className="text-red-500 text-sm font-bold mt-2">
+                        {carroStatusError}
+                     </p>
+                  )}
+               </div>
+            )}
+
+            <hr className="border-bee-dark-300 dark:border-bee-dark-400 my-2 md:my-4" />
+
+            <div className="w-full">
+               <h2 className="text-xl md:text-2xl font-bold flex gap-2 items-center">
+                  <Icon name="calendar" className="size-5 md:size-6" /> Período
+                  do Relatório
+               </h2>
+               <div className="mt-3 md:mt-4 space-y-4">
+                  <label className="inline-flex items-center">
+                     <input
+                        type="checkbox"
+                        className="form-checkbox border border-bee-dark-300 dark:border-bee-dark-400 rounded"
+                        checked={timePeriodEnabled}
+                        onChange={(e) => setTimePeriodEnabled(e.target.checked)}
+                     />
+                     <span className="ml-2">
+                        Filtrar por período específico
+                     </span>
+                  </label>
+
+                  {timePeriodEnabled && (
+                     <div className="pl-0 md:pl-6 space-y-6 mt-4">
+                        <div className="space-y-2">
+                           <h3 className="text-base md:text-lg font-semibold">
+                              Data Inicial
+                           </h3>
+                           <div className="space-y-3 pl-0 md:pl-4">
+                              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                                 <label className="inline-flex items-center">
+                                    <input
+                                       type="radio"
+                                       className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
+                                       name="startDateOption"
+                                       value="creation"
+                                       checked={startDateOption === "creation"}
+                                       onChange={() =>
+                                          setStartDateOption("creation")
+                                       }
+                                       disabled={reportType === "all"}
+                                    />
+                                    <span
+                                       className={`ml-2 ${reportType === "all" ? "text-gray-400 dark:text-gray-500" : ""}`}
+                                    >
+                                       Data de criação
+                                    </span>
+                                 </label>
+                                 <label className="inline-flex items-center">
+                                    <input
+                                       type="radio"
+                                       className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
+                                       name="startDateOption"
+                                       value="custom"
+                                       checked={startDateOption === "custom"}
+                                       onChange={() =>
+                                          setStartDateOption("custom")
+                                       }
+                                    />
+                                    <span className="ml-2">Data manual</span>
+                                 </label>
+                              </div>
+                              {startDateOption === "custom" && (
+                                 <div className="pl-0 md:pl-6 w-full md:w-56">
+                                    <InputText
+                                       type="date"
+                                       className="w-full"
+                                       value={customStartDate}
+                                       onChange={(e) =>
+                                          setCustomStartDate(e.target.value)
+                                       }
+                                    />
+                                 </div>
+                              )}
+                           </div>
+                        </div>
+
+                        <div className="space-y-2">
+                           <h3 className="text-base md:text-lg font-semibold">
+                              Data Final
+                           </h3>
+                           <div className="space-y-3 pl-0 md:pl-4">
+                              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                                 <label className="inline-flex items-center">
+                                    <input
+                                       type="radio"
+                                       className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
+                                       name="endDateOption"
+                                       value="current"
+                                       checked={endDateOption === "current"}
+                                       onChange={() =>
+                                          setEndDateOption("current")
+                                       }
+                                    />
+                                    <span className="ml-2">Data atual</span>
+                                 </label>
+                                 <label className="inline-flex items-center">
+                                    <input
+                                       type="radio"
+                                       className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
+                                       name="endDateOption"
+                                       value="custom"
+                                       checked={endDateOption === "custom"}
+                                       onChange={() =>
+                                          setEndDateOption("custom")
+                                       }
+                                    />
+                                    <span className="ml-2">Data manual</span>
+                                 </label>
+                              </div>
+                              {endDateOption === "custom" && (
+                                 <div className="pl-0 md:pl-6 w-full md:w-56">
+                                    <InputText
+                                       type="date"
+                                       className="w-full"
+                                       value={customEndDate}
+                                       onChange={(e) =>
+                                          setCustomEndDate(e.target.value)
+                                       }
+                                    />
+                                 </div>
+                              )}
+                           </div>
+                        </div>
+                     </div>
+                  )}
+               </div>
+            </div>
+         </div>
+         {formError && (
+            <div className="text-red-500 text-sm font-bold mt-2">
+               {formError}
+            </div>
+         )}
+
+         {erro && (
+            <div className="text-red-500 text-sm font-bold mt-2">{erro}</div>
+         )}
+
+         <hr className="border-bee-dark-300 dark:border-bee-dark-400 my-2 md:my-4" />
+
+         <div className="flex flex-row gap-3 md:gap-4">
+            <Btn
+               type="button"
+               texto="Cancelar"
+               onClick={() => window.history.back()}
+               className="w-full flex-[1] border border-red-400 bg-red-400 hover:bg-red-500 py-2 md:py-3"
+            />
+            <Btn
+               type="submit"
+               texto={carregando ? "Gerando..." : "Gerar Relatório"}
+               className="w-full flex-[2] py-2 md:py-3 px-4 text-base md:text-lg"
+               disabled={
+                  (reportType === "single" && !selectedCarro) || carregando
+               }
+            />
+         </div>
+      </form>
+   );
+}
