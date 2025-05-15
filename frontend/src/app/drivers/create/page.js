@@ -74,7 +74,6 @@ function CreateUser() {
          return;
       }
       await createDriver(name, phone, license, image);
-      console.log({ name, phone, license, image });
    };
 
    const formList = [
