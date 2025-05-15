@@ -13,7 +13,6 @@ export default function useAuth() {
       typeof window !== "undefined"
          ? window.location.origin
          : process.env.NEXT_PUBLIC_API_URL;
-   console.log("Using API URL:", API_URL);
 
    const getImageUrl = (image) => {
       if (image && API_URL) {
