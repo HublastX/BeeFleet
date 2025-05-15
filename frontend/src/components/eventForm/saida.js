@@ -70,7 +70,7 @@ export default function Saida() {
    }, [carroInput, carrosFiltrados]);
 
    const selecionarMotorista = (m) => {
-      if (m.isAvailable != true) {
+      if (m.isAvailable !== true) {
          setMotoristaStatusError(
             "Este motorista não está disponível no momento"
          );
@@ -212,7 +212,7 @@ export default function Saida() {
                                     key={m.id}
                                     onClick={() => selecionarMotorista(m)}
                                     className={`px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                                       m.status !== "AVAILABLE"
+                                       m.isAvailable !== true
                                           ? "text-gray-400"
                                           : ""
                                     }`}
@@ -404,6 +404,10 @@ export default function Saida() {
                            <p>
                               <strong>Cor:</strong>{" "}
                               {selectedCarro.color || "Não informado"}
+                           </p>
+                           <p>
+                              <strong>Hodômetro:</strong>{" "}
+                              {selectedCarro.odometer || "Não informado"}
                            </p>
                         </>
                      ) : (

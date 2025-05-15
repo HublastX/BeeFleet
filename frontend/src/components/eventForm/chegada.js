@@ -144,7 +144,6 @@ export default function Chegada() {
       );
 
       if (!checkoutEvent) {
-         alert("Nenhum checkout ativo encontrado para esta combinação!");
          return;
       }
 
@@ -471,6 +470,10 @@ export default function Chegada() {
                            <p>
                               <strong>Cor:</strong>{" "}
                               {selectedCarro.color || "Não informado"}
+                           </p>
+                           <p>
+                              <strong>Hodômetro:</strong>{" "}
+                              {selectedCarro.odometer || "Não informado"}
                            </p>
                         </>
                      ) : (
