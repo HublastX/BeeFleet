@@ -40,7 +40,7 @@ export default function DetailDriverTable() {
    };
 
    const translateStatus = (eventType) => {
-      return eventType === "CHECKOUT" ? "Saída" : "Entrada";
+      return eventType === "CHECKOUT" ? "Saída" : "Chegada";
    };
 
    return driverEvents.length > 0 ? (
@@ -84,7 +84,7 @@ export default function DetailDriverTable() {
                      className="dark:hover:bg-bee-alert-600 hover:bg-bee-alert-500"
                   >
                      <TableCell
-                        className={`px-3 py-2 sm:px-4 sm:py-3 text-start dark:text-bee-alert-500 whitespace-nowrap ${translateStatus(event.eventType) === "Entrada" ? "text-bee-alert-100" : "text-bee-alert-300"}`}
+                        className={`px-3 py-2 sm:px-4 sm:py-3 text-start dark:text-bee-alert-500 whitespace-nowrap ${translateStatus(event.eventType) === "Chegada" ? "text-bee-alert-100" : "text-bee-alert-300"}`}
                      >
                         {translateStatus(event.eventType)}
                      </TableCell>

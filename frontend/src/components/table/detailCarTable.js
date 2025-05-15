@@ -40,7 +40,7 @@ export default function DetailCarTable() {
    };
 
    const translateStatus = (eventType) => {
-      return eventType === "CHECKOUT" ? "Saída" : "Entrada";
+      return eventType === "CHECKOUT" ? "Saída" : "Chegada";
    };
 
    return carEvents.length > 0 ? (
@@ -83,7 +83,7 @@ export default function DetailCarTable() {
                      key={event.id}
                      className="dark:hover:bg-bee-alert-600 hover:bg-bee-alert-500"
                   >
-                     <TableCell className={`px-3 py-2 sm:px-4 sm:py-3 text-start dark:text-bee-alert-500 whitespace-nowrap ${translateStatus(event.eventType) === "Entrada" ? "text-bee-alert-100" : "text-bee-alert-300"}`}>
+                     <TableCell className={`px-3 py-2 sm:px-4 sm:py-3 text-start dark:text-bee-alert-500 whitespace-nowrap ${translateStatus(event.eventType) === "Chegada" ? "text-bee-alert-100" : "text-bee-alert-300"}`}>
                         {translateStatus(event.eventType)}
                      </TableCell>
                      <TableCell className="px-3 py-2 sm:px-4 sm:py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 whitespace-nowrap">
