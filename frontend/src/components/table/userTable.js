@@ -125,6 +125,12 @@ export default function UserTable({ searchTerm }) {
                               isHeader
                               className="px-5 py-3 text-start hidden md:table-cell"
                            >
+                              CNH
+                           </TableCell>
+                           <TableCell
+                              isHeader
+                              className="px-5 py-3 text-start hidden md:table-cell"
+                           >
                               <div
                                  onClick={() => {
                                     setOrdenarPorStatus((prev) => !prev);
@@ -211,6 +217,9 @@ export default function UserTable({ searchTerm }) {
 
                               <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start  dark:text-bee-alert-500">
                                  {motorista.phone}
+                              </TableCell>
+                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start  dark:text-bee-alert-500">
+                                 {motorista.license}
                               </TableCell>
 
                               <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 dark:text-bee-alert-500">

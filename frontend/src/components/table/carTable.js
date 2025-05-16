@@ -212,7 +212,7 @@ export default function CarTable({ searchTerm }) {
                                     </div>
                                     <div>
                                        <span className="block text-bee-dark-600 dark:text-bee-alert-500">
-                                          {carro.model}
+                                          {carro.brand}{" "}{carro.model}
                                        </span>
                                     </div>
                                  </div>
