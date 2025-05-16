@@ -25,6 +25,7 @@ import {
    QuestionMarkCircleIcon,
    DocumentIcon,
    CalendarIcon,
+   ArrowUpOnSquareIcon,
 } from "@heroicons/react/24/solid";
 import {
    ChevronUpIcon,
@@ -88,7 +89,7 @@ const icons = {
    menuMobile: ListBulletIcon,
    suport: QuestionMarkCircleIcon,
    reports: DocumentIcon,
-   calendar: CalendarIcon
+   calendar: CalendarIcon,
 };
 
 export default function Icon({ name, className, strokeWidth }) {
