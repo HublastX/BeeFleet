@@ -13,6 +13,7 @@ import { useParams } from "next/navigation";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import useAuth from "@/hooks/useAuth";
+import Pagination from "./Pagination";
 
 export default function DetailCarTable() {
    const { events } = useEvents();
@@ -43,8 +44,18 @@ export default function DetailCarTable() {
       return eventType === "CHECKOUT" ? "Saída" : "Chegada";
    };
 
+   // Paginação
+   const [currentPage, setCurrentPage] = React.useState(1);
+   const itemsPerPage = 5;
+   const totalPages = Math.ceil(carEvents.length / itemsPerPage);
+
+   const currentEvents = carEvents.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+   );
+
    return carEvents.length > 0 ? (
-      <div className="hidden md:flex overflow-x-auto rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
+      <div className="hidden md:flex flex-col overflow-x-auto rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
          <Table className="min-w-[500px] text-sm sm:text-base">
             {/* Table Header */}
             <TableHeader className="border-b border-bee-dark-300 dark:border-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
@@ -78,12 +89,14 @@ export default function DetailCarTable() {
 
             {/* Table Body */}
             <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400">
-               {carEvents.map((event) => (
+               {currentEvents.map((event) => (
                   <TableRow
                      key={event.id}
                      className="dark:hover:bg-bee-alert-600 hover:bg-bee-alert-500"
                   >
-                     <TableCell className={`px-3 py-2 sm:px-4 sm:py-3 text-start dark:text-bee-alert-500 whitespace-nowrap ${translateStatus(event.eventType) === "Chegada" ? "text-bee-alert-100" : "text-bee-alert-300"}`}>
+                     <TableCell
+                        className={`px-3 py-2 sm:px-4 sm:py-3 text-start dark:text-bee-alert-500 whitespace-nowrap ${translateStatus(event.eventType) === "Chegada" ? "text-bee-alert-100" : "text-bee-alert-300"}`}
+                     >
                         {translateStatus(event.eventType)}
                      </TableCell>
                      <TableCell className="px-3 py-2 sm:px-4 sm:py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 whitespace-nowrap">
@@ -99,9 +112,20 @@ export default function DetailCarTable() {
                ))}
             </TableBody>
          </Table>
+         {totalPages > 1 && (
+            <div className="flex justify-end px-6 py-3 border-t border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-50 dark:bg-bee-dark-800">
+               <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  totalItems={carEvents.length}
+               />
+            </div>
+         )}
       </div>
    ) : (
       <div className="text-center text-bee-dark-600 dark:text-bee-alert-500 py-4">
          Ainda não há nenhum evento registrado com este carro.
-      </div>);
+      </div>
+   );
 }
