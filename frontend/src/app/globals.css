@@ -6,7 +6,7 @@
 
 :root {
    --background: #fdfdfd;
-   --foreground: #2E2E2F;
+   --foreground: #2e2e2f;
    --spacing: 0.25rem;
    --radius-lg: 0.5rem;
    --text-theme-sm--line-height: 20px;
@@ -25,7 +25,7 @@
 @media (prefers-color-scheme: dark) {
    :root {
       --background: #19202d;
-      --foreground: #F0F0F0;
+      --foreground: #f0f0f0;
    }
 }
 
@@ -82,11 +82,28 @@ body {
 }
 input:-webkit-autofill {
    box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
- }
+}
 
 @media (prefers-color-scheme: dark) {
    input:-webkit-autofill {
       box-shadow: 0 0 0 1000px #1e2939 inset !important;
       -webkit-text-fill-color: #fff !important;
-    }
+   }
+}
+.custom-scrollbar::-webkit-scrollbar {
+   width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+   background: rgba(0, 0, 0, 0.05);
+   border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+   background: rgba(0, 0, 0, 0.2);
+   border-radius: 10px;
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+   background: rgba(255, 255, 255, 0.2);
 }
