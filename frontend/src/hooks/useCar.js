@@ -294,6 +294,15 @@ export default function useCar() {
       setErro(null);
 
       try {
+         const car = carro.find((car) => car.id === id);
+         if(car && car.status !== "AVAILABLE") {
+            showToast(
+               "Erro",
+               "warning",
+               "Carro não pode ser deletado, pois não está disponível.",
+               5000
+            );
+         }
          const res = await fetch(
             `${API_URL}/api/cars/${id}`,
             {

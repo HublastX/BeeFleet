@@ -163,16 +163,13 @@ export default function useDrivers() {
          formData.append("image", image);
          formData.append("managerId", gestor.id);
 
-         const res = await fetch(
-            `${API_URL}/api/drivers/create`,
-            {
-               method: "POST",
-               headers: {
-                  Authorization: `Bearer ${gestor.token}`,
-               },
-               body: formData,
-            }
-         );
+         const res = await fetch(`${API_URL}/api/drivers/create`, {
+            method: "POST",
+            headers: {
+               Authorization: `Bearer ${gestor.token}`,
+            },
+            body: formData,
+         });
 
          if (!res.ok)
             throw new Error("Erro ao criar motorista. Tente novamente.");
@@ -225,16 +222,13 @@ export default function useDrivers() {
             formData.append("image", image);
          }
 
-         const res = await fetch(
-            `${API_URL}/api/drivers/${id}`,
-            {
-               method: "PUT",
-               headers: {
-                  Authorization: `Bearer ${gestor.token}`,
-               },
-               body: formData,
-            }
-         );
+         const res = await fetch(`${API_URL}/api/drivers/${id}`, {
+            method: "PUT",
+            headers: {
+               Authorization: `Bearer ${gestor.token}`,
+            },
+            body: formData,
+         });
 
          const data = await res.json();
 
@@ -274,7 +268,7 @@ export default function useDrivers() {
    // Deletar motorista
    const deleteDriver = async (id) => {
       if (!gestor?.token) {
-         setErro("token do gestor não encontrado.");
+         setErro("Token do gestor não encontrado.");
          return;
       }
 
@@ -282,30 +276,47 @@ export default function useDrivers() {
       setErro(null);
 
       try {
-         const res = await fetch(
-            `${API_URL}/api/drivers/${id}`,
-            {
-               method: "DELETE",
-               headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${gestor.token}`,
-               },
-            }
-         );
+         const driver = motoristas.find((driver) => driver.id === id);
 
-         localStorage.setItem(
-            "toastMessage",
-            "Motorista deletado com sucesso!"
-         );
-         localStorage.setItem("toastType", "success");
-         router.push("/drivers");
+         if (driver && !driver.isAvailable) {
+            showToast(
+               "Não é possível excluir",
+               "error",
+               "Este motorista está com um veículo no momento. Libere o veículo antes de excluir.",
+               5000
+            );
+            return;
+         }
 
-         if (!res.ok)
+         const res = await fetch(`${API_URL}/api/drivers/${id}`, {
+            method: "DELETE",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+
+         if (!res.ok) {
             throw new Error("Erro ao deletar motorista. Tente novamente.");
+         }
 
          setMotoristas((prev) => prev.filter((driver) => driver.id !== id));
+
+         showToast(
+            "Sucesso",
+            "success",
+            "Motorista deletado com sucesso!",
+            5000
+         );
+         router.push("/drivers");
       } catch (error) {
          setErro(error.message || "Erro ao conectar ao servidor.");
+         showToast(
+            "Erro",
+            "error",
+            error.message || "Falha ao deletar motorista",
+            5000
+         );
       } finally {
          setCarregando(false);
       }
