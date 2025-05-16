@@ -74,7 +74,6 @@ export default function RecentEvent() {
                               return (
                                  <TableRow
                                     key={event.id}
-                                    className="hover:bg-bee-dark-300 dark:hover:bg-bee-dark-400"
                                  >
                                     <TableCell className="table-cell py-3 pl-1 max-w-[80px] truncate">
                                        {event.driver?.name ||

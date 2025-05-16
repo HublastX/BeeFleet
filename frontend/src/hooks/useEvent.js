@@ -216,6 +216,8 @@ export default function useEvents() {
       setErro(null);
 
       try {
+         const eventToDelete = events.find((event) => event.id === id);
+
          const response = await fetch(`${API_URL}/api/events/checkout/${id}`, {
             method: "DELETE",
             headers: {
@@ -229,7 +231,37 @@ export default function useEvents() {
             throw new Error(data.error || "Erro ao deletar evento");
          }
 
-         setEvents((prev) => prev.filter((event) => event.id !== id));
+         if (eventToDelete?.checkoutEventId) {
+            try {
+               const relatedResponse = await fetch(
+                  `${API_URL}/api/events/checkout/${eventToDelete.checkoutEventId}`,
+                  {
+                     method: "DELETE",
+                     headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${gestor.token}`,
+                     },
+                  }
+               );
+               if (!relatedResponse.ok) {
+                  const relatedData = await relatedResponse.json();
+                  console.warn(
+                     "Falha ao deletar evento relacionado:",
+                     relatedData.error || relatedResponse.statusText
+                  );
+               }
+            } catch (err) {
+               console.warn("Erro ao deletar evento relacionado:", err);
+            }
+         }
+
+         setEvents((prev) =>
+            prev.filter(
+               (event) =>
+                  event.id !== id &&
+                  event.id !== eventToDelete?.checkoutEventId
+            )
+         );
          showToast("Sucesso", "success", "Evento deletado com sucesso!", 5000);
          router.refresh();
       } catch (error) {
