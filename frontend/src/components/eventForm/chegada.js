@@ -97,10 +97,11 @@ export default function Chegada() {
       if (selectedCarro || selectedMotorista) {
          const eventoAtivo = events.find(
             (e) =>
-               (selectedCarro && e.carId === selectedCarro.id) ||
+               (selectedCarro &&
+                  e.carId === selectedCarro.id &&
+                  e.eventType === "CHECKOUT") ||
                (selectedMotorista &&
                   e.driverId === selectedMotorista.id &&
-                  e.status === "ACTIVE" &&
                   e.eventType === "CHECKOUT")
          );
 
@@ -148,7 +149,7 @@ export default function Chegada() {
          setCarroInput(c[criterioCarro]);
          setCarroError(false);
          setCarroStatusError("");
-         setOdometro(c.odometer || "");
+         setOdometro(c.odometer);
       }
    };
 
@@ -174,8 +175,7 @@ export default function Chegada() {
          (e) =>
             e.carId === selectedCarro.id &&
             e.driverId === selectedMotorista.id &&
-            e.eventType === "CHECKOUT" &&
-            e.status === "ACTIVE"
+            e.eventType === "CHECKOUT"
       );
 
       if (!checkoutEvent) {
@@ -193,7 +193,6 @@ export default function Chegada() {
             checkoutEvent.id
          );
 
-         router.push("/");
       } catch (error) {
          console.error("Erro ao registrar chegada:", error);
       }
