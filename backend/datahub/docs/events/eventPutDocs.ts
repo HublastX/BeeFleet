@@ -42,9 +42,6 @@ export const DOCS_EVENT_UPDATE = {
      *               checkoutEventId:
      *                 type: string
      *                 description: ID of the related checkout event (required for RETURN events).
-     *               image:
-     *                 type: string
-     *                 description: Path to the image associated with the event.
      *             required:
      *               - eventType
      *               - odometer
