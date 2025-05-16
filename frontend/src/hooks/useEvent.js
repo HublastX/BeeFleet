@@ -140,29 +140,6 @@ export default function useEvents() {
       setErro(null);
 
       try {
-         // if (eventType === "CHECKOUT") {
-         //    const hasActiveEvent = events.some(
-         //       (event) =>
-         //          event.status === "ACTIVE" &&
-         //          ((eventType === "CHECKOUT" && event.carId === carId) ||
-         //             (eventType === "CHECKOUT" && event.driverId === driverId))
-         //    );
-
-         //    if (hasActiveEvent) {
-         //       const conflict = events.find(
-         //          (e) => e.carId === carId && e.status === "ACTIVE"
-         //       )
-         //          ? "carro"
-         //          : "motorista";
-         //       handleError(
-         //          `Já existe um checkout ativo para este ${conflict}`,
-         //          "warning"
-         //       );
-         //       setCarregando(false);
-         //       return;
-         //    }
-         // }
-
          const payload = {
             eventType,
             odometer: parseInt(odometer),
@@ -197,7 +174,7 @@ export default function useEvents() {
 
          showToast("Sucesso", "success", successMessage, 5000);
 
-         router.refresh();
+         router.push("/");
       } catch (error) {
          handleError(error, "Erro ao criar evento");
       } finally {
@@ -258,8 +235,7 @@ export default function useEvents() {
          setEvents((prev) =>
             prev.filter(
                (event) =>
-                  event.id !== id &&
-                  event.id !== eventToDelete?.checkoutEventId
+                  event.id !== id && event.id !== eventToDelete?.checkoutEventId
             )
          );
          showToast("Sucesso", "success", "Evento deletado com sucesso!", 5000);

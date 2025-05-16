@@ -31,11 +31,7 @@ const navItem = [
    {
       icon: "evento",
       name: "Eventos",
-      subItems: [
-         {name: "Inicio", path: "/event"},
-         {name: "Saída", path: "/event?tipo=saida"},
-         {name: "Chegada", path: "/event?tipo=chegada"},
-      ],
+      path: "/event",
    },
    {
       name: "Graficos",

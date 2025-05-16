@@ -21,7 +21,7 @@ function formatarData(dataISO) {
    }).format(data);
 }
 
-function DiverPage() {
+function DriverPage() {
    const { id } = useParams();
    const { getDriver, carregando, erro, deleteDriver } = useDrivers();
    const [motoristaData, setMotoristaData] = useState(null);
@@ -61,10 +61,10 @@ function DiverPage() {
    };
 
    const [modalAberto, setModalAberto] = useState(false);
-   const [motoristaParaDeletar, setMotristaParaDeletar] = useState(null);
+   const [motoristaParaDeletar, setMotoristaParaDeletar] = useState(null);
 
    function abrirModalDeletar(motoristaId) {
-      setMotristaParaDeletar(motoristaId);
+      setMotoristaParaDeletar(motoristaId);
       setModalAberto(true);
    }
 
@@ -73,7 +73,7 @@ function DiverPage() {
          try {
             await deleteDriver(motoristaParaDeletar);
             setModalAberto(false);
-            setMotristaParaDeletar(null);
+            setMotoristaParaDeletar(null);
             setMotoristaData(null);
          } catch (error) {
             console.error("Erro ao deletar motorista:", error);
@@ -99,7 +99,7 @@ function DiverPage() {
                   </p>
                </div>
             </div>
-         )}{" "}
+         )}
          {!carregando && !erro && !motoristaData && (
             <p>Nenhum motorista encontrado.</p>
          )}
@@ -144,7 +144,7 @@ function DiverPage() {
                      </div>
                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                           <span className="text-sm">Numero</span>
+                           <span className="text-sm">Telefone</span>
                            <h1 className="font-black">{motoristaData.phone}</h1>
                         </div>
                         <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
@@ -154,7 +154,7 @@ function DiverPage() {
                            </h1>
                         </div>
                         <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                           <span className="text-sm">Criado em</span>
+                           <span className="text-sm">Cadastrado em</span>
                            <h1 className="font-black">
                               {formatarData(motoristaData.createdAt)}
                            </h1>
@@ -221,7 +221,7 @@ function DiverPage() {
                                     className="size-4 text-bee-primary"
                                  />
                                  <span className="text-gray-800 dark:text-gray-200">
-                                    Gerar relatorio
+                                    Gerar relatório
                                  </span>
                               </span>
                            </Link>
@@ -268,7 +268,7 @@ function DiverPage() {
                {modalAberto && (
                   <DeleteConfirmation
                      link={confirmarDelete}
-                     tipo="carro"
+                     tipo="motorista"
                      onClose={() => setModalAberto(false)}
                   />
                )}
@@ -277,4 +277,4 @@ function DiverPage() {
       </div>
    );
 }
-export default withAuth(DiverPage);
+export default withAuth(DriverPage);

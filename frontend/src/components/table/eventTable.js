@@ -109,13 +109,13 @@ export default function EventTable({ searchTerm }) {
          {/* Abas */}
          <div className="flex gap-1 px-6 py-3 bg-bee-dark-100 dark:bg-bee-dark-800 border-b border-bee-dark-300 dark:border-bee-dark-400">
             <button
-               className={`font-semibold text-md px-4 py-2 rounded-t-lg transition-all ${aba === "ATIVOS" ? "bg-white dark:bg-bee-dark-400 text-bee-yellow-600 border-t border-l border-r border-bee-dark-300 dark:border-bee-dark-400" : "text-bee-dark-500 dark:text-bee-dark-300 hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"}`}
+               className={`font-semibold text-md px-4 py-2 rounded-t-lg transition-all ${aba === "ATIVOS" ? " text-bee-yellow-600 border-t border-l border-r border-bee-dark-300 dark:border-bee-dark-400" : "text-bee-dark-500 dark:text-bee-dark-300 hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"}`}
                onClick={() => setAba("ATIVOS")}
             >
                Ativos
             </button>
             <button
-               className={`font-semibold text-md px-4 py-2 rounded-t-lg transition-all ${aba === "FINALIZADOS" ? "bg-white dark:bg-bee-dark-400 text-bee-yellow-600 border-t border-l border-r border-bee-dark-300 dark:border-bee-dark-400" : "text-bee-dark-500 dark:text-bee-dark-300 hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"}`}
+               className={`font-semibold text-md px-4 py-2 rounded-t-lg transition-all ${aba === "FINALIZADOS" ? "text-bee-yellow-600 border-t border-l border-r border-bee-dark-300 dark:border-bee-dark-400" : "text-bee-dark-500 dark:text-bee-dark-300 hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"}`}
                onClick={() => setAba("FINALIZADOS")}
             >
                Finalizados
