@@ -84,7 +84,7 @@ function Home() {
                      <div className="overflow-hidden rounded-2xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800 p-6">
                         <div className="flex flex-col gap-4">
                            <div className="flex items-center gap-3 text-bee-primary-500 dark:text-white">
-                              <Icon name="eventoL" className="size-7" />
+                              <Icon name="evento" className="size-7" />
                               <h2 className="text-xl font-bold">
                                  Gerenciar Eventos
                               </h2>
