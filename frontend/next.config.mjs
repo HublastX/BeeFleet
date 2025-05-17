@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
    basePath: "/beefleet",
+   assetPrefix: "/beefleet",
    trailingSlash: true,
 
    rewrites: async () => {
