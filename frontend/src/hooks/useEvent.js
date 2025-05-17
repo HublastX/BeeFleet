@@ -46,16 +46,20 @@ export default function useEvents() {
 
    // Utilitário para exibir erro
    const handleError = (
-      erro,
+      error,
       fallbackMessage = "Erro inesperado.",
-      type = "erro"
+      type = "error"
    ) => {
+      if (["error", "warning", "success", "info"].includes(fallbackMessage)) {
+         type = fallbackMessage;
+         fallbackMessage = "Erro inesperado.";
+      }
+
       const msg =
-         typeof erro === "string" ? erro : erro.message || fallbackMessage;
+         typeof error === "string" ? error : error.message || fallbackMessage;
       setErro(msg);
       showToast("Erro", type, msg, 5000);
    };
-
    // Utilitário para filtrar eventos por gestor
    const getEventsByManager = () => {
       if (!gestor?.id) return [];

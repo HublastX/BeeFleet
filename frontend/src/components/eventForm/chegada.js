@@ -192,7 +192,8 @@ export default function Chegada() {
          (e) =>
             e.carId === selectedCarro.id &&
             e.driverId === selectedMotorista.id &&
-            e.eventType === "CHECKOUT"
+            e.eventType === "CHECKOUT" &&
+            e.status === "ACTIVE"
       );
 
       if (!checkoutEvent) {
@@ -458,7 +459,7 @@ export default function Chegada() {
                >
                   <div className="flex items-center gap-3">
                      <Icon
-                        name="checklist"
+                        name="evento"
                         className="size-6 text-bee-purple-500"
                      />
                      <h2 className="text-xl font-bold">Resumo da Chegada</h2>
@@ -521,18 +522,18 @@ export default function Chegada() {
                )}
             </div>
 
-            {/* Botões de Ação */}
+            {/* Botões */}
             <div className="flex flex-col sm:flex-row gap-4 mt-6">
                <Btn
                   type="button"
                   texto="Cancelar"
                   onClick={() => router.back()}
-                  className="flex-1 py-3 border border-red-400 bg-red-400 hover:bg-red-500"
+                  className="flex-[1] py-3 border border-red-400 bg-red-400 hover:bg-red-500"
                />
                <Btn
                   type="submit"
                   texto={carregando ? "Processando..." : "Confirmar Chegada"}
-                  className="flex-1 py-3 bg-bee-purple-500 hover:bg-bee-purple-600 text-lg"
+                  className="flex-[2] py-3 bg-bee-purple-500 hover:bg-bee-purple-600 text-lg"
                   disabled={
                      !selectedCarro ||
                      !selectedMotorista ||

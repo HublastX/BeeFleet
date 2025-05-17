@@ -16,9 +16,14 @@ export default function useReports() {
    // Utilitário para exibir erro
    const handleError = (
       error,
-      fallbackMessage = "Erro ao gerar relatório.",
+      fallbackMessage = "Erro inesperado.",
       type = "error"
    ) => {
+      if (["error", "warning", "success", "info"].includes(fallbackMessage)) {
+         type = fallbackMessage;
+         fallbackMessage = "Erro inesperado.";
+      }
+
       const msg =
          typeof error === "string" ? error : error.message || fallbackMessage;
       setErro(msg);
