@@ -47,7 +47,6 @@ services:
             context: ./backend/datahub
         env_file:
             - .env
-        container_name: bee-fleet-datahub
         restart: always
         environment:
             DB_HOST: mysql
