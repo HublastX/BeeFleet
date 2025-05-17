@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useToast } from "@/utils/ToastContext";
 import useDrivers from "./useDrivers";
 import useCar from "./useCar";
+import { useCallback } from "react";
 
 export default function useEvents() {
    const { gestor } = useAuth();
@@ -20,25 +21,28 @@ export default function useEvents() {
          : process.env.NEXT_PUBLIC_API_URL;
 
    // Função para dados de motorista e carro
-   const enrichEvents = (events) => {
-      return events.map((event) => {
-         const driver = motoristas.find((m) => m.id === event.driverId) || {
-            name: "Motorista não encontrado",
-            id: event.driverId,
-         };
+   const enrichEvents = useCallback(
+      (events) => {
+         return events.map((event) => {
+            const driver = motoristas.find((m) => m.id === event.driverId) || {
+               name: "Motorista não encontrado",
+               id: event.driverId,
+            };
 
-         const car = carro.find((c) => c.id === event.carId) || {
-            plate: "Placa não encontrada",
-            id: event.carId,
-         };
+            const car = carro.find((c) => c.id === event.carId) || {
+               plate: "Placa não encontrada",
+               id: event.carId,
+            };
 
-         return {
-            ...event,
-            driver,
-            car,
-         };
-      });
-   };
+            return {
+               ...event,
+               driver,
+               car,
+            };
+         });
+      },
+      [motoristas, carro]
+   );
 
    // Utilitário para exibir erro
    const handleError = (
@@ -87,7 +91,7 @@ export default function useEvents() {
       }
 
       fetchEvents();
-   }, [gestor?.token, motoristas, carro]);
+   }, [gestor?.token, motoristas, carro, API_URL, enrichEvents]);
 
    // Buscar evento individual
    const getEvent = async (id) => {

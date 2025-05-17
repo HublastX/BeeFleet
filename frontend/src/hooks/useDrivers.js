@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/utils/ToastContext";
+import { useCallback } from "react";
 
 export default function useDrivers() {
    const { gestor } = useAuth();
@@ -15,12 +16,16 @@ export default function useDrivers() {
          ? window.location.origin
          : process.env.NEXT_PUBLIC_API_URL;
 
-   const getImageUrl = (image) => {
-      if (image && API_URL) {
-         return `${API_URL}/api${image}`;
-      }
-      return `/images/${image}`;
-   };
+
+   const getImageUrl = useCallback(
+      (image) => {
+         if (image && API_URL) {
+            return `${API_URL}/api${image}`;
+         }
+         return `/images/${image}`;
+      },
+      [API_URL]
+   );
 
    // Utilitário para exibir erro
    const handleError = (
@@ -80,7 +85,7 @@ export default function useDrivers() {
       }
 
       fetchDrivers();
-   }, [gestor?.token]);
+   }, [gestor?.token, API_URL, gestor?.id, getImageUrl]);
 
    // Buscar Motorista individual
    const getDriver = async (id) => {
