@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+   basePath: "/beefleet",
+
    rewrites: async () => {
       return [
          {
@@ -8,6 +10,7 @@ const nextConfig = {
          },
       ];
    },
+
    images: {
       domains: ["localhost"],
    },
