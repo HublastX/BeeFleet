@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useCallback } from "react";
 
 export default function Chegada() {
    const { motoristas } = useDrivers();
@@ -58,6 +59,44 @@ export default function Chegada() {
       return false;
    });
 
+   // Handlers
+   const selecionarMotorista = useCallback(
+      (m) => {
+         if (m.isAvailable !== false) {
+            setMotoristaStatusError(
+               "Este motorista não está com um carro no momento"
+            );
+            setSelectedMotorista(null);
+            setMotoristaInput("");
+         } else {
+            setSelectedMotorista(m);
+            setMotoristaInput(m[criterioMotorista]);
+            setMotoristaError(false);
+            setMotoristaStatusError("");
+         }
+      },
+      [criterioMotorista]
+   );
+
+   const selecionarCarro = useCallback(
+      (c) => {
+         if (c.status !== "IN_USE") {
+            setCarroStatusError(
+               "Este carro não está com um motorista no momento"
+            );
+            setSelectedCarro(null);
+            setCarroInput("");
+         } else {
+            setSelectedCarro(c);
+            setCarroInput(c[criterioCarro]);
+            setCarroError(false);
+            setCarroStatusError("");
+            setOdometro(c.odometer);
+         }
+      },
+      [criterioCarro]
+   );
+
    // Efeitos
    useEffect(() => {
       if (!motoristasFiltrados?.length && motoristaInput) {
@@ -81,7 +120,7 @@ export default function Chegada() {
          const motorista = motoristas.find((m) => m.id === motoristaId);
          if (motorista) selecionarMotorista(motorista);
       }
-   }, [motoristas, searchParams]);
+   }, [motoristas, searchParams, selecionarMotorista]);
 
    useEffect(() => {
       const carroId = searchParams.get("carroId");
@@ -91,7 +130,7 @@ export default function Chegada() {
             selecionarCarro(carroSelecionado);
          }
       }
-   }, [carro, searchParams]);
+   }, [carro, searchParams, selecionarCarro]);
 
    useEffect(() => {
       if (selectedCarro || selectedMotorista) {
@@ -121,37 +160,15 @@ export default function Chegada() {
             }
          }
       }
-   }, [selectedCarro, selectedMotorista, events, motoristas, carro]);
-
-   // Handlers
-   const selecionarMotorista = (m) => {
-      if (m.isAvailable !== false) {
-         setMotoristaStatusError(
-            "Este motorista não está com um carro no momento"
-         );
-         setSelectedMotorista(null);
-         setMotoristaInput("");
-      } else {
-         setSelectedMotorista(m);
-         setMotoristaInput(m[criterioMotorista]);
-         setMotoristaError(false);
-         setMotoristaStatusError("");
-      }
-   };
-
-   const selecionarCarro = (c) => {
-      if (c.status !== "IN_USE") {
-         setCarroStatusError("Este carro não está com um motorista no momento");
-         setSelectedCarro(null);
-         setCarroInput("");
-      } else {
-         setSelectedCarro(c);
-         setCarroInput(c[criterioCarro]);
-         setCarroError(false);
-         setCarroStatusError("");
-         setOdometro(c.odometer);
-      }
-   };
+   }, [
+      selectedCarro,
+      selectedMotorista,
+      events,
+      motoristas,
+      carro,
+      selecionarCarro,
+      selecionarMotorista,
+   ]);
 
    const toggleInfoSection = () => {
       setShowInfo(!showInfo);
@@ -192,7 +209,6 @@ export default function Chegada() {
             odometro,
             checkoutEvent.id
          );
-
       } catch (error) {
          console.error("Erro ao registrar chegada:", error);
       }

@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useCallback } from "react";
 
 export default function Saida() {
    const { motoristas } = useDrivers();
@@ -56,6 +57,41 @@ export default function Saida() {
       return false;
    });
 
+   const selecionarMotorista = useCallback(
+      (m) => {
+         if (m.isAvailable !== true) {
+            setMotoristaStatusError(
+               "Este motorista não está disponível no momento"
+            );
+            setSelectedMotorista(null);
+            setMotoristaInput("");
+         } else {
+            setSelectedMotorista(m);
+            setMotoristaInput(m[criterioMotorista]);
+            setMotoristaError(false);
+            setMotoristaStatusError("");
+         }
+      },
+      [criterioMotorista]
+   );
+
+   const selecionarCarro = useCallback(
+      (c) => {
+         if (c.status !== "AVAILABLE") {
+            setCarroStatusError("Este carro não está disponível no momento");
+            setSelectedCarro(null);
+            setCarroInput("");
+         } else {
+            setSelectedCarro(c);
+            setCarroInput(c[criterioCarro]);
+            setOdometro(c.odometer);
+            setCarroError(false);
+            setCarroStatusError("");
+         }
+      },
+      [criterioCarro]
+   );
+
    // Efeitos
    useEffect(() => {
       if (!motoristasFiltrados.length && motoristaInput) {
@@ -79,7 +115,7 @@ export default function Saida() {
          const motorista = motoristas.find((m) => m.id === motoristaId);
          if (motorista) selecionarMotorista(motorista);
       }
-   }, [motoristas, searchParams]);
+   }, [motoristas, searchParams, selecionarMotorista]);
 
    useEffect(() => {
       const carroId = searchParams.get("carroId");
@@ -89,37 +125,9 @@ export default function Saida() {
             selecionarCarro(carroSelecionado);
          }
       }
-   }, [carro, searchParams]);
+   }, [carro, searchParams, selecionarCarro]);
 
    // Handlers
-   const selecionarMotorista = (m) => {
-      if (m.isAvailable !== true) {
-         setMotoristaStatusError(
-            "Este motorista não está disponível no momento"
-         );
-         setSelectedMotorista(null);
-         setMotoristaInput("");
-      } else {
-         setSelectedMotorista(m);
-         setMotoristaInput(m[criterioMotorista]);
-         setMotoristaError(false);
-         setMotoristaStatusError("");
-      }
-   };
-
-   const selecionarCarro = (c) => {
-      if (c.status !== "AVAILABLE") {
-         setCarroStatusError("Este carro não está disponível no momento");
-         setSelectedCarro(null);
-         setCarroInput("");
-      } else {
-         setSelectedCarro(c);
-         setCarroInput(c[criterioCarro]);
-         setOdometro(c.odometer);
-         setCarroError(false);
-         setCarroStatusError("");
-      }
-   };
 
    const toggleInfoSection = () => {
       setShowInfo(!showInfo);
