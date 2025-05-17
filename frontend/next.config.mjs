@@ -14,7 +14,7 @@ const nextConfig = {
    },
 
    images: {
-      domains: ["localhost"],
+      domains: ["localhost", "hublast.com", "bee-fleet-datahub"],
    },
 };
 

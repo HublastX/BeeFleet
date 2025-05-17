@@ -13,7 +13,7 @@ const app: Application = express();
 
 app.use(
     cors({
-        origin: ["http://localhost:5006", "http://localhost:3000"], // Add any other origins as needed
+        origin: ["http://localhost:5006", "http://localhost:3000", "https://hublast.com"], // Add any other origins as needed
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,

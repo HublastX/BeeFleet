@@ -243,7 +243,7 @@ const NavBar = () => {
                {isExpanded || isHovered || isMobileOpen ? (
                   <>
                      <Image
-                        src="/image/logo.svg"
+                        src="/beefleet/image/logo.svg"
                         alt="Logo"
                         className="w-16"
                         width={60}
@@ -255,7 +255,7 @@ const NavBar = () => {
                   </>
                ) : (
                   <Image
-                     src="/image/logo.svg"
+                     src="/beefleet/image/logo.svg"
                      alt="Logo"
                      width={60}
                      height={60}
