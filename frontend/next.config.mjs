@@ -8,7 +8,7 @@ const nextConfig = {
       return [
          {
             source: "/api/:path*",
-            destination: "https://hublast.com/beefleet/api/api/:path*",
+            destination: "https://hublast.com/bee-fleet-datahub/api/api/:path*",
          },
       ];
    },

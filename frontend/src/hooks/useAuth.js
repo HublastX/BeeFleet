@@ -10,13 +10,13 @@ export default function useAuth() {
    const [gestores, setGestores] = useState([]);
    const router = useRouter();
    const { showToast } = useToast();
-   const API_URL = "http://bee-fleet-datahub:5004";
+   const API_URL = "https://hublast.com/bee-fleet-datahub/api";
 
 
    const getImageUrl = useCallback(
       (image) => {
          if (image && API_URL) {
-            return `${API_URL}/api${image}`;
+            return `${API_URL}/api/${image}`;
          }
          return `/images/${image}`;
       },
