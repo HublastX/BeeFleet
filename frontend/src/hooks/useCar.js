@@ -303,11 +303,12 @@ export default function useCar() {
          const car = carro.find((car) => car.id === id);
          if (car && car.status !== "AVAILABLE") {
             showToast(
-               "Erro",
-               "warning",
+               "Não é possível excluir",
+               "error",
                "Carro não pode ser deletado, pois não está disponível.",
                5000
             );
+            return;
          }
          const res = await fetch(`${API_URL}/api/cars/${id}`, {
             method: "DELETE",
