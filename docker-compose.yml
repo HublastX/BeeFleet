@@ -91,7 +91,6 @@ services:
         restart: always
 
     bee_fleet_frontend:
-        container_name: bee-fleet-frontend
         build:
             context: ./frontend
             dockerfile: Dockerfile
