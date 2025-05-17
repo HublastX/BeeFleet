@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
    basePath: "/beefleet",
+   trailingSlash: true,
 
    rewrites: async () => {
       return [
@@ -15,5 +16,6 @@ const nextConfig = {
       domains: ["localhost"],
    },
 };
+
 
 export default nextConfig;
