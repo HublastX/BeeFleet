@@ -97,7 +97,7 @@ services:
             dockerfile: Dockerfile
         environment:
             - NEXT_PUBLIC_API_URL=http://bee-fleet-datahub:5004
-            - NEXT_PUBLIC_CLIENT_API_URL=https://hublast.com
+            - NEXT_PUBLIC_CLIENT_API_URL=http://bee-fleet-datahub:5004
         restart: always
         ports:
             - "5006:5006"
