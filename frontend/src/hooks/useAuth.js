@@ -10,10 +10,7 @@ export default function useAuth() {
    const [gestores, setGestores] = useState([]);
    const router = useRouter();
    const { showToast } = useToast();
-   const API_URL =
-      typeof window !== "undefined"
-         ? process.env.NEXT_PUBLIC_CLIENT_API_URL || window.location.origin
-         : process.env.NEXT_PUBLIC_API_URL;
+   const API_URL = "http://bee-fleet-datahub:5004";
 
 
    const getImageUrl = useCallback(
