@@ -63,6 +63,7 @@ export default function CarCard({ searchTerm }) {
                                  alt={`Imagem do carro ${car.model}`}
                                  layout="fill"
                                  objectFit="cover"
+                                 unoptimized 
                                  className="rounded-lg"
                               />
                            ) : (

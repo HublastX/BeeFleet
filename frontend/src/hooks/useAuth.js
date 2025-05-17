@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/utils/ToastContext";
+import { useCallback } from "react";
 
 export default function useAuth() {
    const [gestor, setGestor] = useState(null);
@@ -14,12 +15,16 @@ export default function useAuth() {
          ? window.location.origin
          : process.env.NEXT_PUBLIC_API_URL;
 
-   const getImageUrl = (image) => {
-      if (image && API_URL) {
-         return `${API_URL}/api${image}`;
-      }
-      return `/images/${image}`;
-   };
+
+   const getImageUrl = useCallback(
+      (image) => {
+         if (image && API_URL) {
+            return `${API_URL}/api${image}`;
+         }
+         return `/images/${image}`;
+      },
+      [API_URL]
+   );
 
 const handleError = (
    error,
@@ -258,7 +263,7 @@ const handleError = (
       }
 
       fetchAllManagers();
-   }, [gestor?.token, API_URL]);
+   }, [gestor?.token, API_URL, getImageUrl, showToast]);
 
    // Deletar gestor
    const deleteManager = async (id) => {

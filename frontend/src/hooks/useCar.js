@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import useAuth from "./useAuth";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/utils/ToastContext";
+import { useCallback } from "react";
 
 export default function useCar() {
    const { gestor } = useAuth();
@@ -15,12 +16,16 @@ export default function useCar() {
          ? window.location.origin
          : process.env.NEXT_PUBLIC_API_URL;
 
-   const getImageUrl = (image) => {
-      if (image && API_URL) {
-         return `${API_URL}/api${image}`;
-      }
-      return `/images/${image}`;
-   };
+
+   const getImageUrl = useCallback(
+      (image) => {
+         if (image && API_URL) {
+            return `${API_URL}/api${image}`;
+         }
+         return `/images/${image}`;
+      },
+      [API_URL]
+   );
 
    // Utilitário para exibir erro
    const handleError = (
@@ -28,6 +33,11 @@ export default function useCar() {
       fallbackMessage = "Erro inesperado.",
       type = "error"
    ) => {
+      if (["error", "warning", "success", "info"].includes(fallbackMessage)) {
+         type = fallbackMessage;
+         fallbackMessage = "Erro inesperado.";
+      }
+
       const msg =
          typeof error === "string" ? error : error.message || fallbackMessage;
       setErro(msg);
@@ -46,15 +56,12 @@ export default function useCar() {
 
       async function fetchCars() {
          try {
-            const res = await fetch(
-               `${API_URL}/api/cars/`,
-               {
-                  headers: {
-                     "Content-Type": "application/json",
-                     Authorization: `Bearer ${gestor.token}`,
-                  },
-               }
-            );
+            const res = await fetch(`${API_URL}/api/cars/`, {
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${gestor.token}`,
+               },
+            });
 
             if (!res.ok) throw new Error("Erro ao buscar carros");
 
@@ -79,7 +86,7 @@ export default function useCar() {
       }
 
       fetchCars();
-   }, [gestor?.token]);
+   }, [gestor?.token, API_URL, getImageUrl]);
 
    // Buscar carro individual
    const getCar = async (id) => {
@@ -183,18 +190,15 @@ export default function useCar() {
          formData.append("status", "AVAILABLE");
          formData.append("managerId", gestor.id);
 
-         const res = await fetch(
-            `${API_URL}/api/cars/create`,
-            {
-               method: "POST",
-               headers: {
-                  Authorization: `Bearer ${gestor.token}`,
-               },
-               body: formData,
-            }
-         );
+         const res = await fetch(`${API_URL}/api/cars/create`, {
+            method: "POST",
+            headers: {
+               Authorization: `Bearer ${gestor.token}`,
+            },
+            body: formData,
+         });
 
-         if (!res.ok) throw new Error("Erro ao criar carro. Tente novamente.");
+         if (!res.ok) throw new Error( "Erro ao criar carro. Tente novamente.");
 
          const data = await res.json();
 
@@ -212,11 +216,13 @@ export default function useCar() {
             setCarro((prev) => [...prev, data.car]);
             router.push("/cars");
          } else {
-            setErro(data.error || "Erro ao criar carro. Tente novamente.");
+            handleError(
+               data.error || "Erro ao criar carro. Tente novamente.",
+               "error",
+            );
          }
       } catch (error) {
-         setErro(error.message || "Erro ao conectar ao servidor.");
-         handleError(error, "warning", "Erro ao conectar ao servidor.");
+         handleError(error, "Erro ao conectar ao servidor.","warning");
       } finally {
          setCarregando(false);
       }
@@ -295,7 +301,7 @@ export default function useCar() {
 
       try {
          const car = carro.find((car) => car.id === id);
-         if(car && car.status !== "AVAILABLE") {
+         if (car && car.status !== "AVAILABLE") {
             showToast(
                "Erro",
                "warning",
@@ -303,16 +309,13 @@ export default function useCar() {
                5000
             );
          }
-         const res = await fetch(
-            `${API_URL}/api/cars/${id}`,
-            {
-               method: "DELETE",
-               headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${gestor.token}`,
-               },
-            }
-         );
+         const res = await fetch(`${API_URL}/api/cars/${id}`, {
+            method: "DELETE",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
          localStorage.setItem("toastMessage", "Carro deletado com sucesso!");
          localStorage.setItem("toastType", "success");
          router.push("/cars");
