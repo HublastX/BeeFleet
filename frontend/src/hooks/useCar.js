@@ -13,7 +13,7 @@ export default function useCar() {
    const { showToast } = useToast();
    const API_URL =
       typeof window !== "undefined"
-         ? window.location.origin
+         ? process.env.NEXT_PUBLIC_CLIENT_API_URL || window.location.origin
          : process.env.NEXT_PUBLIC_API_URL;
 
 
