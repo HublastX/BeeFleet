@@ -8,7 +8,7 @@ const nextConfig = {
       return [
          {
             source: "/api/:path*",
-            destination: `${process.env.NEXT_PUBLIC_API_URL}/api/:path*`,
+            destination: "http://bee-fleet-datahub:5004/api/:path*",
          },
       ];
    },
