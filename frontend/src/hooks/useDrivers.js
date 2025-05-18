@@ -11,7 +11,7 @@ export default function useDrivers() {
    const [erro, setErro] = useState(null);
    const router = useRouter();
    const { showToast } = useToast();
-   const API_URL = "https://bee-fleet-datahub:5004";
+   const API_URL = "https://hublast.com/bee-fleet-datahub/api";
    // const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
    const getImageUrl = useCallback(
