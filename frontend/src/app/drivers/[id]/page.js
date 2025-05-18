@@ -198,7 +198,7 @@ function DriverPage() {
                <DetailDriverTable />
 
                {menuAberto && (
-                  <div className="absolute bottom-23 right-1 shadow-xl rounded-lg p-2 w-56 bg-white dark:bg-bee-dark-800 border border-gray-200 dark:border-bee-dark-600 z-50 animate-fade-in">
+                  <div className="fixed bottom-23 right-1 shadow-xl rounded-lg p-2 w-56 bg-white dark:bg-bee-dark-800 border border-gray-200 dark:border-bee-dark-600 z-50 animate-fade-in">
                      <ul className="flex flex-col gap-1">
                         <li>
                            <Link href={`/drivers/${id}/edit`} className="block">
