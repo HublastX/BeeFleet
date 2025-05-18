@@ -32,7 +32,7 @@ export default function RecentEvent() {
             <div className="py-4 text-center text-red-500">{erro}</div>
          ) : (
             <div className="relative overflow-x-auto w-full">
-               <Table className="">
+               <Table>
                   <TableHeader className="border-b border-bee-dark-300 dark:border-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
                      <TableRow>
                         <TableCell
