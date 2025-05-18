@@ -11,33 +11,33 @@ export default function useAuth() {
    const router = useRouter();
    const { showToast } = useToast();
    const API_URL = "https://hublast.com/bee-fleet-datahub/api";
-
+   // const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
    const getImageUrl = useCallback(
       (image) => {
          if (image && API_URL) {
-            return `${API_URL}/api/${image}`;
+            return `${API_URL}/api${image}`;
          }
          return `/images/${image}`;
       },
       [API_URL]
    );
 
-const handleError = (
-   error,
-   fallbackMessage = "Erro inesperado.",
-   type = "error"
-) => {
-   if (["error", "warning", "success", "info"].includes(fallbackMessage)) {
-      type = fallbackMessage;
-      fallbackMessage = "Erro inesperado.";
-   }
-   
-   const msg =
-      typeof error === "string" ? error : error.message || fallbackMessage;
-   setErro(msg);
-   showToast("Erro", type, msg, 5000);
-};
+   const handleError = (
+      error,
+      fallbackMessage = "Erro inesperado.",
+      type = "error"
+   ) => {
+      if (["error", "warning", "success"].includes(fallbackMessage)) {
+         type = fallbackMessage;
+         fallbackMessage = "Erro inesperado.";
+      }
+
+      const msg =
+         typeof error === "string" ? error : error.message || fallbackMessage;
+      setErro(msg);
+      showToast("Erro", type, msg, 5000);
+   };
 
    // Login
    const login = async (email, password) => {
@@ -78,7 +78,7 @@ const handleError = (
                "Login realizado com sucesso!"
             );
             localStorage.setItem("toastType", "success");
-            window.location.href = "/";
+            window.location.href = "/beefleet";
          } else {
             throw new Error("Erro inesperado ao fazer login.");
          }
@@ -94,16 +94,6 @@ const handleError = (
       setCarregando(true);
       setErro(null);
 
-      const existingManager = gestores.find(
-         (manager) => manager.email === email
-      );
-      if (existingManager) {
-         setErro("Email já cadastrado.");
-         showToast("Erro", "error", "Email já cadastrado.", 5000);
-         setCarregando(false);
-         return;
-      }
-
       try {
          const formData = new FormData();
          formData.append("name", name);
@@ -116,22 +106,26 @@ const handleError = (
             body: formData,
          });
 
-         if (!res.ok)
-            throw new Error(
-               "Erro ao registrar. Verifique os dados e tente novamente."
-            );
-
          const data = await res.json();
-         if (res.ok) {
-            localStorage.setItem(
-               "toastMessage",
-               "Gestor registrado com sucesso!"
+
+         if (!res.ok) {
+            if (data?.message?.toLowerCase().includes("email")) {
+                  handleError("Este e-mail já está em uso. Tente outro.", "error");
+                  return;
+               return;
+            }
+            throw new Error(
+               data.error ||
+                  "Erro ao registrar. Verifique os dados e tente novamente."
             );
-            localStorage.setItem("toastType", "success");
-            router.push("/login");
-         } else {
-            throw new Error(data.error || "Erro inesperado ao registrar.");
          }
+
+         localStorage.setItem(
+            "toastMessage",
+            "Gestor registrado com sucesso!"
+         );
+         localStorage.setItem("toastType", "success");
+         router.push("/login");
       } catch (error) {
          handleError(error, "Erro ao conectar ao servidor.", "warning");
       } finally {
@@ -180,7 +174,7 @@ const handleError = (
             5000
          );
 
-         window.location.href = "/profile";
+         window.location.href = "/beefleet/profile";
 
          return data;
       } catch (error) {
@@ -221,7 +215,7 @@ const handleError = (
       localStorage.removeItem("image");
 
       setGestor(null);
-      window.location.href = "/";
+      window.location.href = "/beefleet";
    };
 
    // Listar gestores

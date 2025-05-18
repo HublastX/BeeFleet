@@ -52,7 +52,7 @@ export default function CarCard({ searchTerm }) {
                <>
                   {carrosFiltrados.map((car) => (
                      <Link
-                        href={`cars/${car.id}`}
+                        href={`${car.id}`}
                         key={car.id}
                         className="relative bg-bee-dark-100 dark:bg-bee-dark-800 p-4 rounded-2xl shadow hover:shadow-xl transition duration-300 flex flex-col gap-4"
                      >

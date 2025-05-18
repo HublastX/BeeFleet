@@ -11,11 +11,8 @@ export default function useCar() {
    const [erro, setErro] = useState(null);
    const router = useRouter();
    const { showToast } = useToast();
-   const API_URL =
-      typeof window !== "undefined"
-         ? process.env.NEXT_PUBLIC_CLIENT_API_URL || window.location.origin
-         : process.env.NEXT_PUBLIC_API_URL;
-
+   const API_URL = "https://hublast.com/bee-fleet-datahub/api";
+   // const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
    const getImageUrl = useCallback(
       (image) => {
@@ -198,7 +195,7 @@ export default function useCar() {
             body: formData,
          });
 
-         if (!res.ok) throw new Error( "Erro ao criar carro. Tente novamente.");
+         if (!res.ok) throw new Error("Erro ao criar carro. Tente novamente.");
 
          const data = await res.json();
 
@@ -218,11 +215,11 @@ export default function useCar() {
          } else {
             handleError(
                data.error || "Erro ao criar carro. Tente novamente.",
-               "error",
+               "error"
             );
          }
       } catch (error) {
-         handleError(error, "Erro ao conectar ao servidor.","warning");
+         handleError(error, "Erro ao conectar ao servidor.", "warning");
       } finally {
          setCarregando(false);
       }

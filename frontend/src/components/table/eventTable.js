@@ -199,7 +199,7 @@ export default function EventTable({ searchTerm }) {
                         </TableCell>
                         <TableCell className="px-6 py-4 text-bee-dark-800 dark:text-bee-dark-100">
                            <Link
-                              href={`drivers/${event.driverId}`}
+                              href={`/drivers/${event.driverId}`}
                               className="underline hover:text-bee-yellow-600 transition-colors"
                            >
                               {event.driver?.name || "Não informado"}
@@ -224,7 +224,7 @@ export default function EventTable({ searchTerm }) {
                               </TableCell>
                               <TableCell className="px-0 py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
                                  <Link
-                                    href={`event?tipo=chegada&carroId=${event.carId}`}
+                                    href={`/event?tipo=chegada&carroId=${event.carId}`}
                                     className="inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-bee-yellow-100 dark:hover:bg-bee-dark-700 transition-colors"
                                  >
                                     <Icon
