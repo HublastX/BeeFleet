@@ -168,7 +168,7 @@ function Manager() {
             <div className="fixed bottom-23 right-1 shadow-xl rounded-lg p-2 w-56 bg-white dark:bg-bee-dark-800 border border-gray-200 dark:border-bee-dark-600 z-50 animate-fade-in">
                <ul className="flex flex-col gap-1">
                   <li>
-                     <Link href="profile/edit" className="block">
+                     <Link href="/edit" className="block">
                         <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
                            <Icon
                               name="lapis"
