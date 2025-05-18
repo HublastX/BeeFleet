@@ -15,10 +15,8 @@ export default function useEvents() {
    const [erro, setErro] = useState(null);
    const router = useRouter();
    const { showToast } = useToast();
-   const API_URL =
-      typeof window !== "undefined"
-         ? window.location.origin
-         : process.env.NEXT_PUBLIC_API_URL;
+   const API_URL = "https://hublast.com/bee-fleet-datahub/api";
+   // const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
    // Função para dados de motorista e carro
    const enrichEvents = useCallback(
