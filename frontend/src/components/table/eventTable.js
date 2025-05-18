@@ -105,7 +105,7 @@ export default function EventTable({ searchTerm }) {
    //    );
 
    return (
-      <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-50 dark:border-bee-dark-400 dark:bg-bee-dark-800 shadow-sm w-full min-w-max">
+      <div className="overflow-hidden rounded-xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm w-full min-w-max">
          {/* Abas */}
          <div className="flex gap-1 px-6 py-3 bg-bee-dark-100 dark:bg-bee-dark-800 border-b border-bee-dark-300 dark:border-bee-dark-400">
             <button
@@ -175,7 +175,7 @@ export default function EventTable({ searchTerm }) {
                            </TableCell>
                            <TableCell
                               isHeader
-                              className="px-0 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200"
+                              className="px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200"
                            >
                               Apagar
                            </TableCell>
@@ -183,7 +183,7 @@ export default function EventTable({ searchTerm }) {
                      )}
                   </TableRow>
                </TableHeader>
-               <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400 bg-white dark:bg-bee-dark-800">
+               <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
                   {currentEvents.map((event) => (
                      <TableRow
                         key={`cars/${event.carId}-${event.id}`}
@@ -251,7 +251,7 @@ export default function EventTable({ searchTerm }) {
                                       )
                                     : "-"}
                               </TableCell>
-                              <TableCell className="px-0 py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
+                              <TableCell className="px-2 py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
                                  <button
                                     aria-label="Deletar evento"
                                     onClick={() => abrirModalDeletar(event)}

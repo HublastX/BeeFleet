@@ -20,7 +20,6 @@ export default function ReportDriver() {
 
    return (
       <form
-         onSubmit={handleSubmit}
          className="space-y-6 md:space-y-8 mt-4 md:mt-6"
       >
          <div className="flex flex-col gap-6 md:gap-8">
