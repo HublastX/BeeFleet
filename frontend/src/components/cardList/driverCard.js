@@ -67,7 +67,7 @@ export default function DriverCard({ searchTerm }) {
                <>
                   {motoristasFiltrados.map((driver) => (
                      <Link
-                        href={`drivers/${driver.id}`}
+                        href={`${driver.id}`}
                         key={driver.id}
                         className="relative bg-bee-dark-100 dark:bg-bee-dark-800 p-4 rounded-2xl shadow hover:shadow-xl transition duration-300 flex flex-col gap-4"
                      >
