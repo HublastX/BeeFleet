@@ -77,9 +77,9 @@ export default function useReports() {
    };
 
    return {
-      relatorio, 
-      carregando, 
-      erro, 
+      relatorio,
+      carregando,
+      erro,
       getCarUsageReport,
    };
 }
