@@ -15,7 +15,7 @@ export default function useEvents() {
    const [erro, setErro] = useState(null);
    const router = useRouter();
    const { showToast } = useToast();
-   const API_URL = "https://hublast.com/bee-fleet-datahub";
+   const API_URL = "https://hublast.com/bee-fleet-datahub/api";
    // const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
    // Função para dados de motorista e carro
@@ -85,7 +85,7 @@ export default function useEvents() {
             const enrichedEvents = enrichEvents(rawEvents);
             setEvents(enrichedEvents);
          } catch (err) {
-            console.erro("Erro na requisição:", err);
+            console.error("Erro na requisição:", err);
             setErro(err.message);
          } finally {
             setCarregando(false);
@@ -122,7 +122,7 @@ export default function useEvents() {
          const enrichedEvent = enrichEvents([rawEvent])[0];
          return enrichedEvent;
       } catch (err) {
-         console.erro("Erro na requisição:", err);
+         console.error("Erro na requisição:", err);
          setErro(err.message);
       } finally {
          setCarregando(false);
