@@ -9,7 +9,7 @@ import useAuth from "@/hooks/useAuth";
 
 function Register() {
    const [show, setShow] = useState(false);
-   const { register, carregando, erro, gestores } = useAuth();
+   const { register, carregando, erro } = useAuth();
    const [name, setName] = useState("");
    const [email, setEmail] = useState("");
    const [password, setPassword] = useState("");
