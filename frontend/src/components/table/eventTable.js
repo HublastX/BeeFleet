@@ -154,7 +154,7 @@ export default function EventTable({ searchTerm }) {
                            </TableCell>
                            <TableCell
                               isHeader
-                              className="px-0 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200"
+                              className="px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200"
                            >
                               Finalizar
                            </TableCell>
