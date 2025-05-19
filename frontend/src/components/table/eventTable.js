@@ -177,6 +177,12 @@ export default function EventTable({ searchTerm }) {
                               isHeader
                               className="px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200"
                            >
+                              Relatorio
+                           </TableCell>
+                           <TableCell
+                              isHeader
+                              className="px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200"
+                           >
                               Apagar
                            </TableCell>
                         </>
@@ -250,6 +256,15 @@ export default function EventTable({ searchTerm }) {
                                          "pt-BR"
                                       )
                                     : "-"}
+                              </TableCell>
+                              <TableCell className="px-2 py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
+                                 <Link href="/report" className="inline-flex p-1 items-center justify-center rounded-full hover:bg-bee-yellow-100  transition-colors">
+                                    <Icon
+                                       strokeWidth={2}
+                                       name="reports"
+                                       className="size-6 text-bee-yellow-600"
+                                    />
+                                 </Link>
                               </TableCell>
                               <TableCell className="px-2 py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
                                  <button
