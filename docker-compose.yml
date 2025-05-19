@@ -94,8 +94,8 @@ services:
             context: ./frontend
             dockerfile: Dockerfile
         environment:
-            - NEXT_PUBLIC_API_URL=http://bee-fleet-datahub:5004
-            - NEXT_PUBLIC_CLIENT_API_URL=http://bee-fleet-datahub:5004
+            - NEXT_PUBLIC_API_URL=https://hublast.com/bee-fleet-datahub/api
+            - NEXT_PUBLIC_CLIENT_API_URL=https://hublast.com/bee-fleet-datahub/api
         restart: always
         ports:
             - "5006:5006"
