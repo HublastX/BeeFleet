@@ -8,7 +8,8 @@ export default function useReports() {
    const [carregando, setCarregando] = useState(false);
    const [erro, setErro] = useState(null);
    const { showToast } = useToast();
-   const API_URL = "https://hublast.com/bee-fleet-datahub/api";
+   // const API_URL = "https://hublast.com/bee-fleet-datahub/api";
+   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
    // Utilitário para exibir erro
    const handleError = (
