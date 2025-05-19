@@ -57,12 +57,13 @@ function Events() {
          {!tipoEvento && (
             <div className="flex flex-col gap-7 mt-6">
                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm text-sm text-gray-700 dark:text-gray-200">
-                  <p className="mb-2">
-                     1. Esta área é onde você gerencia os eventos de{" "}
-                     <span className="font-semibold text-black dark:text-white">chegada</span>
-                     <span className="font-semibold text-black dark:text-white">saída</span>
-                     motoristas.
-                  </p>
+               <p className="mb-2">
+                    1. Esta área é onde você gerencia os eventos de{" "}
+                        <span className="font-semibold text-black dark:text-white">chegada</span>{" "}
+                    e{" "}
+                        <span className="font-semibold text-black dark:text-white">saída</span>{" "}
+                        de motoristas.
+                </p>
                   <p className="mb-2">
                      2. Use o filtro no topo da página para escolher qual tipo
                      de evento você quer visualizar. Isso ajuda a manter o
