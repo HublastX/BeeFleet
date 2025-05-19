@@ -2,6 +2,7 @@
 import Btn from "@/elements/btn";
 import Icon from "@/elements/Icon";
 import InputText from "@/elements/inputText";
+import Badge from "@/elements/ui/badge/Badge";
 import useCar from "@/hooks/useCar";
 import useDrivers from "@/hooks/useDrivers";
 import useEvents from "@/hooks/useEvent";
@@ -10,6 +11,7 @@ import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useCallback } from "react";
+import EventList from "../profileList/eventList";
 
 export default function Saida() {
    const { motoristas } = useDrivers();
@@ -35,6 +37,10 @@ export default function Saida() {
 
    const [showInfo, setShowInfo] = useState(false);
 
+   // Estados para abrir os modais
+   const [openMotoristaList, setOpenMotoristaList] = useState(false);
+   const [openCarroList, setOpenCarroList] = useState(false);
+
    // Filtros
    const motoristasFiltrados = motoristas?.filter((m) => {
       const valor = motoristaInput.toLowerCase();
@@ -56,6 +62,11 @@ export default function Saida() {
          return c.chassis?.toLowerCase().includes(valor);
       return false;
    });
+
+   const motoristasDisponiveis = motoristas?.filter(
+      (m) => m.isAvailable === true
+   );
+   const carrosDisponiveis = carro?.filter((c) => c.status === "AVAILABLE");
 
    const selecionarMotorista = useCallback(
       (m) => {
@@ -172,11 +183,28 @@ export default function Saida() {
          </h1>
 
          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Seção Motorista */}
             <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
-               <div className="flex items-center gap-3 mb-4">
-                  <Icon name="user" className="size-6 text-bee-purple-500" />
-                  <h2 className="text-xl font-bold">Motorista</h2>
+               <div className="flex items-center flex-row justify-between w-full mb-4">
+                  <div className="flex items-center gap-3">
+                     <Icon name="user" className="size-6 text-bee-purple-500" />
+                     <h2 className="text-xl font-bold">Motorista</h2>
+                  </div>
+                  <button
+                     type="button"
+                     onClick={() => setOpenMotoristaList(true)}
+                     className="flex items- cursor-pointer"
+                  >
+                     <Badge
+                        size="sm"
+                        color={
+                           motoristasDisponiveis?.length > 0
+                              ? "success"
+                              : "error"
+                        }
+                     >
+                        disponíveis: {motoristasDisponiveis?.length}
+                     </Badge>
+                  </button>
                </div>
 
                <div className="space-y-4">
@@ -276,6 +304,20 @@ export default function Saida() {
                <div className="flex items-center gap-3 mb-4">
                   <Icon name="car" className="size-6 text-bee-purple-500" />
                   <h2 className="text-xl font-bold">Veículo</h2>
+                  <button
+                     type="button"
+                     onClick={() => setOpenCarroList(true)}
+                     className="ml-auto cursor-pointer"
+                  >
+                     <Badge
+                        size="sm"
+                        color={
+                           carrosDisponiveis?.length > 0 ? "success" : "error"
+                        }
+                     >
+                        disponíveis: {carrosDisponiveis?.length}
+                     </Badge>
+                  </button>
                </div>
 
                <div className="space-y-4">
@@ -453,6 +495,20 @@ export default function Saida() {
                   disabled={!selectedCarro || !selectedMotorista || carregando}
                />
             </div>
+
+            {/* Modais de seleção */}
+            <EventList
+               open={openMotoristaList}
+               onClose={() => setOpenMotoristaList(false)}
+               tipo="motoristas"
+               onSelect={selecionarMotorista}
+            />
+            <EventList
+               open={openCarroList}
+               onClose={() => setOpenCarroList(false)}
+               tipo="carros"
+               onSelect={selecionarCarro}
+            />
          </form>
       </div>
    );
