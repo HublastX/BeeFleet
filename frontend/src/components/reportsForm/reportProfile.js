@@ -4,124 +4,64 @@ import Icon from "@/elements/Icon";
 import InputText from "@/elements/inputText";
 import { useState } from "react";
 
-export default function ReportDriver() {
-   const [reportType, setReportType] = useState("single");
+export default function ReportProfile() {
    const [timePeriodEnabled, setTimePeriodEnabled] = useState(false);
    const [startDateOption, setStartDateOption] = useState("creation");
    const [endDateOption, setEndDateOption] = useState("current");
    const [customStartDate, setCustomStartDate] = useState("");
    const [customEndDate, setCustomEndDate] = useState("");
+   const [formError, setFormError] = useState("");
 
-   const [criterioDriver, setCriterioDriver] = useState("name");
-   const [driverInput, setDriverInput] = useState("");
-   const [selectedDriver, setSelectedDriver] = useState(null);
-   const [driverError, setDriverError] = useState(false);
-   const [driverStatusError, setDriverStatusError] = useState("");
+   const handleSubmit = (e) => {
+      e.preventDefault();
+      setFormError("");
+
+      let startDate, endDate;
+
+      if (timePeriodEnabled) {
+         if (startDateOption === "creation") {
+            // Aqui você pode definir a data de criação do perfil, se disponível
+            startDate = "2020-01-01";
+         } else if (startDateOption === "custom" && customStartDate) {
+            startDate = customStartDate;
+         } else {
+            const defaultDate = new Date();
+            defaultDate.setDate(defaultDate.getDate() - 30);
+            startDate = defaultDate.toISOString().split("T")[0];
+         }
+
+         if (endDateOption === "current") {
+            endDate = new Date().toISOString().split("T")[0];
+         } else if (endDateOption === "custom" && customEndDate) {
+            endDate = customEndDate;
+         } else {
+            endDate = new Date().toISOString().split("T")[0];
+         }
+      } else {
+         const endDateObj = new Date();
+         const startDateObj = new Date();
+         startDateObj.setDate(startDateObj.getDate() - 30);
+
+         startDate = startDateObj.toISOString().split("T")[0];
+         endDate = endDateObj.toISOString().split("T")[0];
+      }
+
+      if (new Date(startDate) > new Date(endDate)) {
+         setFormError("A data final deve ser maior que a data inicial");
+         return;
+      }
+
+      // Chame aqui a função de geração do relatório de perfil
+      // Exemplo: generateProfileReport({ startDate, endDate });
+   };
 
    return (
       <div className="max-w-4xl mx-auto p-4">
          <h1 className="text-2xl font-bold mb-6 flex items-center">
-            Relatório de Motorista
+            <Icon name="report" className="size-6 mr-2" />
+            Relatório do Perfil
          </h1>
-         <form className="space-y-6">
-            {/* Seção Tipo de Relatório */}
-            <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
-               <h2 className="text-xl font-bold flex gap-2 items-center mb-2">
-                  <Icon name="reports" className="size-5" /> Tipo de Relatório
-               </h2>
-               <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  Selecione se deseja um relatório de um motorista específico ou
-                  de todos os motoristas
-               </p>
-               <div className="flex flex-col sm:flex-row gap-3">
-                  <label className="inline-flex items-center">
-                     <input
-                        type="radio"
-                        className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
-                        name="reportType"
-                        value="single"
-                        checked={reportType === "single"}
-                        onChange={() => setReportType("single")}
-                     />
-                     <span className="ml-2">Motorista específico</span>
-                  </label>
-                  <label className="inline-flex items-center">
-                     <input
-                        type="radio"
-                        className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
-                        name="reportType"
-                        value="all"
-                        checked={reportType === "all"}
-                        onChange={() => setReportType("all")}
-                     />
-                     <span className="ml-2">Todos os motoristas</span>
-                  </label>
-               </div>
-            </div>
-
-            {/* Seção Motorista */}
-            {reportType === "single" && (
-               <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
-                  <h2 className="text-xl font-bold flex gap-2 items-center mb-2">
-                     <Icon name="user" className="size-5" /> Motorista
-                  </h2>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                     Você pode pesquisar por nome, telefone ou CNH
-                  </p>
-                  <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
-                     <label className="font-medium min-w-[120px]">
-                        Buscar por:
-                     </label>
-                     <select
-                        value={criterioDriver}
-                        onChange={(e) => {
-                           setCriterioDriver(e.target.value);
-                           setDriverInput("");
-                           setSelectedDriver(null);
-                           setDriverError(false);
-                           setDriverStatusError("");
-                        }}
-                        className="border border-bee-dark-300 dark:border-bee-dark-400 rounded px-3 py-2 bg-white dark:bg-bee-dark-800 w-full md:w-40"
-                     >
-                        <option value="name">Nome</option>
-                        <option value="phone">Telefone</option>
-                        <option value="cnh">CNH</option>
-                     </select>
-                     <div className="relative w-full">
-                        <InputText
-                           type="text"
-                           value={driverInput}
-                           onChange={(e) => {
-                              setDriverInput(e.target.value);
-                              setSelectedDriver(null);
-                              setDriverError(false);
-                              setDriverStatusError("");
-                           }}
-                           placeholder={`Digite ${
-                              criterioDriver === "name"
-                                 ? "o nome"
-                                 : criterioDriver === "phone"
-                                   ? "o telefone"
-                                   : "a CNH"
-                           } do motorista`}
-                           className={`${driverError || driverStatusError ? "border-red-500" : ""} w-full`}
-                        />
-                        {driverError && (
-                           <p className="text-red-500 text-sm font-bold mt-2">
-                              Motorista não encontrado. Verifique os dados ou
-                              cadastre um novo motorista.
-                           </p>
-                        )}
-                        {driverStatusError && (
-                           <p className="text-red-500 text-sm font-bold mt-2">
-                              {driverStatusError}
-                           </p>
-                        )}
-                     </div>
-                  </div>
-               </div>
-            )}
-
+         <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Seção Período */}
             <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
                <h2 className="text-xl font-bold flex gap-2 items-center mb-2">
@@ -157,13 +97,8 @@ export default function ReportDriver() {
                                     onChange={() =>
                                        setStartDateOption("creation")
                                     }
-                                    disabled={reportType === "all"}
                                  />
-                                 <span
-                                    className={`ml-2 ${reportType === "all" ? "text-gray-400 dark:text-gray-500" : ""}`}
-                                 >
-                                    Data de criação
-                                 </span>
+                                 <span className="ml-2">Data de criação</span>
                               </label>
                               <label className="inline-flex items-center">
                                  <input
@@ -238,6 +173,13 @@ export default function ReportDriver() {
                </div>
             </div>
 
+            {/* Mensagens de erro */}
+            {formError && (
+               <div className="text-red-500 text-sm font-bold mt-2">
+                  {formError}
+               </div>
+            )}
+
             {/* Botões */}
             <div className="flex flex-col sm:flex-row gap-4 mt-6">
                <Btn
@@ -250,7 +192,6 @@ export default function ReportDriver() {
                   type="submit"
                   texto="Gerar Relatório"
                   className="flex-[2] py-3 bg-bee-purple-500 hover:bg-bee-purple-600 text-lg"
-                  disabled={reportType === "single" && !selectedDriver}
                />
             </div>
          </form>
