@@ -202,7 +202,14 @@ export default function Saida() {
                               : "error"
                         }
                      >
-                        disponíveis: {motoristasDisponiveis?.length}
+                        <span className="hidden sm:inline">
+                           {motoristasDisponiveis?.length > 0
+                              ? `${motoristasDisponiveis?.length} disponível${motoristasDisponiveis?.length > 1 ? "s" : ""}`
+                              : "0 disponível"}
+                        </span>
+                        <span className="sm:hidden">
+                           {motoristasDisponiveis?.length}
+                        </span>
                      </Badge>
                   </button>
                </div>
@@ -315,7 +322,14 @@ export default function Saida() {
                            carrosDisponiveis?.length > 0 ? "success" : "error"
                         }
                      >
-                        disponíveis: {carrosDisponiveis?.length}
+                        <span className="hidden sm:inline">
+                           {carrosDisponiveis?.length > 0
+                              ? `${carrosDisponiveis?.length} disponível${carrosDisponiveis?.length > 1 ? "s" : ""}`
+                              : "0 disponível"}
+                        </span>
+                        <span className="sm:hidden">
+                           {carrosDisponiveis?.length}
+                        </span>
                      </Badge>
                   </button>
                </div>
@@ -420,7 +434,7 @@ export default function Saida() {
                >
                   <div className="flex items-center gap-3">
                      <Icon
-                        name="checklist"
+                        name="evento"
                         className="size-6 text-bee-purple-500"
                      />
                      <h2 className="text-xl font-bold">Resumo da Saída</h2>
@@ -486,12 +500,12 @@ export default function Saida() {
                   type="button"
                   texto="Cancelar"
                   onClick={() => router.back()}
-                  className="flex-1 py-3 border border-red-400 bg-red-400 hover:bg-red-500"
+                  className="flex-[1] py-3 border border-red-400 bg-red-400 hover:bg-red-500"
                />
                <Btn
                   type="submit"
                   texto={carregando ? "Processando..." : "Confirmar Saída"}
-                  className="flex-1 py-3 bg-bee-purple-500 hover:bg-bee-purple-600 text-lg"
+                  className="flex-[2] py-3 bg-bee-purple-500 hover:bg-bee-purple-600 text-lg"
                   disabled={!selectedCarro || !selectedMotorista || carregando}
                />
             </div>

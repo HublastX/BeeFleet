@@ -94,6 +94,7 @@ export default function RecentEvent() {
                                                 ? "success"
                                                 : "error"
                                           }
+                                          className="text-nowrap"
                                        >
                                           {event.eventType === "CHECKOUT"
                                              ? "Em uso"
