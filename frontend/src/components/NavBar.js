@@ -41,11 +41,7 @@ const navItem = [
    {
       name: "Graficos",
       icon: "graficoPizza",
-      subItems: [
-         { name: "novos usuarios", path: "/blank" },
-         { name: "novos carros", path: "/error-404" },
-         { name: "pedidos de carro", path: "/error-501" },
-      ],
+      path: "/charts",
    },
 ];
 
