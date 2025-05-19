@@ -38,11 +38,6 @@ const navItem = [
       name: "Relatorio",
       path: "/report",
    },
-   {
-      name: "Graficos",
-      icon: "graficoPizza",
-      path: "/charts",
-   },
 ];
 
 const othersItems = [
@@ -173,7 +168,7 @@ const NavBar = () => {
       (path) => pathname === path || pathname.startsWith(`${path}/`),
       [pathname]
    );
-   
+
    useEffect(() => {
       let submenuMatched = false;
       ["main", "others"].forEach((menuType) => {
