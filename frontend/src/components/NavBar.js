@@ -34,6 +34,11 @@ const navItem = [
       path: "/event",
    },
    {
+      icon: "reports",
+      name: "Relatorio",
+      path: "/report",
+   },
+   {
       name: "Graficos",
       icon: "graficoPizza",
       subItems: [
