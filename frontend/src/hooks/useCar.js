@@ -11,8 +11,8 @@ export default function useCar() {
    const [erro, setErro] = useState(null);
    const router = useRouter();
    const { showToast } = useToast();
-   const API_URL = "https://hublast.com/bee-fleet-datahub/api";
-   // const API_URL = process.env.NEXT_PUBLIC_API_URL;
+   // const API_URL = "https://hublast.com/bee-fleet-datahub/api";
+   const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
    const getImageUrl = useCallback(
       (image) => {
