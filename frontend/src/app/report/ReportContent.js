@@ -2,6 +2,7 @@
 import ReportCar from "@/components/reportsForm/reportCar";
 import ReportDriver from "@/components/reportsForm/reportDriver";
 import ReportEvent from "@/components/reportsForm/reportEvent";
+import ReportProfile from "@/components/reportsForm/reportProfile";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -38,6 +39,7 @@ export default function ReportContent() {
                   <option value="carro">Carro</option>
                   <option value="motorista">Motorista</option>
                   <option value="evento">Evento</option>
+                  <option value="pessoal">Pessoal</option>
                </select>
             </div>
          </div>
@@ -45,6 +47,7 @@ export default function ReportContent() {
             {selectedReport === "carro" && <ReportCar />}
             {selectedReport === "motorista" && <ReportDriver />}
             {selectedReport === "evento" && <ReportEvent />}
+            {selectedReport === "pessoal" && <ReportProfile />}
          </div>
       </div>
    );
