@@ -27,7 +27,7 @@ export default function ProfileListModal({ open, onClose, tipo }) {
 
    return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
-         <div className="bg-white dark:bg-bee-dark-800 rounded-xl p-6 w-full max-w-lg shadow-2xl relative border border-gray-200 dark:border-bee-dark-700 transform transition-all duration-300 scale-95 hover:scale-100">
+         <div className="bg-white dark:bg-bee-dark-800 rounded-xl p-6 w-full max-w-lg shadow-2xl relative border border-gray-200 dark:border-bee-dark-400 transform transition-all duration-300 scale-95 hover:scale-100">
             <button
                className="absolute top-4 right-4 p-1 rounded-xl hover:bg-gray-100 dark:hover:bg-bee-dark-400 transition-colors"
                onClick={onClose}
@@ -60,7 +60,7 @@ export default function ProfileListModal({ open, onClose, tipo }) {
                         return (
                            <li
                               key={item.id}
-                              className="border-b border-gray-100 dark:border-bee-dark-700 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-bee-dark-400/50 transition-colors"
+                              className="border-b border-gray-100 dark:border-bee-dark-400 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-bee-dark-400/50 transition-colors"
                            >
                               {tipo === "motoristas" && (
                                  <div className="flex flex-col">
