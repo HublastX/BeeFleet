@@ -6,7 +6,6 @@ import {
    TableRow,
 } from "@/elements/ui/table";
 import Badge from "@/elements/ui/badge/Badge";
-import Icon from "@/elements/Icon";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import useEvents from "@/hooks/useEvent";
@@ -31,19 +30,19 @@ export default function RecentEvent() {
          ) : erro ? (
             <div className="py-4 text-center text-red-500">{erro}</div>
          ) : (
-            <div className="relative overflow-x-auto w-full">
+            <div className="relative overflow-x-auto w-full no-scrollbar">
                <Table>
                   <TableHeader className="border-b border-bee-dark-300 dark:border-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
                      <TableRow>
                         <TableCell
                            isHeader
-                           className="py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[180px]"
+                           className="py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[100px]"
                         >
                            Motorista
                         </TableCell>
                         <TableCell
                            isHeader
-                           className="py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[120px]"
+                           className="py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[100px]"
                         >
                            Carro
                         </TableCell>
