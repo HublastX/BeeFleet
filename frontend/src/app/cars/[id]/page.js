@@ -13,6 +13,7 @@ import DeleteConfirmation from "@/components/ConfirmDeleteModal";
 import { useNavBar } from "@/components/navbar/navBarContext";
 import useEvents from "@/hooks/useEvent";
 import useDrivers from "@/hooks/useDrivers";
+import DetailSkeleton from "@/elements/ui/skeleton/DetailSkeleton";
 
 function formatarData(dataISO) {
    const data = new Date(dataISO);
@@ -90,27 +91,25 @@ function CarPage() {
    }`;
 
    return (
-         <div className="p-6">
-             {carregando && <p>Carregando...</p>}
-            {erro && (
-             <div className="flex items-start gap-3 bg-white dark:bg-bee-dark-800 border border-black dark:border-bee-dark-400 text-red-700 dark:text-red-400 p-4 rounded-lg shadow max-w-xl mx-auto mt-8">
-                <span className="text-2xl">🚫</span>
-                <div>
-                <p className="font-semibold text-lg">
-                Não foi possível encontrar o carro.
-                </p>
-                <p className="text-sm">
-                Tente novamente mais tarde ou verifique a conexão.
-                </p>
-                <p className="text-xs mt-1 text-red-700 dark:text-red-400">
-                 Detalhes técnicos: {erro}
-             </p>
-        </div>
-    </div>
-    )}
-
+      <div className="p-6">
+         {carregando && <DetailSkeleton />}
+         {erro && (
+            <div className="flex items-start gap-3 bg-white dark:bg-bee-dark-800 border border-black dark:border-bee-dark-400 text-red-700 dark:text-red-400 p-4 rounded-lg shadow max-w-xl mx-auto mt-8">
+               <span className="text-2xl">🚫</span>
+               <div>
+                  <p className="font-semibold text-lg">
+                     Não foi possível encontrar o carro.
+                  </p>
+                  <p className="text-sm">
+                     Tente novamente mais tarde ou verifique a conexão.
+                  </p>
+                  <p className="text-xs mt-1 text-red-700 dark:text-red-400">
+                     Detalhes técnicos: {erro}
+                  </p>
+               </div>
+            </div>
+         )}
          {!carregando && !erro && !carroData && <p>Nenhum carro encontrado.</p>}
-
          {carroData && (
             <div className="gap-5 flex flex-col">
                <div className="flex flex-col md:flex-row gap-6">
