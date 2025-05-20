@@ -3,7 +3,7 @@ import Icon from "@/elements/Icon";
 export default function DeleteConfirmation({ link, tipo, onClose }) {
    return (
       <div className="fixed inset-0 flex items-center justify-center backdrop-blur-sm z-50">
-         <div className="bg-white max-w-1/3 dark:bg-bee-dark-800 dark:border-bee-dark-400 dark:border-1 py-5 px-15 rounded shadow-lg text-center">
+        <div className="bg-white w-full max-w-md min-w-[300px] px-6 py-5 rounded shadow-lg text-center dark:bg-bee-dark-800 dark:border dark:border-bee-dark-400">
             <div className="text-5xl text-red-500 mb-4 text-center flex justify-center">
                <Icon
                   name="xMark"
