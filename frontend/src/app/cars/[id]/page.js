@@ -93,7 +93,7 @@ function CarPage() {
    return (
       <div className="p-6">
          {carregando && <DetailSkeleton />}
-         {erro && (
+         {erro && !carregando && (
             <div className="flex items-start gap-3 bg-white dark:bg-bee-dark-800 border border-black dark:border-bee-dark-400 text-red-700 dark:text-red-400 p-4 rounded-lg shadow max-w-xl mx-auto mt-8">
                <span className="text-2xl">🚫</span>
                <div>
