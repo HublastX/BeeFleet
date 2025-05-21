@@ -6,10 +6,11 @@ import useCar from "@/hooks/useCar";
 import useReports from "@/hooks/useReports";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import CarReportPreview from "../reports/driver";
 
 export default function ReportCar() {
    const { carro } = useCar();
-   const { getCarUsageReport, carregando, erro } = useReports();
+   const { getAllCarUsageReport, carregando, erro, relatorio } = useReports();
    const [reportType, setReportType] = useState("single");
    const [timePeriodEnabled, setTimePeriodEnabled] = useState(false);
    const [startDateOption, setStartDateOption] = useState("creation");
@@ -55,73 +56,14 @@ export default function ReportCar() {
       setFormError("");
 
       if (reportType === "single" && !selectedCarro) {
-         setCarroStatusError("Por favor, selecione um carro válido");
+         setFormError("Selecione um carro para gerar o relatório.");
          return;
       }
 
-      let startDate, endDate;
-
-      if (timePeriodEnabled) {
-         if (startDateOption === "creation" && reportType === "single") {
-            startDate = selectedCarro.createdAt;
-         } else if (startDateOption === "custom" && customStartDate) {
-            startDate = customStartDate;
-         } else {
-            const defaultDate = new Date();
-            defaultDate.setDate(defaultDate.getDate() - 30);
-            startDate = defaultDate.toISOString().split("T")[0];
-         }
-
-         if (endDateOption === "current") {
-            endDate = new Date().toISOString().split("T")[0];
-         } else if (endDateOption === "custom" && customEndDate) {
-            endDate = customEndDate;
-         } else {
-            endDate = new Date().toISOString().split("T")[0];
-         }
-      } else {
-         const endDateObj = new Date();
-         const startDateObj = new Date();
-         startDateObj.setDate(startDateObj.getDate() - 30);
-
-         startDate = startDateObj.toISOString().split("T")[0];
-         endDate = endDateObj.toISOString().split("T")[0];
-      }
-
-      if (new Date(startDate) > new Date(endDate)) {
-         setFormError("A data final deve ser maior que a data inicial");
-         return;
-      }
-
-      try {
-         const result = await getCarUsageReport({
-            startDate,
-            endDate,
-            carId: reportType === "single" ? selectedCarro.id : null,
-         });
-
-         if (!result) {
-            setFormError("Não foi possível gerar o relatório");
-            return;
-         }
-
-         if (result instanceof Blob) {
-            const url = window.URL.createObjectURL(result);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `relatorio-${reportType === "single" ? selectedCarro.plate : "todos"}-${startDate}_${endDate}.${result.type.split("/")[1]}`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            a.remove();
-         } else if (typeof result === "object") {
-            console.log("Relatório gerado:", result);
-         } else {
-            console.log("Resposta da API:", result);
-         }
-      } catch (error) {
-         console.error("Erro ao gerar relatório:", error);
-         setFormError(error.message || "Erro ao processar o relatório");
+      if (reportType === "all") {
+         await getAllCarUsageReport();
+      } else if (reportType === "single" && selectedCarro) {
+         await getAllCarUsageReport(selectedCarro.id);
       }
    };
 
@@ -165,7 +107,6 @@ export default function ReportCar() {
                   </label>
                </div>
             </div>
-
             {/* Seção Carro */}
             {reportType === "single" && (
                <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
@@ -252,7 +193,6 @@ export default function ReportCar() {
                   )}
                </div>
             )}
-
             {/* Seção Período */}
             <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
                <h2 className="text-xl font-bold flex gap-2 items-center mb-2">
@@ -368,7 +308,6 @@ export default function ReportCar() {
                   )}
                </div>
             </div>
-
             {/* Mensagens de erro */}
             {formError && (
                <div className="text-red-500 text-sm font-bold mt-2">
@@ -378,7 +317,6 @@ export default function ReportCar() {
             {erro && (
                <div className="text-red-500 text-sm font-bold mt-2">{erro}</div>
             )}
-
             {/* Botões */}
             <div className="flex flex-col sm:flex-row gap-4 mt-6">
                <Btn
@@ -396,6 +334,11 @@ export default function ReportCar() {
                   }
                />
             </div>
+            {relatorio && (
+               <div className="mt-10">
+                  <CarReportPreview reportData={relatorio} />
+               </div>
+            )}
          </form>
       </div>
    );
