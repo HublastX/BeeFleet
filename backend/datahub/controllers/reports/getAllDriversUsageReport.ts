@@ -8,14 +8,7 @@ import {
 
 export const getAllDriversUsageReport = async (req: Request, res: Response) => {
     try {
-        const { managerId } = req.query;
-
-        if (!managerId) {
-            return res.status(400).json({ error: "Manager ID is required" });
-        }
-
         const drivers: Driver[] = await prisma.driver.findMany({
-            where: { managerId: managerId as string },
             include: {
                 events: {
                     where: { eventType: "RETURN" },

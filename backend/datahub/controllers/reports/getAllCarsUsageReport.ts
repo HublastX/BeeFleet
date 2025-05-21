@@ -1,28 +1,29 @@
-import { Request, Response } from "express";
 import { prisma } from "../../config/prisma";
-import { CarUsageReport } from "../../schemas/reportInterface";
+import { Request, Response } from "express";
+import {
+    Car,
+    CarReport,
+    DriverUsageDetail,
+} from "../../schemas/reportInterface";
 
 export const getAllCarsUsageReport = async (req: Request, res: Response) => {
     try {
-        const { managerId } = req.query;
-
-        if (!managerId || typeof managerId !== "string") {
-            return res
-                .status(400).json({ error: "Manager ID is required and must be a string" });
-        }
-
-        const cars = await prisma.car.findMany({
-            where: { managerId },
+        const cars: Car[] = await prisma.car.findMany({
             include: {
                 events: {
                     where: { eventType: "RETURN" },
+                    include: { driver: true },
                     orderBy: { createdAt: "desc" },
                 },
             },
         });
 
-        const carsReport: CarUsageReport[] = cars.map((car) => {
+        const carsReport: CarReport[] = cars.map((car) => {
             const totalUsageTimes = car.events.length;
+
+            const uniqueDrivers = new Set(
+                car.events.map((event) => event.driver.id)
+            );
 
             const totalOdometerChange = car.events.reduce((acc, event) => {
                 return acc + event.odometer;
@@ -31,10 +32,26 @@ export const getAllCarsUsageReport = async (req: Request, res: Response) => {
             const lastUsed =
                 car.events.length > 0 ? car.events[0].createdAt : null;
 
-            const averageDailyUsage =
-                totalUsageTimes > 0
-                    ? (totalOdometerChange / totalUsageTimes).toFixed(2)
-                    : 0;
+            const driverUsageDetails: DriverUsageDetail[] = Array.from(
+                uniqueDrivers
+            ).map((driverId) => {
+                const driverEvents = car.events.filter(
+                    (event) => event.driver.id === driverId
+                );
+                const driver = driverEvents[0].driver;
+
+                return {
+                    driverId: driver.id,
+                    name: driver.name,
+                    phone: driver.phone,
+                    license: driver.license,
+                    totalUsageTimes: driverEvents.length,
+                    totalOdometerChange: driverEvents.reduce(
+                        (acc, event) => acc + event.odometer,
+                        0
+                    ),
+                };
+            });
 
             return {
                 id: car.id,
@@ -48,9 +65,9 @@ export const getAllCarsUsageReport = async (req: Request, res: Response) => {
                 status: car.status,
                 totalUsageTimes,
                 totalOdometerChange,
+                uniqueDriversUsed: uniqueDrivers.size,
                 lastUsed,
-                averageDailyUsage,
-                currentOdometer: car.odometer,
+                driverUsageDetails,
             };
         });
 
