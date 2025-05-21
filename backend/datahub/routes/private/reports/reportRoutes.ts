@@ -5,6 +5,8 @@ import { getCarUsageReport } from "../../../controllers/reports/getCarUsageRepor
 import { getDriverUsageReport } from "../../../controllers/reports/getDriverUsageReport";
 import { getAllCarsUsageReport } from "../../../controllers/reports/getAllCarsUsageReport";
 import { getAllDriversUsageReport } from "../../../controllers/reports/getAllDriversUsageReport";
+import { getAllEventsReport } from "../../../controllers/reports/getAllEventsReport";
+import { getAllManagersReport } from "../../../controllers/reports/getAllManagersReport";
 
 const reportRoutes: Router = express.Router();
 
@@ -54,6 +56,38 @@ reportRoutes.get(
     async (req: Request, res: Response) => {
         try {
             await getAllDriversUsageReport(req, res);
+        } catch (error) {
+            res.status(500).send({ error: "Internal Server Error" });
+        }
+    }
+);
+
+reportRoutes.get(
+    "/report/all-events",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    async (req: Request, res: Response) => {
+        try {
+            await getAllEventsReport(req, res);
+        } catch (error) {
+            res.status(500).send({ error: "Internal Server Error" });
+        }
+    }
+);
+
+reportRoutes.get(
+    "/report/all-managers",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    async (req: Request, res: Response) => {
+        try {
+            await getAllManagersReport(req, res);
         } catch (error) {
             res.status(500).send({ error: "Internal Server Error" });
         }
