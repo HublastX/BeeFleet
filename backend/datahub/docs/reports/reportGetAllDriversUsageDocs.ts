@@ -6,15 +6,9 @@ export const DOCS_REPORT_DRIVER_GET_ALL_USAGE = {
      *     tags:
      *       - Reports
      *     summary: Lista o uso de todos os motoristas por um relatório
-     *     description: Obtém um relatório de todo o uso dos motoristas filtrado pelo ID do gerente
-     *     operationId: getAllDriversUsageReport
-     *     parameters:
-     *       - name: managerId
-     *         in: query
-     *         required: true
-     *         description: Filtra pelo ID do gestor
-     *         schema:
-     *           type: string
+     *     description: Obtém um relatório de todo o uso dos motoristas
+     *     security:
+     *       - bearerAuth: []
      *     responses:
      *       200:
      *         description: All drivers usage report successfully retrieved.

@@ -10,15 +10,8 @@ export const DOCS_REPORT_CAR_GET_ALL_USAGE = {
      *     tags:
      *       - Reports
      *     summary: Lista o uso de todos os veículos por um relatório
-     *     description: Obtém um relatório de todo o uso dos veículos filtrado pelo ID do gerente
+     *     description: Obtém um relatório de todo o uso dos veículos
      *     operationId: getAllCarUsageReport
-     *     parameters:
-     *       - name: managerId
-     *         in: query
-     *         required: true
-     *         description: Filtra pelo ID do gestor
-     *         schema:
-     *           type: string
      *     responses:
      *       200:
      *         description: All cars usage report successfully retrieved.
