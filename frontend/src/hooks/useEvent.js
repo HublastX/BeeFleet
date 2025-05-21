@@ -277,6 +277,6 @@ export default function useEvents() {
       getEvent,
       getEventsByManager,
       countEventsByManager: getEventsByManager().length,
-      deleteEvent, // <-- adicionado aqui
+      deleteEvent,
    };
 }
