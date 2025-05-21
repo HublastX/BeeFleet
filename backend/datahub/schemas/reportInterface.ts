@@ -41,6 +41,41 @@ export interface Driver {
     events: DriverEvent[];
 }
 
+export interface CarEvent {
+    id: string
+    eventType: string;
+    odometer: number;
+    createdAt: Date;
+    driver: {
+        id: string;
+        name: string;
+        phone: string;
+        license: string;
+    }
+}
+
+export interface Car {
+    id: string;
+    renavam: string;
+    chassis: string;
+    plate: string;
+    brand: string;
+    model: string;
+    year: number;
+    color: string;
+    status: string;
+    events: CarEvent[];
+}
+
+export interface DriverUsageDetail {
+    driverId: string;
+    name: string;
+    phone: string;
+    license: string;
+    totalUsageTimes: number;
+    totalOdometerChange: number;
+}
+
 export interface CarUsageDetail {
     carId: string;
     renavam: string;
@@ -65,6 +100,21 @@ export interface DriverReport {
     totalOdometerChange: number;
     lastUsed: Date | null;
     carUsageDetails: CarUsageDetail[];
+}
+
+export interface CarReport {
+    id: string;
+    renavam: string;
+    chassis: string;
+    plate: string;
+    brand: string;
+    model: string;
+    year: number;
+    color: string;
+    status: string;
+    uniqueDriversUsed: number;
+    totalOdometerChange: number;
+    driverUsageDetails: DriverUsageDetail[];
 }
 
 export interface DriverUsageReportRequest {
@@ -113,5 +163,146 @@ export interface CarUsage {
     color: string;
     status: string;
     usageCount: number;
+    drivers: string[];
     totalOdometer: number;
+}
+
+export interface Event {
+    id: string;
+    eventType: string;
+    odometer: number;
+    isActive: boolean;
+    status: string;
+    createdAt: Date;
+    endedAt: Date | null;
+    managerId: string;
+    driverId: string;
+    carId: string;
+    checkoutEventId: string | null;
+}
+
+export interface EventReport {
+    id: string;
+    eventType: string;
+    odometer: number;
+    isActive: boolean;
+    status: string;
+    createdAt: Date;
+    endedAt: Date | null;
+    managerId: string;
+    driverId: string;
+    carId: string;
+    checkoutEventId: string | null;
+    driverDetails: {
+        id: string;
+        name: string;
+        phone: string;
+        license: string;
+    };
+    carDetails: {
+        id: string;
+        renavam: string;
+        chassis: string;
+        plate: string;
+        brand: string;
+        model: string;
+        year: number;
+        color: string;
+        status: string;
+    };
+}
+
+export interface EventDetail {
+    eventId: string;
+    eventType: string;
+    isActive: boolean;
+    status: string;
+    createAt: Date;
+    endedAt: Date | null;
+    managerId: string;
+    driverId: string;
+    carId: string;
+    checkoutEventId: string | null;
+    driverDetails: {
+        id: string;
+        name: string;
+        phone: string;
+        license: string;
+    };
+    carDetails: {
+        id: string;
+        renavam: string;
+        chassis: string;
+        plate: string;
+        brand: string;
+        model: string;
+        year: number;
+        color: string;
+        status: string;
+    };
+}
+
+
+export interface Manager {
+    id: string;
+    email: string;
+    password: string;
+    name: string;
+    createdAt: Date;
+    updatedAt: Date;
+    events: ManagerEvent[];
+}
+
+export interface DriverManag {
+    id: string;
+    name: string;
+    phone: string;
+    license: string;
+}
+
+export interface CarManag {
+    id: string;
+    renavam: string;
+    chassis: string;
+    plate: string;
+    brand: string;
+    model: string;
+    year: number;
+    color: string;
+    status: string;
+}
+
+export interface ManagerReport {
+    id: string;
+    name: string;
+    email: string;
+    createdAt: Date;
+    updatedAt: Date;
+    drivers: DriverManag[];
+    cars: CarManag[];
+    events: Event[];
+}
+
+export interface ManagerEvent {
+    id: string;
+    eventType: string;
+    odometer: number;
+    createdAt: Date;
+    driver: {
+        id: string;
+        name: string;
+        phone: string;
+        license: string;
+    };
+    car: {
+        id: string;
+        renavam: string;
+        chassis: string;
+        plate: string;
+        brand: string;
+        model: string;
+        year: number;
+        color: string;
+        status: string;
+    };
 }
