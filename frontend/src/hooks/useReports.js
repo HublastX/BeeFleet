@@ -8,7 +8,6 @@ export default function useReports() {
    const [carregando, setCarregando] = useState(false);
    const [erro, setErro] = useState(null);
    const { showToast } = useToast();
-   // const API_URL = "https://hublast.com/bee-fleet-datahub/api";
    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
    // Utilitário para exibir erro
@@ -17,7 +16,7 @@ export default function useReports() {
       fallbackMessage = "Erro inesperado.",
       type = "error"
    ) => {
-      if (["error", "warning", "success", "info"].includes(fallbackMessage)) {
+      if (["error", "warning", "success"].includes(fallbackMessage)) {
          type = fallbackMessage;
          fallbackMessage = "Erro inesperado.";
       }
@@ -29,32 +28,16 @@ export default function useReports() {
    };
 
    // Gerar relatório de uso de carro
-   const getCarUsageReport = async ({ startDate, endDate, carId }) => {
-      if (!gestor?.token) {
-         handleError("Usuário não autenticado");
-         return null;
-      }
-
-      if (!startDate || !endDate) {
-         handleError("Datas de início e fim são obrigatórias");
-         return null;
-      }
-
+   const getAllCarUsageReport = async (carId = null) => {
       setCarregando(true);
       setErro(null);
-
       try {
-         const params = new URLSearchParams({
-            startDate,
-            endDate,
-            managerId: gestor.id,
-         });
-
-         if (carId) params.append("carId", carId);
-
-         const url = `${API_URL}/api/reports/car-usage?${params.toString()}`;
-
+         let url = `${API_URL}/api/report/all-cars`;
+         if (carId) {
+            url += `?${encodeURIComponent(carId)}`;
+         }
          const res = await fetch(url, {
+            method: "GET",
             headers: {
                "Content-Type": "application/json",
                Authorization: `Bearer ${gestor.token}`,
@@ -63,15 +46,20 @@ export default function useReports() {
 
          if (!res.ok) {
             const errorData = await res.json();
-            throw new Error(errorData.error || "Falha ao gerar relatório");
+            throw new Error(errorData.error || "Erro ao buscar relatório.");
          }
 
          const data = await res.json();
          setRelatorio(data);
-         return data;
-      } catch (err) {
-         handleError(err);
-         return null;
+         showToast(
+            "Relatório carregado!",
+            "success",
+            "Relatório de uso de carros carregado com sucesso.",
+            4000
+         );
+         console.log("Relatório de uso de carros:", data);
+      } catch (error) {
+         handleError(error, "Erro ao buscar relatório de uso de carros.");
       } finally {
          setCarregando(false);
       }
@@ -81,6 +69,6 @@ export default function useReports() {
       relatorio,
       carregando,
       erro,
-      getCarUsageReport,
+      getAllCarUsageReport,
    };
 }
