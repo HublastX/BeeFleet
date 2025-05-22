@@ -34,7 +34,7 @@ export default function useReports() {
       try {
          let url = `${API_URL}/api/report/all-cars`;
          if (carId) {
-            url += `?${encodeURIComponent(carId)}`;
+            url += `?carId=${carId}`;
          }
          const res = await fetch(url, {
             method: "GET",
@@ -49,7 +49,16 @@ export default function useReports() {
             throw new Error(errorData.error || "Erro ao buscar relatório.");
          }
 
-         const data = await res.json();
+         let data = await res.json();
+
+         if (carId && data.cars) {
+            data = {
+               ...data,
+               cars: data.cars.filter((c) => c.id === carId),
+               totalCars: 1,
+            };
+         }
+
          setRelatorio(data);
          showToast(
             "Relatório carregado!",
@@ -65,10 +74,105 @@ export default function useReports() {
       }
    };
 
+   // Gerar relatório de uso de motoristas
+   const getAllDriversUsageReport = async (driverId = null) => {
+      setCarregando(true);
+      setErro(null);
+      try {
+         let url = `${API_URL}/api/report/all-drivers`;
+         if (driverId) {
+            url += `?driverId=${driverId}`;
+         }
+         const res = await fetch(url, {
+            method: "GET",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+
+         if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || "Erro ao buscar relatório.");
+         }
+
+         let data = await res.json();
+
+         if (driverId && data.drivers) {
+            data = {
+               ...data,
+               drivers: data.drivers.filter((c) => c.id === driverId),
+               drivers: 1,
+            };
+         }
+
+         setRelatorio(data);
+         showToast(
+            "Relatório carregado!",
+            "success",
+            "Relatório de uso de motoristas carregado com sucesso.",
+            4000
+         );
+         console.log("Relatório de uso de motoristas:", data);
+      } catch (error) {
+         handleError(error, "Erro ao buscar relatório de uso de motoristas.");
+      } finally {
+         setCarregando(false);
+      }
+   };
+
+   const getAllEventsUsageReport = async (eventId = null) => {
+      setCarregando(true);
+      setErro(null);
+      try {
+         let url = `${API_URL}/api/report/all-events`;
+         if (eventId) {
+            url += `?eventId=${eventId}`;
+         }
+         const res = await fetch(url, {
+            method: "GET",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+
+         if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || "Erro ao buscar relatório.");
+         }
+
+         let data = await res.json();
+
+         if (eventId && data.events) {
+            data = {
+               ...data,
+               events: data.events.filter((c) => c.id === eventId),
+               events: 1,
+            };
+         }
+
+         setRelatorio(data);
+         showToast(
+            "Relatório carregado!",
+            "success",
+            "Relatório de uso de eventos carregado com sucesso.",
+            4000
+         );
+         console.log("Relatório de uso de eventos:", data);
+      } catch (error) {
+         handleError(error, "Erro ao buscar relatório de uso de eventos.");
+      } finally {
+         setCarregando(false);
+      }
+   };
+
    return {
       relatorio,
       carregando,
       erro,
       getAllCarUsageReport,
+      getAllDriversUsageReport,
+      getAllEventsUsageReport,
    };
 }

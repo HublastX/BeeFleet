@@ -2,28 +2,74 @@
 import Btn from "@/elements/btn";
 import Icon from "@/elements/Icon";
 import InputText from "@/elements/inputText";
-import { useState } from "react";
+import useDrivers from "@/hooks/useDrivers";
+import useReports from "@/hooks/useReports";
+import { useState, useEffect } from "react";
+import DriverReportPreview from "../reports/DriverReportPreview";
 
 export default function ReportDriver() {
+   const { motoristas } = useDrivers();
+   const { getAllDriversUsageReport, carregando, erro, relatorio } =
+      useReports();
    const [reportType, setReportType] = useState("single");
-   const [timePeriodEnabled, setTimePeriodEnabled] = useState(false);
-   const [startDateOption, setStartDateOption] = useState("creation");
-   const [endDateOption, setEndDateOption] = useState("current");
-   const [customStartDate, setCustomStartDate] = useState("");
-   const [customEndDate, setCustomEndDate] = useState("");
-
    const [criterioDriver, setCriterioDriver] = useState("name");
    const [driverInput, setDriverInput] = useState("");
    const [selectedDriver, setSelectedDriver] = useState(null);
    const [driverError, setDriverError] = useState(false);
    const [driverStatusError, setDriverStatusError] = useState("");
+   const [formError, setFormError] = useState("");
+   const [modalAberto, setModalAberto] = useState(false);
+
+   // Filtro de motoristas
+   const driversFiltrados = motoristas?.filter((d) => {
+      const valor = driverInput.toLowerCase();
+      if (criterioDriver === "name")
+         return d.name.toLowerCase().includes(valor);
+      if (criterioDriver === "phone")
+         return d.phone?.toLowerCase().includes(valor);
+      if (criterioDriver === "cnh") return d.cnh?.toLowerCase().includes(valor);
+      return false;
+   });
+
+   useEffect(() => {
+      if (!driversFiltrados?.length && driverInput) {
+         setDriverError(true);
+      } else {
+         setDriverError(false);
+      }
+   }, [driverInput, driversFiltrados]);
+
+   const selecionarDriver = (d) => {
+      setSelectedDriver(d);
+      setDriverInput(d[criterioDriver]);
+      setDriverError(false);
+      setDriverStatusError("");
+   };
+
+   const handleSubmit = async (e) => {
+      e.preventDefault();
+      setFormError("");
+
+      if (reportType === "single" && !selectedDriver) {
+         setFormError("Selecione um motorista para gerar o relatório.");
+         return;
+      }
+
+      if (reportType === "all") {
+         await getAllDriversUsageReport();
+      } else if (reportType === "single" && selectedDriver) {
+         await getAllDriversUsageReport(selectedDriver.id);
+      }
+
+      setModalAberto(true);
+   };
 
    return (
       <div className="max-w-4xl mx-auto p-4">
          <h1 className="text-2xl font-bold mb-6 flex items-center">
             Relatório de Motorista
          </h1>
-         <form className="space-y-6">
+         <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Seção Tipo de Relatório */}
             <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
                <h2 className="text-xl font-bold flex gap-2 items-center mb-2">
@@ -58,7 +104,6 @@ export default function ReportDriver() {
                   </label>
                </div>
             </div>
-
             {/* Seção Motorista */}
             {reportType === "single" && (
                <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
@@ -106,138 +151,49 @@ export default function ReportDriver() {
                            } do motorista`}
                            className={`${driverError || driverStatusError ? "border-red-500" : ""} w-full`}
                         />
-                        {driverError && (
-                           <p className="text-red-500 text-sm font-bold mt-2">
-                              Motorista não encontrado. Verifique os dados ou
-                              cadastre um novo motorista.
-                           </p>
-                        )}
-                        {driverStatusError && (
-                           <p className="text-red-500 text-sm font-bold mt-2">
-                              {driverStatusError}
-                           </p>
-                        )}
+                        {driverInput &&
+                           !selectedDriver &&
+                           driversFiltrados?.length > 0 && (
+                              <ul className="absolute z-20 top-full left-0 right-0 bg-bee-dark-100 dark:bg-bee-dark-800 border border-bee-dark-300 dark:border-bee-dark-400 rounded shadow mt-1 max-h-48 overflow-auto">
+                                 {driversFiltrados.map((d) => (
+                                    <li
+                                       key={d.id}
+                                       onClick={() => selecionarDriver(d)}
+                                       className="px-4 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                                    >
+                                       {criterioDriver === "name"
+                                          ? d.name
+                                          : criterioDriver === "phone"
+                                            ? d.phone
+                                            : d.cnh}
+                                    </li>
+                                 ))}
+                              </ul>
+                           )}
                      </div>
                   </div>
-               </div>
-            )}
-
-            {/* Seção Período */}
-            <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
-               <h2 className="text-xl font-bold flex gap-2 items-center mb-2">
-                  <Icon name="calendar" className="size-5" /> Período do
-                  Relatório
-               </h2>
-               <div className="mt-3 space-y-4">
-                  <label className="inline-flex items-center">
-                     <input
-                        type="checkbox"
-                        className="form-checkbox border border-bee-dark-300 dark:border-bee-dark-400 rounded"
-                        checked={timePeriodEnabled}
-                        onChange={(e) => setTimePeriodEnabled(e.target.checked)}
-                     />
-                     <span className="ml-2">
-                        Filtrar por período específico
-                     </span>
-                  </label>
-                  {timePeriodEnabled && (
-                     <div className="pl-0 md:pl-6 space-y-6 mt-4">
-                        <div className="space-y-2">
-                           <h3 className="text-base font-semibold">
-                              Data Inicial
-                           </h3>
-                           <div className="flex flex-col sm:flex-row gap-3">
-                              <label className="inline-flex items-center">
-                                 <input
-                                    type="radio"
-                                    className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
-                                    name="startDateOption"
-                                    value="creation"
-                                    checked={startDateOption === "creation"}
-                                    onChange={() =>
-                                       setStartDateOption("creation")
-                                    }
-                                    disabled={reportType === "all"}
-                                 />
-                                 <span
-                                    className={`ml-2 ${reportType === "all" ? "text-gray-400 dark:text-gray-500" : ""}`}
-                                 >
-                                    Data de criação
-                                 </span>
-                              </label>
-                              <label className="inline-flex items-center">
-                                 <input
-                                    type="radio"
-                                    className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
-                                    name="startDateOption"
-                                    value="custom"
-                                    checked={startDateOption === "custom"}
-                                    onChange={() =>
-                                       setStartDateOption("custom")
-                                    }
-                                 />
-                                 <span className="ml-2">Data manual</span>
-                              </label>
-                           </div>
-                           {startDateOption === "custom" && (
-                              <div className="pl-0 md:pl-6 w-full md:w-56">
-                                 <InputText
-                                    type="date"
-                                    className="w-full"
-                                    value={customStartDate}
-                                    onChange={(e) =>
-                                       setCustomStartDate(e.target.value)
-                                    }
-                                 />
-                              </div>
-                           )}
-                        </div>
-                        <div className="space-y-2">
-                           <h3 className="text-base font-semibold">
-                              Data Final
-                           </h3>
-                           <div className="flex flex-col sm:flex-row gap-3">
-                              <label className="inline-flex items-center">
-                                 <input
-                                    type="radio"
-                                    className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
-                                    name="endDateOption"
-                                    value="current"
-                                    checked={endDateOption === "current"}
-                                    onChange={() => setEndDateOption("current")}
-                                 />
-                                 <span className="ml-2">Data atual</span>
-                              </label>
-                              <label className="inline-flex items-center">
-                                 <input
-                                    type="radio"
-                                    className="form-radio border border-bee-dark-300 dark:border-bee-dark-400"
-                                    name="endDateOption"
-                                    value="custom"
-                                    checked={endDateOption === "custom"}
-                                    onChange={() => setEndDateOption("custom")}
-                                 />
-                                 <span className="ml-2">Data manual</span>
-                              </label>
-                           </div>
-                           {endDateOption === "custom" && (
-                              <div className="pl-0 md:pl-6 w-full md:w-56">
-                                 <InputText
-                                    type="date"
-                                    className="w-full"
-                                    value={customEndDate}
-                                    onChange={(e) =>
-                                       setCustomEndDate(e.target.value)
-                                    }
-                                 />
-                              </div>
-                           )}
-                        </div>
-                     </div>
+                  {driverError && (
+                     <p className="text-red-500 text-sm font-bold mt-2">
+                        Motorista não encontrado. Verifique os dados ou cadastre
+                        um novo motorista.
+                     </p>
+                  )}
+                  {driverStatusError && (
+                     <p className="text-red-500 text-sm font-bold mt-2">
+                        {driverStatusError}
+                     </p>
                   )}
                </div>
-            </div>
-
+            )}
+            {/* Mensagens de erro */}
+            {formError && (
+               <div className="text-red-500 text-sm font-bold mt-2">
+                  {formError}
+               </div>
+            )}
+            {erro && (
+               <div className="text-red-500 text-sm font-bold mt-2">{erro}</div>
+            )}
             {/* Botões */}
             <div className="flex flex-col sm:flex-row gap-4 mt-6">
                <Btn
@@ -248,12 +204,34 @@ export default function ReportDriver() {
                />
                <Btn
                   type="submit"
-                  texto="Gerar Relatório"
+                  texto={carregando ? "Gerando..." : "Gerar Relatório"}
                   className="flex-[2] py-3 bg-bee-purple-500 hover:bg-bee-purple-600 text-lg"
-                  disabled={reportType === "single" && !selectedDriver}
+                  disabled={
+                     (reportType === "single" && !selectedDriver) || carregando
+                  }
                />
             </div>
          </form>
+         {modalAberto && relatorio && (
+            <div className="fixed inset-0 z-50 flex print:items-start items-center justify-center bg-black/60">
+               <div
+                  className="relative bg-white rounded-lg"
+                  style={{
+                     maxHeight: "90vh",
+                     overflowY: "auto",
+                  }}
+               >
+                  <button
+                     className="absolute print:hidden top-4 right-4 text-2xl font-bold text-gray-500 hover:text-red-500"
+                     onClick={() => setModalAberto(false)}
+                     aria-label="Fechar"
+                  >
+                     ×
+                  </button>
+                  <DriverReportPreview reportData={relatorio} />
+               </div>
+            </div>
+         )}
       </div>
    );
 }
