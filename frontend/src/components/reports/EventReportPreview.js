@@ -87,7 +87,7 @@ export default function EventReportPreview({ reportData }) {
    };
 
    return (
-      <div id="event-report-preview" className="print:p-0 p-10">
+      <div id="event-report-preview" className="print:p-0 p-10 text-black">
          {/* Cabeçalho */}
          <header className="border-b border-bee-dark-300 pb-4 mb-6">
             <div className="flex justify-between items-start">
