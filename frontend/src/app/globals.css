@@ -107,3 +107,15 @@ input:-webkit-autofill {
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
    background: rgba(255, 255, 255, 0.2);
 }
+
+@media print {
+   .no-print {
+      display: none !important;
+   }
+}
+@media print {
+   thead {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+   }
+}
