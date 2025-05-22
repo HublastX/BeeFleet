@@ -6,7 +6,7 @@ import useCar from "@/hooks/useCar";
 import useReports from "@/hooks/useReports";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import CarReportPreview from "../reports/driver";
+import CarReportPreview from "../reports/CarReportPreview";
 
 export default function ReportCar() {
    const { carro } = useCar();
@@ -17,6 +17,7 @@ export default function ReportCar() {
    const [endDateOption, setEndDateOption] = useState("current");
    const [customStartDate, setCustomStartDate] = useState("");
    const [customEndDate, setCustomEndDate] = useState("");
+   const [modalAberto, setModalAberto] = useState(false);
 
    const [criterioCarro, setCriterioCarro] = useState("plate");
    const [carroInput, setCarroInput] = useState("");
@@ -65,6 +66,8 @@ export default function ReportCar() {
       } else if (reportType === "single" && selectedCarro) {
          await getAllCarUsageReport(selectedCarro.id);
       }
+
+      setModalAberto(true);
    };
 
    return (
@@ -194,7 +197,7 @@ export default function ReportCar() {
                </div>
             )}
             {/* Seção Período */}
-            <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
+            {/* <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
                <h2 className="text-xl font-bold flex gap-2 items-center mb-2">
                   <Icon name="calendar" className="size-5" /> Período do
                   Relatório
@@ -307,7 +310,7 @@ export default function ReportCar() {
                      </div>
                   )}
                </div>
-            </div>
+            </div> */}
             {/* Mensagens de erro */}
             {formError && (
                <div className="text-red-500 text-sm font-bold mt-2">
@@ -334,12 +337,27 @@ export default function ReportCar() {
                   }
                />
             </div>
-            {relatorio && (
-               <div className="mt-10">
+         </form>
+         {modalAberto && relatorio && (
+            <div className="fixed inset-0 z-50 flex print:items-start items-center justify-center bg-black/60">
+               <div
+                  className="relative bg-white rounded-lg"
+                  style={{
+                     maxHeight: "90vh",
+                     overflowY: "auto",
+                  }}
+               >
+                  <button
+                     className="absolute print:hidden top-4 right-4 text-2xl font-bold text-gray-500 hover:text-red-500"
+                     onClick={() => setModalAberto(false)}
+                     aria-label="Fechar"
+                  >
+                     ×
+                  </button>
                   <CarReportPreview reportData={relatorio} />
                </div>
-            )}
-         </form>
+            </div>
+         )}
       </div>
    );
 }
