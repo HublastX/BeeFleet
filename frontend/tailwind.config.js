@@ -23,7 +23,7 @@ module.exports = {
                700: "#3b2287", // bg do btn primary hover
             },
             "bee-dark": {
-               100: "#fafafa", //cor fundo light mode[btn secundary hover, card, skeleton table, navbar, header, cartable, hometable, usertable ]
+               100: "#fbfbfd", //cor fundo light mode[btn secundary hover, card, skeleton table, navbar, header, cartable, hometable, usertable ]
                200: "#f9eaffd2",
                300: "#dbdbdb", //borda do light mode[btn secundary, card, input, navbar, header, cartable, hometable, usertable, userdropdown]
                400: "#364153", //borda do darkmode [btn secundary, card, navbar, header, cartable, hometable, userTable, userdropdown], || bg hover[btn secundary, carTable]
