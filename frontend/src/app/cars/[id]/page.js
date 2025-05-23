@@ -10,17 +10,20 @@ import Image from "next/image";
 import Link from "next/link";
 import DetailCarTable from "@/components/table/detailCarTable";
 import DeleteConfirmation from "@/components/ConfirmDeleteModal";
-import { useNavBar } from "@/components/navbar/navBarContext";
 import useEvents from "@/hooks/useEvent";
 import useDrivers from "@/hooks/useDrivers";
 import DetailSkeleton from "@/elements/ui/skeleton/DetailSkeleton";
+import Btn from "@/elements/btn";
 
-function formatarData(dataISO) {
-   const data = new Date(dataISO);
-   return new Intl.DateTimeFormat("pt-BR", {
-      dateStyle: "short",
-      timeStyle: "short",
-   }).format(data);
+function formatDate(dateISO) {
+   const options = {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+   };
+   return new Date(dateISO).toLocaleDateString("pt-BR", options);
 }
 
 function CarPage() {
@@ -35,7 +38,7 @@ function CarPage() {
    );
    const motoristaAtualId = activeEvent ? activeEvent.driverId : null;
    const motoristaAtual = motoristaAtualId
-      ? motoristas.find((motorista) => motorista.id === motoristaAtualId)?.name
+      ? motoristas.find((motorista) => motorista.id === motoristaAtualId)
       : null;
 
    useEffect(() => {
@@ -56,25 +59,20 @@ function CarPage() {
       ? gestores.find((g) => g.id === carroData.managerId)
       : null;
 
-   const [menuAberto, setMenuAberto] = useState(false);
-
-   const alternarMenu = () => {
-      setMenuAberto(!menuAberto);
-   };
-
-   const [modalAberto, setModalAberto] = useState(false);
+   const [showMenu, setShowMenu] = useState(false);
+   const [showDeleteModal, setShowDeleteModal] = useState(false);
    const [carroParaDeletar, setCarroParaDeletar] = useState(null);
 
    function abrirModalDeletar(carroId) {
+      setShowDeleteModal(true);
       setCarroParaDeletar(carroId);
-      setModalAberto(true);
    }
 
    async function confirmarDelete() {
       if (carroParaDeletar) {
          try {
             await deleteCar(carroParaDeletar);
-            setModalAberto(false);
+            setShowDeleteModal(false);
             setCarroParaDeletar(null);
             setCarroData(null);
          } catch (error) {
@@ -83,229 +81,269 @@ function CarPage() {
       }
    }
 
-   const { isExpanded, isHovered } = useNavBar();
-   const isNavOpen = isExpanded || isHovered;
+   if (carregando) return <DetailSkeleton />;
 
-   const gridClass = `grid transition-all duration-300 ease-in-out grid grid-cols-1 md:grid-cols-2  gap-4 ${
-      isNavOpen ? "lg:grid-cols-3" : "lg:grid-cols-3 xl:grid-cols-4"
-   }`;
-
-   return (
-      <div className="p-6">
-         {carregando && <DetailSkeleton />}
-         {erro && !carregando && (
-            <div className="flex items-start gap-3 bg-white dark:bg-bee-dark-800 border border-black dark:border-bee-dark-400 text-red-700 dark:text-red-400 p-4 rounded-lg shadow max-w-xl mx-auto mt-8">
-               <span className="text-2xl">🚫</span>
+   if (erro)
+      return (
+         <div className="max-w-4xl mx-auto p-6">
+            <div className="flex items-center gap-4 p-4 bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg">
+               <Icon name="warning" className="size-6 text-red-500" />
                <div>
-                  <p className="font-semibold text-lg">
-                     Não foi possível encontrar o carro.
-                  </p>
-                  <p className="text-sm">
-                     Tente novamente mais tarde ou verifique a conexão.
-                  </p>
-                  <p className="text-xs mt-1 text-red-700 dark:text-red-400">
-                     Detalhes técnicos: {erro}
+                  <h3 className="font-medium text-red-600 dark:text-red-400">
+                     Erro ao carregar veículo
+                  </h3>
+                  <p className="text-sm text-red-500 dark:text-red-400/80">
+                     {erro.message || "Tente novamente mais tarde."}
                   </p>
                </div>
             </div>
-         )}
-         {!carregando && !erro && !carroData && <p>Nenhum carro encontrado.</p>}
-         {carroData && (
-            <div className="gap-5 flex flex-col">
-               <div className="flex flex-col md:flex-row gap-6">
-                  {/* Card 1: Imagem e placa */}
-                  <div className="flex flex-col px-4 py-5 items-center gap-4 w-full h-fit md:w-80 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-md border border-bee-dark-300 dark:border-bee-dark-400">
-                     <div className="relative w-full h-40 rounded-md overflow-hidden">
-                        {carroData.image ? (
-                           <Image
-                              src={carroData.image}
-                              alt={`Imagem do carro ${carroData.model}`}
-                              layout="fill"
-                              objectFit="cover"
-                              className="rounded"
-                           />
-                        ) : (
-                           <Icon
-                              name="car"
-                              className="w-full h-full border-b-2 border-bee-dark-300 dark:border-bee-dark-400 pb-3"
-                           />
-                        )}
+         </div>
+      );
+
+   if (!carroData)
+      return (
+         <div className="max-w-4xl mx-auto p-6 text-center">
+            <p className="text-gray-500 dark:text-gray-400">
+               Veículo não encontrado
+            </p>
+         </div>
+      );
+
+   return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+         {/* Header */}
+         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div>
+               <div className="flex items-center gap-4">
+                  <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+                     {carroData.model}
+                  </h1>
+                  <Badge
+                     color={carroData.isAvailable ? "success" : "error"}
+                     size="lg"
+                  >
+                     {carroData.isAvailable ? "Disponível" : "Em uso"}
+                  </Badge>
+               </div>
+               <p className="text-gray-500 dark:text-gray-400 mt-1">
+                  Cadastrado em {formatDate(carroData.createdAt)}
+               </p>
+            </div>
+
+            <div className="flex gap-3">
+               <Btn
+                  variant="secondary"
+                  onClick={() => setShowMenu(!showMenu)}
+                  className="w-fit p-3 gap-2"
+               >
+                  abrir menu
+               </Btn>
+            </div>
+         </div>
+
+         {/* principal */}
+         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* foto */}
+            <div className="bg-white dark:bg-gray-800 h-fit rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+               <div className="relative h-48 bg-gray-100 dark:bg-gray-700">
+                  {carroData.image ? (
+                     <Image
+                        src={carroData.image}
+                        alt={`Foto de ${carroData.model}`}
+                        fill
+                        className="object-cover"
+                        priority
+                     />
+                  ) : (
+                     <div className="flex items-center justify-center h-full">
+                        <Icon name="car" className="size-20 text-gray-400" />
                      </div>
-                     <div className="bg-gray-100 w-full p-3 rounded-md shadow-sm border-t-8 border-blue-700">
-                        <p className="text-center text-bee-dark-600 font-extrabold text-3xl">
-                           {carroData.plate}
+                  )}
+               </div>
+
+               <div className="p-6">
+                  <div className="space-y-6">
+                     <div>
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                           Placa
+                        </h3>
+                        <p className="text-lg font-medium">{carroData.plate}</p>
+                     </div>
+
+                     <div>
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                           Marca
+                        </h3>
+                        <p className="text-lg font-medium">{carroData.brand}</p>
+                     </div>
+
+                     <div>
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                           Ano
+                        </h3>
+                        <p className="text-lg font-medium">{carroData.year}</p>
+                     </div>
+
+                     {!carroData.isAvailable && motoristaAtual && (
+                        <div>
+                           <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                              Motorista Atual
+                           </h3>
+                           <p className="text-lg font-medium">
+                              {motoristaAtual.name}
+                           </p>
+                        </div>
+                     )}
+                  </div>
+               </div>
+            </div>
+
+            {/* informacoes */}
+            <div className="lg:col-span-2 space-y-6">
+               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                  <h2 className="text-xl font-semibold mb-6">Informações</h2>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     <div>
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                           Cor
+                        </h3>
+                        <p className="text-lg">{carroData.color}</p>
+                     </div>
+
+                     <div>
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                           Hodômetro
+                        </h3>
+                        <p className="text-lg">{carroData.odometer}</p>
+                     </div>
+
+                     <div>
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                           Chassi
+                        </h3>
+                        <p className="text-lg">{carroData.chassis}</p>
+                     </div>
+
+                     <div>
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                           Renavam
+                        </h3>
+                        <p className="text-lg">{carroData.renavam}</p>
+                     </div>
+
+                     <div>
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                           Última atualização
+                        </h3>
+                        <p className="text-lg">
+                           {formatDate(carroData.updatedAt)}
+                        </p>
+                     </div>
+
+                     <div>
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                           Cadastrado por
+                        </h3>
+                        <p className="text-lg">
+                           {gestorDoCarro?.name || "Não especificado"}
+                        </p>
+                     </div>
+
+                     <div className="md:col-span-2">
+                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                           Status
+                        </h3>
+                        <p className="text-lg">
+                           {carroData.isAvailable
+                              ? "Disponível para uso"
+                              : `Em uso por ${motoristaAtual?.name || "motorista não identificado"}`}
                         </p>
                      </div>
                   </div>
+               </div>
 
-                  {/* Card 2: Detalhes do carro */}
-                  <div className="flex flex-col w-full md:px-4 px-0 py-5 gap-6 bg-transparent md:bg-bee-dark-100 md:dark:bg-bee-dark-800 rounded-md md:border border-bee-dark-300 dark:border-bee-dark-400">
-                     <div className="flex justify-between items-center pb-3 text-center border-b-2 dark:border-bee-dark-400">
-                        <h1 className="text-3xl font-extrabold text-gray-800 dark:text-white/90">
-                           {carroData.model}
-                        </h1>
-                        <Badge
-                           className="lg:inline-flex hidden"
-                           size="sm"
-                           color={carroData.isAvailable ? "success" : "error"}
-                        >
-                           {carroData.isAvailable
-                              ? "Disponível"
-                              : "Indisponível"}
-                        </Badge>
-                     </div>
-                     <div className={` ${gridClass}`}>
-                        <Badge
-                           className="lg:hidden inline-flex"
-                           size="sm"
-                           color={carroData.isAvailable ? "success" : "error"}
-                        >
-                           {carroData.isAvailable
-                              ? "Disponível"
-                              : "Indisponível"}
-                        </Badge>
-                        <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                           <span className="text-sm">Ano</span>
-                           <h1 className="font-black">{carroData.year}</h1>
-                        </div>
-                        <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                           <span className="text-sm">Cor</span>
-                           <h1 className="font-black">{carroData.color}</h1>
-                        </div>
-                        <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                           <span className="text-sm">Marca</span>
-                           <h1 className="font-black">{carroData.brand}</h1>
-                        </div>
-                        <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                           <span className="text-sm">Hodômetro</span>
-                           <h1 className="font-black">{carroData.odometer}</h1>
-                        </div>
-                        <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                           <span className="text-sm">Chassi</span>
-                           <h1 className="font-black">{carroData.chassis}</h1>
-                        </div>
-                        <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                           <span className="text-sm">Renavam</span>
-                           <h1 className="font-black">{carroData.renavam}</h1>
-                        </div>
-                        <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                           <span className="text-sm">Criado em</span>
-                           <h1 className="font-black">
-                              {formatarData(carroData.createdAt)}
-                           </h1>
-                        </div>
-                        <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                           <span className="text-sm">Última edição</span>
-                           <h1 className="font-black">
-                              {formatarData(carroData.updatedAt)}
-                           </h1>
-                        </div>
-                        <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                           <span className="text-sm">Criado por</span>
-                           <h1 className="font-black">
-                              {gestorDoCarro?.name || "Gestor não encontrado"}
-                           </h1>
-                        </div>
-                        {carroData.isAvailable === false && (
-                           <div className="flex flex-col text-bee-dark-600 dark:text-bee-alert-500">
-                              <span className="text-sm">Sendo usado por</span>
-                              <h1 className="font-black">
-                                 {motoristaAtual || "Motorista não encontrado"}
-                              </h1>
-                           </div>
-                        )}
-                     </div>
-                  </div>
-                  <div className="fixed bottom-0 right-0 m-4 z-50">
-                     <button
-                        onClick={alternarMenu}
-                        className="p-5 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300"
-                     >
-                        <Icon
-                           name="menuMobile"
-                           className="size-7"
-                           strokeWidth={2}
+               {/* historia */}
+               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                  <div className="flex justify-between items-center mb-6">
+                     <h2 className="text-xl font-semibold">
+                        Histórico de Utilização
+                     </h2>
+                     <Link href="/report">
+                        <button
+                           variant="link"
+                           icon="report"
+                           text="Gerar Relatório"
                         />
+                     </Link>
+                  </div>
+                  <DetailCarTable />
+               </div>
+            </div>
+         </div>
+
+         {/* Mobile Menu */}
+         {showMenu && (
+            <div className="fixed inset-0 z-50">
+               <div
+                  className="absolute inset-0 bg-black/30"
+                  onClick={() => setShowMenu(false)}
+               />
+               <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-xl shadow-xl border-t border-gray-200 dark:border-gray-700 p-4">
+                  <div className="space-y-2">
+                     <Link
+                        href={`/cars/${id}/edit`}
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onClick={() => setShowMenu(false)}
+                     >
+                        <Icon name="lapis" className="size-5" />
+                        <span>Editar Veículo</span>
+                     </Link>
+
+                     <Link
+                        href={`/event?tipo=${carroData.isAvailable ? "saida" : "chegada"}&carroId=${id}`}
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onClick={() => setShowMenu(false)}
+                     >
+                        <Icon name="evento" className="size-5" />
+                        <span>
+                           {carroData.isAvailable
+                              ? "Registrar Saída"
+                              : "Registrar Chegada"}
+                        </span>
+                     </Link>
+
+                     <Link
+                        href="/report"
+                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
+                        onClick={() => setShowMenu(false)}
+                     >
+                        <Icon name="reports" className="size-5" />
+                        <span>Gerar Relatório</span>
+                     </Link>
+
+                     <button
+                        onClick={() => {
+                           abrirModalDeletar(id);
+                           setShowMenu(false);
+                        }}
+                        className="w-full flex items-center gap-3 p-3 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
+                     >
+                        <Icon name="trash" className="size-5" />
+                        <span>Excluir Veículo</span>
                      </button>
                   </div>
                </div>
-               <DetailCarTable />
-               {menuAberto && (
-                  <div className="fixed bottom-23 right-1 shadow-xl rounded-lg p-2 w-56 bg-white dark:bg-bee-dark-800 border border-gray-200 dark:border-bee-dark-600 z-50 animate-fade-in">
-                     <ul className="flex flex-col gap-1">
-                        <li>
-                           <Link href={`/cars/${id}/edit`} className="block">
-                              <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
-                                 <Icon
-                                    name="lapis"
-                                    className="size-4 text-bee-primary"
-                                 />
-                                 <span className="text-gray-800 dark:text-gray-200">
-                                    Editar
-                                 </span>
-                              </span>
-                           </Link>
-                        </li>
-                        <li>
-                           <Link href="/report" className="block">
-                              <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
-                                 <Icon
-                                    name="reports"
-                                    className="size-4 text-bee-primary"
-                                 />
-                                 <span className="text-gray-800 dark:text-gray-200">
-                                    Gerar relatorio
-                                 </span>
-                              </span>
-                           </Link>
-                        </li>
-                        <li>
-                           <Link
-                              href={`/event?tipo=${carroData.status === "AVAILABLE" ? "saida" : "chegada"}&carroId=${id}`}
-                              className="block"
-                           >
-                              <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
-                                 <Icon
-                                    name="evento"
-                                    className="size-4 text-bee-primary"
-                                 />
-                                 <span className="text-gray-800 dark:text-gray-200">
-                                    {carroData.status === "AVAILABLE"
-                                       ? "Marcar Saída"
-                                       : "Marcar Chegada"}
-                                 </span>
-                              </span>
-                           </Link>
-                        </li>
-                        <li className="border-t border-gray-200 dark:border-bee-dark-600 mt-1 pt-1">
-                           <button
-                              onClick={() => abrirModalDeletar(id)}
-                              className="w-full text-left"
-                           >
-                              <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200">
-                                 <Icon
-                                    name="trash"
-                                    className="size-4 text-red-500 dark:text-red-400"
-                                    strokeWidth={3}
-                                 />
-                                 <span className="text-red-600 dark:text-red-400">
-                                    Deletar Carro
-                                 </span>
-                              </span>
-                           </button>
-                        </li>
-                     </ul>
-                  </div>
-               )}
-
-               {modalAberto && (
-                  <DeleteConfirmation
-                     link={confirmarDelete}
-                     tipo="carro"
-                     onClose={() => setModalAberto(false)}
-                  />
-               )}
             </div>
+         )}
+
+         {/* Delete Modal */}
+         {showDeleteModal && (
+            <DeleteConfirmation
+               onConfirm={confirmarDelete}
+               onClose={() => setShowDeleteModal(false)}
+               type="veículo"
+            />
          )}
       </div>
    );

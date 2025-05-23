@@ -110,8 +110,7 @@ export default function useAuth() {
 
          if (!res.ok) {
             if (data?.message?.toLowerCase().includes("email")) {
-                  handleError("Este e-mail já está em uso. Tente outro.", "error");
-                  return;
+               handleError("Este e-mail já está em uso. Tente outro.", "error");
                return;
             }
             throw new Error(
@@ -120,10 +119,7 @@ export default function useAuth() {
             );
          }
 
-         localStorage.setItem(
-            "toastMessage",
-            "Gestor registrado com sucesso!"
-         );
+         localStorage.setItem("toastMessage", "Gestor registrado com sucesso!");
          localStorage.setItem("toastType", "success");
          router.push("/login");
       } catch (error) {

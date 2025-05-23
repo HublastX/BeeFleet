@@ -7,13 +7,15 @@ import Btn from "@/elements/btn";
 import InputText from "@/elements/inputText";
 import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
 import { useToast } from "@/utils/ToastContext";
+import Icon from "@/elements/Icon";
 
-function EditCars() {
+function EditCarsModal() {
    const { id } = useParams();
    const router = useRouter();
    const { carro, carregando, updateCar } = useCar();
    const { showToast } = useToast();
    const [errors, setErrors] = useState({});
+   const [show, setShow] = useState(false);
    const [formData, setFormData] = useState({
       plate: "",
       model: "",
@@ -21,7 +23,6 @@ function EditCars() {
       color: "",
       odometer: "",
       renavam: "",
-      // chassis: "",
       brand: "",
       image: null,
    });
@@ -34,6 +35,21 @@ function EditCars() {
    ];
 
    useEffect(() => {
+      setTimeout(() => setShow(true), 10);
+   }, []);
+
+   useEffect(() => {
+      const handleKeyDown = (e) => {
+         if (e.key === "Escape") {
+            setShow(false);
+            router.push("/cars");
+         }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+   }, [router]);
+
+   useEffect(() => {
       const car = carro.find((car) => car.id === id);
       if (car) {
          setFormData({
@@ -43,7 +59,6 @@ function EditCars() {
             color: car.color || "",
             odometer: car.odometer || "",
             renavam: car.renavam || "",
-            // chassis: car.chassis || "",
             brand: car.brand || "",
             image: null,
          });
@@ -58,7 +73,6 @@ function EditCars() {
       if (!formData.brand) newErrors.brand = "Campo obrigatório";
       if (!formData.model) newErrors.model = "Campo obrigatório";
       if (!formData.year) newErrors.year = "Campo obrigatório";
-      // if (!formData.chassis) newErrors.chassis = "Campo obrigatório";
       if (!formData.odometer) newErrors.odometer = "Campo obrigatório";
       if (!formData.renavam) newErrors.renavam = "Campo obrigatório";
       if (!formData.color) newErrors.color = "Campo obrigatório";
@@ -71,13 +85,12 @@ function EditCars() {
             "Placa inválida (formatos aceitos: ABC1234 ou ABC1D23)";
       }
 
-      if (formData.year < 1900) {
-         newErrors.year = "Ano inválido";
+      if (formData.year && Number(formData.year) < 1900) {
+         newErrors.year = "Ano inválido, apenas maior que 1900";
       }
 
       if (formData.renavam && !/^\d{11}$/.test(formData.renavam)) {
-         newErrors.renavam =
-            "Renavam deve conter exatamente 11 dígitos (ex: 12345678901)";
+         newErrors.renavam = "Renavam deve conter exatamente 11 dígitos";
       }
 
       if (
@@ -102,70 +115,107 @@ function EditCars() {
       {
          label: "Placa",
          id: "plate",
+         value: formData.plate,
+         setValue: (value) =>
+            setFormData((prev) => ({ ...prev, plate: value.toUpperCase() })),
+         error: errors.plate,
          placeholder: "Ex: ABC1234",
          type: "text",
-         transform: (v) => v.toUpperCase(),
       },
       {
          label: "Marca",
          id: "brand",
+         value: formData.brand,
+         setValue: (value) =>
+            setFormData((prev) => ({ ...prev, brand: value })),
+         error: errors.brand,
          placeholder: "Ex: Toyota",
          type: "text",
       },
       {
          label: "Modelo",
          id: "model",
+         value: formData.model,
+         setValue: (value) =>
+            setFormData((prev) => ({ ...prev, model: value })),
+         error: errors.model,
          placeholder: "Ex: Corolla",
          type: "text",
       },
       {
          label: "Ano",
          id: "year",
+         value: formData.year,
+         setValue: (value) => setFormData((prev) => ({ ...prev, year: value })),
+         error: errors.year,
          placeholder: "Ex: 2023",
          type: "number",
       },
       {
          label: "Renavam",
          id: "renavam",
+         value: formData.renavam,
+         setValue: (value) =>
+            setFormData((prev) => ({ ...prev, renavam: value })),
+         error: errors.renavam,
          placeholder: "Ex: 82754432011",
          type: "number",
       },
-      // {
-      //    label: "Chassi",
-      //    id: "chassis",
-      //    placeholder: "Ex: 9XbZ3DvWVvNSU1551",
-      //    type: "text",
-      // },
       {
          label: "Cor",
          id: "color",
+         value: formData.color,
+         setValue: (value) =>
+            setFormData((prev) => ({ ...prev, color: value })),
+         error: errors.color,
          placeholder: "Ex: Preto",
          type: "text",
       },
       {
          label: "Odômetro",
          id: "odometer",
+         value: formData.odometer,
+         setValue: (value) =>
+            setFormData((prev) => ({ ...prev, odometer: value })),
+         error: errors.odometer,
          placeholder: "Ex: 50000",
          type: "number",
       },
    ];
 
    return (
-      <div className="w-full">
-         {carregando && <FormSkeleton />}
-         {!carregando && (
-            <>
-               <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
-                  Editar Veículo
-               </h2>
-               <div className="flex flex-col-reverse md:flex-row justify-between gap-10 w-full">
-                  <form onSubmit={handleSubmit} className="space-y-6 w-full">
+      <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+         <div className="bg-white dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center gap-3 mb-6 sticky top-0 bg-white dark:bg-bee-dark-800 pb-4 border-b border-bee-dark-300 dark:border-bee-dark-400">
+               <h2 className="text-2xl font-bold">Editar Veículo</h2>
+               <button
+                  onClick={router.back}
+                  className="ml-auto text-gray-400 hover:text-gray-700 dark:hover:text-white text-2xl font-bold focus:outline-none"
+                  aria-label="Fechar"
+                  type="button"
+               >
+                  <Icon name="xMark" className="size-5" strokeWidth={5} />
+               </button>
+            </div>
+
+            {carregando && <FormSkeleton />}
+            {!carregando && (
+               <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                      {formList.map(
-                        ({ label, id, placeholder, type, transform }) => (
-                           <div key={id}>
+                        ({
+                           label,
+                           id,
+                           value,
+                           setValue,
+                           error,
+                           placeholder,
+                           type,
+                        }) => (
+                           <div key={id} className="space-y-1">
                               <label
                                  htmlFor={id}
-                                 className="block text-sm font-medium text-dark dark:text-white mb-2"
+                                 className="block text-sm font-medium text-dark dark:text-white"
                               >
                                  {label}
                               </label>
@@ -173,119 +223,58 @@ function EditCars() {
                                  type={type}
                                  id={id}
                                  name={id}
-                                 value={formData[id]}
-                                 onChange={(e) =>
-                                    setFormData((prev) => ({
-                                       ...prev,
-                                       [id]: transform
-                                          ? transform(e.target.value)
-                                          : e.target.value,
-                                    }))
-                                 }
+                                 value={value}
+                                 onChange={(e) => setValue(e.target.value)}
                                  placeholder={placeholder}
                                  required
-                                 className={
-                                    errors[id]
-                                       ? "border-red-500 dark:border-red-500 border-2"
-                                       : ""
-                                 }
+                                 className={`w-full ${error ? "border-red-500 dark:border-red-500 border-2" : ""}`}
                               />
-                              {errors[id] && (
-                                 <p className="text-red-500 text-sm font-bold">
-                                    {errors[id]}
-                                 </p>
+                              {error && (
+                                 <p className="text-red-500 text-xs">{error}</p>
                               )}
                            </div>
                         )
                      )}
+                  </div>
 
-                     <div>
-                        <label
-                           htmlFor="image"
-                           className="block text-sm font-medium mb-2"
-                        >
-                           Atualizar Foto
-                        </label>
-                        <InputText
-                           type="file"
-                           name="image"
-                           accept="image/*"
-                           variant="file"
-                           className={`file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark ${errors.image ? "border-red-500 dark:border-red-500 border-2" : ""}`}
-                           onChange={(e) => {
-                              const file = e.target.files[0];
-                              if (file) {
-                                 setFormData((prev) => ({
-                                    ...prev,
-                                    image: file,
-                                 }));
-                              }
-                           }}
-                        />
-                        {errors.image && (
-                           <p className="text-red-500 text-sm font-bold">
-                              {errors.image}
-                           </p>
-                        )}
-                     </div>
+                  <div className="space-y-1">
+                     <label className="block text-sm font-medium">
+                        Atualizar Foto do Veículo
+                     </label>
+                     <InputText
+                        type="file"
+                        variant="file"
+                        name="photo"
+                        accept="image/*"
+                        onChange={(e) => {
+                           const file = e.target.files[0];
+                           if (file) {
+                              setFormData((prev) => ({ ...prev, image: file }));
+                           }
+                        }}
+                        className={`file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark w-full ${errors.image ? "border-red-500 dark:border-red-500 border-2" : ""}`}
+                     />
+                     {errors.image && (
+                        <p className="text-red-500 text-xs">{errors.image}</p>
+                     )}
+                  </div>
 
-                     <div className="flex gap-4">
-                        <Btn
-                           type="button"
-                           onClick={() => router.back()}
-                           texto="Cancelar"
-                           className="flex-[1] border border-red-400 bg-red-400 hover:bg-red-500"
-                        />
-                        <Btn
-                           type="submit"
-                           variant="primary"
-                           disabled={carregando}
-                           className="flex-[2] py-3 px-4 text-lg"
-                        >
-                           {carregando ? "Salvando..." : "Salvar Alterações"}
-                        </Btn>
-                     </div>
-                  </form>
-
-                  {/* <div className="hidden sticky md:flex md:flex-col min-w-65 h-fit border font-bold bg-bee-dark-100 border-bee-dark-300 dark:bg-gray-800 dark:border-gray-500 p-4 rounded-lg">
-                     <div className="flex justify-center items-center md:mb-4 bg-bee-purple-200 rounded-md p-3">
-                        {formData.image ? (
-                           typeof formData.image === "string" ? (
-                              <Image
-                                 src={formData.image}
-                                 alt="Imagem do carro"
-                                 width={128}
-                                 height={128}
-                                 unoptimized
-                                 className="w-32 h-32 rounded-full object-cover"
-                              />
-                           ) : (
-                              <Image
-                                 src={URL.createObjectURL(formData.image)}
-                                 alt="Imagem do carro"
-                                 width={128}
-                                 height={128}
-                                 unoptimized
-                                 className="w-32 h-32 rounded-full object-cover"
-                              />
-                           )
-                        ) : (
-                           <Icon name="car" className="size-32 text-white" />
-                        )}
-                     </div>
-                     <div className="pl-3 gap-3 flex flex-col">
-                        <h1>Modelo: {formData.model}</h1>
-                        <p>Placa: {formData.plate}</p>
-                        <p>Cor: {formData.color}</p>
-                        <p>Ano: {formData.year}</p>
-                        <p>Odômetro: {formData.odometer}</p>
-                     </div>
-                  </div> */}
-               </div>
-            </>
-         )}
+                  <div className="flex justify-end gap-3 pt-4 border-t border-bee-dark-300 dark:border-bee-dark-400">
+                     <Btn
+                        type="button"
+                        onClick={router.back}
+                        variant="cancel"
+                        texto="Cancelar"
+                     />
+                     <Btn type="submit" variant="primary" disabled={carregando}>
+                        {carregando ? "Salvando..." : "Salvar Alterações"}
+                     </Btn>
+                  </div>
+               </form>
+            )}
+         </div>
       </div>
    );
 }
 
-export default withAuth(EditCars);
+export default withAuth(EditCarsModal);

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import withAuth from "@/utils/withAuth";
 import Btn from "@/elements/btn";
@@ -7,12 +7,14 @@ import useCar from "@/hooks/useCar";
 import InputText from "@/elements/inputText";
 import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
 import { useToast } from "@/utils/ToastContext";
+import Icon from "@/elements/Icon";
 
-function CreateCars() {
+function CreateCarsModal() {
    const { createCar, carregando, erro } = useCar();
    const router = useRouter();
    const [errors, setErrors] = useState({});
    const { showToast } = useToast();
+   const [show, setShow] = useState(false);
 
    const [plate, setPlate] = useState("");
    const [model, setModel] = useState("");
@@ -30,6 +32,21 @@ function CreateCars() {
       "image/gif",
       "image/jpg",
    ];
+
+   useEffect(() => {
+      setTimeout(() => setShow(true), 10);
+   }, []);
+
+   useEffect(() => {
+      const handleKeyDown = (e) => {
+         if (e.key === "Escape") {
+            setShow(false);
+            router.back();
+         }
+      };
+      window.addEventListener("keydown", handleKeyDown);
+      return () => window.removeEventListener("keydown", handleKeyDown);
+   }, [router]);
 
    const formList = [
       {
@@ -86,6 +103,7 @@ function CreateCars() {
          error: errors.chassis,
          placeholder: "Ex: 9XbZ3DvWVvNSU1551",
          type: "text",
+         transform: (v) => v.toUpperCase(),
       },
       {
          label: "Cor",
@@ -171,60 +189,68 @@ function CreateCars() {
    };
 
    return (
-      <div>
-         {carregando && <FormSkeleton />}
-         {!carregando && (
-            <div className="max-w-3xl mx-auto">
-               <h2 className="text-3xl font-bold mb-6 text-dark dark:text-white">
-                  Cadastro de Veículo
-               </h2>
-               <form onSubmit={handleSubmit} className="space-y-6">
-                  {formList.map(
-                     ({
-                        label,
-                        id,
-                        value,
-                        setValue,
-                        error,
-                        placeholder,
-                        type,
-                        required,
-                        transform,
-                     }) => (
-                        <div key={id}>
-                           <label
-                              htmlFor={id}
-                              className="block text-sm font-medium text-dark dark:text-white mb-2"
-                           >
-                              {label}
-                           </label>
-                           <InputText
-                              type={type}
-                              id={id}
-                              name={id}
-                              value={value}
-                              onChange={(e) =>
-                                 setValue(
-                                    transform
-                                       ? transform(e.target.value)
-                                       : e.target.value
-                                 )
-                              }
-                              placeholder={placeholder}
-                              required
-                              className={`${error ? "border-red-500 dark:border-red-500 border-2" : ""}`}
-                           />
-                           {error && (
-                              <p className="text-red-500 text-sm font-bold">
-                                 {error}
-                              </p>
-                           )}
-                        </div>
-                     )
-                  )}
+      <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
+         <div className="bg-white dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex items-center gap-3 mb-6 sticky top-0 bg-white dark:bg-bee-dark-800 pb-4 border-b border-bee-dark-300 dark:border-bee-dark-400">
+               <h2 className="text-2xl font-bold">Cadastrar Novo Veículo</h2>
+               <button
+                  onClick={router.back}
+                  className="ml-auto text-gray-400 hover:text-gray-700 dark:hover:text-white text-2xl font-bold focus:outline-none"
+                  aria-label="Fechar"
+                  type="button"
+               >
+                  <Icon name="xMark" className="size-5" strokeWidth={5} />
+               </button>
+            </div>
 
-                  <div>
-                     <label className="block text-sm font-medium mb-2">
+            {carregando && <FormSkeleton />}
+            {!carregando && (
+               <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                     {formList.map(
+                        ({
+                           label,
+                           id,
+                           value,
+                           setValue,
+                           error,
+                           placeholder,
+                           type,
+                           transform,
+                        }) => (
+                           <div key={id} className="space-y-1">
+                              <label
+                                 htmlFor={id}
+                                 className="block text-sm font-medium text-dark dark:text-white"
+                              >
+                                 {label}
+                              </label>
+                              <InputText
+                                 type={type}
+                                 id={id}
+                                 name={id}
+                                 value={value}
+                                 onChange={(e) =>
+                                    setValue(
+                                       transform
+                                          ? transform(e.target.value)
+                                          : e.target.value
+                                    )
+                                 }
+                                 placeholder={placeholder}
+                                 required
+                                 className={`w-full ${error ? "border-red-500 dark:border-red-500 border-2" : ""}`}
+                              />
+                              {error && (
+                                 <p className="text-red-500 text-xs">{error}</p>
+                              )}
+                           </div>
+                        )
+                     )}
+                  </div>
+
+                  <div className="space-y-1">
+                     <label className="block text-sm font-medium">
                         Imagem do Veículo
                      </label>
                      <InputText
@@ -233,37 +259,29 @@ function CreateCars() {
                         name="photo"
                         accept="image/*"
                         onChange={(e) => setImage(e.target.files[0])}
-                        className={`file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark ${errors.image ? "border-red-500 dark:border-red-500 border-2" : ""}`}
+                        className={`file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark w-full ${errors.image ? "border-red-500 dark:border-red-500 border-2" : ""}`}
                      />
                      {errors.image && (
-                        <p className="text-red-500 text-sm font-bold">
-                           {errors.image}
-                        </p>
+                        <p className="text-red-500 text-xs">{errors.image}</p>
                      )}
                   </div>
 
-                  {/* Botões */}
-                  <div className="flex gap-4">
+                  <div className="flex justify-end gap-3 pt-4 border-t border-bee-dark-300 dark:border-bee-dark-400">
                      <Btn
                         type="button"
-                        onClick={() => router.back()}
+                        onClick={router.push("/cars")}
+                        variant="cancel"
                         texto="Cancelar"
-                        className="flex-1 py-3 px-4 text-lg border border-red-400 bg-red-400 hover:bg-red-500 text-white rounded-lg transition-colors"
                      />
-                     <Btn
-                        type="submit"
-                        variant="primary"
-                        disabled={carregando}
-                        className="flex-2 py-3 px-4 text-lg"
-                     >
+                     <Btn type="submit" variant="primary" disabled={carregando}>
                         {carregando ? "Cadastrando..." : "Cadastrar Veículo"}
                      </Btn>
                   </div>
                </form>
-            </div>
-         )}
+            )}
+         </div>
       </div>
    );
 }
 
-export default withAuth(CreateCars);
+export default withAuth(CreateCarsModal);
