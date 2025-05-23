@@ -95,82 +95,79 @@ function Events() {
             </div>
          </div>
 
-         {!tipoEvento && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-               {/* estatistica */}
-               <div className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover">
-                  <h3 className="text-xl font-bold mb-4 text-bee-dark-800 dark:text-white">
-                     Visão Geral
-                  </h3>
-                  <div className="h-40">
-                     <ResponsiveContainer width="100%" height="100%">
-                        <PieChart>
-                           <Pie
-                              data={eventTypeData}
-                              cx="50%"
-                              cy="50%"
-                              innerRadius={40}
-                              outerRadius={63}
-                              paddingAngle={2}
-                              dataKey="value"
-                           >
-                              {eventTypeData.map((entry, index) => (
-                                 <Cell
-                                    key={`cell-${index}`}
-                                    fill={COLORS[index % COLORS.length]}
-                                 />
-                              ))}
-                           </Pie>
-                           <Tooltip
-                              formatter={(value) => [`${value} eventos`, ""]}
-                           />
-                           <Legend
-                              iconSize={10}
-                              iconType="circle"
-                              layout="vertical"
-                              verticalAlign="center"
-                              align="right"
-                              wrapperStyle={{
-                                 paddingLeft: "20px",
-                                 fontSize: "12px",
-                              }}
-                              formatter={(value) => (
-                                 <span className="text-sm text-bee-dark-500 dark:text-bee-dark-300 mt-2">
-                                    {value}
-                                 </span>
-                              )}
-                           />
-                        </PieChart>
-                     </ResponsiveContainer>
+         {/* conteudo */}
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
+            {/* estatistica */}
+            <div className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover">
+               <h3 className="text-xl font-bold mb-4 text-bee-dark-800 dark:text-white">
+                  Visão Geral
+               </h3>
+               <div className="h-40">
+                  <ResponsiveContainer width="100%" height="100%">
+                     <PieChart>
+                        <Pie
+                           data={eventTypeData}
+                           cx="50%"
+                           cy="50%"
+                           innerRadius={40}
+                           outerRadius={63}
+                           paddingAngle={2}
+                           dataKey="value"
+                        >
+                           {eventTypeData.map((entry, index) => (
+                              <Cell
+                                 key={`cell-${index}`}
+                                 fill={COLORS[index % COLORS.length]}
+                              />
+                           ))}
+                        </Pie>
+                        <Tooltip
+                           formatter={(value) => [`${value} eventos`, ""]}
+                        />
+                        <Legend
+                           iconSize={10}
+                           iconType="circle"
+                           layout="vertical"
+                           verticalAlign="center"
+                           align="right"
+                           wrapperStyle={{
+                              paddingLeft: "20px",
+                              fontSize: "12px",
+                           }}
+                           formatter={(value) => (
+                              <span className="text-sm text-bee-dark-500 dark:text-bee-dark-300">
+                                 {value}
+                              </span>
+                           )}
+                        />
+                     </PieChart>
+                  </ResponsiveContainer>
+               </div>
+               <div className="grid grid-cols-2 gap-4 mb-4 border-t border-bee-dark-300 dark:border-bee-dark-400 mt-4">
+                  <div className=" p-3 rounded-lg">
+                     <p className="text-sm text-bee-dark-500 dark:text-bee-dark-300">
+                        Ativos
+                     </p>
+                     <p className="text-2xl font-bold">
+                        {eventosAtivos.length || (
+                           <span className="italic text-bee-dark-400">-</span>
+                        )}
+                     </p>
                   </div>
-                  <div className="grid grid-cols-2 gap-4 mb-4 border-t border-bee-dark-300 dark:border-bee-dark-400 mt-4">
-                     <div className=" p-3 rounded-lg">
-                        <p className="text-sm text-bee-dark-500 dark:text-bee-dark-300">
-                           Ativos
-                        </p>
-                        <p className="text-2xl font-bold">
-                           {eventosAtivos.length || (
-                              <span className="italic text-bee-dark-400">
-                                 -
-                              </span>
-                           )}
-                        </p>
-                     </div>
-                     <div className=" p-3 rounded-lg">
-                        <p className="text-sm text-bee-dark-500 dark:text-bee-dark-300">
-                           Finalizados
-                        </p>
-                        <p className="text-2xl font-bold">
-                           {eventosFinalizados.length || (
-                              <span className="italic text-bee-dark-400">
-                                 -
-                              </span>
-                           )}
-                        </p>
-                     </div>
+                  <div className=" p-3 rounded-lg">
+                     <p className="text-sm text-bee-dark-500 dark:text-bee-dark-300">
+                        Finalizados
+                     </p>
+                     <p className="text-2xl font-bold">
+                        {eventosFinalizados.length || (
+                           <span className="italic text-bee-dark-400">-</span>
+                        )}
+                     </p>
                   </div>
                </div>
+            </div>
 
+            <div className="flex flex-col gap-4">
                {/* semana */}
                <div className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover">
                   <h3 className="text-xl font-bold mb-4 text-bee-dark-800 dark:text-white">
@@ -273,43 +270,40 @@ function Events() {
                      </p>
                   </div>
                </div>
+            </div>
 
-               {/*  acoes rapidas */}
-               <div className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover">
-                  <h3 className="text-xl font-bold mb-4 text-bee-dark-800 dark:text-white">
-                     Ações Rápidas
-                  </h3>
-                  <div className="space-y-3">
-                     <button
-                        onClick={() => setTipoEvento("saida")}
-                        className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors hover:bg-purple-500/10 "
-                     >
-                        <Icon
-                           name="eventoL"
-                           className="size-5 text-purple-500"
-                        />
-                        <span>Registrar Saída</span>
-                     </button>
-                     <button
-                        onClick={() => setTipoEvento("chegada")}
-                        className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors hover:bg-green-500/10"
-                     >
-                        <Icon name="evento" className="size-5 text-green-500" />
-                        <span>Registrar Chegada</span>
-                     </button>
-                     <button className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors hover:bg-blue-500/10">
-                        <Icon name="reports" className="size-5 text-blue-500" />
-                        <span>Gerar Relatório</span>
-                     </button>
-                  </div>
-               </div>
-
-               {/* Tabela */}
-               <div className="p-0 shadow-sm rounded-md col-span-1 md:col-span-2 lg:col-span-4 card-hover">
-                  <EventTable />
+            {/*  acoes rapidas */}
+            <div className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover">
+               <h3 className="text-xl font-bold mb-4 text-bee-dark-800 dark:text-white">
+                  Ações Rápidas
+               </h3>
+               <div className="space-y-3">
+                  <button
+                     onClick={() => setTipoEvento("saida")}
+                     className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors hover:bg-purple-500/10 "
+                  >
+                     <Icon name="eventoL" className="size-5 text-purple-500" />
+                     <span>Registrar Saída</span>
+                  </button>
+                  <button
+                     onClick={() => setTipoEvento("chegada")}
+                     className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors hover:bg-green-500/10"
+                  >
+                     <Icon name="evento" className="size-5 text-green-500" />
+                     <span>Registrar Chegada</span>
+                  </button>
+                  <button className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors hover:bg-blue-500/10">
+                     <Icon name="reports" className="size-5 text-blue-500" />
+                     <span>Gerar Relatório</span>
+                  </button>
                </div>
             </div>
-         )}
+
+            {/* Tabela */}
+            <div className="p-0 shadow-sm rounded-md col-span-1 md:col-span-2 lg:col-span-4 card-hover">
+               <EventTable />
+            </div>
+         </div>
 
          {/* Modal de evento */}
          {tipoEvento && (
