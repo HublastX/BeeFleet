@@ -178,15 +178,11 @@ export default function Saida() {
 
    return (
       <div className="max-w-4xl mx-auto p-4">
-         <h1 className="text-2xl font-bold mb-6 flex items-center">
-            Registrar Saída de Veículo
-         </h1>
-
          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
+            <div className="p-6">
                <div className="flex items-center flex-row justify-between w-full mb-4">
                   <div className="flex items-center gap-3">
-                     <Icon name="user" className="size-6 text-bee-purple-500" />
+                     <Icon name="user" className="size-6 " />
                      <h2 className="text-xl font-bold">Motorista</h2>
                   </div>
                   <button
@@ -307,9 +303,9 @@ export default function Saida() {
             </div>
 
             {/* Seção Veículo */}
-            <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
+            <div className="p-6">
                <div className="flex items-center gap-3 mb-4">
-                  <Icon name="car" className="size-6 text-bee-purple-500" />
+                  <Icon name="car" className="size-6 " />
                   <h2 className="text-xl font-bold">Veículo</h2>
                   <button
                      type="button"
@@ -427,16 +423,13 @@ export default function Saida() {
             </div>
 
             {/* Seção Confirmação */}
-            <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
+            <div className="bg-bee-dark-100 dark:bg-gray-800 rounded-lg p-6">
                <div
                   className="flex items-center justify-between cursor-pointer"
                   onClick={toggleInfoSection}
                >
                   <div className="flex items-center gap-3">
-                     <Icon
-                        name="evento"
-                        className="size-6 text-bee-purple-500"
-                     />
+                     <Icon name="evento" className="size-6 " />
                      <h2 className="text-xl font-bold">Resumo da Saída</h2>
                   </div>
                   <Icon
@@ -494,18 +487,17 @@ export default function Saida() {
                )}
             </div>
 
-            {/* Botões de Ação */}
-            <div className="flex flex-col sm:flex-row gap-4 mt-6">
+            {/* Botões */}
+            <div className="mt-6 pt-6 border-t-2 border-bee-dark-300 dark:border-bee-dark-400 flex justify-end gap-3">
                <Btn
                   type="button"
                   texto="Cancelar"
+                  variant="cancel"
                   onClick={() => router.back()}
-                  className="flex-[1] py-3 border border-red-400 bg-red-400 hover:bg-red-500"
                />
                <Btn
                   type="submit"
                   texto={carregando ? "Processando..." : "Confirmar Saída"}
-                  className="flex-[2] py-3 bg-bee-purple-500 hover:bg-bee-purple-600 text-lg"
                   disabled={!selectedCarro || !selectedMotorista || carregando}
                />
             </div>
