@@ -15,6 +15,8 @@ import Icon from "@/elements/Icon";
 import Pagination from "./Pagination";
 import { useState, useEffect } from "react";
 import DeleteConfirmation from "../ConfirmDeleteModal";
+import InputText from "@/elements/inputText";
+import Btn from "@/elements/btn";
 
 export default function EventTable({ searchTerm }) {
    const { events, carregando, erro, deleteEvent } = useEvents();
@@ -94,20 +96,10 @@ export default function EventTable({ searchTerm }) {
             <TableSkeleton />
          </div>
       );
-   // if (eventosFiltrados.length === 0)
-   //    return (
-   //       <div className="flex items-center justify-center p-6 w-full h-full">
-   //          <div className="text-center font-semibold text-xl ">
-   //             Nenhum evento {aba === "ATIVOS" ? "ativo" : "finalizado"}{" "}
-   //             encontrado
-   //          </div>
-   //       </div>
-   //    );
 
    return (
-      <div className="overflow-hidden rounded-xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm w-full min-w-max">
-         {/* Abas */}
-         <div className="flex gap-1 px-6 py-3 bg-bee-dark-100 dark:bg-bee-dark-800 border-b border-bee-dark-300 dark:border-bee-dark-400">
+      <div className="overflow-hidden rounded-lg border border-bee-dark-300 dark:border-bee-dark-400 w-full">
+         <div className="flex gap-1 px-6 pt-3 bg-bee-dark-100 dark:bg-bee-dark-800 border-b border-bee-dark-300 dark:border-bee-dark-400">
             <button
                className={`font-semibold text-md px-4 py-2 rounded-t-lg transition-all ${aba === "ATIVOS" ? " text-bee-yellow-600 border-t border-l border-r border-bee-dark-300 dark:border-bee-dark-400" : "text-bee-dark-500 dark:text-bee-dark-300 hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"}`}
                onClick={() => setAba("ATIVOS")}
@@ -121,9 +113,23 @@ export default function EventTable({ searchTerm }) {
                Finalizados
             </button>
          </div>
-
-         <div className="w-full overflow-x-auto">
-            <Table className="min-w-full">
+         <div className="flex flex-row gap-3 p-4 border-b border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
+            <div className="flex-1">
+               <InputText
+                  type="text"
+                  variant="withIcon"
+                  icon="search"
+                  placeholder="Buscar por placa ou motorista..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+               />
+            </div>
+            <Btn variant="secondary">
+               <Icon name="filtro" className="size-7" />
+            </Btn>
+         </div>
+         <div className="w-full overflow-x-auto lg:overflow-hidden no-scrollbar">
+            <Table className="min-w-max md:min-w-full">
                <TableHeader className="border-b-2 border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
                   <TableRow>
                      <TableCell
@@ -154,7 +160,7 @@ export default function EventTable({ searchTerm }) {
                            </TableCell>
                            <TableCell
                               isHeader
-                              className="px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200"
+                              className="px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200 bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-0 w-28 min-w-[7rem]"
                            >
                               Finalizar
                            </TableCell>
@@ -175,13 +181,13 @@ export default function EventTable({ searchTerm }) {
                            </TableCell>
                            <TableCell
                               isHeader
-                              className="px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200"
+                              className="px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200 bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-28 w-28 min-w-[7rem]"
                            >
                               Relatorio
                            </TableCell>
                            <TableCell
                               isHeader
-                              className="px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200"
+                              className="px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200 bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-0 w-28 min-w-[7rem]"
                            >
                               Apagar
                            </TableCell>
@@ -228,7 +234,7 @@ export default function EventTable({ searchTerm }) {
                                       )
                                     : "-"}
                               </TableCell>
-                              <TableCell className="px-0 py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
+                              <TableCell className="px-0 py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-0 w-28 min-w-[7rem]">
                                  <Link
                                     href={`/event?tipo=chegada&carroId=${event.carId}`}
                                     className="inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-bee-yellow-100 dark:hover:bg-bee-dark-700 transition-colors"
@@ -257,8 +263,11 @@ export default function EventTable({ searchTerm }) {
                                       )
                                     : "-"}
                               </TableCell>
-                              <TableCell className="px-2 py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
-                                 <Link href="/report" className="inline-flex p-1 items-center justify-center rounded-full hover:bg-bee-yellow-100  transition-colors">
+                              <TableCell className="px-2 py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-28 w-28 min-w-[7rem]">
+                                 <Link
+                                    href="/report"
+                                    className="inline-flex p-1 items-center justify-center rounded-full hover:bg-bee-yellow-100  transition-colors"
+                                 >
                                     <Icon
                                        strokeWidth={2}
                                        name="reports"
@@ -266,7 +275,7 @@ export default function EventTable({ searchTerm }) {
                                     />
                                  </Link>
                               </TableCell>
-                              <TableCell className="px-2 py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
+                              <TableCell className="px-2 py-4 text-center bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-0 w-28 min-w-[7rem]">
                                  <button
                                     aria-label="Deletar evento"
                                     onClick={() => abrirModalDeletar(event)}
