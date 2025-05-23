@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 :root {
-   --background: #fdfdfd;
+   --background: #ffffff;
    --foreground: #2e2e2f;
    --spacing: 0.25rem;
    --radius-lg: 0.5rem;
@@ -89,6 +89,7 @@ input:-webkit-autofill {
       box-shadow: 0 0 0 1000px #1e2939 inset !important;
       -webkit-text-fill-color: #fff !important;
    }
+   
 }
 .custom-scrollbar::-webkit-scrollbar {
    width: 6px;
@@ -118,4 +119,18 @@ input:-webkit-autofill {
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
    }
+}
+
+
+.card-hover {
+  transition: all 0.2s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.dark .card-hover:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
