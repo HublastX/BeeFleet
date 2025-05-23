@@ -1,4 +1,5 @@
 "use client";
+"use client";
 import useAuth from "@/hooks/useAuth";
 import useDrivers from "@/hooks/useDrivers";
 import useCar from "@/hooks/useCar";
@@ -11,18 +12,27 @@ import DeleteConfirmation from "@/components/ConfirmDeleteModal";
 import { useState } from "react";
 import useEvents from "@/hooks/useEvent";
 import ProfileListModal from "@/components/profileList/profileList";
+import { useRouter } from "next/navigation";
+import {
+   PieChart,
+   Pie,
+   Cell,
+   ResponsiveContainer,
+   Tooltip,
+} from "recharts";
 
 function Manager() {
    const { gestor, deleteManager } = useAuth();
-   const { countDriversByManager } = useDrivers();
-   const { countCarsByManager } = useCar();
-   const { countEventsByManager } = useEvents();
+   const { countDriversByManager, motoristas } = useDrivers();
+   const { countCarsByManager, carro } = useCar();
+   const { countEventsByManager, events } = useEvents();
 
    const [modalAberto, setModalAberto] = useState(false);
    const [managerParaDeletar, setManagerParaDeletar] = useState(null);
    const [modalListaAberto, setModalListaAberto] = useState(false);
    const [tipoLista, setTipoLista] = useState(null);
    const [menuAberto, setMenuAberto] = useState(false);
+   const router = useRouter();
 
    if (!gestor) return null;
    const { name, image, email, id } = gestor;
@@ -30,6 +40,28 @@ function Manager() {
    const myDriversCount = countDriversByManager;
    const myCarsCount = countCarsByManager;
    const myEventsCount = countEventsByManager;
+
+   const countAllDrivers = motoristas.length;
+   const countAllCars = carro.length;
+   const countAllEvents = events.length;
+
+   // Dados para os gráficos de pizza
+   const driversData = [
+      { name: "Meus Motoristas", value: myDriversCount },
+      { name: "Outros Motoristas", value: countAllDrivers - myDriversCount },
+   ];
+
+   const carsData = [
+      { name: "Meus Veículos", value: myCarsCount },
+      { name: "Outros Veículos", value: countAllCars - myCarsCount },
+   ];
+
+   const eventsData = [
+      { name: "Meus Eventos", value: myEventsCount },
+      { name: "Outros Eventos", value: countAllEvents - myEventsCount },
+   ];
+
+   const COLORS = ["#8B5CF6", "#E2E8F0"];
 
    function abrirModalDeletar(managerId) {
       setManagerParaDeletar(managerId);
@@ -55,157 +87,236 @@ function Manager() {
    return (
       <div className="max-w-6xl mx-auto p-4 md:p-8 space-y-8">
          {/* Header */}
-         <div className="flex justify-between items-center mb-6">
-            <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
-               Meu Perfil
-            </h1>
-            <div className="flex gap-2 hidden lg:flex">
+         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+               <h1 className="text-3xl font-bold text-gray-800 dark:text-white">
+                  Painel do Gestor
+               </h1>
+               <p className="text-gray-500 dark:text-gray-400 mt-1">
+                  Gerencie seus recursos e informações pessoais
+               </p>
+            </div>
+
+            <div className="flex gap-3">
                <Link href="/profile/edit">
                   <Btn
                      texto="Editar perfil"
-                     className="px-4 py-2 text-sm font-medium flex flex-row-reverse items-center gap-2"
+                     className="flex flex-row-reverse items-center gap-2"
                   >
-                     <Icon name="lapis" className="w-4 h-4" />
+                     <Icon name="lapis" className="size-4" />
                   </Btn>
                </Link>
                <button
                   onClick={() => abrirModalDeletar(id)}
-                  className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-800 dark:hover:text-red-400 transition-colors flex items-center gap-2"
+                  className="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 dark:hover:text-red-400 transition-colors flex items-center gap-2 border border-red-100 dark:border-red-900/30 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg"
                >
-                  <Icon name="trash" className="size-5" strokeWidth={2} />
+                  <Icon name="trash" className="size-4" strokeWidth={2} />
                   Excluir conta
                </button>
             </div>
          </div>
 
-         {/* Profile Card */}
-         <div className="flex flex-col sm:flex-row items-center gap-6 p-6 rounded-xl bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 lg:bg-transparent lg:border-transparent transition-all">
-            <div className="relative flex-shrink-0 group">
-               {!image ? (
-                  <Icon
-                     name="UserCircle"
-                     className="w-32 h-32 text-gray-400 dark:text-gray-500"
+         {/* parte de cima */}
+         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* perfil */}
+            <div className="card-hover lg:col-span-2 bg-gradient-to-br from-white to-blue-50 dark:from-bee-dark-400 dark:to-bee-dark-800 rounded-2xl p-6 shadow-sm border border-bee-dark-300 dark:border-bee-dark-400">
+               <div className="flex flex-col md:flex-row items-center gap-6">
+                  <div className="relative flex-shrink-0 group">
+                     {!image ? (
+                        <div className="w-28 h-28 rounded-full bg-white dark:bg-bee-dark-800 flex items-center justify-center border-2 border-gray-200 dark:border-bee-dark-400">
+                           <Icon
+                              name="UserCircle"
+                              className="w-20 h-20 text-gray-400 dark:text-gray-500"
+                           />
+                        </div>
+                     ) : (
+                        <div className="w-28 h-28 rounded-full border-2 border-white dark:border-bee-dark-500 shadow-md overflow-hidden">
+                           <Image
+                              src={image}
+                              alt={`Foto de perfil de ${name}`}
+                              width={112}
+                              height={112}
+                              className="object-cover w-full h-full"
+                              priority
+                           />
+                        </div>
+                     )}
+                  </div>
+
+                  <div className="flex-1 text-center md:text-left space-y-3">
+                     <div>
+                        <h1 className="text-2xl font-bold capitalize text-gray-800 dark:text-white">
+                           {name}
+                        </h1>
+                        <p className="text-gray-600 dark:text-gray-300">
+                           {email}
+                        </p>
+                     </div>
+
+                     <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
+                        <span className="px-3 py-1 bg-white dark:bg-bee-dark-600 text-xs font-medium rounded-full border border-gray-200 dark:border-bee-dark-500">
+                           Gestor
+                        </span>
+                        <span className="px-3 py-1 bg-white dark:bg-bee-dark-600 text-xs font-medium rounded-full border border-gray-200 dark:border-bee-dark-500">
+                           ID: {id.slice(0, 8)}...
+                        </span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+
+            {/* resumo*/}
+            <div className="card-hover bg-white dark:bg-bee-dark-800 rounded-2xl p-6 shadow-sm border border-bee-dark-300 dark:border-bee-dark-400">
+               <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                  Resumo
+               </h3>
+               <div className="space-y-4">
+                  <StatItem
+                     icon="users"
+                     label="Motoristas"
+                     value={myDriversCount}
+                     onClick={() => {
+                        setTipoLista("motoristas");
+                        setModalListaAberto(true);
+                     }}
                   />
-               ) : (
-                  <>
-                     <Image
-                        src={image}
-                        alt={`Foto de perfil de ${name}`}
-                        width={128}
-                        height={128}
-                        className="rounded-full object-cover w-32 h-32 transition-all"
-                        priority
-                     />
-                  </>
-               )}
+                  <StatItem
+                     icon="car"
+                     label="Veículos"
+                     value={myCarsCount}
+                     onClick={() => {
+                        setTipoLista("carros");
+                        setModalListaAberto(true);
+                     }}
+                  />
+                  <StatItem
+                     icon="evento"
+                     label="Eventos"
+                     value={myEventsCount}
+                     onClick={() => {
+                        setTipoLista("eventos");
+                        setModalListaAberto(true);
+                     }}
+                  />
+               </div>
             </div>
+         </section>
 
-            <div className="flex-1 text-center sm:text-left space-y-2">
-               <h1 className="text-3xl font-bold capitalize text-gray-800 dark:text-white">
-                  {name}
-               </h1>
-               <p className="text-lg text-gray-600 dark:text-gray-300">
-                  {email}
-               </p>
+         {/* Estatisticas */}
+         <section className="mt-8">
+            <div className="flex justify-between items-center mb-6">
+               <h2 className="text-xl font-bold text-gray-800 dark:text-white">
+                  Estatísticas Detalhadas
+               </h2>
+               <Link
+                  href="/report"
+                  className="text-sm font-medium text-bee-purple-600 dark:text-bee-purple-400 hover:underline flex items-center gap-1"
+               >
+                  <Icon name="reports" className="size-4" />
+                  Gerar relatório completo
+               </Link>
             </div>
-         </div>
-
-         {/* Statistics Section */}
-         <section className="mt-12">
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 pb-2 border-b border-gray-200 dark:border-gray-700">
-               Minhas Estatísticas
-            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                <StatCard
                   icon="users"
                   title="Motoristas"
                   count={myDriversCount}
+                  total={countAllDrivers}
+                  color="purple"
+                  data={driversData}
                   onClick={() => {
-                     setTipoLista("motoristas");
-                     setModalListaAberto(true);
+                     router.push("/drivers");
                   }}
                />
 
                <StatCard
                   icon="car"
-                  title="Carros"
+                  title="Veículos"
                   count={myCarsCount}
+                  total={countAllCars}
+                  color="blue"
+                  data={carsData}
                   onClick={() => {
-                     setTipoLista("carros");
-                     setModalListaAberto(true);
+                     router.push("/cars");
                   }}
                />
 
                <StatCard
-                  icon="eventoL"
+                  icon="evento"
                   title="Eventos"
                   count={myEventsCount}
+                  total={countAllEvents}
+                  color="green"
+                  data={eventsData}
                   onClick={() => {
-                     setTipoLista("eventos");
-                     setModalListaAberto(true);
+                     router.push("/event");
                   }}
                />
             </div>
          </section>
 
-         <div className="fixed block lg:hidden bottom-0 right-0 m-4 z-50">
+         {/* Menu mobile */}
+         <div className="fixed block lg:hidden bottom-4 right-4 z-50">
             <button
                onClick={alternarMenu}
-               className="p-5 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300"
+               className="p-5 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-lg text-white rounded-full transition-all duration-300 flex items-center justify-center"
             >
-               <Icon name="menuMobile" className="size-7" strokeWidth={2} />
+               <Icon
+                  name={menuAberto ? "xMark" : "menuMobile"}
+                  className="size-6"
+                  strokeWidth={2}
+               />
             </button>
          </div>
 
-         <ProfileListModal
-            open={modalListaAberto}
-            onClose={() => setModalListaAberto(false)}
-            tipo={tipoLista}
-         />
-
          {menuAberto && (
-            <div className="fixed bottom-23 right-1 shadow-xl rounded-lg p-2 w-56 bg-white dark:bg-bee-dark-800 border border-gray-200 dark:border-bee-dark-600 z-50 animate-fade-in">
+            <div className="fixed bottom-24 right-6 shadow-xl rounded-xl p-3 w-64 bg-white dark:bg-bee-dark-800 border border-gray-200 dark:border-bee-dark-600 z-50 animate-fade-in">
                <ul className="flex flex-col gap-1">
                   <li>
-                     <Link href="/profile/edit" className="block">
-                        <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
-                           <Icon
-                              name="lapis"
-                              className="size-4 text-bee-primary"
-                           />
-                           <span className="text-gray-800 dark:text-gray-200">
-                              Editar
+                     <Link
+                        href="/profile/edit"
+                        className="block"
+                        onClick={() => setMenuAberto(false)}
+                     >
+                        <span className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
+                           <Icon name="lapis" className="size-5" />
+                           <span className="text-gray-800 dark:text-gray-200 font-medium">
+                              Editar Perfil
                            </span>
                         </span>
                      </Link>
                   </li>
                   <li>
-                     <Link href="/report" className="block">
-                        <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
-                           <Icon
-                              name="reports"
-                              className="size-4 text-bee-primary"
-                           />
-                           <span className="text-gray-800 dark:text-gray-200">
-                              Gerar relatorio
+                     <Link
+                        href="/report"
+                        className="block"
+                        onClick={() => setMenuAberto(false)}
+                     >
+                        <span className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
+                           <Icon name="reports" className="size-5" />
+                           <span className="text-gray-800 dark:text-gray-200 font-medium">
+                              Gerar Relatório
                            </span>
                         </span>
                      </Link>
                   </li>
-                  <li className="border-t border-gray-200 dark:border-bee-dark-600 mt-1 pt-1">
+                  <li className="border-t border-bee-dark-300 dark:border-bee-dark-400 mt-2 pt-2">
                      <button
-                        onClick={() => abrirModalDeletar(id)}
+                        onClick={() => {
+                           abrirModalDeletar(id);
+                           setMenuAberto(false);
+                        }}
                         className="w-full text-left"
                      >
-                        <span className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200">
+                        <span className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200">
                            <Icon
                               name="trash"
-                              className="size-4 text-red-500 dark:text-red-400"
-                              strokeWidth={3}
+                              className="size-5 text-red-500 dark:text-red-400"
+                              strokeWidth={2}
                            />
-                           <span className="text-red-600 dark:text-red-400">
-                              Deletar Conta
+                           <span className="text-red-600 dark:text-red-400 font-medium">
+                              Excluir Conta
                            </span>
                         </span>
                      </button>
@@ -213,6 +324,14 @@ function Manager() {
                </ul>
             </div>
          )}
+
+         {/* Modals */}
+         <ProfileListModal
+            open={modalListaAberto}
+            onClose={() => setModalListaAberto(false)}
+            tipo={tipoLista}
+         />
+
          {modalAberto && (
             <DeleteConfirmation
                link={confirmarDelete}
@@ -224,27 +343,116 @@ function Manager() {
    );
 }
 
-function StatCard({ icon, title, count, onClick }) {
+function StatItem({ icon, label, value, onClick }) {
    return (
       <button
          onClick={onClick}
-         className="p-6 rounded-xl bg-neutral-50 dark:bg-bee-dark-800 shadow-none border border-bee-dark-300 dark:border-bee-dark-400 transition-all hover:shadow-lg hover:-translate-y-1 group"
+         className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors"
       >
-         <div className="flex items-center gap-4">
-            <div className="p-3 rounded-lg bg-gray-100 dark:bg-gray-800 transition-colors">
+         <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-gray-100 dark:bg-bee-dark-400">
                <Icon
                   name={icon}
-                  className="text-bee-dark-600 size-6 dark:text-bee-alert-500"
+                  className="size-5 text-gray-600 dark:text-gray-300"
                />
             </div>
-            <div className="text-left">
-               <h3 className="text-sm font-semibold text-bee-dark-600 dark:text-gray-400">
+            <span className="font-medium text-gray-700 dark:text-gray-300">
+               {label}
+            </span>
+         </div>
+         <span className="font-bold text-gray-800 dark:text-white">
+            {value}
+         </span>
+      </button>
+   );
+}
+
+function StatCard({ icon, title, count, total, color, data, onClick }) {
+   const colorClasses = {
+      purple: {
+         bg: "bg-purple-50 dark:bg-purple-900/20",
+         text: "text-purple-600 dark:text-purple-400",
+         iconBg: "bg-purple-100 dark:bg-purple-800/50",
+         chartColor: "#8B5CF6",
+      },
+      blue: {
+         bg: "bg-blue-50 dark:bg-blue-900/20",
+         text: "text-blue-600 dark:text-blue-400",
+         iconBg: "bg-blue-100 dark:bg-blue-800/50",
+         chartColor: "#3B82F6",
+      },
+      green: {
+         bg: "bg-green-50 dark:bg-green-900/20",
+         text: "text-green-600 dark:text-green-400",
+         iconBg: "bg-green-100 dark:bg-green-800/50",
+         chartColor: "#10B981",
+      },
+   };
+
+   const COLORS = [colorClasses[color].chartColor, "#E2E8F0"];
+
+   return (
+      <button
+         onClick={onClick}
+         className={`p-6 rounded-xl ${colorClasses[color].bg} shadow-sm border border-bee-dark-300 dark:border-bee-dark-400 transition-all card-hover group w-full h-full text-left`}
+      >
+         <div className="flex items-start justify-between">
+            <div>
+               <h3 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2">
                   {title}
                </h3>
-               <p className="mt-2 text-3xl font-bold text-bee-dark-600 dark:text-bee-alert-500">
-                  {count}
+               <p className={`text-3xl font-bold ${colorClasses[color].text}`}>
+                  {count}{" "}
+                  <span className="text-sm text-gray-500 dark:text-gray-400">
+                     de {total}
+                  </span>
                </p>
             </div>
+            <div className={`p-3 rounded-lg ${colorClasses[color].iconBg}`}>
+               <Icon
+                  name={icon}
+                  className={`size-6 ${colorClasses[color].text}`}
+               />
+            </div>
+         </div>
+
+         {/* grafico de pizza */}
+         <div className="mt-4 h-45">
+            <ResponsiveContainer width="100%" height="100%">
+               <PieChart>
+                  <Pie
+                     data={data}
+                     cx="50%"
+                     cy="50%"
+                     innerRadius={60}
+                     outerRadius={80}
+                     fill="#8884d8"
+                     paddingAngle={2}
+                     dataKey="value"
+                  >
+                     {data.map((entry, index) => (
+                        <Cell
+                           key={`cell-${index}`}
+                           fill={COLORS[index % COLORS.length]}
+                        />
+                     ))}
+                  </Pie>
+                  <Tooltip
+                     formatter={(value) => [
+                        `${value} ${title.toLowerCase()}`,
+                        "",
+                     ]}
+                     labelFormatter={(name) => name}
+                  />
+               </PieChart>
+            </ResponsiveContainer>
+         </div>
+
+         <div className="mt-3 pt-3 border-t border-gray-100 dark:border-bee-dark-400 flex justify-end">
+            <span className="text-xs font-medium text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 flex items-center gap-1">
+               Ver todos
+               <Icon name="chevronRight" className="size-3" strokeWidth={3} />
+            </span>
          </div>
       </button>
    );
