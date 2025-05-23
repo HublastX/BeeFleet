@@ -27,16 +27,20 @@ import {
    CalendarIcon,
    ChartBarIcon,
    ArrowDownOnSquareIcon,
+   FunnelIcon,
+   InboxIcon,
+   ClockIcon,
+   PhoneIcon,
 } from "@heroicons/react/24/solid";
 import {
    ChevronUpIcon,
    PlusIcon,
    ChatBubbleBottomCenterTextIcon,
    Bars3BottomLeftIcon,
+   ChevronRightIcon,
    ChevronDownIcon,
    XMarkIcon,
    ArrowLeftStartOnRectangleIcon,
-   FunnelIcon,
    EyeIcon,
    TrashIcon,
    ArrowLongRightIcon,
@@ -93,6 +97,10 @@ const icons = {
    calendar: CalendarIcon,
    analytics: ChartBarIcon,
    download: ArrowDownOnSquareIcon,
+   chevronRight: ChevronRightIcon,
+   inbox: InboxIcon,
+   clock: ClockIcon,
+   phone: PhoneIcon
 };
 
 export default function Icon({ name, className, strokeWidth }) {
