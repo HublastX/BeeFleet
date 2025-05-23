@@ -29,7 +29,7 @@ export default function ProfileListModal({ open, onClose, tipo }) {
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm transition-opacity duration-300">
          <div className="bg-white dark:bg-bee-dark-800 rounded-xl p-6 w-full max-w-lg shadow-2xl relative border border-gray-200 dark:border-bee-dark-400 transform transition-all duration-300 scale-95 hover:scale-100">
             <button
-               className="absolute top-4 right-4 p-1 rounded-xl hover:bg-gray-100 dark:hover:bg-bee-dark-400 transition-colors"
+               className="absolute top-4 right-4 p-1 rounded-xl hover:bg-bee-alert-500 dark:hover:bg-bee-dark-400 transition-colors"
                onClick={onClose}
                aria-label="Fechar modal"
             >
@@ -44,86 +44,128 @@ export default function ProfileListModal({ open, onClose, tipo }) {
             </h2>
 
             <div className="max-h-[70vh] overflow-hidden">
-               <ul className="space-y-3 flex flex-col pr-2 max-h-[65vh] overflow-y-auto custom-scrollbar">
+               <ul className="space-y-2 flex flex-col pr-2 max-h-[65vh] overflow-y-auto custom-scrollbar">
                   {lista.length === 0 && (
-                     <li className="text-center py-4 text-gray-500 dark:text-gray-400">
-                        Nenhum item encontrado
+                     <li className="text-center py-6 text-gray-500 dark:text-gray-400 flex flex-col items-center">
+                        <Icon
+                           name="inbox"
+                           className="size-10 mb-2 opacity-60"
+                        />
+                        <span>Nenhum item encontrado</span>
                      </li>
                   )}
 
                   {lista.map((item) => {
                      let href = "";
-                     if (tipo === "motoristas") href = `/drivers/${item.id}`;
-                     else if (tipo === "carros") href = `/cars/${item.id}`;
+                     let iconName = "";
+                     let iconColor = "";
+
+                     if (tipo === "motoristas") {
+                        href = `/drivers/${item.id}`;
+                        iconName = "user";
+                        iconColor =
+                           "bg-bee-purple-100 dark:bg-bee-purple-200 text-bee-purple-500";
+                     } else if (tipo === "carros") {
+                        href = `/cars/${item.id}`;
+                        iconName = "car";
+                        iconColor =
+                           "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400";
+                     } else if (tipo === "eventos") {
+                        iconName =
+                           item.eventType === "CHECKOUT"
+                              ? "eventoL"
+                              : "evento";
+                        iconColor =
+                           item.eventType === "CHECKOUT"
+                              ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
+                              : "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400";
+                     }
+
+                     const content = (
+                        <div className="flex items-start gap-4">
+                           <div className={`${iconColor} p-2 rounded-lg`}>
+                              <Icon name={iconName} className="size-5" />
+                           </div>
+                           <div className="flex-1 min-w-0">
+                              {tipo === "motoristas" && (
+                                 <>
+                                    <div className="flex justify-between items-start">
+                                       <span className="font-semibold text-gray-800 dark:text-gray-100 truncate">
+                                          {item.name}
+                                       </span>
+                                    </div>
+                                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                                       <span className="flex items-center text-gray-500 dark:text-gray-400">
+                                          <Icon
+                                             name="phone"
+                                             className="size-3.5 mr-1.5"
+                                          />
+                                          {item.phone}
+                                       </span>
+                                    </div>
+                                 </>
+                              )}
+
+                              {tipo === "carros" && (
+                                 <>
+                                    <div className="flex justify-between items-start">
+                                       <span className="font-semibold text-gray-800 dark:text-gray-100">
+                                          {item.plate}
+                                       </span>
+                                    </div>
+                                    <div className="mt-1 text-sm font-medium text-gray-700 dark:text-gray-300">
+                                       {item.brand} {item.model}
+                                    </div>
+                                 </>
+                              )}
+
+                              {tipo === "eventos" && (
+                                 <>
+                                    <div className="flex justify-between items-start">
+                                       <span className="font-semibold text-gray-800 dark:text-gray-100 capitalize">
+                                          {item.eventType === "CHECKOUT"
+                                             ? "Saída"
+                                             : "Chegada"}
+                                       </span>
+                                       <span className="text-xs bg-gray-100 dark:bg-bee-dark-400 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-full">
+                                          {new Date(
+                                             item.createdAt
+                                          ).toLocaleDateString("pt-BR")}
+                                       </span>
+                                    </div>
+                                    <div className="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">
+                                       <Icon
+                                          name="clock"
+                                          className="size-3.5 mr-1.5"
+                                       />
+                                       {new Date(
+                                          item.createdAt
+                                       ).toLocaleTimeString("pt-BR", {
+                                          hour: "2-digit",
+                                          minute: "2-digit",
+                                       })}
+                                    </div>
+                                 </>
+                              )}
+                           </div>
+                        </div>
+                     );
 
                      if (!href) {
                         return (
                            <li
                               key={item.id}
-                              className="border-b border-gray-100 dark:border-bee-dark-400 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-bee-dark-400/50 transition-colors"
+                              className="border border-bee-dark-300 dark:border-bee-dark-400 p-4 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-all group hover:shadow-sm "
                            >
-                              {tipo === "motoristas" && (
-                                 <div className="flex flex-col">
-                                    <span className="font-semibold text-gray-800 dark:text-gray-100">
-                                       {item.name}
-                                    </span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                                       {item.phone}
-                                    </span>
-                                 </div>
-                              )}
-
-                              {tipo === "carros" && (
-                                 <div className="flex flex-col">
-                                    <span className="font-semibold text-gray-800 dark:text-gray-100">
-                                       {item.plate}
-                                    </span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                                       {item.model}
-                                    </span>
-                                 </div>
-                              )}
-
-                              {tipo === "eventos" && (
-                                 <div className="flex flex-col">
-                                    <span className="font-semibold text-gray-800 dark:text-gray-100 capitalize">
-                                       {item.eventType === "CHECKOUT" ? "Saída" : "Chegada"}
-                                    </span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                                       {new Date(item.createdAt).toLocaleString(
-                                          "pt-BR"
-                                       )}
-                                    </span>
-                                 </div>
-                              )}
+                              {content}
                            </li>
                         );
                      }
 
                      return (
                         <Link href={href} key={item.id} passHref>
-                           <li className="border-b border-gray-300 dark:border-bee-dark-400 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-bee-dark-400/50 transition-colors cursor-pointer">
-                              {tipo === "motoristas" && (
-                                 <div className="flex flex-col">
-                                    <span className="font-semibold text-gray-800 dark:text-gray-100">
-                                       {item.name}
-                                    </span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                                       {item.phone}
-                                    </span>
-                                 </div>
-                              )}
-
-                              {tipo === "carros" && (
-                                 <div className="flex flex-col">
-                                    <span className="font-semibold text-gray-800 dark:text-gray-100">
-                                       {item.plate}
-                                    </span>
-                                    <span className="text-sm text-gray-500 dark:text-gray-400">
-                                       {item.model}
-                                    </span>
-                                 </div>
-                              )}
+                           <li className="border border-bee-dark-300 dark:border-bee-dark-400 p-4 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-all cursor-pointer group hover:shadow-sm ">
+                              {content}
                            </li>
                         </Link>
                      );

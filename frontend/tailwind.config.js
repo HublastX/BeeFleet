@@ -23,7 +23,7 @@ module.exports = {
                700: "#3b2287", // bg do btn primary hover
             },
             "bee-dark": {
-               100: "#fafafa", //cor fundo light mode[btn secundary hover, card, skeleton table, navbar, header, cartable, hometable, usertable ]
+               100: "#fbfbfd", //cor fundo light mode[btn secundary hover, card, skeleton table, navbar, header, cartable, hometable, usertable ]
                200: "#f9eaffd2",
                300: "#dbdbdb", //borda do light mode[btn secundary, card, input, navbar, header, cartable, hometable, usertable, userdropdown]
                400: "#364153", //borda do darkmode [btn secundary, card, navbar, header, cartable, hometable, userTable, userdropdown], || bg hover[btn secundary, carTable]
@@ -39,7 +39,7 @@ module.exports = {
                400: "rgba(255, 17, 0, 0.20)", //cor do bg error [badge light, badge solid] || icone de lixeira hover
                500: "#F0F0F0", //cor do texto do darkmode[icon card, card, cartable, hometable, pagination, usertable, userdropdown] || bg hover light [navbar, cartable, userTable, userdropdown]
                600: "#d2d2d21f", // bg hover darkmode [navbar, cartable, usertable, userdropdown]
-               700: " #f790093f", //cor do bg warning [badge light, badge solid]
+               700: " #f790093f", //cor do bg warning [badge light, badge solid ]
             },
          },
       },
