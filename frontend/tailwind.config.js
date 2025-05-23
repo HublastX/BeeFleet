@@ -39,7 +39,7 @@ module.exports = {
                400: "rgba(255, 17, 0, 0.20)", //cor do bg error [badge light, badge solid] || icone de lixeira hover
                500: "#F0F0F0", //cor do texto do darkmode[icon card, card, cartable, hometable, pagination, usertable, userdropdown] || bg hover light [navbar, cartable, userTable, userdropdown]
                600: "#d2d2d21f", // bg hover darkmode [navbar, cartable, usertable, userdropdown]
-               700: " #f790093f", //cor do bg warning [badge light, badge solid]
+               700: " #f790093f", //cor do bg warning [badge light, badge solid ]
             },
          },
       },
