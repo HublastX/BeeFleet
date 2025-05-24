@@ -454,10 +454,7 @@ export default function Chegada() {
                   onClick={toggleInfoSection}
                >
                   <div className="flex items-center gap-3">
-                     <Icon
-                        name="evento"
-                        className="size-6 "
-                     />
+                     <Icon name="evento" className="size-6 " />
                      <h2 className="text-xl font-bold">Resumo da Chegada</h2>
                   </div>
                   <Icon
@@ -528,7 +525,15 @@ export default function Chegada() {
                />
                <Btn
                   type="submit"
-                  texto={carregando ? "Processando..." : "Confirmar Chegada"}
+                  texto={
+                     carregando ? (
+                        <div className="flex items-center justify-center gap-2 min-w-34">
+                           <Icon name="circle" className="size-5 text-white" />
+                        </div>
+                     ) : (
+                        "Confirmar Chegada"
+                     )
+                  }
                   disabled={
                      !selectedCarro ||
                      !selectedMotorista ||
