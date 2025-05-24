@@ -14,6 +14,8 @@ import useCar from "@/hooks/useCar";
 import useEvents from "@/hooks/useEvent";
 import DetailSkeleton from "@/elements/ui/skeleton/DetailSkeleton";
 import Btn from "@/elements/btn";
+import { Dropdown } from "@/elements/ui/dropdown/Dropdown";
+import { DropdownItem } from "@/elements/ui/dropdown/DropdownItem";
 
 function formatDate(dateISO) {
    const options = {
@@ -33,6 +35,16 @@ function DriverPage() {
    const { gestores } = useAuth();
    const { carro } = useCar();
    const { events } = useEvents();
+   const [isOpen, setIsOpen] = useState(false);
+
+   function toggleDropdown(e) {
+      e.stopPropagation();
+      setIsOpen((prev) => !prev);
+   }
+
+   function closeDropdown() {
+      setIsOpen(false);
+   }
 
    const activeEvent = events.find(
       (event) => event.driverId === id && event.isActive
@@ -122,6 +134,7 @@ function DriverPage() {
                   <Badge
                      color={driver.isAvailable ? "success" : "error"}
                      size="lg"
+                     className="text-nowrap"
                   >
                      {driver.isAvailable ? "Disponível" : "Em viagem"}
                   </Badge>
@@ -132,94 +145,128 @@ function DriverPage() {
             </div>
 
             <div className="flex gap-3">
-               {/* <div className="hidden sm:flex gap-3">
-                  <Link href={`/drivers/${id}/edit`}>
-                     <Btn
-                        texto="Editar"
-                        className="flex gap-2 flex-row-reverse items-center"
-                     >
-                        <Icon name="lapis" className="size-5" />
-                     </Btn>
-                  </Link>
-                  <Link
-                     href={`/event?tipo=${driver.isAvailable ? "saida" : "chegada"}&motoristaId=${id}`}
-                  >
-                     <Btn
-                        className="flex gap-2 flex-row-reverse items-center"
-                        texto={
-                           driver.isAvailable
-                              ? "Registrar Saída"
-                              : "Registrar Chegada"
-                        }
-                     >
-                        <Icon name="evento" className="size-5" />
-                     </Btn>
-                  </Link>
-               </div> */}
                <Btn
-                  variant="secondary"
+                  variant="cancel"
+                  texto="Opções"
+                  onClick={toggleDropdown}
+                  className="hidden md:flex"
+               />
+               <Btn
+                  texto="Opções"
+                  variant="cancel"
                   onClick={() => setShowMenu(!showMenu)}
-                  className="w-fit p-3 gap-2 "
+                  className="flex md:hidden"
+               />
+
+               <Dropdown
+                  isOpen={isOpen}
+                  onClose={closeDropdown}
+                  className="absolute px-5 mt-12 mr-3 flex flex-col rounded-b-2xl border border-bee-dark-300 bg-bee-dark-100 py-3 shadow-theme-lg dark:border-bee-dark-400 dark:bg-bee-dark-800"
                >
-                  {/* <Icon name="menuMobile" className="size-6" strokeWidth={3} /> */}
-                  abrir menu
-               </Btn>
+                  <ul className="flex flex-col gap-1 pb-3 border-b border-bee-dark-300 dark:border-bee-dark-400">
+                     <li>
+                        <DropdownItem
+                           onItemClick={closeDropdown}
+                           tag="a"
+                           href={`/drivers/${id}/edit`}
+                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
+                        >
+                           <Icon name="lapis" className="size-4" />
+                           Editar Motorista
+                        </DropdownItem>
+                        <DropdownItem
+                           onItemClick={closeDropdown}
+                           tag="a"
+                           href={`/event?tipo=${driver.isAvailable ? "saida" : "chegada"}&motoristaId=${id}`}
+                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
+                        >
+                           <Icon name="evento" className="size-4" />
+                           {driver.isAvailable
+                              ? "Registrar Saída"
+                              : "Registrar Chegada"}
+                        </DropdownItem>
+                        <DropdownItem
+                           onItemClick={closeDropdown}
+                           tag="a"
+                           href="/report"
+                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
+                        >
+                           <Icon name="reports" className="size-4" />
+                           Gerar Relatório
+                        </DropdownItem>
+                     </li>
+                  </ul>
+                  <button
+                     onClick={() => {
+                        abrirModalDeletar(id);
+                        setShowMenu(false);
+                     }}
+                     className="w-full mt-2 flex items-center gap-3 p-3 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
+                  >
+                     <Icon name="trash" className="size-5" strokeWidth={2} />
+                     Excluir Motorista
+                  </button>
+               </Dropdown>
             </div>
          </div>
 
          {/* parte principal */}
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* foto de perfil */}
-            <div className="bg-white dark:bg-gray-800 h-fit rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-               <div className="relative h-48 bg-gray-100 dark:bg-gray-700">
-                  {driver.image ? (
-                     <Image
-                        src={driver.image}
-                        alt={`Foto de ${driver.name}`}
-                        fill
-                        className="object-cover"
-                        priority
-                     />
-                  ) : (
-                     <div className="flex items-center justify-center h-full">
-                        <Icon name="user" className="size-20 text-gray-400" />
-                     </div>
-                  )}
-               </div>
-
-               <div className="p-6">
-                  <div className="space-y-6">
-                     <div>
-                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                           Telefone
-                        </h3>
-                        <p className="text-lg font-medium">{driver.phone}</p>
-                     </div>
-
-                     <div>
-                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                           CNH
-                        </h3>
-                        <p className="text-lg font-medium">{driver.license}</p>
-                     </div>
-
-                     {!driver.isAvailable && currentCar && (
-                        <div>
-                           <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                              Veículo Atual
-                           </h3>
-                           <p className="text-lg font-medium">
-                              {currentCar.plate} - {currentCar.model}
-                           </p>
+            <div className="lg:col-span-3 grid grid-cols-1 lg:grid-cols-3 gap-8">
+               {/* foto */}
+               <div className="bg-white dark:bg-gray-800 h-fit rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                  <div className="relative h-48 bg-gray-100 dark:bg-gray-700">
+                     {driver.image ? (
+                        <Image
+                           src={driver.image}
+                           alt={`Foto de ${driver.name}`}
+                           fill
+                           className="object-cover"
+                           priority
+                        />
+                     ) : (
+                        <div className="flex items-center justify-center h-full">
+                           <Icon
+                              name="user"
+                              className="size-20 text-gray-400"
+                           />
                         </div>
                      )}
                   </div>
-               </div>
-            </div>
 
-            {/* informacoes */}
-            <div className="lg:col-span-2 space-y-6">
-               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                  <div className="p-6">
+                     <div className="space-y-6">
+                        <div>
+                           <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                              Telefone
+                           </h3>
+                           <p className="text-lg font-medium">{driver.phone}</p>
+                        </div>
+
+                        <div>
+                           <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                              CNH
+                           </h3>
+                           <p className="text-lg font-medium">
+                              {driver.license}
+                           </p>
+                        </div>
+
+                        {!driver.isAvailable && currentCar && (
+                           <div>
+                              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                                 Veículo Atual
+                              </h3>
+                              <p className="text-lg font-medium">
+                                 {currentCar.plate} - {currentCar.model}
+                              </p>
+                           </div>
+                        )}
+                     </div>
+                  </div>
+               </div>
+               {/* informacoes */}
+               <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                   <h2 className="text-xl font-semibold mb-6">Informações</h2>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -253,23 +300,23 @@ function DriverPage() {
                      </div>
                   </div>
                </div>
+            </div>
 
-               {/* historico */}
-               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                  <div className="flex justify-between items-center mb-6">
-                     <h2 className="text-xl font-semibold">
-                        Histórico de Viagens
-                     </h2>
-                     <Link href="/report">
-                        <button
-                           variant="link"
-                           icon="report"
-                           text="Gerar Relatório"
-                        />
-                     </Link>
-                  </div>
-                  <DetailDriverTable />
+            {/* historico */}
+            <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+               <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold">
+                     Histórico de Viagens
+                  </h2>
+                  <Link href="/report">
+                     <button
+                        variant="link"
+                        icon="report"
+                        text="Gerar Relatório"
+                     />
+                  </Link>
                </div>
+               <DetailDriverTable />
             </div>
          </div>
 
@@ -309,10 +356,7 @@ function DriverPage() {
                         className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
                         onClick={() => setShowMenu(false)}
                      >
-                        <Icon
-                           name="reports"
-                           className="size-5"
-                        />
+                        <Icon name="reports" className="size-5" />
                         <span>Gerar Relatório</span>
                      </Link>
 
@@ -336,7 +380,7 @@ function DriverPage() {
             <DeleteConfirmation
                onConfirm={confirmarDelete}
                onClose={() => setShowDeleteModal(false)}
-               type="motorista"
+               tipo="motorista"
             />
          )}
       </div>

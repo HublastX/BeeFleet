@@ -14,6 +14,8 @@ import useEvents from "@/hooks/useEvent";
 import useDrivers from "@/hooks/useDrivers";
 import DetailSkeleton from "@/elements/ui/skeleton/DetailSkeleton";
 import Btn from "@/elements/btn";
+import { DropdownItem } from "@/elements/ui/dropdown/DropdownItem";
+import { Dropdown } from "@/elements/ui/dropdown/Dropdown";
 
 function formatDate(dateISO) {
    const options = {
@@ -33,6 +35,17 @@ function CarPage() {
    const { gestores } = useAuth();
    const { motoristas } = useDrivers();
    const { events } = useEvents();
+   const [isOpen, setIsOpen] = useState(false);
+
+   function toggleDropdown(e) {
+      e.stopPropagation();
+      setIsOpen((prev) => !prev);
+   }
+
+   function closeDropdown() {
+      setIsOpen(false);
+   }
+
    const activeEvent = events.find(
       (event) => event.carId === id && event.isActive
    );
@@ -132,77 +145,135 @@ function CarPage() {
 
             <div className="flex gap-3">
                <Btn
-                  variant="secondary"
+                  variant="cancel"
+                  texto="Opções"
+                  onClick={toggleDropdown}
+                  className="hidden md:flex"
+               />
+               <Btn
+                  texto="Opções"
+                  variant="cancel"
                   onClick={() => setShowMenu(!showMenu)}
-                  className="w-fit p-3 gap-2"
+                  className="flex md:hidden"
+               />
+
+               <Dropdown
+                  isOpen={isOpen}
+                  onClose={closeDropdown}
+                  className="absolute px-5 mt-12 mr-3 flex flex-col rounded-b-2xl border border-bee-dark-300 bg-bee-dark-100 py-3 shadow-theme-lg dark:border-bee-dark-400 dark:bg-bee-dark-800"
                >
-                  abrir menu
-               </Btn>
+                  <ul className="flex flex-col gap-1 pb-3 border-b border-bee-dark-300 dark:border-bee-dark-400">
+                     <li>
+                        <DropdownItem
+                           onItemClick={closeDropdown}
+                           tag="a"
+                           href={`/cars/${id}/edit`}
+                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
+                        >
+                           <Icon name="lapis" className="size-4" />
+                           Editar Carro
+                        </DropdownItem>
+                        <DropdownItem
+                           onItemClick={closeDropdown}
+                           tag="a"
+                           href={`/event?tipo=${carroData.isAvailable ? "saida" : "chegada"}&carroId=${id}`}
+                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
+                        >
+                           <Icon name="evento" className="size-4" />
+                           {carroData.isAvailable
+                              ? "Registrar Saída"
+                              : "Registrar Chegada"}
+                        </DropdownItem>
+                        <DropdownItem
+                           onItemClick={closeDropdown}
+                           tag="a"
+                           href="/report"
+                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
+                        >
+                           <Icon name="reports" className="size-4" />
+                           Gerar Relatório
+                        </DropdownItem>
+                     </li>
+                  </ul>
+                  <button
+                     onClick={() => {
+                        abrirModalDeletar(id);
+                        setShowMenu(false);
+                     }}
+                     className="w-full mt-2 flex items-center gap-3 p-3 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
+                  >
+                     <Icon name="trash" className="size-5" strokeWidth={2} />
+                     Excluir Carro
+                  </button>
+               </Dropdown>
             </div>
          </div>
 
          {/* principal */}
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* foto */}
-            <div className="bg-white dark:bg-gray-800 h-fit rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-               <div className="relative h-48 bg-gray-100 dark:bg-gray-700">
-                  {carroData.image ? (
-                     <Image
-                        src={carroData.image}
-                        alt={`Foto de ${carroData.model}`}
-                        fill
-                        className="object-cover"
-                        priority
-                     />
-                  ) : (
-                     <div className="flex items-center justify-center h-full">
-                        <Icon name="car" className="size-20 text-gray-400" />
-                     </div>
-                  )}
-               </div>
-
-               <div className="p-6">
-                  <div className="space-y-6">
-                     <div>
-                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                           Placa
-                        </h3>
-                        <p className="text-lg font-medium">{carroData.plate}</p>
-                     </div>
-
-                     <div>
-                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                           Marca
-                        </h3>
-                        <p className="text-lg font-medium">{carroData.brand}</p>
-                     </div>
-
-                     <div>
-                        <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                           Ano
-                        </h3>
-                        <p className="text-lg font-medium">{carroData.year}</p>
-                     </div>
-
-                     {!carroData.isAvailable && motoristaAtual && (
-                        <div>
-                           <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                              Motorista Atual
-                           </h3>
-                           <p className="text-lg font-medium">
-                              {motoristaAtual.name}
-                           </p>
+            <div className="lg:col-span-3 grid grid-cols-1 lg:grid-cols-3 gap-8">
+               {/* foto */}
+               <div className="bg-white dark:bg-gray-800 h-fit rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                  <div className="relative h-48 bg-gray-100 dark:bg-gray-700">
+                     {carroData.image ? (
+                        <Image
+                           src={carroData.image}
+                           alt={`Foto de ${carroData.model}`}
+                           fill
+                           className="object-cover"
+                           priority
+                        />
+                     ) : (
+                        <div className="flex items-center justify-center h-full">
+                           <Icon name="car" className="size-20 text-gray-400" />
                         </div>
                      )}
                   </div>
+                  <div className="p-6">
+                     <div className="space-y-6">
+                        <div>
+                           <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                              Placa
+                           </h3>
+                           <p className="text-lg font-medium">
+                              {carroData.plate}
+                           </p>
+                        </div>
+
+                        <div>
+                           <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                              Marca
+                           </h3>
+                           <p className="text-lg font-medium">
+                              {carroData.brand}
+                           </p>
+                        </div>
+
+                        <div>
+                           <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                              Ano
+                           </h3>
+                           <p className="text-lg font-medium">
+                              {carroData.year}
+                           </p>
+                        </div>
+
+                        {!carroData.isAvailable && motoristaAtual && (
+                           <div>
+                              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                                 Motorista Atual
+                              </h3>
+                              <p className="text-lg font-medium">
+                                 {motoristaAtual.name}
+                              </p>
+                           </div>
+                        )}
+                     </div>
+                  </div>
                </div>
-            </div>
-
-            {/* informacoes */}
-            <div className="lg:col-span-2 space-y-6">
-               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+               {/* informacoes */}
+               <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                   <h2 className="text-xl font-semibold mb-6">Informações</h2>
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                      <div>
                         <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
@@ -262,23 +333,22 @@ function CarPage() {
                      </div>
                   </div>
                </div>
-
-               {/* historia */}
-               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
-                  <div className="flex justify-between items-center mb-6">
-                     <h2 className="text-xl font-semibold">
-                        Histórico de Utilização
-                     </h2>
-                     <Link href="/report">
-                        <button
-                           variant="link"
-                           icon="report"
-                           text="Gerar Relatório"
-                        />
-                     </Link>
-                  </div>
-                  <DetailCarTable />
+            </div>
+            {/* historico */}
+            <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+               <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-xl font-semibold">
+                     Histórico de Utilização
+                  </h2>
+                  <Link href="/report">
+                     <button
+                        variant="link"
+                        icon="report"
+                        text="Gerar Relatório"
+                     />
+                  </Link>
                </div>
+               <DetailCarTable />
             </div>
          </div>
 
@@ -342,7 +412,7 @@ function CarPage() {
             <DeleteConfirmation
                onConfirm={confirmarDelete}
                onClose={() => setShowDeleteModal(false)}
-               type="veículo"
+               tipo="veículo"
             />
          )}
       </div>
