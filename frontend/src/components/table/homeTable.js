@@ -54,7 +54,7 @@ export default function RecentEvent() {
                         </TableCell>
                         <TableCell
                            isHeader
-                           className="sticky right-0 bg-bee-dark-100 dark:bg-bee-dark-800 py-3 px-2 text-center font-medium  text-gray-500 dark:text-gray-400"
+                           className="sticky right-0 bg-bee-dark-100 dark:bg-bee-dark-800 py-3 px-2 text-center font-medium  text-gray-500 dark:text-gray-400 shadow-lg lg:shadow-none"
                         >
                            Status
                         </TableCell>
@@ -85,7 +85,7 @@ export default function RecentEvent() {
                                     <TableCell className="table-cell py-3 max-w-[80px] truncate">
                                        {formatDate(event.createdAt)}
                                     </TableCell>
-                                    <TableCell className="sticky right-0 px-2 bg-bee-dark-100 dark:bg-bee-dark-800 py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
+                                    <TableCell className="sticky right-0 px-2 bg-bee-dark-100 dark:bg-bee-dark-800 py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400 shadow-lg lg:shadow-none">
                                        <Badge
                                           size="sm"
                                           color={
