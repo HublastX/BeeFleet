@@ -4,8 +4,12 @@ import Link from "next/link";
 import Icon from "@/elements/Icon";
 import CardSkeleton from "@/elements/ui/skeleton/CardSkeleton";
 import { useNavBar } from "../navbar/navBarContext";
+
 export default function CarCard({ searchTerm }) {
    const { carro, erro, carregando } = useCar();
+   const { isExpanded, isHovered } = useNavBar();
+   const isNavOpen = isExpanded || isHovered;
+
    const carrosFiltrados = carro
       .filter((carro) => {
          if (!searchTerm) return true;
@@ -17,17 +21,16 @@ export default function CarCard({ searchTerm }) {
       })
       .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
-   const { isExpanded, isHovered } = useNavBar();
-   const isNavOpen = isExpanded || isHovered;
-
-   const gridClass = `grid transition-all duration-300 ease-in-out grid-cols-1 md:grid-cols-3 ${
-      isNavOpen ? "lg:grid-cols-4" : "lg:grid-cols-5"
-   }`;
+   const gridClass = `grid transition-all duration-300 ease-in-out gap-6 p-4 ${
+      isNavOpen
+         ? "xl:grid-cols-4 lg:grid-cols-3"
+         : "xl:grid-cols-5 lg:grid-cols-4"
+   } grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3`;
 
    if (carregando) return <CardSkeleton />;
    if (erro)
       return (
-         <div>
+         <div className="space-y-4">
             <div className="p-6 text-center font-semibold text-xl">
                <p className="text-bee-alert-300">
                   Ocorreu um problema ao carregar os carros. <br />
@@ -39,65 +42,100 @@ export default function CarCard({ searchTerm }) {
       );
 
    return (
-      <>
+      <div className="w-full">
          {carrosFiltrados.length === 0 && !erro && !carregando && (
-            <div className="flex items-center justify-center p-6 w-full h-full">
-               <div className="text-center font-semibold text-xl">
-                  Nenhum carro foi encontrado
+            <div className="flex flex-col items-center justify-center p-12 w-full h-full bg-white dark:bg-bee-dark-800 rounded-xl border border-dashed border-bee-dark-300 dark:border-bee-dark-400">
+               <Icon
+                  name="car"
+                  className="size-16 text-gray-400 dark:text-gray-500 mb-4"
+               />
+               <div className="text-center">
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+                     Nenhum carro encontrado
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400 mt-1">
+                     {searchTerm
+                        ? "Tente ajustar sua busca"
+                        : "Adicione um novo carro para começar"}
+                  </p>
                </div>
             </div>
          )}
-         <div className={`${gridClass} gap-6 p-4`}>
-            {!carregando && !erro && (
-               <>
-                  {carrosFiltrados.map((car) => (
-                     <Link
-                        href={`${car.id}`}
-                        key={car.id}
-                        className="relative bg-bee-dark-100 dark:bg-bee-dark-800 p-4 rounded-2xl shadow hover:shadow-xl transition duration-300 flex flex-col gap-4"
-                     >
-                        <div className="relative w-full h-40 rounded-lg overflow-hidden">
-                           {car.image ? (
-                              <Image
-                                 src={car.image}
-                                 alt={`Imagem do carro ${car.model}`}
-                                 layout="fill"
-                                 objectFit="cover"
-                                 unoptimized 
-                                 className="rounded-lg"
-                              />
-                           ) : (
-                              <div className="w-full h-full bg-bee-purple-300 text-bee-alert-500 text-center flex justify-center">
-                                 <Icon name="car" />
-                              </div>
-                           )}
 
-                           <h1
-                              className={`absolute top-1 right-1 w-5 h-5 rounded-full border-2 border-white dark:border-gray-800 ${
-                                 car.status === "IN_USE"
-                                    ? "bg-bee-alert-300"
-                                    : car.status === "AVAILABLE"
-                                      ? "bg-bee-alert-100"
-                                      : "bg-bee-alert-700"
-                              }`}
-                           ></h1>
+         <div className={gridClass}>
+            {carrosFiltrados.map((car) => (
+               <Link
+                  href={`${car.id}`}
+                  key={car.id}
+                  className="group relative bg-white dark:bg-bee-dark-800 rounded-xl shadow-sm card-hover transition-all duration-300 overflow-hidden border border-bee-dark-300 dark:border-bee-dark-400"
+               >
+                  {/* Status Badge */}
+                  <div
+                     className={`absolute top-3 right-3 z-10 px-2 py-1 rounded-full text-xs font-medium ${
+                        car.status === "AVAILABLE"
+                           ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400"
+                           : car.status === "IN_USE"
+                             ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400"
+                             : "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400"
+                     }`}
+                  >
+                     {car.status === "AVAILABLE"
+                        ? "Disponível"
+                        : car.status === "IN_USE"
+                          ? "Em uso"
+                          : "Indisponível"}
+                  </div>
+
+                  {/* foto */}
+                  <div className="relative w-full h-48 bg-gray-100 dark:bg-bee-dark-400 overflow-hidden">
+                     {car.image ? (
+                        <Image
+                           src={car.image}
+                           alt={`Foto do carro ${car.model}`}
+                           fill
+                           className="object-cover transition-transform duration-500 group-hover:scale-105"
+                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                     ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                           <Icon name="car" className="size-35" />
                         </div>
-                        <div className="flex flex-col gap-1">
-                           <h2 className="text-lg font-semibold">
-                              {car.plate}
-                           </h2>
-                           <p className="text-sm text-gray-600 dark:text-gray-400">
-                              {car.brand} {car.model}
-                           </p>
-                           <p className="text-sm font-medium text-bee-primary-500">
-                              {car.odometer}km
-                           </p>
+                     )}
+                  </div>
+
+                  {/* detalhes */}
+                  <div className="p-4 space-y-2">
+                     <h3 className="font-semibold text-lg text-gray-800 dark:text-white truncate">
+                        {car.brand} {car.model}
+                     </h3>
+
+                     {/* <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                        <Icon name="plate" className="size-4" />
+                        <span className="text-sm">{car.plate}</span>
+                     </div> */}
+
+                     <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                        {/* <Icon name="clock" className="size-4" /> */}
+                        <span className="text-sm">{car.odometer} km</span>
+                     </div>
+
+                     <div className="pt-2 mt-2 border-t border-bee-dark-300 dark:border-bee-dark-400 flex justify-between items-center text-xs text-gray-500 dark:text-gray-400">
+                        <span>
+                           Atualizado em:{" "}
+                           {new Date(car.updatedAt).toLocaleDateString("pt-BR")}
+                        </span>
+                        <div>
+                           <Icon
+                              name="chevronRight"
+                              className="size-5"
+                              strokeWidth={2}
+                           />
                         </div>
-                     </Link>
-                  ))}
-               </>
-            )}
+                     </div>
+                  </div>
+               </Link>
+            ))}
          </div>
-      </>
+      </div>
    );
 }
