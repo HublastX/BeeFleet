@@ -8,30 +8,36 @@ datasource db {
 }
 
 model Manager {
-    id        String   @id @default(uuid())
-    email     String   @unique
-    password  String
-    name      String
-    image     String?
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-    events    Event[]
-    reports   Report[]
-    drivers   Driver[]
-    cars      Car[]
+    id             String   @id @default(uuid())
+    email          String   @unique
+    password       String
+    name           String
+    image          String?
+    createdAt      DateTime @default(now())
+    updatedAt      DateTime @updatedAt
+    events         Event[]
+    reports        Report[]
+    drivers        Driver[]
+    cars           Car[]
+    deletedCars    Car[]    @relation("DeletedBy")
+    deletedDrivers Driver[] @relation("DeletedBy")
+    deletedEvents  Event[]  @relation("DeletedBy")
 }
 
 model Driver {
-    id          String   @id @default(uuid())
+    id          String    @id @default(uuid())
     name        String
     phone       String
     image       String?
-    license     String   @unique
-    isAvailable Boolean  @default(true)
-    createdAt   DateTime @default(now())
-    updatedAt   DateTime @updatedAt
-    manager     Manager  @relation(fields: [managerId], references: [id])
+    license     String    @unique
+    isAvailable Boolean   @default(true)
+    createdAt   DateTime  @default(now())
+    updatedAt   DateTime  @updatedAt
+    deletedAt   DateTime?
+    manager     Manager   @relation(fields: [managerId], references: [id])
     managerId   String
+    deletedBy   Manager?  @relation("DeletedBy", fields: [deletedById], references: [id])
+    deletedById String?
     events      Event[]
     reports     Report[]
 }
@@ -51,26 +57,32 @@ model Car {
     isAvailable Boolean   @default(true)
     createdAt   DateTime  @default(now())
     updatedAt   DateTime  @updatedAt
+    deletedAt   DateTime?
     manager     Manager   @relation(fields: [managerId], references: [id])
     managerId   String
+    deletedBy   Manager?  @relation("DeletedBy", fields: [deletedById], references: [id])
+    deletedById String?
     events      Event[]
     reports     Report[]
 }
 
 model Event {
-    id        String      @id @default(uuid())
-    eventType EventType
-    odometer  Int
-    isActive  Boolean     @default(true)
-    status    EventStatus @default(PENDING)
-    createdAt DateTime    @default(now())
-    endedAt   DateTime?
-    manager   Manager     @relation(fields: [managerId], references: [id])
-    managerId String
-    driver    Driver      @relation(fields: [driverId], references: [id])
-    driverId  String
-    car       Car         @relation(fields: [carId], references: [id])
-    carId     String
+    id          String      @id @default(uuid())
+    eventType   EventType
+    odometer    Int
+    isActive    Boolean     @default(true)
+    status      EventStatus @default(PENDING)
+    createdAt   DateTime    @default(now())
+    endedAt     DateTime?
+    deletedAt   DateTime?
+    manager     Manager     @relation(fields: [managerId], references: [id])
+    managerId   String
+    deletedBy   Manager?    @relation("DeletedBy", fields: [deletedById], references: [id])
+    deletedById String?
+    driver      Driver      @relation(fields: [driverId], references: [id])
+    driverId    String
+    car         Car         @relation(fields: [carId], references: [id])
+    carId       String
 
     checkoutEventId       String? @unique
     originalCheckoutEvent Event?  @relation("RelatedEvents", fields: [checkoutEventId], references: [id])
