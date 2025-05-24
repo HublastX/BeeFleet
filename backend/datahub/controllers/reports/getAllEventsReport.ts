@@ -28,13 +28,11 @@ export const getAllEventsReport = async (req: Request, res: Response) => {
                 carId: event.car.id,
                 checkoutEventId: event.checkoutEventId || null,
                 driverDetails: {
-                    id: event.driver?.id,
                     name: event.driver?.name,
                     phone: event.driver?.phone,
                     license: event.driver?.license,
                 },
                 carDetails: {
-                    id: event.car?.id,
                     renavam: event.car?.renavam,
                     chassis: event.car?.chassis,
                     plate: event.car?.plate,
