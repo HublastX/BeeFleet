@@ -294,7 +294,6 @@ export default function Chegada() {
                   </div>
 
                   {motoristaError && (
-                     <div className="bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded p-3">
                         <p className="text-red-600 dark:text-red-300">
                            Motorista não encontrado.{" "}
                            <Link
@@ -304,15 +303,12 @@ export default function Chegada() {
                               Cadastrar novo motorista
                            </Link>
                         </p>
-                     </div>
                   )}
 
                   {motoristaStatusError && (
-                     <div className="bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded p-3">
                         <p className="text-red-600 dark:text-red-300">
                            {motoristaStatusError}
                         </p>
-                     </div>
                   )}
                </div>
             </div>
@@ -393,7 +389,6 @@ export default function Chegada() {
                   </div>
 
                   {carroError && (
-                     <div className="bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded p-3">
                         <p className="text-red-600 dark:text-red-300">
                            Veículo não encontrado.{" "}
                            <Link
@@ -403,15 +398,12 @@ export default function Chegada() {
                               Cadastrar novo veículo
                            </Link>
                         </p>
-                     </div>
                   )}
 
                   {carroStatusError && (
-                     <div className="bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded p-3">
                         <p className="text-red-600 dark:text-red-300">
                            {carroStatusError}
                         </p>
-                     </div>
                   )}
 
                   {/* Campo de odômetro */}
@@ -498,9 +490,6 @@ export default function Chegada() {
                                     </p>
                                     <p className="text-sm text-gray-600 dark:text-gray-400">
                                        RENAVAN: {selectedCarro.renavam}
-                                    </p>
-                                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                                       Hodômetro: {odometro}
                                     </p>
                                  </div>
                               ) : (
