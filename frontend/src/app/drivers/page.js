@@ -7,24 +7,23 @@ import { useState } from "react";
 import InputText from "@/elements/inputText";
 import Icon from "@/elements/Icon";
 import Cards from "@/components/cardList/driverCard";
-import CreateUserModal from "./create/page";
 
 function Driver() {
    const [view, setView] = useState("cards");
    const [searchTerm, setSearchTerm] = useState("");
-   const [showCarModal, setShowCarModal] = useState(false);
 
    return (
       <div>
          <div className="p-2 mb-3 flex flex-row items-center gap-6">
-            <Btn
-               texto="Novo Motorista"
-               variant="primary"
-               onClick={() => setShowCarModal(true)}
-               className=" gap-3 text-nowrap cursor-pointer hidden md:flex"
-            >
-               <Icon name="addUser" className="size-6" />
-            </Btn>
+            <Link href="/drivers/create">
+               <Btn
+                  texto="Novo Motorista"
+                  variant="primary"
+                  className=" gap-3 text-nowrap cursor-pointer hidden md:flex"
+               >
+                  <Icon name="addUser" className="size-6" />
+               </Btn>
+            </Link>
 
             <div className="w-full md:flex-1">
                <InputText
@@ -52,16 +51,12 @@ function Driver() {
          </div>
 
          <div className="md:hidden flex">
-            <button
-               onClick={() => setShowCarModal(true)}
+            <Link href="/drivers/create"
                className="fixed bottom-0 right-0 m-4 z-50 p-6 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300"
             >
                <Icon name="addUser" className="size-6" />
-            </button>
+            </Link>
          </div>
-         {showCarModal && (
-            <CreateUserModal onClose={() => setShowCarModal(false)} />
-         )}
       </div>
    );
 }
