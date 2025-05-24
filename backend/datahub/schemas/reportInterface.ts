@@ -8,6 +8,7 @@ export interface CarUsageReport {
     year: number;
     color: string;
     status: string;
+    createdAt: Date;
     totalUsageTimes: number;
     totalOdometerChange: number;
     lastUsed: Date | null;
@@ -38,6 +39,7 @@ export interface Driver {
     name: string;
     phone: string;
     license: string;
+    createdAt: Date;
     events: DriverEvent[];
 }
 
@@ -64,6 +66,7 @@ export interface Car {
     year: number;
     color: string;
     status: string;
+    createdAt: Date;
     events: CarEvent[];
 }
 
@@ -194,13 +197,11 @@ export interface EventReport {
     carId: string;
     checkoutEventId: string | null;
     driverDetails: {
-        id: string;
         name: string;
         phone: string;
         license: string;
     };
     carDetails: {
-        id: string;
         renavam: string;
         chassis: string;
         plate: string;
