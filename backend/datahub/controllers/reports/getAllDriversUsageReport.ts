@@ -11,7 +11,7 @@ export const getAllDriversUsageReport = async (req: Request, res: Response) => {
         const drivers: Driver[] = await prisma.driver.findMany({
             include: {
                 events: {
-                    where: { eventType: "RETURN" },
+                    where: { eventType: { in: ["RETURN", "REPAIR_RETURN"] } },
                     include: { car: true },
                     orderBy: { createdAt: "desc" },
                 },
@@ -63,6 +63,7 @@ export const getAllDriversUsageReport = async (req: Request, res: Response) => {
                 name: driver.name,
                 phone: driver.phone,
                 license: driver.license,
+                createdAt: driver.createdAt,
                 totalUsageTimes,
                 uniqueCarsUsed: uniqueCars.size,
                 totalOdometerChange,
