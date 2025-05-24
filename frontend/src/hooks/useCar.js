@@ -286,7 +286,7 @@ export default function useCar() {
       }
    };
 
-   // Deletar carro
+   // Deletar carro "com calma"
    const deleteCar = async (id) => {
       if (!gestor?.token) {
          setErro("token do gestor não encontrado.");
@@ -307,8 +307,8 @@ export default function useCar() {
             );
             return;
          }
-         const res = await fetch(`${API_URL}/api/cars/${id}`, {
-            method: "DELETE",
+         const res = await fetch(`${API_URL}/api/car/${id}/soft-delete`, {
+            method: "PATCH",
             headers: {
                "Content-Type": "application/json",
                Authorization: `Bearer ${gestor.token}`,
