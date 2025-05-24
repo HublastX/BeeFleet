@@ -63,11 +63,15 @@ export default function UserTable({ searchTerm }) {
       setModalAberto(true);
    }
 
-   function confirmarDelete() {
+   async function confirmarDelete() {
       if (motoristaParaDeletar) {
-         deleteDriver(motoristaParaDeletar.id);
-         setModalAberto(false);
-         setMotoristaParaDeletar(null);
+         try {
+            await deleteDriver(motoristaParaDeletar.id, "Motivo da remoção");
+            setModalAberto(false);
+            setMotoristaParaDeletar(null);
+         } catch (error) {
+            console.error("Falha ao deletar:", error);
+         }
       }
    }
 
