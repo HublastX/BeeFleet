@@ -31,7 +31,12 @@ function EditProfile() {
       }
    }, [gestor, formData]);
 
-   const valideImageType = ["image/jpeg", "image/png", "image/gif", "image/jpg"];
+   const valideImageType = [
+      "image/jpeg",
+      "image/png",
+      "image/gif",
+      "image/jpg",
+   ];
 
    const handleSubmit = async (e) => {
       e.preventDefault();
@@ -178,20 +183,24 @@ function EditProfile() {
                </div>
 
                <div className="flex gap-4">
-                  <div className="w-full flex gap-4">
+                  <div className="w-full flex gap-4 justify-end">
                      <Btn
                         type="button"
                         onClick={() => router.back()}
                         texto="Cancelar"
-                        variant="danger"
-                        className="flex-[1] px-4 py-2 border border-red-400 bg-red-400 hover:bg-red-500 text-white rounded-lg transition-colors"
+                        variant="cancel"
                      />
-                     <Btn
-                        type="submit"
-                        disabled={carregando}
-                        className="flex-[2]"
-                     >
-                        {carregando ? "Salvando..." : "Salvar Alterações"}
+                     <Btn type="submit" disabled={carregando}>
+                        {carregando ? (
+                           <div className="flex items-center justify-center gap-2 min-w-34">
+                              <Icon
+                                 name="circle"
+                                 className="size-5 text-white"
+                              />
+                           </div>
+                        ) : (
+                           "Salvar Alterações"
+                        )}
                      </Btn>
                   </div>
                </div>
