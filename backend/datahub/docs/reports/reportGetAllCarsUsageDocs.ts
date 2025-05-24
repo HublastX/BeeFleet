@@ -47,22 +47,43 @@ export const DOCS_REPORT_CAR_GET_ALL_USAGE = {
      *                         type: string
      *                       status:
      *                         type: string
+     *                       createdAt:
+     *                         type: string
+     *                         format: date-time
+     *                         description: Date when the car was created.
      *                       totalUsageTimes:
      *                         type: integer
      *                         description: Number of times the car was used.
      *                       totalOdometerChange:
      *                         type: number
      *                         description: Total odometer change for the car.
+     *                       uniqueDriversUsed:
+     *                         type: integer
+     *                         description: Number of unique drivers who used the car.
      *                       lastUsed:
      *                         type: string
      *                         format: date-time
      *                         description: Last time the car was used.
-     *                       averageDailyUsage:
-     *                         type: string
-     *                         description: Average daily usage of the car.
-     *                       currentOdometer:
-     *                         type: number
-     *                         description: Current odometer reading of the car.
+     *                       driverUsageDetails:
+     *                         type: array
+     *                         description: Details of drivers who used the car.
+     *                         items:
+     *                           type: object
+     *                           properties:
+     *                             driverId:
+     *                               type: string
+     *                             name:
+     *                               type: string
+     *                             phone:
+     *                               type: string
+     *                             license:
+     *                               type: string
+     *                             totalUsageTimes:
+     *                               type: integer
+     *                               description: Number of times the driver used the car.
+     *                             totalOdometerChange:
+     *                               type: number
+     *                               description: Total odometer change by the driver.
      *       400:
      *         description: Invalid request parameters.
      *         content:
