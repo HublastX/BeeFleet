@@ -7,6 +7,13 @@ import { getAllCarsUsageReport } from "../../../controllers/reports/getAllCarsUs
 import { getAllDriversUsageReport } from "../../../controllers/reports/getAllDriversUsageReport";
 import { getAllEventsReport } from "../../../controllers/reports/getAllEventsReport";
 import { getAllManagersReport } from "../../../controllers/reports/getAllManagersReport";
+import { getCompleteManagersReport } from "../../../controllers/reports/getCompleteManagersReport";
+import {
+    softDeleteCar,
+    softDeleteDriver,
+    softDeleteEvent,
+    restoreDeletedItem,
+} from "../../../controllers/managers/softDeleteController";
 
 const reportRoutes: Router = express.Router();
 
@@ -88,6 +95,86 @@ reportRoutes.get(
     async (req: Request, res: Response) => {
         try {
             await getAllManagersReport(req, res);
+        } catch (error) {
+            res.status(500).send({ error: "Internal Server Error" });
+        }
+    }
+);
+
+reportRoutes.get(
+    "/report/complete-report",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    async (req: Request, res: Response) => {
+        try {
+            await getCompleteManagersReport(req, res);
+        } catch (error) {
+            res.status(500).send({ error: "Internal Server Error" });
+        }
+    }
+);
+
+reportRoutes.patch(
+    "/car/:id/soft-delete",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    async (req: Request, res: Response) => {
+        try {
+            await softDeleteCar(req, res);
+        } catch (error) {
+            res.status(500).send({ error: "Internal Server Error" });
+        }
+    }
+);
+
+reportRoutes.patch(
+    "/driver/:id/soft-delete",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    async (req: Request, res: Response) => {
+        try {
+            await softDeleteDriver(req, res);
+        } catch (error) {
+            res.status(500).send({ error: "Internal Server Error" });
+        }
+    }
+);
+
+reportRoutes.patch(
+    "/event/:id/soft-delete",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    async (req: Request, res: Response) => {
+        try {
+            await softDeleteEvent(req, res);
+        } catch (error) {
+            res.status(500).send({ error: "Internal Server Error" });
+        }
+    }
+);
+
+reportRoutes.patch(
+    "/restore/:itemType/:itemId",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    async (req: Request, res: Response) => {
+        try {
+            await restoreDeletedItem(req, res);
         } catch (error) {
             res.status(500).send({ error: "Internal Server Error" });
         }
