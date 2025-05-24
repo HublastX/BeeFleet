@@ -322,11 +322,9 @@ export default function Saida() {
                   )}
 
                   {motoristaStatusError && (
-                     <div className="bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded p-3">
-                        <p className="text-red-600 dark:text-red-300">
-                           {motoristaStatusError}
-                        </p>
-                     </div>
+                     <p className="text-red-600 dark:text-red-300">
+                        {motoristaStatusError}
+                     </p>
                   )}
                </div>
             </div>
@@ -440,11 +438,9 @@ export default function Saida() {
                   )}
 
                   {carroStatusError && (
-                     <div className="bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded p-3">
-                        <p className="text-red-600 dark:text-red-300">
-                           {carroStatusError}
-                        </p>
-                     </div>
+                     <p className="text-red-600 dark:text-red-300">
+                        {carroStatusError}
+                     </p>
                   )}
                </div>
             </div>

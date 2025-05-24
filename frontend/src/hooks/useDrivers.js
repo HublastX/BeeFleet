@@ -66,7 +66,11 @@ export default function useDrivers() {
 
             const data = await res.json();
 
-            const motoristasFormatados = data.data.map((motorista) => ({
+            const motoristasAtivos = data.data.filter(
+               (motorista) => motorista.deletedAt === null
+            );
+
+            const motoristasFormatados = motoristasAtivos.map((motorista) => ({
                ...motorista,
                managerId: motorista.managerId || gestor.id,
                image:
@@ -142,7 +146,8 @@ export default function useDrivers() {
       setErro(null);
 
       const existingDriver = motoristas.find(
-         (driver) => driver.license === license || driver.phone === phone
+         (driver) =>
+            driver && (driver.license === license || driver.phone === phone)
       );
 
       if (existingDriver) {
@@ -273,7 +278,7 @@ export default function useDrivers() {
    };
 
    // Deletar motorista
-   const deleteDriver = async (id) => {
+   const deleteDriver = async (id, reason) => {
       if (!gestor?.token) {
          setErro("Token do gestor não encontrado.");
          return;
@@ -295,12 +300,16 @@ export default function useDrivers() {
             return;
          }
 
-         const res = await fetch(`${API_URL}/api/drivers/${id}`, {
-            method: "DELETE",
+         const res = await fetch(`${API_URL}/api/driver/${id}/soft-delete`, {
+            method: "PATCH",
             headers: {
                "Content-Type": "application/json",
                Authorization: `Bearer ${gestor.token}`,
             },
+            body: JSON.stringify({
+               managerId: gestor.id,
+               reason,
+            }),
          });
 
          if (!res.ok) {

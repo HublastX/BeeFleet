@@ -300,7 +300,7 @@ function Events() {
             </div>
 
             {/* Tabela */}
-            <div className="p-0 shadow-sm rounded-md col-span-1 md:col-span-2 lg:col-span-4 card-hover">
+            <div className="p-0 shadow-sm rounded-md col-span-1 md:col-span-2 lg:col-span-4 ">
                <EventTable />
             </div>
          </div>
