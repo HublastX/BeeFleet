@@ -13,14 +13,19 @@ const app: Application = express();
 
 app.use(
     cors({
-        origin: ["http://localhost:5006", "http://localhost:3000", "https://hublast.com", "https://hublast.com/beefleet/api/"], // Add any other origins as needed
+        origin: [
+            "http://localhost:5006",
+            "http://localhost:3000",
+            "https://hublast.com",
+            "https://hublast.com/beefleet/api/",
+            "http://localhost:5004",
+        ],
         methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         allowedHeaders: ["Content-Type", "Authorization"],
         credentials: true,
     })
 );
 
-// Add these lines to parse JSON and form data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
