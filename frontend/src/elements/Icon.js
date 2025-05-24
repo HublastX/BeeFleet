@@ -1,6 +1,8 @@
 import React from "react";
 import CarPlus from "@/styles/CustomCarIconPlus";
 import Car from "@/styles/CustomCarIcon";
+import Circle from "@/styles/CustomCircleIcon";
+
 import {
    EllipsisHorizontalIcon,
    UserIcon,
@@ -100,7 +102,8 @@ const icons = {
    chevronRight: ChevronRightIcon,
    inbox: InboxIcon,
    clock: ClockIcon,
-   phone: PhoneIcon
+   phone: PhoneIcon,
+   circle: Circle
 };
 
 export default function Icon({ name, className, strokeWidth }) {

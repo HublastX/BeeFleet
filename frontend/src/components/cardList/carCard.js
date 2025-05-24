@@ -75,8 +75,8 @@ export default function CarCard({ searchTerm }) {
                         car.status === "AVAILABLE"
                            ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400"
                            : car.status === "IN_USE"
-                             ? "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400"
-                             : "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400"
+                             ? "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400"
+                             : "bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400"
                      }`}
                   >
                      {car.status === "AVAILABLE"

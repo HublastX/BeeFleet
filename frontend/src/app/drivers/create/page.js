@@ -203,8 +203,18 @@ function DriverCreate() {
                         variant="cancel"
                         texto="Cancelar"
                      />
-                     <Btn type="submit" variant="primary" disabled={carregando}>
-                        {carregando ? "Cadastrando..." : "Cadastrar Motorista"}
+                     <Btn
+                        type="submit"
+                        variant="primary"
+                        disabled={carregando}
+                     >
+                        {carregando ? (
+                           <div className="flex items-center justify-center gap-2 min-w-36">
+                              <Icon name="circle" className="size-5 text-white" />
+                           </div>
+                        ) : (
+                           "Cadastrar Motorista"
+                        )}
                      </Btn>
                   </div>
                </form>

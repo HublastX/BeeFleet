@@ -145,7 +145,7 @@ export default function Saida() {
             "customDateTimeContainer"
          );
          const customOption = document.querySelector(
-            "input[name=\"horaOption\"][value=\"custom\"]"
+            "input[name='horaOption'][value='custom']"
          );
 
          if (customOption.checked) {
@@ -156,7 +156,7 @@ export default function Saida() {
       };
 
       const radioButtons = document.querySelectorAll(
-         "input[name=\"horaOption\"]"
+         "input[name='horaOption']"
       );
       radioButtons.forEach((radio) => {
          radio.addEventListener("change", handleRadioChange);
@@ -198,8 +198,8 @@ export default function Saida() {
             selectedMotorista.id,
             "CHECKOUT",
             odometro,
-            null,
-            eventDate.toISOString()
+            null
+            // eventDate.toISOString()
          );
       } catch (error) {
          console.error("Erro no handleSubmit:", error);
@@ -310,17 +310,15 @@ export default function Saida() {
                   </div>
 
                   {motoristaError && (
-                     <div className="bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded p-3">
-                        <p className="text-red-600 dark:text-red-300">
-                           Motorista não encontrado.{" "}
-                           <Link
-                              href="drivers/create"
-                              className="text-bee-purple-500 font-medium"
-                           >
-                              Cadastrar novo motorista
-                           </Link>
-                        </p>
-                     </div>
+                     <p className="text-red-600 dark:text-red-300">
+                        Motorista não encontrado.{" "}
+                        <Link
+                           href="drivers/create"
+                           className="text-bee-purple-500 font-medium"
+                        >
+                           Cadastrar novo motorista
+                        </Link>
+                     </p>
                   )}
 
                   {motoristaStatusError && (
@@ -430,17 +428,15 @@ export default function Saida() {
                   </div>
 
                   {carroError && (
-                     <div className="bg-red-100 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded p-3">
-                        <p className="text-red-600 dark:text-red-300">
-                           Veículo não encontrado.{" "}
-                           <Link
-                              href="cars/create"
-                              className="text-bee-purple-500 font-medium"
-                           >
-                              Cadastrar novo veículo
-                           </Link>
-                        </p>
-                     </div>
+                     <p className="text-red-600 dark:text-red-300">
+                        Veículo não encontrado.{" "}
+                        <Link
+                           href="cars/create"
+                           className="text-bee-purple-500 font-medium"
+                        >
+                           Cadastrar novo veículo
+                        </Link>
+                     </p>
                   )}
 
                   {carroStatusError && (
@@ -454,10 +450,11 @@ export default function Saida() {
             </div>
 
             {/* Seção Data/Hora */}
-            <div className="p-6">
+            <div className="p-6 text-gray-300 italic cursor-not-allowed">
                <div className="flex items-center gap-3 mb-4">
                   <Icon name="calendar" className="size-6" />
                   <h2 className="text-xl font-bold">Data/Hora</h2>
+                  <p className="text-red-500 italic">*ainda nao implementado</p>
                </div>
 
                <div className="space-y-4">
@@ -556,7 +553,9 @@ export default function Saida() {
                            </div>
                         </div>
                         <div className="mt-4">
-                           <h4 className="font-medium mb-2">Data/Hora</h4>
+                           <h4 className="font-medium mb-2 italic text-gray-300">
+                              Data/Hora
+                           </h4>
                            {/* <p>
                               {document.querySelector(
                                  'input[name="horaOption"]:checked'
@@ -584,7 +583,15 @@ export default function Saida() {
                />
                <Btn
                   type="submit"
-                  texto={carregando ? "Processando..." : "Confirmar Saída"}
+                  texto={
+                     carregando ? (
+                        <div className="flex items-center justify-center gap-2 min-w-34">
+                           <Icon name="circle" className="size-5 text-white" />
+                        </div>
+                     ) : (
+                        "Confirmar Saída"
+                     )
+                  }
                   disabled={!selectedCarro || !selectedMotorista || carregando}
                />
             </div>
