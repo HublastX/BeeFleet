@@ -269,12 +269,21 @@ function CreateCarsModal() {
                   <div className="flex justify-end gap-3 pt-4 border-t border-bee-dark-300 dark:border-bee-dark-400">
                      <Btn
                         type="button"
-                        onClick={() =>router.push("/cars")}
+                        onClick={() => router.push("/cars")}
                         variant="cancel"
                         texto="Cancelar"
                      />
                      <Btn type="submit" variant="primary" disabled={carregando}>
-                        {carregando ? "Cadastrando..." : "Cadastrar Veículo"}
+                        {carregando ? (
+                           <div className="flex items-center justify-center gap-2 min-w-34">
+                              <Icon
+                                 name="circle"
+                                 className="size-5 text-white"
+                              />
+                           </div>
+                        ) : (
+                           "Cadastrar Veículo"
+                        )}
                      </Btn>
                   </div>
                </form>

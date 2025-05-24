@@ -234,7 +234,16 @@ function EditDriverModal() {
                         texto="Cancelar"
                      />
                      <Btn type="submit" variant="primary" disabled={carregando}>
-                        {carregando ? "Salvando..." : "Salvar Alterações"}
+                        {carregando ? (
+                           <div className="flex items-center justify-center gap-2 min-w-34">
+                              <Icon
+                                 name="circle"
+                                 className="size-5 text-white"
+                              />
+                           </div>
+                        ) : (
+                           "Salvar Alterações"
+                        )}
                      </Btn>
                   </div>
                </form>
