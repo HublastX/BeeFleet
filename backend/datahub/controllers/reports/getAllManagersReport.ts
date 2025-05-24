@@ -1,95 +1,93 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
-import {
-    ManagerReport
-} from "../../schemas/reportInterface";
+import { ManagerReport } from "../../schemas/reportInterface";
 
 export const getAllManagersReport = async (req: Request, res: Response) => {
     try {
-        const managers = await prisma.manager.findMany({
-            include: {
-                events: {
-                    include: {
-                        driver: true,
-                        car: true,
-                    },
-                },
-            },
-        });
+        // Buscar todos os gestores - incluir todos os relacionamentos para depuração
+        const managers = await prisma.manager.findMany();
 
-        const drivers = await prisma.driver.findMany({
-            where: {
-                events: {
-                    some: {
-                        managerId: {
-                            in: managers.map((manager) => manager.id),
-                        },
-                    },
-                },
-            },
-            include: {
-                events: {
-                    include: {
-                        car: true,
-                    },
-                },
+        console.log(`Total de gestores encontrados: ${managers.length}`);
 
-            },
-        });
+        // Lista para armazenar os relatórios de cada gestor
+        const managersReport: ManagerReport[] = [];
 
-        const cars = await prisma.car.findMany({
-            where: {
-                events: {
-                    some: {
-                        managerId: {
-                            in: managers.map((manager) => manager.id),
-                        },
-                    },
-                },
-            },
-            include: {
-                events: {
-                    include: {
-                        driver: true,
-                    },
-                },
-            },
-        });
+        // Para cada gestor, busque todos os seus dados relacionados
+        for (const manager of managers) {
+            console.log(`Processando gestor: ${manager.name} (${manager.id})`);
 
-        const managersReport: ManagerReport[] = managers.map((manager) => {
-            return {
+            // Buscar todos os motoristas deste gestor
+            const drivers = await prisma.driver.findMany({
+                where: {
+                    managerId: manager.id,
+                },
+            });
+
+            console.log(
+                `Motoristas encontrados para ${manager.name}: ${drivers.length}`
+            );
+
+            const cars = await prisma.car.findMany({
+                where: {
+                    managerId: manager.id,
+                },
+            });
+
+            console.log(
+                `Carros encontrados para ${manager.name}: ${cars.length}`
+            );
+
+            const events = await prisma.event.findMany({
+                where: {
+                    managerId: manager.id,
+                },
+                include: {
+                    driver: true,
+                    car: true,
+                },
+            });
+
+            console.log(
+                `Eventos encontrados para ${manager.name}: ${events.length}`
+            );
+
+            if (drivers.length === 0) {
+                console.log(
+                    "ATENÇÃO: Nenhum motorista encontrado para este gestor, verificando manualmente..."
+                );
+                const manualDriverCheck = await prisma.$queryRaw`
+                    SELECT * FROM Driver WHERE managerId = ${manager.id}
+                `;
+                console.log(
+                    "Resultado da verificação manual:",
+                    manualDriverCheck
+                );
+            }
+
+            managersReport.push({
                 id: manager.id,
                 name: manager.name,
                 email: manager.email,
                 createdAt: manager.createdAt,
                 updatedAt: manager.updatedAt,
-                drivers: drivers
-                    .filter((driver) =>
-                        driver.events.some((event) => event.managerId === manager.id)
-                    )
-                    .map((driver) => ({
-                        id: driver.id,
-                        name: driver.name,
-                        phone: driver.phone,
-                        license: driver.license,
-                    })),
-
-                cars: cars
-                    .filter((car) =>
-                        car.events.some((event) => event.managerId === manager.id)
-                    )
-                    .map((car) => ({
-                        id: car.id,
-                        renavam: car.renavam,
-                        chassis: car.chassis,
-                        plate: car.plate,
-                        brand: car.brand,
-                        model: car.model,
-                        year: car.year,
-                        color: car.color,
-                        status: car.status,
-                    })),
-                events: manager.events.map((event) => ({
+                drivers: drivers.map((driver) => ({
+                    id: driver.id,
+                    name: driver.name,
+                    phone: driver.phone,
+                    license: driver.license,
+                })),
+                cars: cars.map((car) => ({
+                    id: car.id,
+                    renavam: car.renavam,
+                    chassis: car.chassis,
+                    plate: car.plate,
+                    brand: car.brand,
+                    model: car.model,
+                    year: car.year,
+                    color: car.color,
+                    status: car.status,
+                })),
+                events: events.map((event) => ({
                     id: event.id,
                     eventType: event.eventType,
                     odometer: event.odometer,
@@ -101,12 +99,17 @@ export const getAllManagersReport = async (req: Request, res: Response) => {
                     driverId: event.driver.id,
                     carId: event.car.id,
                     checkoutEventId: event.checkoutEventId || null,
-            })),
-        }});
+                })),
+            });
+        }
+
+        console.log(
+            `Relatório final: ${managersReport.length} gestores processados`
+        );
 
         res.json(managersReport);
     } catch (error) {
-        console.error(error);
+        console.error("Erro no relatório de gestores:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 };
