@@ -6,24 +6,24 @@ import Table from "../../components/table/carTable";
 import Icon from "@/elements/Icon";
 import Cards from "../../components/cardList/carCard";
 import InputText from "@/elements/inputText";
-import CreateCarsModal from "./create/page";
+import Link from "next/link";
 
 function Cars() {
    const [view, setView] = useState("cards");
    const [searchTerm, setSearchTerm] = useState("");
-   const [showCarModal, setShowCarModal] = useState(false);
 
    return (
       <div>
          <div className="p-2 mb-3 flex flex-row items-center gap-6">
+            <Link href="/cars/create">
             <Btn
                texto="Novo carro"
                variant="primary"
-               onClick={() => setShowCarModal(true)}
                className="gap-3 text-nowrap ursor-pointer hidden md:flex"
             >
                <Icon name="carPlus" className="size-6" />
             </Btn>
+            </Link>
             <div className="w-full md:flex-1">
                <InputText
                   variant="withIcon"
@@ -50,13 +50,10 @@ function Cars() {
          </div>
 
          <div className="md:hidden flex">
-            <button  onClick={() => setShowCarModal(true)} className="fixed bottom-0 right-0 m-4 z-50 p-6 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300">
+            <Link href="/cars/create"  className="fixed bottom-0 right-0 m-4 z-50 p-6 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300">
                <Icon name="carPlus" className="size-6" />
-            </button>
+            </Link>
          </div>
-         {showCarModal && (
-            <CreateCarsModal onClose={() => setShowCarModal(false)} />
-         )}
       </div>
    );
 }

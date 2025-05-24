@@ -9,7 +9,7 @@ import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
 import { useToast } from "@/utils/ToastContext";
 import Icon from "@/elements/Icon";
 
-function CreateUserModal() {
+function DriverCreate() {
    const { createDriver, carregando, erro } = useDrivers();
    const router = useRouter();
    const [errors, setErrors] = useState({});
@@ -36,7 +36,7 @@ function CreateUserModal() {
       const handleKeyDown = (e) => {
          if (e.key === "Escape") {
             setShow(false);
-            router.back();;
+            router.back();
          }
       };
       window.addEventListener("keydown", handleKeyDown);
@@ -131,7 +131,7 @@ function CreateUserModal() {
             <div className="flex items-center gap-3 mb-6 sticky top-0 bg-white dark:bg-bee-dark-800 pb-4 border-b border-bee-dark-300 dark:border-bee-dark-400">
                <h2 className="text-2xl font-bold">Cadastrar Novo Motorista</h2>
                <button
-                  onClick={router.back}
+                  onClick={() => router.back()}
                   className="ml-auto text-gray-400 hover:text-gray-700 dark:hover:text-white text-2xl font-bold focus:outline-none"
                   aria-label="Fechar"
                   type="button"
@@ -199,7 +199,7 @@ function CreateUserModal() {
                   <div className="flex justify-end gap-3 pt-4 border-t border-bee-dark-300 dark:border-bee-dark-400">
                      <Btn
                         type="button"
-                        onClick={router.push("/drivers")}
+                        onClick={() => router.push("/drivers")}
                         variant="cancel"
                         texto="Cancelar"
                      />
@@ -214,4 +214,4 @@ function CreateUserModal() {
    );
 }
 
-export default withAuth(CreateUserModal);
+export default withAuth(DriverCreate);
