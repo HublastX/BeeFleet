@@ -34,7 +34,7 @@ export default function UserDropdown() {
                )}
             </span>
 
-            <span className="hidden md:block mr-1 font-medium text-theme-sm">
+            <span className="block mr-1 font-medium text-theme-sm">
                {gestor.name}
             </span>
 
