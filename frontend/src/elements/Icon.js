@@ -29,7 +29,6 @@ import {
    CalendarIcon,
    ChartBarIcon,
    ArrowDownOnSquareIcon,
-   FunnelIcon,
    InboxIcon,
    ClockIcon,
    PhoneIcon,
@@ -37,6 +36,7 @@ import {
 import {
    ChevronUpIcon,
    PlusIcon,
+   FunnelIcon,
    ChatBubbleBottomCenterTextIcon,
    Bars3BottomLeftIcon,
    ChevronRightIcon,

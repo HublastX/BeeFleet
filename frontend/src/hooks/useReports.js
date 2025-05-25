@@ -167,6 +167,43 @@ export default function useReports() {
       }
    };
 
+   const getFullReport = async () => {
+      if (!gestor?.token) return;
+
+      setCarregando(true);
+      setErro(null);
+
+      try {
+         const res = await fetch(`${API_URL}/api/report/complete-report`, {
+            method: "GET",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+
+         if (!res.ok) {
+            const errorData = await res.json();
+            throw new Error(errorData.error || "Erro ao buscar relatório.");
+         }
+
+         const data = await res.json();
+
+         showToast(
+            "Relatório carregado!",
+            "success",
+            "Relatório carregado com sucesso.",
+            4000
+         );
+
+         return data;
+      } catch (error) {
+         handleError(error, "Erro ao gerar relatorio.");
+      } finally {
+         setCarregando(false);
+      }
+   };
+
    return {
       relatorio,
       carregando,
@@ -174,5 +211,6 @@ export default function useReports() {
       getAllCarUsageReport,
       getAllDriversUsageReport,
       getAllEventsUsageReport,
+      getFullReport,
    };
 }
