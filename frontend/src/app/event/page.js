@@ -219,7 +219,7 @@ function Events() {
 
                {/* tipos de evento */}
                <div className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover">
-                  <h3 className="text-xl font-bold mb-4 text-bee-dark-800 dark:text-white">
+                  <h3 className="text-xl font-bold mb-4">
                      Tipos de Evento
                   </h3>
                   <div className="space-y-3">
