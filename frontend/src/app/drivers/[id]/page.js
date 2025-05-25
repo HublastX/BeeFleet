@@ -14,8 +14,6 @@ import useCar from "@/hooks/useCar";
 import useEvents from "@/hooks/useEvent";
 import DetailSkeleton from "@/elements/ui/skeleton/DetailSkeleton";
 import Btn from "@/elements/btn";
-import { Dropdown } from "@/elements/ui/dropdown/Dropdown";
-import { DropdownItem } from "@/elements/ui/dropdown/DropdownItem";
 
 function formatDate(dateISO) {
    const options = {
@@ -35,16 +33,6 @@ function DriverPage() {
    const { gestores } = useAuth();
    const { carro } = useCar();
    const { events } = useEvents();
-   const [isOpen, setIsOpen] = useState(false);
-
-   function toggleDropdown(e) {
-      e.stopPropagation();
-      setIsOpen((prev) => !prev);
-   }
-
-   function closeDropdown() {
-      setIsOpen(false);
-   }
 
    const activeEvent = events.find(
       (event) => event.driverId === id && event.isActive
@@ -146,67 +134,10 @@ function DriverPage() {
 
             <div className="flex gap-3">
                <Btn
-                  variant="cancel"
-                  texto="Opções"
-                  onClick={toggleDropdown}
-                  className="hidden md:flex"
-               />
-               <Btn
                   texto="Opções"
                   variant="cancel"
                   onClick={() => setShowMenu(!showMenu)}
-                  className="flex md:hidden"
                />
-
-               <Dropdown
-                  isOpen={isOpen}
-                  onClose={closeDropdown}
-                  className="absolute px-5 mt-12 mr-3 flex flex-col rounded-b-2xl border border-bee-dark-300 bg-bee-dark-100 py-3 shadow-theme-lg dark:border-bee-dark-400 dark:bg-bee-dark-800"
-               >
-                  <ul className="flex flex-col gap-1 pb-3 border-b border-bee-dark-300 dark:border-bee-dark-400">
-                     <li>
-                        <DropdownItem
-                           onItemClick={closeDropdown}
-                           tag="a"
-                           href={`/drivers/${id}/edit`}
-                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
-                        >
-                           <Icon name="lapis" className="size-4" />
-                           Editar Motorista
-                        </DropdownItem>
-                        <DropdownItem
-                           onItemClick={closeDropdown}
-                           tag="a"
-                           href={`/event?tipo=${driver.isAvailable ? "saida" : "chegada"}&motoristaId=${id}`}
-                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
-                        >
-                           <Icon name="evento" className="size-4" />
-                           {driver.isAvailable
-                              ? "Registrar Saída"
-                              : "Registrar Chegada"}
-                        </DropdownItem>
-                        <DropdownItem
-                           onItemClick={closeDropdown}
-                           tag="a"
-                           href="/report"
-                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
-                        >
-                           <Icon name="reports" className="size-4" />
-                           Gerar Relatório
-                        </DropdownItem>
-                     </li>
-                  </ul>
-                  <button
-                     onClick={() => {
-                        abrirModalDeletar(id);
-                        setShowMenu(false);
-                     }}
-                     className="w-full mt-2 flex items-center gap-3 p-3 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
-                  >
-                     <Icon name="trash" className="size-5" strokeWidth={2} />
-                     Excluir Motorista
-                  </button>
-               </Dropdown>
             </div>
          </div>
 
@@ -327,49 +258,52 @@ function DriverPage() {
                   className="absolute inset-0 bg-black/30"
                   onClick={() => setShowMenu(false)}
                />
-               <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-xl shadow-xl border-t border-gray-200 dark:border-gray-700 p-4">
-                  <div className="space-y-2">
-                     <Link
-                        href={`/drivers/${id}/edit`}
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-                        onClick={() => setShowMenu(false)}
-                     >
-                        <Icon name="lapis" className="size-5" />
-                        <span>Editar Motorista</span>
-                     </Link>
 
-                     <Link
-                        href={`/event?tipo=${driver.isAvailable ? "saida" : "chegada"}&motoristaId=${id}`}
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-                        onClick={() => setShowMenu(false)}
-                     >
-                        <Icon name="evento" className="size-5" />
-                        <span>
-                           {driver.isAvailable
-                              ? "Registrar Saída"
-                              : "Registrar Chegada"}
-                        </span>
-                     </Link>
-
-                     <Link
-                        href="/report"
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-                        onClick={() => setShowMenu(false)}
-                     >
-                        <Icon name="reports" className="size-5" />
-                        <span>Gerar Relatório</span>
-                     </Link>
-
-                     <button
-                        onClick={() => {
-                           abrirModalDeletar(id);
-                           setShowMenu(false);
-                        }}
-                        className="w-full flex items-center gap-3 p-3 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
-                     >
-                        <Icon name="trash" className="size-5" />
-                        <span>Excluir Motorista</span>
-                     </button>
+               <div className="absolute bottom-0 left-0 right-0 md:bottom-auto md:right-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:min-w-1/3">
+                  <div className="bg-white dark:bg-gray-800 rounded-t-xl md:rounded-xl shadow-xl border-t md:border border-gray-200 dark:border-gray-700 p-4 md:p-6 w-full md:max-w-md">
+                     <div className="space-y-2 md:space-y-3">
+                        <h3 className="hidden md:block text-lg font-medium mb-4">
+                           Opções do Motorista
+                        </h3>
+                        <Link
+                           href={`/drivers/${id}/edit`}
+                           className="flex items-center gap-3 p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
+                           onClick={() => setShowMenu(false)}
+                        >
+                           <Icon name="lapis" className="size-5" />
+                           <span>Editar Motorista</span>
+                        </Link>
+                        <Link
+                           href={`/event?tipo=${driver.isAvailable ? "saida" : "chegada"}&motoristaId=${id}`}
+                           className="flex items-center gap-3 p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
+                           onClick={() => setShowMenu(false)}
+                        >
+                           <Icon name="evento" className="size-5" />
+                           <span>
+                              {driver.isAvailable
+                                 ? "Registrar Saída"
+                                 : "Registrar Chegada"}
+                           </span>
+                        </Link>
+                        <Link
+                           href="/report"
+                           className="flex items-center gap-3 p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
+                           onClick={() => setShowMenu(false)}
+                        >
+                           <Icon name="reports" className="size-5" />
+                           <span>Gerar Relatório</span>
+                        </Link>
+                        <button
+                           onClick={() => {
+                              abrirModalDeletar(id);
+                              setShowMenu(false);
+                           }}
+                           className="w-full flex items-center gap-3 p-3 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
+                        >
+                           <Icon name="trash" className="size-5" />
+                           <span>Excluir Motorista</span>
+                        </button>
+                     </div>
                   </div>
                </div>
             </div>
