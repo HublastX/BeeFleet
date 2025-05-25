@@ -27,7 +27,7 @@ const Card = ({ icone, titulo, quantidade, estado, porcentagem, color }) => {
 
    return (
       <div
-         className={`p-5 min-w-60 flex md:min-w-auto justify-between rounded-2xl border ${colorClasses[color].border} bg-bee-dark-100 dark:bg-bee-dark-800 card-hover`}
+         className="p-5 min-w-60 flex md:min-w-auto justify-between rounded-2xl border  bg-bee-dark-100 dark:bg-bee-dark-800 border-bee-dark-300 dark:border-bee-dark-400 hover:shadow-lg"
       >
          <div className=" gap-5 flex items-center">
             <div

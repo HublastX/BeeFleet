@@ -35,16 +35,6 @@ function CarPage() {
    const { gestores } = useAuth();
    const { motoristas } = useDrivers();
    const { events } = useEvents();
-   const [isOpen, setIsOpen] = useState(false);
-
-   function toggleDropdown(e) {
-      e.stopPropagation();
-      setIsOpen((prev) => !prev);
-   }
-
-   function closeDropdown() {
-      setIsOpen(false);
-   }
 
    const activeEvent = events.find(
       (event) => event.carId === id && event.isActive
@@ -145,67 +135,10 @@ function CarPage() {
 
             <div className="flex gap-3">
                <Btn
-                  variant="cancel"
-                  texto="Opções"
-                  onClick={toggleDropdown}
-                  className="hidden md:flex"
-               />
-               <Btn
                   texto="Opções"
                   variant="cancel"
                   onClick={() => setShowMenu(!showMenu)}
-                  className="flex md:hidden"
                />
-
-               <Dropdown
-                  isOpen={isOpen}
-                  onClose={closeDropdown}
-                  className="absolute px-5 mt-12 mr-3 flex flex-col rounded-b-2xl border border-bee-dark-300 bg-bee-dark-100 py-3 shadow-theme-lg dark:border-bee-dark-400 dark:bg-bee-dark-800"
-               >
-                  <ul className="flex flex-col gap-1 pb-3 border-b border-bee-dark-300 dark:border-bee-dark-400">
-                     <li>
-                        <DropdownItem
-                           onItemClick={closeDropdown}
-                           tag="a"
-                           href={`/cars/${id}/edit`}
-                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
-                        >
-                           <Icon name="lapis" className="size-4" />
-                           Editar Carro
-                        </DropdownItem>
-                        <DropdownItem
-                           onItemClick={closeDropdown}
-                           tag="a"
-                           href={`/event?tipo=${carroData.isAvailable ? "saida" : "chegada"}&carroId=${id}`}
-                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
-                        >
-                           <Icon name="evento" className="size-4" />
-                           {carroData.isAvailable
-                              ? "Registrar Saída"
-                              : "Registrar Chegada"}
-                        </DropdownItem>
-                        <DropdownItem
-                           onItemClick={closeDropdown}
-                           tag="a"
-                           href="/report"
-                           className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
-                        >
-                           <Icon name="reports" className="size-4" />
-                           Gerar Relatório
-                        </DropdownItem>
-                     </li>
-                  </ul>
-                  <button
-                     onClick={() => {
-                        abrirModalDeletar(id);
-                        setShowMenu(false);
-                     }}
-                     className="w-full mt-2 flex items-center gap-3 p-3 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
-                  >
-                     <Icon name="trash" className="size-5" strokeWidth={2} />
-                     Excluir Carro
-                  </button>
-               </Dropdown>
             </div>
          </div>
 
@@ -257,17 +190,6 @@ function CarPage() {
                               {carroData.year}
                            </p>
                         </div>
-
-                        {!carroData.isAvailable && motoristaAtual && (
-                           <div>
-                              <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                                 Motorista Atual
-                              </h3>
-                              <p className="text-lg font-medium">
-                                 {motoristaAtual.name}
-                              </p>
-                           </div>
-                        )}
                      </div>
                   </div>
                </div>
@@ -286,7 +208,7 @@ function CarPage() {
                         <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
                            Hodômetro
                         </h3>
-                        <p className="text-lg">{carroData.odometer}</p>
+                        <p className="text-lg">{carroData.odometer}km</p>
                      </div>
 
                      <div>
@@ -359,49 +281,57 @@ function CarPage() {
                   className="absolute inset-0 bg-black/30"
                   onClick={() => setShowMenu(false)}
                />
-               <div className="absolute bottom-0 left-0 right-0 bg-white dark:bg-gray-800 rounded-t-xl shadow-xl border-t border-gray-200 dark:border-gray-700 p-4">
-                  <div className="space-y-2">
-                     <Link
-                        href={`/cars/${id}/edit`}
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-                        onClick={() => setShowMenu(false)}
-                     >
-                        <Icon name="lapis" className="size-5" />
-                        <span>Editar Veículo</span>
-                     </Link>
 
-                     <Link
-                        href={`/event?tipo=${carroData.isAvailable ? "saida" : "chegada"}&carroId=${id}`}
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-                        onClick={() => setShowMenu(false)}
-                     >
-                        <Icon name="evento" className="size-5" />
-                        <span>
-                           {carroData.isAvailable
-                              ? "Registrar Saída"
-                              : "Registrar Chegada"}
-                        </span>
-                     </Link>
+               <div className="absolute bottom-0 left-0 right-0 md:bottom-auto md:right-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:min-w-1/3">
+                  <div className="bg-white dark:bg-gray-800 rounded-t-xl md:rounded-xl shadow-xl border-t md:border border-gray-200 dark:border-gray-700 p-4 md:p-6 w-full md:max-w-md">
 
-                     <Link
-                        href="/report"
-                        className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700"
-                        onClick={() => setShowMenu(false)}
-                     >
-                        <Icon name="reports" className="size-5" />
-                        <span>Gerar Relatório</span>
-                     </Link>
+                     <div className="space-y-2 md:space-y-3">
+                        <h3 className="hidden md:block text-lg font-medium mb-4">
+                           Opções do Veículo
+                        </h3>
 
-                     <button
-                        onClick={() => {
-                           abrirModalDeletar(id);
-                           setShowMenu(false);
-                        }}
-                        className="w-full flex items-center gap-3 p-3 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
-                     >
-                        <Icon name="trash" className="size-5" />
-                        <span>Excluir Veículo</span>
-                     </button>
+                        <Link
+                           href={`/cars/${id}/edit`}
+                           className="flex items-center gap-3 p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 md:transition-colors"
+                           onClick={() => setShowMenu(false)}
+                        >
+                           <Icon name="lapis" className="size-5" />
+                           <span>Editar Veículo</span>
+                        </Link>
+
+                        <Link
+                           href={`/event?tipo=${carroData.isAvailable ? "saida" : "chegada"}&carroId=${id}`}
+                           className="flex items-center gap-3 p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 md:transition-colors"
+                           onClick={() => setShowMenu(false)}
+                        >
+                           <Icon name="evento" className="size-5" />
+                           <span>
+                              {carroData.isAvailable
+                                 ? "Registrar Saída"
+                                 : "Registrar Chegada"}
+                           </span>
+                        </Link>
+
+                        <Link
+                           href="/report"
+                           className="flex items-center gap-3 p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 md:transition-colors"
+                           onClick={() => setShowMenu(false)}
+                        >
+                           <Icon name="reports" className="size-5" />
+                           <span>Gerar Relatório</span>
+                        </Link>
+
+                        <button
+                           onClick={() => {
+                              abrirModalDeletar(id);
+                              setShowMenu(false);
+                           }}
+                           className="w-full flex items-center gap-3 p-3 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 md:transition-colors"
+                        >
+                           <Icon name="trash" className="size-5" />
+                           <span>Excluir Veículo</span>
+                        </button>
+                     </div>
                   </div>
                </div>
             </div>

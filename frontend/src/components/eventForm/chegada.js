@@ -138,10 +138,12 @@ export default function Chegada() {
             (e) =>
                (selectedCarro &&
                   e.carId === selectedCarro.id &&
-                  e.eventType === "CHECKOUT") ||
+                  e.eventType === "CHECKOUT" &&
+                  e.status === "ACTIVE") ||
                (selectedMotorista &&
                   e.driverId === selectedMotorista.id &&
-                  e.eventType === "CHECKOUT")
+                  e.eventType === "CHECKOUT" &&
+                  e.status === "ACTIVE")
          );
 
          if (eventoAtivo) {
@@ -201,7 +203,7 @@ export default function Chegada() {
       }
 
       try {
-         await updateCar(selectedCarro.id, odometro);
+         //  await updateCar(selectedCarro.id, odometro);
 
          await createEvent(
             selectedCarro.id,
@@ -294,21 +296,21 @@ export default function Chegada() {
                   </div>
 
                   {motoristaError && (
-                        <p className="text-red-600 dark:text-red-300">
-                           Motorista não encontrado.{" "}
-                           <Link
-                              href="drivers/create"
-                              className="text-bee-purple-500 font-medium"
-                           >
-                              Cadastrar novo motorista
-                           </Link>
-                        </p>
+                     <p className="text-red-600 dark:text-red-300">
+                        Motorista não encontrado.{" "}
+                        <Link
+                           href="drivers/create"
+                           className="text-bee-purple-500 font-medium"
+                        >
+                           Cadastrar novo motorista
+                        </Link>
+                     </p>
                   )}
 
                   {motoristaStatusError && (
-                        <p className="text-red-600 dark:text-red-300">
-                           {motoristaStatusError}
-                        </p>
+                     <p className="text-red-600 dark:text-red-300">
+                        {motoristaStatusError}
+                     </p>
                   )}
                </div>
             </div>
@@ -389,21 +391,21 @@ export default function Chegada() {
                   </div>
 
                   {carroError && (
-                        <p className="text-red-600 dark:text-red-300">
-                           Veículo não encontrado.{" "}
-                           <Link
-                              href="cars/create"
-                              className="text-bee-purple-500 font-medium"
-                           >
-                              Cadastrar novo veículo
-                           </Link>
-                        </p>
+                     <p className="text-red-600 dark:text-red-300">
+                        Veículo não encontrado.{" "}
+                        <Link
+                           href="cars/create"
+                           className="text-bee-purple-500 font-medium"
+                        >
+                           Cadastrar novo veículo
+                        </Link>
+                     </p>
                   )}
 
                   {carroStatusError && (
-                        <p className="text-red-600 dark:text-red-300">
-                           {carroStatusError}
-                        </p>
+                     <p className="text-red-600 dark:text-red-300">
+                        {carroStatusError}
+                     </p>
                   )}
 
                   {/* Campo de odômetro */}

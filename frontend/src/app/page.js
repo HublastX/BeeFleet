@@ -146,11 +146,11 @@ function Home() {
                            />
                         </Link>
                      </div>
-                     <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800 p-6 card-hover transition-all duration-300 hover:shadow-lg">
+                     <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800 p-6 transition-all duration-300 hover:shadow-lg">
                         <div className="flex flex-col gap-5">
                            <div className="flex items-center gap-3 text-bee-primary-500 dark:text-white">
-                              <div className="p-2 bg-bee-alert-500 dark:bg-bee-alert-600 rounded-lg">
-                                 <Icon name="evento" className="size-6" />
+                              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800">
+                                 <Icon name="evento"  className="text-bee-dark-600 size-6 dark:text-bee-alert-500" />
                               </div>
                               <h2 className="text-xl font-semibold tracking-tight">
                                  Gerenciar Eventos
