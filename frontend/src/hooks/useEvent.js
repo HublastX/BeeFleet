@@ -118,7 +118,6 @@ export default function useEvents() {
          const data = await res.json();
          const rawEvent = data.data || data;
 
-         // Enriquecer o evento individual
          const enrichedEvent = enrichEvents([rawEvent])[0];
          return enrichedEvent;
       } catch (err) {
