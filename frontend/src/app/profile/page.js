@@ -31,7 +31,6 @@ function Manager() {
    const [managerParaDeletar, setManagerParaDeletar] = useState(null);
    const [modalListaAberto, setModalListaAberto] = useState(false);
    const [tipoLista, setTipoLista] = useState(null);
-   const [menuAberto, setMenuAberto] = useState(false);
    const router = useRouter();
 
    if (!gestor) return null;
@@ -67,10 +66,6 @@ function Manager() {
       setManagerParaDeletar(managerId);
       setModalAberto(true);
    }
-
-   const alternarMenu = () => {
-      setMenuAberto(!menuAberto);
-   };
 
    async function confirmarDelete() {
       if (managerParaDeletar) {
@@ -116,7 +111,7 @@ function Manager() {
             </div>
          </div>
 
-         {/* parte de cima */}
+ 
          <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* perfil */}
             <div className="card-hover lg:col-span-2 bg-gradient-to-br from-white to-blue-50 dark:from-bee-dark-400 dark:to-bee-dark-800 rounded-2xl p-6 shadow-sm border border-bee-dark-300 dark:border-bee-dark-400">
@@ -256,74 +251,6 @@ function Manager() {
             </div>
          </section>
 
-         {/* Menu mobile */}
-         <div className="fixed block lg:hidden bottom-4 right-4 z-50">
-            <button
-               onClick={alternarMenu}
-               className="p-5 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-lg text-white rounded-full transition-all duration-300 flex items-center justify-center"
-            >
-               <Icon
-                  name={menuAberto ? "xMark" : "menuMobile"}
-                  className="size-6"
-                  strokeWidth={2}
-               />
-            </button>
-         </div>
-
-         {menuAberto && (
-            <div className="fixed bottom-24 right-6 shadow-xl rounded-xl p-3 w-64 bg-white dark:bg-bee-dark-800 border border-gray-200 dark:border-bee-dark-600 z-50 animate-fade-in">
-               <ul className="flex flex-col gap-1">
-                  <li>
-                     <Link
-                        href="/profile/edit"
-                        className="block"
-                        onClick={() => setMenuAberto(false)}
-                     >
-                        <span className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
-                           <Icon name="lapis" className="size-5" />
-                           <span className="text-gray-800 dark:text-gray-200 font-medium">
-                              Editar Perfil
-                           </span>
-                        </span>
-                     </Link>
-                  </li>
-                  <li>
-                     <Link
-                        href="/report"
-                        className="block"
-                        onClick={() => setMenuAberto(false)}
-                     >
-                        <span className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors duration-200">
-                           <Icon name="reports" className="size-5" />
-                           <span className="text-gray-800 dark:text-gray-200 font-medium">
-                              Gerar Relatório
-                           </span>
-                        </span>
-                     </Link>
-                  </li>
-                  <li className="border-t border-bee-dark-300 dark:border-bee-dark-400 mt-2 pt-2">
-                     <button
-                        onClick={() => {
-                           abrirModalDeletar(id);
-                           setMenuAberto(false);
-                        }}
-                        className="w-full text-left"
-                     >
-                        <span className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors duration-200">
-                           <Icon
-                              name="trash"
-                              className="size-5 text-red-500 dark:text-red-400"
-                              strokeWidth={2}
-                           />
-                           <span className="text-red-600 dark:text-red-400 font-medium">
-                              Excluir Conta
-                           </span>
-                        </span>
-                     </button>
-                  </li>
-               </ul>
-            </div>
-         )}
 
          {/* Modals */}
          <ProfileListModal
