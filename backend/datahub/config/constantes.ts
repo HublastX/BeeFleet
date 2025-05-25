@@ -1,6 +1,6 @@
-import dotenv from "dotenv";
+import { config } from "dotenv";
 
-dotenv.config({ path: ".env" });
+config();
 
 export const DATABASE_URL: string = process.env.DATABASE_URL || "";
 export const PORT_DATAHUB: number = parseInt(
@@ -8,3 +8,5 @@ export const PORT_DATAHUB: number = parseInt(
     10
 );
 export const SECRET_KEY: string = process.env.JWT_SECRET || "chave-secreta";
+export const BOT_SERVICE_URL: string =
+    process.env.BOT_SERVICE_URL || "http://localhost:8000";
