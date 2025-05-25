@@ -56,6 +56,8 @@ services:
             DB_NAME: ${MYSQL_DATABASE}
         ports:
             - "5004:5004"
+        volumes:
+            - ./backend/datahub/uploads:/app/uploads
         depends_on:
             mysql:
                 condition: service_healthy

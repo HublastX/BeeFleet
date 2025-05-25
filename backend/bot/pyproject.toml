@@ -1,12 +1,18 @@
 [project]
-name = "anality"
+name = "backend"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 dependencies = [
-    "fastapi>=0.115.11",
-    "gunicorn>=23.0.0",
-    "ruff>=0.11.0",
+    "fastapi>=0.115.12",
+    "google-genai>=1.10.0",
+    "langchain>=0.3.23",
+    "langchain-google-genai>=2.1.2",
+    "pillow>=11.2.1",
+    "psycopg2-binary>=2.9.10",
+    "pydantic-settings>=2.8.1",
+    "pymupdf>=1.25.5",
+    "python-multipart>=0.0.20",
     "uvicorn>=0.34.0",
 ]
