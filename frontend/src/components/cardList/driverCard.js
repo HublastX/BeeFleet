@@ -35,8 +35,10 @@ export default function DriverCard({ searchTerm }) {
       .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
 
    const gridClass = `grid transition-all duration-300 ease-in-out gap-6 p-4 ${
-      isNavOpen ? "xl:grid-cols-4 lg:grid-cols-3" : "xl:grid-cols-5 lg:grid-cols-4"
-   } grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3` ;
+      isNavOpen
+         ? "xl:grid-cols-4 lg:grid-cols-3"
+         : "xl:grid-cols-5 lg:grid-cols-4"
+   } grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3`;
 
    if (carregando) return <CardSkeleton />;
    if (erro)
@@ -84,8 +86,8 @@ export default function DriverCard({ searchTerm }) {
                   <div
                      className={`absolute top-3 right-3 z-10 px-2 py-1 rounded-full text-xs font-medium ${
                         driver.isAvailable
-                           ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400"
-                           : "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400"
+                           ? "bg-green-300/80 dark:bg-green-900/70 text-green-800 dark:text-green-500"
+                           : "bg-red-300/80 dark:bg-red-900/70 text-red-800 dark:text-red-500"
                      }`}
                   >
                      {driver.isAvailable ? "Disponível" : "Indisponível"}
@@ -134,7 +136,11 @@ export default function DriverCard({ searchTerm }) {
                            )}
                         </span>
                         <div>
-                           <Icon name="chevronRight" className="size-5" strokeWidth={2}/>
+                           <Icon
+                              name="chevronRight"
+                              className="size-5"
+                              strokeWidth={2}
+                           />
                         </div>
                      </div>
                   </div>
