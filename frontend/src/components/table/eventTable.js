@@ -16,7 +16,6 @@ import Pagination from "./Pagination";
 import { useState, useEffect } from "react";
 import DeleteConfirmation from "../ConfirmDeleteModal";
 import InputText from "@/elements/inputText";
-import Btn from "@/elements/btn";
 
 export default function EventTable() {
    const { events, carregando, erro, deleteEvent } = useEvents();
@@ -293,6 +292,7 @@ export default function EventTable() {
                   ))}
                </TableBody>
             </Table>
+         </div>
             {!carregando && !erro && totalPages > 1 && (
                <div className="flex justify-end px-6 py-3 border-t border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
                   <Pagination
@@ -303,7 +303,6 @@ export default function EventTable() {
                   />
                </div>
             )}
-         </div>
          {modalAberto && (
             <DeleteConfirmation
                link={confirmarDelete}
