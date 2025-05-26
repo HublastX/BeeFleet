@@ -23,6 +23,8 @@ export default function EventTable() {
    const [searchTerm, setSearchTerm] = useState("");
    const [aba, setAba] = useState("ATIVOS");
 
+   console.log("Eventos:", events);
+
    // Eventos ativos
    const eventosCheckoutAtivos = events
       .filter(
