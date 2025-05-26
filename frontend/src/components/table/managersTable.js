@@ -38,11 +38,17 @@ export default function ManagersTable() {
             <TableSkeleton />{" "}
          </div>
       );
-   if (gestores.length === 0)
+   if (gestores.length === 0 && !erro && !carregando)
       return (
-         <div className="flex items-center justify-center p-6 w-full h-full">
-            <div className="text-center font-semibold text-xl ">
-               Nenhum gestor foi encontrado
+         <div className="flex flex-col items-center justify-center p-12 w-full h-full bg-white dark:bg-bee-dark-800 rounded-xl border border-dashed border-bee-dark-300 dark:border-bee-dark-400">
+            <Icon
+               name="gestor"
+               className="size-16 text-gray-400 dark:text-gray-500 mb-4"
+            />
+            <div className="text-center">
+               <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
+                  Nenhum gestor encontrado
+               </h3>
             </div>
          </div>
       );

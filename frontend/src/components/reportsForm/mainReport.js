@@ -54,6 +54,8 @@ export default function ReportForm() {
       searchCriteria: "",
       selectedItem: null,
    });
+   const [rangeStart, setRangeStart] = useState("");
+   const [rangeEnd, setRangeEnd] = useState("");
 
    const handleSubmit = async (e) => {
       e.preventDefault();
@@ -62,12 +64,14 @@ export default function ReportForm() {
          dateRange: dateRangeOption,
          searchCriteria,
          selectedItem,
+         startDate: dateRangeOption === "range" ? rangeStart : null,
+         endDate: dateRangeOption === "range" ? rangeEnd : null,
       };
 
       setReportFilters(filters);
 
       try {
-         const data = await getFullReport();
+         const data = await getFullReport(filters);
          setReportData(data);
          setIsReportOpen(true);
       } catch (error) {
@@ -125,11 +129,21 @@ export default function ReportForm() {
                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                            <label className="block mb-2 font-medium">De</label>
-                           <InputText type="date" className="w-full" />
+                           <InputText
+                              type="date"
+                              className="w-full"
+                              value={rangeStart}
+                              onChange={(e) => setRangeStart(e.target.value)}
+                           />
                         </div>
                         <div>
                            <label className="block mb-2 font-medium">Até</label>
-                           <InputText type="date" className="w-full" />
+                           <InputText
+                              type="date"
+                              className="w-full"
+                              value={rangeEnd}
+                              onChange={(e) => setRangeEnd(e.target.value)}
+                           />
                         </div>
                      </div>
                   )}
@@ -138,12 +152,13 @@ export default function ReportForm() {
 
             {/* Seção Filtros */}
             <div className="bg-white dark:bg-bee-dark-800 rounded-lg p-6 shadow">
-               <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+               <div className="flex flex-col items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
                      <Icon name="filtro" className="size-6" strokeWidth={2} />
                      <h2 className="text-xl font-bold">Filtros</h2>
                      <p className="italic text-bee-alert-300">*Opcional</p>
                   </div>
+                  <p className="text-gray-400 text-sm italic">ao selecionar um filtro, voce pode selecionar um item expecifico</p>
                </div>
 
                <div className="space-y-4">
@@ -170,6 +185,7 @@ export default function ReportForm() {
                            type="button"
                            variant="cancel"
                            onClick={() => setOpenReportList(true)}
+                           className="max-w-48 min-w-48 text-nowrap"
                         >
                            {selectedItem
                               ? selectedItem.name ||
@@ -177,7 +193,16 @@ export default function ReportForm() {
                                 (selectedItem.checkoutEventId
                                    ? `${selectedItem.checkoutEventId.substring(0, 5)}...`
                                    : "")
-                              : "Selecionar item"}
+                              : searchCriteria !== "none"
+                                ? `Selecionar ${
+                                     {
+                                        carro: "veículo",
+                                        motorista: "motorista",
+                                        manager: "gestor",
+                                        event: "evento",
+                                     }[searchCriteria]
+                                  }`
+                                : "Selecionar item"}
                         </Btn>
                      </div>
                   </div>

@@ -59,7 +59,7 @@ export default function DriverCard({ searchTerm }) {
          {motoristasFiltrados.length === 0 && !erro && !carregando && (
             <div className="flex flex-col items-center justify-center p-12 w-full h-full bg-white dark:bg-bee-dark-800 rounded-xl border border-dashed border-bee-dark-300 dark:border-bee-dark-400">
                <Icon
-                  name="userCircle"
+                  name="user"
                   className="size-16 text-gray-400 dark:text-gray-500 mb-4"
                />
                <div className="text-center">
