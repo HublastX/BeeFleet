@@ -23,12 +23,12 @@ export default function useEvents() {
       (events) => {
          return events.map((event) => {
             const driver = motoristas.find((m) => m.id === event.driverId) || {
-               name: "Excluido",
+               name: "Motorista não encontrado",
                id: event.driverId,
             };
 
             const car = carro.find((c) => c.id === event.carId) || {
-               plate: "Excluido",
+               plate: "Placa não encontrada",
                id: event.carId,
             };
 
@@ -81,11 +81,10 @@ export default function useEvents() {
 
             const data = await res.json();
 
-            const eventosAtivos = data.data.filter(
-               (events) => events.deletedAt === null
+            const eventoAtivo = data.data?.find(
+               (evento) => evento.deletedAt === null
             );
-
-            const rawEvents = eventosAtivos || data;
+            const rawEvents = eventoAtivo || data;
 
             const enrichedEvents = enrichEvents(rawEvents);
             setEvents(enrichedEvents);
@@ -121,13 +120,9 @@ export default function useEvents() {
          if (!res.ok) throw new Error("Erro ao buscar evento");
 
          const data = await res.json();
+         const rawEvent = data.data || data;
 
-         const eventosAtivos = data.data.filter(
-            (events) => events.deletedAt === null
-         );
-
-         const rawEvent = eventosAtivos || data;
-
+         // Enriquecer o evento individual
          const enrichedEvent = enrichEvents([rawEvent])[0];
          return enrichedEvent;
       } catch (err) {

@@ -64,11 +64,11 @@ export default function useCar() {
 
             const data = await res.json();
 
-            const carrosAtivos = data.data.filter(
+            const carroAtivo = data.data.filter(
                (carro) => carro.deletedAt === null
             );
 
-            const carroFormatado = carrosAtivos.map((carro) => ({
+            const carroFormatado = carroAtivo.map((carro) => ({
                ...carro,
                managerId: carro.managerId || null,
                image:
@@ -111,11 +111,7 @@ export default function useCar() {
 
          const data = await res.json();
 
-         const carrosAtivos = data.data.filter(
-            (carro) => carro.deletedAt === null
-         );
-
-         const carroData = carrosAtivos || data;
+         const carroData = data.data || data;
 
          const carroFormatado = {
             ...carroData,
@@ -274,13 +270,9 @@ export default function useCar() {
 
          const data = await res.json();
 
-         const carrosAtivos = data.data.filter(
-            (carro) => carro.deletedAt === null
-         );
-
-         if (data.success && carrosAtivos) {
+         if (data.success && data.data) {
             setCarro((prev) =>
-               prev.map((car) => (car.id === id ? carrosAtivos : car))
+               prev.map((car) => (car.id === id ? data.data : car))
             );
             localStorage.setItem(
                "toastMessage",
@@ -327,7 +319,7 @@ export default function useCar() {
             },
             body: JSON.stringify({
                managerId: gestor.id,
-               reason: "Carro deletado pelo gestor",
+               reason: "Carro deletado pelo gestor.",
             }),
          });
          localStorage.setItem("toastMessage", "Carro deletado com sucesso!");
