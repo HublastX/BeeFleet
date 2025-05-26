@@ -1,402 +1,685 @@
 "use client";
-import { useState, useEffect } from "react";
 import Icon from "@/elements/Icon";
 import Btn from "@/elements/btn";
 
 const GenericReport = ({ isOpen, onClose, reportData, filters }) => {
-   const [activeTab, setActiveTab] = useState("summary");
-   const [filteredManagers, setFilteredManagers] = useState([]);
-   const [globalStats, setGlobalStats] = useState({});
+   const formatDate = (dateString) => {
+      if (!dateString) return "Nunca utilizado";
+      const date = new Date(dateString);
+      return date.toLocaleDateString("pt-BR");
+   };
 
-   useEffect(() => {
-      if (reportData) {
-         let managers = [...reportData.managers];
-         let stats = { ...reportData.globalStats };
-
-         if (filters.dateRange === "today") {
-            const today = new Date().toISOString().split("T")[0];
-            managers = managers.map((manager) => ({
-               ...manager,
-               events: manager.events.filter(
-                  (event) =>
-                     new Date(event.createdAt).toISOString().split("T")[0] ===
-                     today
-               ),
-            }));
-         }
-
-         setFilteredManagers(managers);
-         setGlobalStats(stats);
-      }
-   }, [reportData, filters]);
-
-   const handlePrint = () => {
-      const printWindow = window.open("", "_blank");
-      printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <title>Relatório</title>
-        <style>
-          @page { size: A4; margin: 1cm; }
-          body { font-family: Arial, sans-serif; }
-          .a4-container { width: 210mm; min-height: 297mm; padding: 20mm; margin: 0 auto; }
-          .header { text-align: center; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-          .header h1 { margin: 0; font-size: 24px; }
-          .header p { margin: 5px 0 0; color: #666; }
-          .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px; }
-          .stat-card { border: 1px solid #ddd; border-radius: 5px; padding: 15px; text-align: center; }
-          .stat-card h3 { margin: 0 0 5px; font-size: 14px; color: #666; }
-          .stat-card p { margin: 0; font-size: 24px; font-weight: bold; }
-          .filters { margin-bottom: 20px; padding: 15px; border: 1px solid #eee; border-radius: 5px; }
-          .filters h3 { margin-top: 0; }
-          .manager-card { border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 15px; }
-          .manager-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-          .manager-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; font-size: 14px; }
-          .event-card { border: 1px solid #ddd; border-radius: 5px; padding: 15px; margin-bottom: 10px; }
-          .event-header { display: flex; justify-content: space-between; margin-bottom: 5px; }
-          .event-details { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; font-size: 14px; }
-          .completed { background-color: #e6ffed; color: #22863a; padding: 2px 5px; border-radius: 3px; }
-          .page-break { page-break-after: always; }
-          @media print {
-            body { -webkit-print-color-adjust: exact; }
-            .no-print { display: none; }
-          }
-        </style>
-      </head>
-      <body>
-        <div class="a4-container">
-          <div class="header">
-            <h1>Relatório Completo</h1>
-            <p>${new Date().toLocaleDateString()}</p>
-          </div>
-
-          <div class="filters">
-            <h3>Filtros Aplicados</h3>
-            <p><strong>Período:</strong> ${
-               filters.dateRange === "all"
-                  ? "Todas as datas"
-                  : filters.dateRange === "today"
-                    ? "Hoje"
-                    : "Intervalo personalizado"
-            }</p>
-            ${
-               filters.selectedItem
-                  ? `
-              <p><strong>Filtro:</strong> ${
-                 filters.searchCriteria === "carro"
-                    ? "Veículo: "
-                    : filters.searchCriteria === "motorista"
-                      ? "Motorista: "
-                      : filters.searchCriteria === "manager"
-                        ? "Gestor: "
-                        : "Evento: "
-              }
-                 ${filters.selectedItem.name || filters.selectedItem.plate || filters.selectedItem.driverName}
-              </p>
-            `
-                  : ""
-            }
-          </div>
-
-          <div class="summary-grid">
-            <div class="stat-card">
-              <h3>Total de Gestores</h3>
-              <p>${globalStats.totalManagers || 0}</p>
-            </div>
-            <div class="stat-card">
-              <h3>Total de Motoristas</h3>
-              <p>${globalStats.totalDrivers || 0}</p>
-            </div>
-            <div class="stat-card">
-              <h3>Total de Veículos</h3>
-              <p>${globalStats.totalCars || 0}</p>
-            </div>
-          </div>
-
-          <h2>Gestores</h2>
-          ${filteredManagers
-             .map(
-                (manager) => `
-            <div class="manager-card">
-              <div class="manager-header">
-                <h3>${manager.name}</h3>
-                <span>${manager.email}</span>
-              </div>
-              <div class="manager-stats">
-                <div>
-                  <p><strong>Motoristas:</strong> ${manager.summary.totalDrivers} ativos, ${manager.summary.totalDeletedDrivers} removidos</p>
-                </div>
-                <div>
-                  <p><strong>Veículos:</strong> ${manager.summary.totalCars} ativos, ${manager.summary.totalDeletedCars} removidos</p>
-                </div>
-                <div>
-                  <p><strong>Eventos:</strong> ${manager.summary.totalEvents} registrados</p>
-                </div>
-              </div>
-            </div>
-          `
-             )
-             .join("")}
-
-          <div class="page-break"></div>
-
-          <h2>Eventos</h2>
-          ${filteredManagers
-             .flatMap((manager) =>
-                manager.events.map(
-                   (event) => `
-              <div class="event-card">
-                <div class="event-header">
-                  <h3>${event.eventType === "CHECKOUT" ? "Saída" : "Retorno"}</h3>
-                  <span class="completed">${event.status}</span>
-                </div>
-                <p><small>${new Date(event.createdAt).toLocaleString()}</small></p>
-                <div class="event-details">
-                  <div>
-                    <p><strong>Motorista:</strong> ${event.driverName}</p>
-                  </div>
-                  <div>
-                    <p><strong>Veículo:</strong> ${event.carInfo}</p>
-                  </div>
-                  <div>
-                    <p><strong>Odômetro:</strong> ${event.odometer} km</p>
-                  </div>
-                </div>
-              </div>
-            `
-                )
-             )
-             .join("")}
-        </div>
-
-        <script>
-          window.onload = function() {
-            setTimeout(function() {
-              window.print();
-              window.close();
-            }, 200);
-          };
-        </script>
-      </body>
-      </html>
-    `);
-      printWindow.document.close();
+   const formatDateTime = (dateString) => {
+      const date = new Date(dateString);
+      return date.toLocaleString("pt-BR");
    };
 
    if (!isOpen) return null;
 
+   // Renderização condicional das tabelas conforme filtro
+   const showManagers =
+      filters.searchCriteria === "manager" || filters.searchCriteria === "none";
+   const showDrivers = filters.searchCriteria === "motorista";
+   const showCars = filters.searchCriteria === "carro";
+   const showEvents = filters.searchCriteria === "event";
+
    return (
-      <div className="fixed inset-0 z-50 overflow-y-auto">
-         <div
-            className="fixed inset-0 bg-black bg-opacity-50"
-            onClick={onClose}
-         ></div>
-
-         <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="inline-block align-bottom bg-white dark:bg-bee-dark-800 rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-6xl sm:w-full">
-               <div className="bg-bee-primary px-4 py-3 sm:px-6 sm:flex sm:items-center sm:justify-between">
-                  <h3 className="text-lg leading-6 font-medium text-white">
-                     Relatório Gerado
-                  </h3>
-                  <button
-                     onClick={onClose}
-                     className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-white text-base font-medium text-bee-primary hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-bee-primary sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  >
-                     Fechar
-                  </button>
+      <div
+         id="generic-report-preview"
+         className="print:p-0 p-10 text-black fixed top-0 left-0 w-full h-full bg-white overflow-y-auto"
+      >
+         {/* Cabeçalho */}
+         <header className="border-b border-bee-dark-300 pb-4 mb-6">
+            <div className="flex justify-between items-start">
+               <div>
+                  <h1 className="text-3xl font-bold">
+                     {filters.searchCriteria === "carro"
+                        ? "Relatório de Veículos"
+                        : filters.searchCriteria === "motorista"
+                          ? "Relatório de Motoristas"
+                          : filters.searchCriteria === "manager"
+                            ? "Relatório de Gestores"
+                            : filters.searchCriteria === "event"
+                              ? "Relatório de Eventos"
+                              : "Relatório Completo"}
+                  </h1>
+                  <p className="text-sm text-gray-500">
+                     Gerado em: {formatDate(new Date().toISOString())} às{" "}
+                     {new Date().toLocaleTimeString("pt-BR", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                     })}
+                  </p>
                </div>
+               <div className="p-2 rounded-lg">
+                  <Icon name={showCars?"car":showDrivers?"user":showEvents?"eventoL":showManagers?"gestor":"report"} className="size-8" />
+               </div>
+            </div>
 
-               <div className="px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                  <div className="flex border-b border-gray-200 dark:border-bee-dark-600 mb-4">
-                     <button
-                        className={`px-4 py-2 font-medium ${activeTab === "summary" ? "text-bee-primary border-b-2 border-bee-primary" : "text-gray-500"}`}
-                        onClick={() => setActiveTab("summary")}
-                     >
-                        Resumo
-                     </button>
-                     <button
-                        className={`px-4 py-2 font-medium ${activeTab === "managers" ? "text-bee-primary border-b-2 border-bee-primary" : "text-gray-500"}`}
-                        onClick={() => setActiveTab("managers")}
-                     >
-                        Gestores
-                     </button>
-                     <button
-                        className={`px-4 py-2 font-medium ${activeTab === "events" ? "text-bee-primary border-b-2 border-bee-primary" : "text-gray-500"}`}
-                        onClick={() => setActiveTab("events")}
-                     >
-                        Eventos
-                     </button>
+            {/* Filtros aplicados */}
+            <div className="mt-4">
+               <h2 className="text-lg font-semibold mb-2">Filtros Aplicados</h2>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                     <p className="text-sm text-gray-500">Período:</p>
+                     <p>
+                        {filters.dateRange === "all"
+                           ? "Todas as datas"
+                           : filters.dateRange === "today"
+                             ? "Hoje"
+                             : "Intervalo personalizado"}
+                     </p>
                   </div>
+                  {filters.selectedItem && (
+                     <div>
+                        <p className="text-sm text-gray-500">Filtro:</p>
+                        <p>
+                           {filters.searchCriteria === "carro"
+                              ? "Veículo: "
+                              : filters.searchCriteria === "motorista"
+                                ? "Motorista: "
+                                : filters.searchCriteria === "manager"
+                                  ? "Gestor: "
+                                  : "Evento: "}
+                           {filters.selectedItem.name ||
+                              filters.selectedItem.plate ||
+                              filters.selectedItem.driverName}
+                        </p>
+                     </div>
+                  )}
+               </div>
+            </div>
+         </header>
 
-                  <div className="max-h-[60vh] overflow-y-auto p-1">
-                     {activeTab === "summary" && (
-                        <div className="space-y-6">
-                           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                              <div className="bg-white dark:bg-bee-dark-800 rounded-lg p-4 shadow flex items-center gap-3">
-                                 <div className="bg-bee-primary/10 p-3 rounded-full">
-                                    <Icon
-                                       name="users"
-                                       className="size-5 text-bee-primary"
-                                    />
-                                 </div>
-                                 <div>
-                                    <p className="text-sm text-gray-500">
-                                       Total de Gestores
-                                    </p>
-                                    <p className="text-2xl font-bold">
-                                       {globalStats.totalManagers || 0}
-                                    </p>
-                                 </div>
-                              </div>
-                              <div className="bg-white dark:bg-bee-dark-800 rounded-lg p-4 shadow flex items-center gap-3">
-                                 <div className="bg-bee-primary/10 p-3 rounded-full">
-                                    <Icon
-                                       name="driver"
-                                       className="size-5 text-bee-primary"
-                                    />
-                                 </div>
-                                 <div>
-                                    <p className="text-sm text-gray-500">
-                                       Total de Motoristas
-                                    </p>
-                                    <p className="text-2xl font-bold">
-                                       {globalStats.totalDrivers || 0}
-                                    </p>
-                                 </div>
-                              </div>
-                              <div className="bg-white dark:bg-bee-dark-800 rounded-lg p-4 shadow flex items-center gap-3">
-                                 <div className="bg-bee-primary/10 p-3 rounded-full">
-                                    <Icon
-                                       name="car"
-                                       className="size-5 text-bee-primary"
-                                    />
-                                 </div>
-                                 <div>
-                                    <p className="text-sm text-gray-500">
-                                       Total de Veículos
-                                    </p>
-                                    <p className="text-2xl font-bold">
-                                       {globalStats.totalCars || 0}
-                                    </p>
-                                 </div>
-                              </div>
-                           </div>
-
-                           <div className="bg-white dark:bg-bee-dark-800 rounded-lg p-4 shadow">
-                              <h3 className="font-bold mb-3">
-                                 Filtros Aplicados
-                              </h3>
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                 <div>
-                                    <p className="text-sm text-gray-500">
-                                       Período:
-                                    </p>
-                                    <p>
-                                       {filters.dateRange === "all"
-                                          ? "Todas as datas"
-                                          : filters.dateRange === "today"
-                                            ? "Hoje"
-                                            : "Intervalo personalizado"}
-                                    </p>
-                                 </div>
-                                 {filters.selectedItem && (
-                                    <div>
-                                       <p className="text-sm text-gray-500">
-                                          Filtro:
-                                       </p>
-                                       <p>
-                                          {filters.searchCriteria === "carro"
-                                             ? "Veículo: "
-                                             : filters.searchCriteria ===
-                                                 "motorista"
-                                               ? "Motorista: "
-                                               : filters.searchCriteria ===
-                                                   "manager"
-                                                 ? "Gestor: "
-                                                 : "Evento: "}
-                                          {filters.selectedItem.name ||
-                                             filters.selectedItem.plate ||
-                                             filters.selectedItem.driverName}
-                                       </p>
-                                    </div>
-                                 )}
-                              </div>
-                           </div>
+         {/* Corpo do Relatório */}
+         <div className="space-y-8">
+            {/* Estatísticas Gerais */}
+            {filters.searchCriteria === "none" && (
+               <>
+                  <section>
+                     <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                        <Icon name="analytics" className="size-5" />
+                        Estatísticas Gerais
+                     </h2>
+                     <div className="grid grid-cols-3 gap-4">
+                        <div className="p-4 rounded-lg border">
+                           <p className="text-sm text-gray-500">
+                              Total de Gestores
+                           </p>
+                           <p className="text-2xl font-bold">
+                              {reportData.globalStats.totalManagers || 0}
+                           </p>
                         </div>
-                     )}
+                        <div className="p-4 rounded-lg border">
+                           <p className="text-sm text-gray-500">
+                              Total de Motoristas
+                           </p>
+                           <p className="text-2xl font-bold">
+                              {reportData.globalStats.totalDrivers || 0}
+                           </p>
+                        </div>
+                        <div className="p-4 rounded-lg border">
+                           <p className="text-sm text-gray-500">
+                              Total de Veículos
+                           </p>
+                           <p className="text-2xl font-bold">
+                              {reportData.globalStats.totalCars || 0}
+                           </p>
+                        </div>
+                     </div>
+                  </section>
 
-                     {activeTab === "managers" && (
-                        <div className="space-y-4">
-                           {filteredManagers.map((manager) => (
-                              <div
-                                 key={manager.id}
-                                 className="bg-white dark:bg-bee-dark-800 rounded-lg p-4 shadow"
-                              >
-                                 <div className="flex items-center justify-between mb-3">
-                                    <h3 className="font-bold">
+                  {/* Quantidade de Itens Excluídos */}
+                  <section>
+                     <h2 className="flex items-center gap-2 text-lg font-semibold mt-6 mb-2">
+                        <Icon name="trash" className="size-5" strokeWidth={2} />
+                        Itens Excluídos
+                     </h2>
+                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="p-4 rounded-lg border bg-red-50">
+                           <p className="text-sm text-red-700">
+                              Motoristas excluídos
+                           </p>
+                           <p className="text-xl font-bold text-red-700">
+                              {reportData.globalStats.totalDeletedDrivers || 0}
+                           </p>
+                        </div>
+                        <div className="p-4 rounded-lg border bg-red-50">
+                           <p className="text-sm text-red-700">
+                              Veículos excluídos
+                           </p>
+                           <p className="text-xl font-bold text-red-700">
+                              {reportData.globalStats.totalDeletedCars || 0}
+                           </p>
+                        </div>
+                        <div className="p-4 rounded-lg border bg-red-50">
+                           <p className="text-sm text-red-700">
+                              Eventos excluídos
+                           </p>
+                           <p className="text-xl font-bold text-red-700">
+                              {reportData.globalStats.totalDeletedEvents || 0}
+                           </p>
+                        </div>
+                     </div>
+                  </section>
+
+                  {/* Tabela de Gestores */}
+                  <section>
+                     <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                        <Icon name="gestor" className="size-5" />
+                        Gestores
+                     </h2>
+                     <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                           <thead className="bg-gray-50">
+                              <tr>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Nome
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Email
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Motoristas
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Veículos
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Eventos
+                                 </th>
+                              </tr>
+                           </thead>
+                           <tbody className="divide-y divide-gray-200">
+                              {reportData.managers
+                                 .slice()
+                                 .sort(
+                                    (a, b) =>
+                                       new Date(b.createdAt) -
+                                       new Date(a.createdAt)
+                                 )
+                                 .slice(0, 5)
+                                 .map((manager) => (
+                                    <tr key={manager.id}>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {manager.name}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {manager.email}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {manager.summary.totalDrivers} ativos
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {manager.summary.totalCars} ativos
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {manager.summary.totalEvents}
+                                       </td>
+                                    </tr>
+                                 ))}
+                           </tbody>
+                        </table>
+                     </div>
+                  </section>
+
+                  {/* Tabela de Motoristas */}
+                  <section>
+                     <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                        <Icon name="users" className="size-5" />
+                        Motoristas
+                     </h2>
+                     <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                           <thead className="bg-gray-50">
+                              <tr>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Nome
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Telefone
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    CNH
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                 </th>
+                              </tr>
+                           </thead>
+                           <tbody className="divide-y divide-gray-200">
+                              {reportData.managers
+                                 .flatMap((manager) => manager.drivers)
+                                 .sort(
+                                    (a, b) =>
+                                       new Date(b.createdAt) -
+                                       new Date(a.createdAt)
+                                 )
+                                 .slice(0, 5)
+                                 .map((driver) => (
+                                    <tr key={driver.id}>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {driver.name}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {driver.phone}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {driver.license}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {driver.isAvailable
+                                             ? "Disponivel"
+                                             : "Indisponível"}
+                                       </td>
+                                    </tr>
+                                 ))}
+                           </tbody>
+                        </table>
+                     </div>
+                  </section>
+
+                  {/* Tabela de Veículos */}
+                  <section>
+                     <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                        <Icon name="car" className="size-5" />
+                        Veículos
+                     </h2>
+                     <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                           <thead className="bg-gray-50">
+                              <tr>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Placa
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Marca
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Modelo
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Ano
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                 </th>
+                              </tr>
+                           </thead>
+                           <tbody className="divide-y divide-gray-200">
+                              {reportData.managers
+                                 .flatMap((manager) => manager.cars)
+                                 .sort(
+                                    (a, b) =>
+                                       new Date(b.createdAt) -
+                                       new Date(a.createdAt)
+                                 )
+                                 .slice(0, 5)
+                                 .map((car) => (
+                                    <tr key={car.id}>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {car.plate}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {car.brand}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {car.model}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {car.year}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {car.status === "IN_USE"
+                                             ? "Em uso"
+                                             : "Disponível"}
+                                       </td>
+                                    </tr>
+                                 ))}
+                           </tbody>
+                        </table>
+                     </div>
+                  </section>
+
+                  {/* Tabela de Eventos */}
+                  <section>
+                     <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                        <Icon name="eventoL" className="size-5" />
+                        Eventos
+                     </h2>
+                     <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                           <thead className="bg-gray-50">
+                              <tr>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Tipo
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Data/Hora
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Status
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Motorista
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Veículo
+                                 </th>
+                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Odômetro
+                                 </th>
+                              </tr>
+                           </thead>
+                           <tbody className="divide-y divide-gray-200">
+                              {reportData.managers
+                                 .flatMap((manager) => manager.events)
+                                 .sort(
+                                    (a, b) =>
+                                       new Date(b.createdAt) -
+                                       new Date(a.createdAt)
+                                 )
+                                 .slice(0, 5)
+                                 .map((event) => (
+                                    <tr key={event.id}>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {event.eventType === "CHECKOUT"
+                                             ? "Saída"
+                                             : "Retorno"}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {formatDateTime(event.createdAt)}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          <span
+                                             className={`px-2 py-1 rounded text-xs ${
+                                                event.status === "COMPLETED"
+                                                   ? "bg-green-100 text-green-800"
+                                                   : "bg-yellow-100 text-yellow-800"
+                                             }`}
+                                          >
+                                             {event.status === "COMPLETED"
+                                                ? "Concluído"
+                                                : "Ativo"}
+                                          </span>
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {event.driverName}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {event.carInfo}
+                                       </td>
+                                       <td className="px-6 py-4 whitespace-nowrap">
+                                          {event.odometer}km
+                                       </td>
+                                    </tr>
+                                 ))}
+                           </tbody>
+                        </table>
+                     </div>
+                  </section>
+               </>
+            )}
+
+            {/* Lista de Gestores */}
+            {showManagers && (
+               <section>
+                  <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                     <Icon name="gestor" className="size-5" />
+                     Gestores
+                  </h2>
+                  <div className="overflow-x-auto">
+                     <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                           <tr>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Nome
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Email
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Motoristas
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Veículos
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Eventos
+                              </th>
+                           </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                           {reportData.managers.map((manager) => (
+                              <tr key={manager.id}>
+                                 <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="font-medium">
                                        {manager.name}
-                                    </h3>
-                                    <span className="text-sm text-gray-500">
+                                    </div>
+                                 </td>
+                                 <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-sm text-gray-500">
                                        {manager.email}
-                                    </span>
-                                 </div>
-
-                                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
-                                    <div>
-                                       <p className="text-gray-500">
-                                          Motoristas:
-                                       </p>
-                                       <p>
-                                          {manager.summary.totalDrivers} ativos,{" "}
-                                          {manager.summary.totalDeletedDrivers}{" "}
-                                          removidos
-                                       </p>
                                     </div>
-                                    <div>
-                                       <p className="text-gray-500">
-                                          Veículos:
-                                       </p>
-                                       <p>
-                                          {manager.summary.totalCars} ativos,{" "}
-                                          {manager.summary.totalDeletedCars}{" "}
-                                          removidos
-                                       </p>
+                                 </td>
+                                 <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="font-medium">
+                                       {manager.summary.totalDrivers} ativos
                                     </div>
-                                    <div>
-                                       <p className="text-gray-500">Eventos:</p>
-                                       <p>
-                                          {manager.summary.totalEvents}{" "}
-                                          registrados
-                                       </p>
+                                    <div className="text-sm text-gray-500">
+                                       {manager.summary.totalDeletedDrivers}{" "}
+                                       removidos
                                     </div>
-                                 </div>
-                              </div>
+                                 </td>
+                                 <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="font-medium">
+                                       {manager.summary.totalCars} ativos
+                                    </div>
+                                    <div className="text-sm text-gray-500">
+                                       {manager.summary.totalDeletedCars}{" "}
+                                       removidos
+                                    </div>
+                                 </td>
+                                 <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="font-medium">
+                                       {manager.summary.totalEvents}
+                                    </div>
+                                 </td>
+                              </tr>
                            ))}
-                        </div>
-                     )}
+                        </tbody>
+                     </table>
+                  </div>
+               </section>
+            )}
 
-                     {activeTab === "events" && (
-                        <div className="space-y-3">
-                           {filteredManagers.flatMap((manager) =>
-                              manager.events.map((event) => (
-                                 <div
-                                    key={event.id}
-                                    className="bg-white dark:bg-bee-dark-800 rounded-lg p-4 shadow"
-                                 >
-                                    <div className="flex justify-between items-start">
-                                       <div>
-                                          <p className="font-bold">
-                                             {event.eventType === "CHECKOUT"
-                                                ? "Saída"
-                                                : "Retorno"}
-                                          </p>
-                                          <p className="text-sm">
-                                             {new Date(
-                                                event.createdAt
-                                             ).toLocaleString()}
-                                          </p>
+            {/* Lista de Motoristas */}
+            {showDrivers && (
+               <section>
+                  <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                     <Icon name="users" className="size-5" />
+                     Motoristas
+                  </h2>
+                  <div className="overflow-x-auto">
+                     <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                           <tr>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Nome
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Telefone
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 CNH
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Status
+                              </th>
+                           </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                           {reportData.managers
+                              .flatMap((manager) => manager.drivers)
+                              .sort(
+                                 (a, b) =>
+                                    new Date(b.createdAt) -
+                                    new Date(a.createdAt)
+                              )
+                              .map((driver) => (
+                                 <tr key={driver.id}>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {driver.name}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {driver.phone}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {driver.license}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {driver.isAvailable
+                                          ? "Disponível"
+                                          : "Indisponível"}
+                                    </td>
+                                 </tr>
+                              ))}
+                        </tbody>
+                     </table>
+                  </div>
+               </section>
+            )}
+
+            {/* Lista de Veículos */}
+            {showCars && (
+               <section>
+                  <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                     <Icon name="car" className="size-5" />
+                     Veículos
+                  </h2>
+                  <div className="overflow-x-auto">
+                     <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                           <tr>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Carro
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Renavam
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Placa
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Ano
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Cor
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Hodometro
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Status
+                              </th>
+                           </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                           {reportData.managers
+                              .flatMap((manager) => manager.cars)
+                              .sort(
+                                 (a, b) =>
+                                    new Date(b.createdAt) -
+                                    new Date(a.createdAt)
+                              )
+                              .map((car) => (
+                                 <tr key={car.id}>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       <div  className="flex flex-col">
+                                          <span className="font-bold">
+                                             {car.model}
+                                          </span>
+                                          {car.brand}
                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {car.renavam}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {car.plate}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {car.year}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {car.color}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {car.odometer}km
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {car.status === "IN_USE"
+                                          ? "Em uso"
+                                          : "Disponível"}
+                                    </td>
+                                 </tr>
+                              ))}
+                        </tbody>
+                     </table>
+                  </div>
+               </section>
+            )}
+
+            {/* Lista de Eventos */}
+            {showEvents && (
+               <section>
+                  <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                     <Icon name="eventoL" className="size-5" />
+                     Eventos
+                  </h2>
+                  <div className="overflow-x-auto">
+                     <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                           <tr>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Tipo
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Data/Hora
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Status
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Motorista
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Veículo
+                              </th>
+                              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                 Odômetro
+                              </th>
+                           </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                           {reportData.managers
+                              .flatMap((manager) => manager.events)
+                              .sort(
+                                 (a, b) =>
+                                    new Date(b.createdAt) -
+                                    new Date(a.createdAt)
+                              )
+                              .map((event) => (
+                                 <tr key={event.id}>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {event.eventType === "CHECKOUT"
+                                          ? "Saída"
+                                          : "Retorno"}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {formatDateTime(event.createdAt)}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
                                        <span
                                           className={`px-2 py-1 rounded text-xs ${
                                              event.status === "COMPLETED"
@@ -404,49 +687,41 @@ const GenericReport = ({ isOpen, onClose, reportData, filters }) => {
                                                 : "bg-yellow-100 text-yellow-800"
                                           }`}
                                        >
-                                          {event.status}
+                                          {event.status === "COMPLETED"
+                                             ? "Concluído"
+                                             : "Ativo"}
                                        </span>
-                                    </div>
-
-                                    <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-2 text-sm">
-                                       <div>
-                                          <p className="text-gray-500">
-                                             Motorista:
-                                          </p>
-                                          <p>{event.driverName}</p>
-                                       </div>
-                                       <div>
-                                          <p className="text-gray-500">
-                                             Veículo:
-                                          </p>
-                                          <p>{event.carInfo}</p>
-                                       </div>
-                                       <div>
-                                          <p className="text-gray-500">
-                                             Odômetro:
-                                          </p>
-                                          <p>{event.odometer} km</p>
-                                       </div>
-                                    </div>
-                                 </div>
-                              ))
-                           )}
-                        </div>
-                     )}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {event.driverName}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {event.carInfo}
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       {event.odometer} km
+                                    </td>
+                                 </tr>
+                              ))}
+                        </tbody>
+                     </table>
                   </div>
-               </div>
+               </section>
+            )}
+         </div>
 
-               <div className="bg-gray-50 dark:bg-bee-dark-700 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                  <Btn
-                     variant="primary"
-                     texto="Imprimir Relatório"
-                     onClick={handlePrint}
-                     className="ml-3"
-                  />
-                  <Btn variant="cancel" texto="Fechar" onClick={onClose} />
+         {/* Rodapé */}
+         <footer className="mt-8 pt-6 border-t border-bee-dark-300">
+            <div className="flex justify-between items-center">
+               <div className="text-xs text-gray-500">
+                  <p>Relatório gerado automaticamente pelo sistema Bee Fleet</p>
+                  <p className="mt-1">
+                     © {new Date().getFullYear()} - Todos os direitos
+                     reservados
+                  </p>
                </div>
             </div>
-         </div>
+         </footer>
       </div>
    );
 };
