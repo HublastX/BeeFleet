@@ -1,6 +1,9 @@
+"use client";
 import ReportForm from "@/components/reportsForm/mainReport";
 import Icon from "@/elements/Icon";
+import { useRouter } from "next/navigation";
 export default function Relatorios() {
+   const router = useRouter();
    return (
       <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
          <div className="bg-white dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-lg self-center min-w-[350px] max-w-full">
@@ -9,6 +12,7 @@ export default function Relatorios() {
                <button
                   className="ml-auto text-gray-400 hover:text-gray-700 dark:hover:text-white text-2xl font-bold focus:outline-none"
                   aria-label="Fechar"
+                  onClick={() => router.back()}
                   type="button"
                >
                   <Icon name="xMark" className="size-5" strokeWidth={5} />

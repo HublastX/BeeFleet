@@ -240,6 +240,7 @@ export const getCompleteManagersReport = async (
                     plate: car.plate,
                     brand: car.brand,
                     model: car.model,
+                    odometer: car.odometer,
                     year: car.year,
                     color: car.color,
                     status: car.status,

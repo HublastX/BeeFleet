@@ -114,7 +114,11 @@ export default function useDrivers() {
 
          const data = await res.json();
 
-         const motoristaData = data.data || data;
+         const motoristasAtivos = data.data.filter(
+            (motorista) => motorista.deletedAt === null
+         );
+
+         const motoristaData = motoristasAtivos || data;
 
          const motoristasFormatados = {
             ...motoristaData,
@@ -244,7 +248,11 @@ export default function useDrivers() {
 
          const data = await res.json();
 
-         if (data.success && data.data) {
+         const motoristasAtivos = data.data.filter(
+            (motorista) => motorista.deletedAt === null
+         );
+
+         if (data.success && motoristasAtivos) {
             const motoristaAtualizado = {
                ...data.data,
                image:

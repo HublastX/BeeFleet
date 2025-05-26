@@ -23,12 +23,12 @@ export default function useEvents() {
       (events) => {
          return events.map((event) => {
             const driver = motoristas.find((m) => m.id === event.driverId) || {
-               name: "Motorista não encontrado",
+               name: "Excluido",
                id: event.driverId,
             };
 
             const car = carro.find((c) => c.id === event.carId) || {
-               plate: "Placa não encontrada",
+               plate: "Excluido",
                id: event.carId,
             };
 
@@ -80,7 +80,12 @@ export default function useEvents() {
             if (!res.ok) throw new Error("Erro ao buscar eventos");
 
             const data = await res.json();
-            const rawEvents = data.data || data;
+
+            const eventosAtivos = data.data.filter(
+               (events) => events.deletedAt === null
+            );
+
+            const rawEvents = eventosAtivos || data;
 
             const enrichedEvents = enrichEvents(rawEvents);
             setEvents(enrichedEvents);
@@ -116,7 +121,12 @@ export default function useEvents() {
          if (!res.ok) throw new Error("Erro ao buscar evento");
 
          const data = await res.json();
-         const rawEvent = data.data || data;
+
+         const eventosAtivos = data.data.filter(
+            (events) => events.deletedAt === null
+         );
+
+         const rawEvent = eventosAtivos || data;
 
          const enrichedEvent = enrichEvents([rawEvent])[0];
          return enrichedEvent;
@@ -200,13 +210,20 @@ export default function useEvents() {
       try {
          const eventToDelete = events.find((event) => event.id === id);
 
-         const response = await fetch(`${API_URL}/api/events/checkout/${id}`, {
-            method: "DELETE",
-            headers: {
-               "Content-Type": "application/json",
-               Authorization: `Bearer ${gestor.token}`,
-            },
-         });
+         const response = await fetch(
+            `${API_URL}/api/event/${id}/soft-delete`,
+            {
+               method: "PATCH",
+               headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${gestor.token}`,
+               },
+               body: JSON.stringify({
+                  managerId: gestor.id,
+                  reason: "Evento deletado pelo gestor",
+               }),
+            }
+         );
 
          if (!response.ok) {
             const data = await response.json();
