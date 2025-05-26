@@ -312,7 +312,7 @@ function DriverPage() {
          {/* Delete Modal */}
          {showDeleteModal && (
             <DeleteConfirmation
-               onConfirm={confirmarDelete}
+               link={confirmarDelete}
                onClose={() => setShowDeleteModal(false)}
                tipo="motorista"
             />
