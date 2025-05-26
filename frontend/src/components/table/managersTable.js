@@ -53,6 +53,9 @@ export default function ManagersTable() {
          </div>
       );
 
+   console.log("Gestores aqui:", gestores);
+   console.log("Eventos aqui:", events);
+
    return (
       <div className="w-screen -mx-4 px-4 md:w-full lg:m-0 flex items-center justify-center">
          <div className="w-full overflow-x-auto rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
