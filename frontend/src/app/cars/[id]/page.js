@@ -14,8 +14,6 @@ import useEvents from "@/hooks/useEvent";
 import useDrivers from "@/hooks/useDrivers";
 import DetailSkeleton from "@/elements/ui/skeleton/DetailSkeleton";
 import Btn from "@/elements/btn";
-import { DropdownItem } from "@/elements/ui/dropdown/DropdownItem";
-import { Dropdown } from "@/elements/ui/dropdown/Dropdown";
 
 function formatDate(dateISO) {
    const options = {
@@ -284,7 +282,6 @@ function CarPage() {
 
                <div className="absolute bottom-0 left-0 right-0 md:bottom-auto md:right-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:min-w-1/3">
                   <div className="bg-white dark:bg-gray-800 rounded-t-xl md:rounded-xl shadow-xl border-t md:border border-gray-200 dark:border-gray-700 p-4 md:p-6 w-full md:max-w-md">
-
                      <div className="space-y-2 md:space-y-3">
                         <h3 className="hidden md:block text-lg font-medium mb-4">
                            Opções do Veículo
@@ -340,7 +337,7 @@ function CarPage() {
          {/* Delete Modal */}
          {showDeleteModal && (
             <DeleteConfirmation
-               onConfirm={confirmarDelete}
+               link={confirmarDelete}
                onClose={() => setShowDeleteModal(false)}
                tipo="veículo"
             />
