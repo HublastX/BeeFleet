@@ -10,6 +10,7 @@ export default function ChatPage() {
    const { chat } = useBot();
    const [messages, setMessages] = useState([]);
    const [inputValue, setInputValue] = useState("");
+   const [loading, setLoading] = useState(false); // Novo estado
    const messagesEndRef = useRef(null);
 
    useEffect(() => {
@@ -30,12 +31,19 @@ export default function ChatPage() {
    };
 
    const handleSendMessage = async () => {
-      if (inputValue.trim() === "") return;
+      if (inputValue.trim() === "" || loading) return;
 
       const userMessage = inputValue;
       setInputValue("");
 
       setMessages((prev) => [...prev, { text: userMessage, sender: "user" }]);
+      setLoading(true); // Inicia carregamento
+
+      // Adiciona mensagem de carregando do bot
+      setMessages((prev) => [
+         ...prev,
+         { text: "...", sender: "bot", loading: true },
+      ]);
 
       try {
          const updatedMessages = [
@@ -44,15 +52,21 @@ export default function ChatPage() {
          ];
          const response = await chat(updatedMessages);
 
-         setMessages((prev) => [...prev, { text: response, sender: "bot" }]);
+         // Remove mensagem de carregando
+         setMessages((prev) => [
+            ...prev.filter((msg) => !msg.loading),
+            { text: response, sender: "bot" },
+         ]);
       } catch (error) {
          setMessages((prev) => [
-            ...prev,
+            ...prev.filter((msg) => !msg.loading),
             {
                text: "Erro ao obter resposta do assistente.",
                sender: "bot",
             },
          ]);
+      } finally {
+         setLoading(false);
       }
    };
 
@@ -73,7 +87,11 @@ export default function ChatPage() {
                {messages.map((message, index) => (
                   <div
                      key={index}
-                     className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
+                     className={`flex ${
+                        message.sender === "user"
+                           ? "justify-end"
+                           : "justify-start"
+                     }`}
                   >
                      <div
                         className={`max-w-xs md:max-w-md lg:max-w-lg rounded-lg px-4 py-2 ${
@@ -84,7 +102,21 @@ export default function ChatPage() {
                      >
                         {message.sender === "bot" ? (
                            <div className="prose dark:prose-invert">
-                              <ReactMarkdown>{message.text}</ReactMarkdown>
+                              {message.loading ? (
+                                 <div class="flex space-x-1 text-2xl text-bold">
+                                    <span class="opacity-0 animate-[fadeIn_1s_ease-in-out_infinite]">
+                                       .
+                                    </span>
+                                    <span class="opacity-0 animate-[fadeIn_1s_ease-in-out_0.33s_infinite]">
+                                       .
+                                    </span>
+                                    <span class="opacity-0 animate-[fadeIn_1s_ease-in-out_0.66s_infinite]">
+                                       .
+                                    </span>
+                                 </div>
+                              ) : (
+                                 <ReactMarkdown>{message.text}</ReactMarkdown>
+                              )}
                            </div>
                         ) : (
                            <p>{message.text}</p>
