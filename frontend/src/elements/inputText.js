@@ -1,7 +1,7 @@
 import React from "react";
 import Icon from "./Icon";
 
-const InputText = ({ placeholder, className, name, type, variant, icon, value, onChange, autoComplete, strokeWidth }) => {
+const InputText = ({ placeholder, className, name, type, variant, icon, value, onChange, autoComplete, strokeWidth, onKeyDown }) => {
    return (
       <div className="relative">
          {variant === "withIcon" && icon && (
@@ -18,6 +18,7 @@ const InputText = ({ placeholder, className, name, type, variant, icon, value, o
             name={name}
             value={value}
             onChange={onChange}
+            onKeyDown={onKeyDown}
             autoComplete={autoComplete}
          />
       </div>
