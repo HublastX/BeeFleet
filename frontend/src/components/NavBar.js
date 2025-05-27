@@ -51,7 +51,7 @@ const othersItems = [
       name: "suporte",
       subItems: [
          { name: "faq", path: "/faq" },
-         { name: "Gui", path: "/gui" },
+         { name: "ChatBot", path: "/chat" },
       ],
    },
 ];
