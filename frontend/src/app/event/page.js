@@ -38,7 +38,7 @@ function Events() {
       { name: "Finalizados", value: eventosFinalizados.length },
    ];
 
-   const COLORS = ["#8B5CF6", "#10B981"];
+   const COLORS = ["#8B5CF6", "#10B981", "#E2E8F0"];
 
    useEffect(() => {
       const tipo = searchParams.get("tipo");
@@ -109,8 +109,9 @@ function Events() {
                            data={eventTypeData}
                            cx="50%"
                            cy="50%"
-                           innerRadius={40}
-                           outerRadius={63}
+                           innerRadius={60}
+                           outerRadius={80}
+                           fill="#8884d8"
                            paddingAngle={2}
                            dataKey="value"
                         >
