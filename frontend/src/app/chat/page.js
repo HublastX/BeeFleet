@@ -72,7 +72,7 @@ export default function ChatPage() {
 
    return (
       <div className="fixed z-50 inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4">
-         <div className="flex z-50 flex-col h-4/5 w-full md:w-3/4 lg:w-1/2 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-xl shadow-lg p-4 space-y-4 border border-bee-dark-300 dark:border-bee-dark-400">
+         <div className="flex z-50 flex-col h-4/5 w-full md:w-3/4 lg:w-1/2 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-xl shadow-lg p-4 space-y-4 border border-bee-dark-300 dark:border-bee-dark-400 overflow-x-hidden">
             {/* Cabeçalho */}
             <header className="mb-5 flex flex-row justify-between">
                <div>
@@ -83,7 +83,7 @@ export default function ChatPage() {
                   <Icon name="xMark" className="size-6" strokeWidth={2} />
                </Link>
             </header>
-            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 overflow-x-hidden">
                {messages.map((message, index) => (
                   <div
                      key={index}
@@ -119,7 +119,7 @@ export default function ChatPage() {
                               )}
                            </div>
                         ) : (
-                           <p>{message.text}</p>
+                           <p className="text-wrap">{message.text}</p>
                         )}
                         <div
                            className={`text-xs mt-1 opacity-70 ${
