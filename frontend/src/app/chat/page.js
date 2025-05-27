@@ -10,7 +10,7 @@ export default function ChatPage() {
    const { chat } = useBot();
    const [messages, setMessages] = useState([]);
    const [inputValue, setInputValue] = useState("");
-   const [loading, setLoading] = useState(false); // Novo estado
+   const [loading, setLoading] = useState(false);
    const messagesEndRef = useRef(null);
 
    useEffect(() => {
@@ -37,9 +37,8 @@ export default function ChatPage() {
       setInputValue("");
 
       setMessages((prev) => [...prev, { text: userMessage, sender: "user" }]);
-      setLoading(true); // Inicia carregamento
+      setLoading(true); 
 
-      // Adiciona mensagem de carregando do bot
       setMessages((prev) => [
          ...prev,
          { text: "...", sender: "bot", loading: true },
@@ -52,7 +51,6 @@ export default function ChatPage() {
          ];
          const response = await chat(updatedMessages);
 
-         // Remove mensagem de carregando
          setMessages((prev) => [
             ...prev.filter((msg) => !msg.loading),
             { text: response, sender: "bot" },
@@ -73,7 +71,6 @@ export default function ChatPage() {
    return (
       <div className="fixed z-50 inset-0 flex items-center justify-center bg-black/20 backdrop-blur-sm p-4">
          <div className="flex z-50 flex-col h-4/5 w-full md:w-3/4 lg:w-1/2 bg-bee-dark-100 dark:bg-bee-dark-800 rounded-xl shadow-lg p-4 space-y-4 border border-bee-dark-300 dark:border-bee-dark-400 overflow-x-hidden">
-            {/* Cabeçalho */}
             <header className="mb-5 flex flex-row justify-between">
                <div>
                   <h1 className="text-xl font-bold">BeeFleet Assistente</h1>
@@ -96,8 +93,8 @@ export default function ChatPage() {
                      <div
                         className={`max-w-xs md:max-w-md lg:max-w-lg rounded-lg px-4 py-2 ${
                            message.sender === "user"
-                              ? "bg-bee-purple-500 text-white rounded-br-none"
-                              : "bg-gray-200 dark:bg-bee-dark-400 text-gray-800 dark:text-gray-200 rounded-bl-none"
+                              ? "bg-bee-purple-500 text-white rounded-br-none ml-7"
+                              : "bg-gray-200 dark:bg-bee-dark-400 text-gray-800 dark:text-gray-200 rounded-bl-none mr-7"
                         }`}
                      >
                         {message.sender === "bot" ? (
@@ -139,7 +136,6 @@ export default function ChatPage() {
                ))}
                <div ref={messagesEndRef} />
             </div>
-            {/* Área de input */}
             <div>
                <div className="flex space-x-2">
                   <div className="w-full">
