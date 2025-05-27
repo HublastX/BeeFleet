@@ -68,12 +68,15 @@ export default function ReportForm() {
          endDate: dateRangeOption === "range" ? rangeEnd : null,
       };
 
-      setReportFilters(filters);
-
       try {
          const data = await getFullReport(filters);
-         setReportData(data);
-         setIsReportOpen(true);
+
+         const encodedData = encodeURIComponent(JSON.stringify(data));
+         const encodedFilters = encodeURIComponent(JSON.stringify(filters));
+
+         router.push(
+            `/report/result?data=${encodedData}&filters=${encodedFilters}`
+         );
       } catch (error) {
          console.error("Erro ao gerar relatório:", error);
       }
@@ -158,7 +161,10 @@ export default function ReportForm() {
                      <h2 className="text-xl font-bold">Filtros</h2>
                      <p className="italic text-bee-alert-300">*Opcional</p>
                   </div>
-                  <p className="text-gray-400 text-sm italic">ao selecionar um filtro, voce pode selecionar um item expecifico</p>
+                  <p className="text-gray-400 text-sm italic">
+                     ao selecionar um filtro, voce pode selecionar um item
+                     expecifico
+                  </p>
                </div>
 
                <div className="space-y-4">
@@ -298,12 +304,7 @@ export default function ReportForm() {
                         : ""
             }
          />
-         <GenericReport
-            isOpen={isReportOpen}
-            onClose={() => setIsReportOpen(false)}
-            reportData={reportData}
-            filters={reportFilters}
-         />
+
       </div>
    );
 }
