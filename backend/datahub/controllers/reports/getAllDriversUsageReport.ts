@@ -11,34 +11,54 @@ export const getAllDriversUsageReport = async (req: Request, res: Response) => {
         const drivers: Driver[] = await prisma.driver.findMany({
             include: {
                 events: {
-                    where: { eventType: { in: ["RETURN", "REPAIR_RETURN"] } },
+                    where: {
+                        eventType: {
+                            in: ["CHECKOUT", "RETURN", "REPAIR_RETURN"]
+                        }
+                    },
                     include: { car: true },
-                    orderBy: { createdAt: "desc" },
+                    orderBy: { createdAt: "asc" }, // ordena corretamente
                 },
             },
         });
 
         const driversReport: DriverReport[] = drivers.map((driver) => {
-            const totalUsageTimes = driver.events.length;
-
-            const uniqueCars = new Set(
-                driver.events.map((event) => event.car.id)
+            const relevantEvents = driver.events.filter(event =>
+                event.eventType === "RETURN" || event.eventType === "REPAIR_RETURN"
             );
 
-            const totalOdometerChange = driver.events.reduce((acc, event) => {
-                return acc + event.odometer;
-            }, 0);
+            const totalUsageTimes = relevantEvents.length;
+
+            const uniqueCars = new Set(
+                relevantEvents.map((event) => event.car.id)
+            );
+
+            const totalOdometerChange = driver.events.length >= 2
+                ? driver.events[driver.events.length - 1].odometer - driver.events[0].odometer
+                : 0;
 
             const lastUsed =
-                driver.events.length > 0 ? driver.events[0].createdAt : null;
+                relevantEvents.length > 0 ? relevantEvents[relevantEvents.length - 1].createdAt : null;
 
-            const carUsageDetails: CarUsageDetail[] = Array.from(
-                uniqueCars
-            ).map((carId) => {
+            const carUsageDetails: CarUsageDetail[] = Array.from(uniqueCars).map((carId) => {
                 const carEvents = driver.events.filter(
                     (event) => event.car.id === carId
                 );
-                const car = carEvents[0].car;
+
+                const sortedCarEvents = carEvents.sort(
+                    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                );
+
+                const carOdometerChange = sortedCarEvents.length >= 2
+                    ? sortedCarEvents[sortedCarEvents.length - 1].odometer -
+                      sortedCarEvents[0].odometer
+                    : 0;
+
+                const car = sortedCarEvents[0].car;
+
+                const usageTimes = carEvents.filter(
+                    (e) => e.eventType === "RETURN" || e.eventType === "REPAIR_RETURN"
+                ).length;
 
                 return {
                     carId: car.id,
@@ -50,11 +70,8 @@ export const getAllDriversUsageReport = async (req: Request, res: Response) => {
                     year: car.year,
                     color: car.color,
                     status: car.status,
-                    usageTimes: carEvents.length,
-                    totalOdometerChange: carEvents.reduce(
-                        (acc, event) => acc + event.odometer,
-                        0
-                    ),
+                    usageTimes,
+                    totalOdometerChange: carOdometerChange,
                 };
             });
 
