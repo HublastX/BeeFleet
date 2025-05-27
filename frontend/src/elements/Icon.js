@@ -52,6 +52,7 @@ import {
    CheckIcon,
    ExclamationTriangleIcon,
    ListBulletIcon,
+   PaperAirplaneIcon,
 } from "@heroicons/react/24/outline";
 
 const icons = {
@@ -103,7 +104,8 @@ const icons = {
    inbox: InboxIcon,
    clock: ClockIcon,
    phone: PhoneIcon,
-   circle: Circle
+   circle: Circle,
+   enviar: PaperAirplaneIcon
 };
 
 export default function Icon({ name, className, strokeWidth }) {

@@ -144,3 +144,21 @@ input:-webkit-autofill {
 .dark .card-hover:hover {
    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+
+.prose a {
+   color: #8b5cf6; /* cor do link */
+   text-decoration: underline;
+   font-weight: 500;
+}
+
+.prose a:hover {
+   color: #7c3aed; /* cor do hover */
+}
+
+.dark .prose a {
+   color: #a78bfa;
+}
+
+.dark .prose a:hover {
+   color: #8b5cf6;
+}
