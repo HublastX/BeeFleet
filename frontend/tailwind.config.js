@@ -18,7 +18,7 @@ module.exports = {
                200: "#C9B6E3",
                300: "#AD92D4",
                400: "#9170C6", // dark focus ring e dorder do inputtext
-               500: "#724FB7", 
+               500: "#724FB7",
                600: "#512DA8", // bg do btn primary
                700: "#3b2287", // bg do btn primary hover
             },
@@ -40,6 +40,16 @@ module.exports = {
                500: "#F0F0F0", //cor do texto do darkmode[icon card, card, cartable, hometable, pagination, usertable, userdropdown] || bg hover light [navbar, cartable, userTable, userdropdown]
                600: "#d2d2d21f", // bg hover darkmode [navbar, cartable, usertable, userdropdown]
                700: " #f790093f", //cor do bg warning [badge light, badge solid ]
+            },
+         },
+         animation: {
+            fadeIn: "fadeIn 1s ease-in-out infinite",
+         },
+         keyframes: {
+            fadeIn: {
+               "0%": { opacity: "0" },
+               "50%": { opacity: "1" },
+               "100%": { opacity: "0" },
             },
          },
       },
