@@ -169,7 +169,7 @@ export const createEvent = async (
             await prisma.car.update({
                 where: { id: carId },
                 data: {
-                    odometer: car.odometer + odometer,
+                    odometer: odometer,
                     status: "AVAILABLE" as CarStatus,
                     isAvailable: true,
                 },
@@ -343,7 +343,7 @@ export const createEvent = async (
             await prisma.car.update({
                 where: { id: carId },
                 data: {
-                    odometer: car.odometer + odometer,
+                    odometer: odometer,
                     status: "AVAILABLE" as CarStatus,
                     isAvailable: true,
                 },
