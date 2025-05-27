@@ -307,3 +307,25 @@ export interface ManagerEvent {
         status: string;
     };
 }
+
+export interface ManagerGlobalReport {
+    id: string;
+    name: string;
+    email: string;
+    createdAt: Date;
+    updatedAt: Date;
+    drivers: any[];
+    deletedDrivers: any[];
+    cars: any[];
+    deletedCars: any[];
+    events: any[];
+    deletedEvents: any[];
+    summary: {
+        totalDrivers: number;
+        totalDeletedDrivers: number;
+        totalCars: number;
+        totalDeletedCars: number;
+        totalEvents: number;
+        totalDeletedEvents: number;
+    };
+}
