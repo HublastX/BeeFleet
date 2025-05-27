@@ -11,26 +11,34 @@ export const getAllCarsUsageReport = async (req: Request, res: Response) => {
         const cars: Car[] = await prisma.car.findMany({
             include: {
                 events: {
-                    where: { eventType: { in: ["RETURN", "REPAIR_RETURN"] } },
+                    where: {
+                        eventType: {
+                            in: ["CHECKOUT", "RETURN", "REPAIR_RETURN"]
+                        }
+                    },
                     include: { driver: true },
-                    orderBy: { createdAt: "desc" },
+                    orderBy: { createdAt: "asc" }, // ordena do mais antigo ao mais novo
                 },
             },
         });
 
         const carsReport: CarReport[] = cars.map((car) => {
-            const totalUsageTimes = car.events.length;
-
-            const uniqueDrivers = new Set(
-                car.events.map((event) => event.driver.id)
+            const relevantEvents = car.events.filter(event =>
+                event.eventType === "RETURN" || event.eventType === "REPAIR_RETURN"
             );
 
-            const totalOdometerChange = car.events.reduce((acc, event) => {
-                return acc + event.odometer;
-            }, 0);
+            const totalUsageTimes = relevantEvents.length;
+
+            const uniqueDrivers = new Set(
+                relevantEvents.map((event) => event.driver.id)
+            );
+
+            const totalOdometerChange = car.events.length >= 2
+                ? car.events[car.events.length - 1].odometer - car.events[0].odometer
+                : 0;
 
             const lastUsed =
-                car.events.length > 0 ? car.events[0].createdAt : null;
+                relevantEvents.length > 0 ? relevantEvents[relevantEvents.length - 1].createdAt : null;
 
             const driverUsageDetails: DriverUsageDetail[] = Array.from(
                 uniqueDrivers
@@ -38,6 +46,16 @@ export const getAllCarsUsageReport = async (req: Request, res: Response) => {
                 const driverEvents = car.events.filter(
                     (event) => event.driver.id === driverId
                 );
+
+                const sortedDriverEvents = driverEvents.sort(
+                    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                );
+
+                const driverOdometerChange = sortedDriverEvents.length >= 2
+                    ? sortedDriverEvents[sortedDriverEvents.length - 1].odometer -
+                      sortedDriverEvents[0].odometer
+                    : 0;
+
                 const driver = driverEvents[0].driver;
 
                 return {
@@ -45,11 +63,10 @@ export const getAllCarsUsageReport = async (req: Request, res: Response) => {
                     name: driver.name,
                     phone: driver.phone,
                     license: driver.license,
-                    totalUsageTimes: driverEvents.length,
-                    totalOdometerChange: driverEvents.reduce(
-                        (acc, event) => acc + event.odometer,
-                        0
-                    ),
+                    totalUsageTimes: driverEvents.filter(
+                        (event) => event.eventType === "RETURN" || event.eventType === "REPAIR_RETURN"
+                    ).length,
+                    totalOdometerChange: driverOdometerChange,
                 };
             });
 
