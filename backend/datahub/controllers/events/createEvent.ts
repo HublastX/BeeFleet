@@ -151,16 +151,6 @@ export const createEvent = async (
                 },
             });
 
-            const car = await prisma.car.findUnique({
-                where: { id: carId },
-                select: { odometer: true },
-            });
-
-            if (!car) {
-                res.status(404).json({ error: "Car not found" });
-                return;
-            }
-
             if (odometer === undefined) {
                 res.status(400).json({ error: "Odometer is required for return event" });
                 return;
@@ -169,7 +159,7 @@ export const createEvent = async (
             await prisma.car.update({
                 where: { id: carId },
                 data: {
-                    odometer: car.odometer + odometer,
+                    odometer: odometer,
                     status: "AVAILABLE" as CarStatus,
                     isAvailable: true,
                 },
@@ -325,16 +315,6 @@ export const createEvent = async (
                 },
             });
 
-            const car = await prisma.car.findUnique({
-                where: { id: carId },
-                select: { odometer: true },
-            });
-
-            if (!car) {
-                res.status(404).json({ error: "Car not found" });
-                return;
-            }
-
             if (odometer === undefined) {
                 res.status(400).json({ error: "Odometer is required for return event" });
                 return;
@@ -343,7 +323,7 @@ export const createEvent = async (
             await prisma.car.update({
                 where: { id: carId },
                 data: {
-                    odometer: car.odometer + odometer,
+                    odometer: odometer,
                     status: "AVAILABLE" as CarStatus,
                     isAvailable: true,
                 },
