@@ -4,7 +4,7 @@ import Icon from "@/elements/Icon";
 
 export default function DeleteConfirmation({ link, tipo, onClose }) {
    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/30 animate-fade-in">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/30">
          <div className="bg-white dark:bg-bee-dark-800 w-full max-w-md rounded-xl shadow-xl border border-bee-dark-300 dark:border-bee-dark-400 overflow-hidden animate-scale-in">
             <div className="bg-red-50 dark:bg-red-900/30 p-5 flex flex-col items-center">
                <div className="bg-red-100 dark:bg-red-900/30 rounded-full p-4 mb-3">
