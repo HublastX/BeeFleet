@@ -1,38 +1,12 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
+import { ManagerGlobalReport } from "../../schemas/reportInterface";
 
-interface ManagerReport {
-    id: string;
-    name: string;
-    email: string;
-    createdAt: Date;
-    updatedAt: Date;
-    drivers: any[];
-    deletedDrivers: any[];
-    cars: any[];
-    deletedCars: any[];
-    events: any[];
-    deletedEvents: any[];
-    summary: {
-        totalDrivers: number;
-        totalDeletedDrivers: number;
-        totalCars: number;
-        totalDeletedCars: number;
-        totalEvents: number;
-        totalDeletedEvents: number;
-    };
-}
-
-export const getCompleteManagersReport = async (
-    req: Request,
-    res: Response
-) => {
+export const getCompleteManagersReport = async (req: Request, res: Response) => {
     try {
-        // Buscar todos os gestores
         const managers = await prisma.manager.findMany();
         console.log(`Total de gestores encontrados: ${managers.length}`);
 
-        // Debugging: verificar se há algum motorista marcado como excluído no sistema
         const allDeletedDrivers = await prisma.driver.findMany({
             where: {
                 deletedById: { not: null },
@@ -67,14 +41,11 @@ export const getCompleteManagersReport = async (
             });
         }
 
-        // Array para armazenar o relatório completo
-        const completeReport: ManagerReport[] = [];
+        const completeReport: ManagerGlobalReport[] = [];
 
-        // Para cada gestor, buscar dados completos incluindo itens excluídos
         for (const manager of managers) {
             console.log(`Processando gestor: ${manager.name} (${manager.id})`);
 
-            // Motoristas ativos
             const activeDrivers = await prisma.driver.findMany({
                 where: {
                     managerId: manager.id,
@@ -82,7 +53,6 @@ export const getCompleteManagersReport = async (
                 },
             });
 
-            // Motoristas excluídos - busca geral, não apenas por managerId pois o motorista pode ter sido gerenciado por outro gestor
             const deletedDrivers = await prisma.driver.findMany({
                 where: {
                     OR: [
@@ -120,7 +90,6 @@ export const getCompleteManagersReport = async (
                 );
             });
 
-            // Carros ativos
             const activeCars = await prisma.car.findMany({
                 where: {
                     managerId: manager.id,
@@ -128,7 +97,6 @@ export const getCompleteManagersReport = async (
                 },
             });
 
-            // Carros excluídos
             const deletedCars = await prisma.car.findMany({
                 where: {
                     OR: [
@@ -154,7 +122,6 @@ export const getCompleteManagersReport = async (
                 },
             });
 
-            // Eventos ativos
             const activeEvents = await prisma.event.findMany({
                 where: {
                     managerId: manager.id,
@@ -166,7 +133,6 @@ export const getCompleteManagersReport = async (
                 },
             });
 
-            // Eventos excluídos
             const deletedEvents = await prisma.event.findMany({
                 where: {
                     OR: [
@@ -194,7 +160,6 @@ export const getCompleteManagersReport = async (
                 },
             });
 
-            // Log para debug
             console.log(`Gestor ${manager.name}:
                 - ${activeDrivers.length} motoristas ativos
                 - ${deletedDrivers.length} motoristas excluídos
@@ -203,14 +168,12 @@ export const getCompleteManagersReport = async (
                 - ${activeEvents.length} eventos ativos
                 - ${deletedEvents.length} eventos excluídos`);
 
-            // Construir o relatório do gestor
-            const managerReport: ManagerReport = {
+            const managerGlobalReport: ManagerGlobalReport = {
                 id: manager.id,
                 name: manager.name,
                 email: manager.email,
                 createdAt: manager.createdAt,
                 updatedAt: manager.updatedAt,
-                // Motoristas ativos
                 drivers: activeDrivers.map((driver) => ({
                     id: driver.id,
                     name: driver.name,
@@ -219,7 +182,6 @@ export const getCompleteManagersReport = async (
                     isAvailable: driver.isAvailable,
                     status: "ACTIVE",
                 })),
-                // Motoristas excluídos
                 deletedDrivers: deletedDrivers.map((driver: any) => ({
                     id: driver.id,
                     name: driver.name,
@@ -232,7 +194,6 @@ export const getCompleteManagersReport = async (
                         : null,
                     status: "DELETED",
                 })),
-                // Carros ativos
                 cars: activeCars.map((car) => ({
                     id: car.id,
                     renavam: car.renavam,
@@ -242,10 +203,10 @@ export const getCompleteManagersReport = async (
                     model: car.model,
                     year: car.year,
                     color: car.color,
+                    odometer: car.odometer,
                     status: car.status,
                     isAvailable: car.isAvailable,
                 })),
-                // Carros excluídos
                 deletedCars: deletedCars.map((car: any) => ({
                     id: car.id,
                     renavam: car.renavam,
@@ -255,12 +216,12 @@ export const getCompleteManagersReport = async (
                     model: car.model,
                     year: car.year,
                     color: car.color,
+                    odometer: car.odometer,
                     deletedAt: car.deletedAt,
                     deletedById: car.deletedById,
                     deletedByName: car.deletedBy ? car.deletedBy.name : null,
                     status: "DELETED",
                 })),
-                // Eventos ativos
                 events: activeEvents.map((event) => ({
                     id: event.id,
                     eventType: event.eventType,
@@ -276,7 +237,6 @@ export const getCompleteManagersReport = async (
                     carInfo: `${event.car.brand} ${event.car.model} (${event.car.plate})`,
                     checkoutEventId: event.checkoutEventId || null,
                 })),
-                // Eventos excluídos
                 deletedEvents: deletedEvents.map((event: any) => ({
                     id: event.id,
                     eventType: event.eventType,
@@ -295,7 +255,6 @@ export const getCompleteManagersReport = async (
                     driverName: event.driver.name,
                     carInfo: `${event.car.brand} ${event.car.model} (${event.car.plate})`,
                 })),
-                // Resumo das informações
                 summary: {
                     totalDrivers: activeDrivers.length,
                     totalDeletedDrivers: deletedDrivers.length,
@@ -306,10 +265,9 @@ export const getCompleteManagersReport = async (
                 },
             };
 
-            completeReport.push(managerReport);
+            completeReport.push(managerGlobalReport);
         }
 
-        // Calcular estatísticas globais
         const globalStats = {
             totalManagers: completeReport.length,
             totalDrivers: completeReport.reduce(
