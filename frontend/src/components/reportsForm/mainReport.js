@@ -5,83 +5,40 @@ import InputText from "@/elements/inputText";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import ReportList from "../profileList/reportList";
-import useCar from "@/hooks/useCar";
-import useDrivers from "@/hooks/useDrivers";
-import useAuth from "@/hooks/useAuth";
-import useEvents from "@/hooks/useEvent";
-import useReports from "@/hooks/useReports";
-import GenericReport from "../reports/GenericReport";
 
 export default function ReportForm() {
    const router = useRouter();
    const [dateRangeOption, setDateRangeOption] = useState("all");
-   const [searchCriteria, setSearchCriteria] = useState("none");
+   const [searchCriteria, setSearchCriteria] = useState("all");
    const [showSummary, setShowSummary] = useState(false);
    const [openReportList, setOpenReportList] = useState(false);
    const [selectedItem, setSelectedItem] = useState(null);
-
-   const { carro } = useCar();
-   const { motoristas } = useDrivers();
-   const { gestores } = useAuth();
-   const { events } = useEvents();
-   const { getFullReport } = useReports();
-
-   const retornado = events?.filter((e) => e.eventType === "RETURN");
+   const [rangeStart, setRangeStart] = useState("");
+   const [rangeEnd, setRangeEnd] = useState("");
 
    const toggleSummary = () => {
       setShowSummary(!showSummary);
    };
 
-   const getListCount = () => {
-      switch (searchCriteria) {
-         case "carro":
-            return carro.length;
-         case "motorista":
-            return motoristas.length;
-         case "manager":
-            return gestores.length;
-         case "event":
-            return retornado.length;
-         default:
-            return "";
-      }
-   };
-
-   const [isReportOpen, setIsReportOpen] = useState(false);
-   const [reportData, setReportData] = useState(null);
-   const [reportFilters, setReportFilters] = useState({
-      dateRange: "all",
-      searchCriteria: "",
-      selectedItem: null,
-   });
-   const [rangeStart, setRangeStart] = useState("");
-   const [rangeEnd, setRangeEnd] = useState("");
-
-   const handleSubmit = async (e) => {
+   const handleSubmit = (e) => {
       e.preventDefault();
 
-      const filters = {
-         dateRange: dateRangeOption,
-         searchCriteria,
-         selectedItem,
-         startDate: dateRangeOption === "range" ? rangeStart : null,
-         endDate: dateRangeOption === "range" ? rangeEnd : null,
-      };
+      const params = new URLSearchParams();
 
-      try {
-         const data = await getFullReport(filters);
-
-         const encodedData = encodeURIComponent(JSON.stringify(data));
-         const encodedFilters = encodeURIComponent(JSON.stringify(filters));
-
-         router.push(
-            `/report/result?data=${encodedData}&filters=${encodedFilters}`
-         );
-      } catch (error) {
-         console.error("Erro ao gerar relatório:", error);
+      params.append("period", dateRangeOption);
+      if (dateRangeOption === "range") {
+         if (rangeStart) params.append("startDate", rangeStart);
+         if (rangeEnd) params.append("endDate", rangeEnd);
       }
-   };
 
+      params.append("filterType", searchCriteria);
+
+      if (selectedItem) {
+         params.append("filterId", selectedItem.id);
+      }
+
+      router.push(`/report/result?${params.toString()}`);
+   };
    return (
       <div className="max-w-4xl mx-auto p-4 overflow-y-auto max-h-[80vh]">
          <form className="space-y-6" onSubmit={handleSubmit}>
@@ -159,7 +116,6 @@ export default function ReportForm() {
                   <div className="flex items-center gap-3">
                      <Icon name="filtro" className="size-6" strokeWidth={2} />
                      <h2 className="text-xl font-bold">Filtros</h2>
-                     <p className="italic text-bee-alert-300">*Opcional</p>
                   </div>
                   <p className="text-gray-400 text-sm italic">
                      ao selecionar um filtro, voce pode selecionar um item
@@ -180,7 +136,7 @@ export default function ReportForm() {
                         }}
                         className="border border-bee-dark-300 dark:border-bee-dark-400 rounded px-3 py-2 bg-white dark:bg-bee-dark-800 w-full md:w-40"
                      >
-                        <option value="none">Não filtrar</option>
+                        <option value="all">Buscar por tudo</option>
                         <option value="carro">Veículo</option>
                         <option value="motorista">Motorista</option>
                         <option value="manager">Gestor</option>
@@ -199,7 +155,7 @@ export default function ReportForm() {
                                 (selectedItem.checkoutEventId
                                    ? `${selectedItem.checkoutEventId.substring(0, 5)}...`
                                    : "")
-                              : searchCriteria !== "none"
+                              : searchCriteria !== "all"
                                 ? `Selecionar ${
                                      {
                                         carro: "veículo",
@@ -304,7 +260,6 @@ export default function ReportForm() {
                         : ""
             }
          />
-
       </div>
    );
 }
