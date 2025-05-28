@@ -41,6 +41,12 @@ export const createEvent = async (
 
             const driver = await prisma.driver.findUnique({
                 where: { id: driverId },
+                select: {
+                    id: true,
+                    name: true,
+                    phone: true,
+                    isAvailable: true,
+                },
             });
 
             if (!driver) {
@@ -82,7 +88,14 @@ export const createEvent = async (
                 },
             });
 
-            res.json(event);
+            res.json({
+                ...event,
+                driver: {
+                    id: driver.id,
+                    name: driver.name,
+                    phone: driver.phone,
+                },
+            });
         } else if (eventType === "RETURN") {
             if (!checkoutEventId) {
                 res.status(400).json({
@@ -110,6 +123,20 @@ export const createEvent = async (
                 res.status(400).json({
                     error: "Return event does not match original checkout event",
                 });
+                return;
+            }
+
+            const driver = await prisma.driver.findUnique({
+                where: { id: driverId },
+                select: {
+                    id: true,
+                    name: true,
+                    phone: true,
+                },
+            });
+
+            if (!driver) {
+                res.status(404).json({ error: "Driver not found" });
                 return;
             }
 
@@ -152,7 +179,9 @@ export const createEvent = async (
             });
 
             if (odometer === undefined) {
-                res.status(400).json({ error: "Odometer is required for return event" });
+                res.status(400).json({
+                    error: "Odometer is required for return event",
+                });
                 return;
             }
 
@@ -176,8 +205,12 @@ export const createEvent = async (
                 event: returnEvent,
                 report,
                 duration: `${duration} hours`,
+                driver: {
+                    id: driver.id,
+                    name: driver.name,
+                    phone: driver.phone,
+                },
             });
-
         } else if (eventType === "REPAIR") {
             const car = await prisma.car.findUnique({
                 where: { id: carId },
@@ -186,14 +219,14 @@ export const createEvent = async (
             if (!car) {
                 res.status(404).json({ error: "Car not found" });
                 return;
-            };
+            }
 
             if (!car.isAvailable || car.status !== "AVAILABLE") {
                 res.status(400).json({
                     error: "Car is not available for checkout",
                 });
                 return;
-            };
+            }
 
             const driver = await prisma.driver.findUnique({
                 where: { id: driverId },
@@ -239,7 +272,6 @@ export const createEvent = async (
             });
 
             res.json(event);
-
         } else if (eventType === "REPAIR_RETURN") {
             if (!checkoutEventId) {
                 res.status(400).json({
@@ -274,6 +306,20 @@ export const createEvent = async (
                 res.status(400).json({
                     error: "Return event does not match original repair event",
                 });
+                return;
+            }
+
+            const driver = await prisma.driver.findUnique({
+                where: { id: driverId },
+                select: {
+                    id: true,
+                    name: true,
+                    phone: true,
+                },
+            });
+
+            if (!driver) {
+                res.status(404).json({ error: "Driver not found" });
                 return;
             }
 
@@ -316,7 +362,9 @@ export const createEvent = async (
             });
 
             if (odometer === undefined) {
-                res.status(400).json({ error: "Odometer is required for return event" });
+                res.status(400).json({
+                    error: "Odometer is required for return event",
+                });
                 return;
             }
 
@@ -340,8 +388,12 @@ export const createEvent = async (
                 event: repairReturnEvent,
                 report,
                 duration: `${repairDuration} hours`,
+                driver: {
+                    id: driver.id,
+                    name: driver.name,
+                    phone: driver.phone,
+                },
             });
-
         } else {
             res.status(400).json({ error: "Invalid event type" });
         }

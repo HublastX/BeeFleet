@@ -2,14 +2,43 @@ import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
 import { ManagerGlobalReport } from "../../schemas/reportInterface";
 
-export const getCompleteManagersReport = async (req: Request, res: Response) => {
+export const getCompleteManagersReport = async (
+    req: Request,
+    res: Response
+) => {
     try {
+        const { startDate, endDate } = req.query;
+
+        // Construir filtro de data opcional
+        let dateFilter = {};
+        if (startDate && endDate) {
+            dateFilter = {
+                createdAt: {
+                    gte: new Date(startDate as string),
+                    lte: new Date(endDate as string),
+                },
+            };
+        } else if (startDate) {
+            dateFilter = {
+                createdAt: {
+                    gte: new Date(startDate as string),
+                },
+            };
+        } else if (endDate) {
+            dateFilter = {
+                createdAt: {
+                    lte: new Date(endDate as string),
+                },
+            };
+        }
+
         const managers = await prisma.manager.findMany();
         console.log(`Total de gestores encontrados: ${managers.length}`);
 
         const allDeletedDrivers = await prisma.driver.findMany({
             where: {
                 deletedById: { not: null },
+                ...dateFilter,
             },
             include: {
                 manager: {
@@ -50,14 +79,19 @@ export const getCompleteManagersReport = async (req: Request, res: Response) => 
                 where: {
                     managerId: manager.id,
                     deletedById: null,
+                    ...dateFilter,
                 },
             });
 
             const deletedDrivers = await prisma.driver.findMany({
                 where: {
                     OR: [
-                        { managerId: manager.id, deletedById: { not: null } },
-                        { deletedById: manager.id },
+                        {
+                            managerId: manager.id,
+                            deletedById: { not: null },
+                            ...dateFilter,
+                        },
+                        { deletedById: manager.id, ...dateFilter },
                     ],
                 },
                 include: {
@@ -94,14 +128,19 @@ export const getCompleteManagersReport = async (req: Request, res: Response) => 
                 where: {
                     managerId: manager.id,
                     deletedById: null,
+                    ...dateFilter,
                 },
             });
 
             const deletedCars = await prisma.car.findMany({
                 where: {
                     OR: [
-                        { managerId: manager.id, deletedById: { not: null } },
-                        { deletedById: manager.id },
+                        {
+                            managerId: manager.id,
+                            deletedById: { not: null },
+                            ...dateFilter,
+                        },
+                        { deletedById: manager.id, ...dateFilter },
                     ],
                 },
                 include: {
@@ -126,6 +165,7 @@ export const getCompleteManagersReport = async (req: Request, res: Response) => 
                 where: {
                     managerId: manager.id,
                     deletedById: null,
+                    ...dateFilter,
                 },
                 include: {
                     driver: true,
@@ -136,8 +176,12 @@ export const getCompleteManagersReport = async (req: Request, res: Response) => 
             const deletedEvents = await prisma.event.findMany({
                 where: {
                     OR: [
-                        { managerId: manager.id, deletedById: { not: null } },
-                        { deletedById: manager.id },
+                        {
+                            managerId: manager.id,
+                            deletedById: { not: null },
+                            ...dateFilter,
+                        },
+                        { deletedById: manager.id, ...dateFilter },
                     ],
                 },
                 include: {
@@ -204,7 +248,6 @@ export const getCompleteManagersReport = async (req: Request, res: Response) => 
                     odometer: car.odometer,
                     year: car.year,
                     color: car.color,
-                    odometer: car.odometer,
                     status: car.status,
                     isAvailable: car.isAvailable,
                 })),
@@ -304,6 +347,10 @@ export const getCompleteManagersReport = async (req: Request, res: Response) => 
         res.json({
             managers: completeReport,
             globalStats,
+            filters: {
+                startDate: startDate || null,
+                endDate: endDate || null,
+            },
         });
     } catch (error) {
         console.error("Erro no relatório completo de gestores:", error);
