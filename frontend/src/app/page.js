@@ -9,6 +9,17 @@ import RecentEvent from "@/components/table/homeTable";
 import HomeSkeleton from "@/elements/ui/skeleton/HomeSkeleton";
 import Icon from "@/elements/Icon";
 import useEvents from "@/hooks/useEvent";
+import {
+   BarChart,
+   Bar,
+   XAxis,
+   YAxis,
+   CartesianGrid,
+   Tooltip,
+   Legend,
+   ResponsiveContainer,
+} from "recharts";
+import RecentAtualizacao from "@/components/table/atualizacaoTable";
 
 function Home() {
    const { gestor, erro, carregando, gestores } = useAuth();
@@ -52,6 +63,36 @@ function Home() {
       });
    }
 
+   function agruparPorDiaDaSemana(dados) {
+      const diasDaSemana = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"];
+      const resultado = diasDaSemana.map((dia) => ({ dia, count: 0 }));
+
+      dados.forEach((item) => {
+         const data = new Date(item.createdAt);
+         const diaSemana = data.getDay();
+         resultado[diaSemana].count++;
+      });
+
+      return resultado;
+   }
+
+   function obterUltimos7Dias() {
+      const hoje = new Date();
+      const seteDiasAtras = new Date();
+      seteDiasAtras.setDate(hoje.getDate() - 6);
+
+      return { inicio: seteDiasAtras, fim: hoje };
+   }
+
+   function filtrarUltimos7Dias(dados) {
+      const { inicio, fim } = obterUltimos7Dias();
+
+      return dados.filter((item) => {
+         const dataCriacao = new Date(item.createdAt);
+         return dataCriacao >= inicio && dataCriacao <= fim;
+      });
+   }
+
    const motoristas7Dias = filtrarPeriodo(motoristas, 0, 7);
    const motoristas7DiasAnteriores = filtrarPeriodo(motoristas, 7, 14);
    const resultadoMotoristas = calcularEstadoComPorcentagem(
@@ -79,6 +120,68 @@ function Home() {
       eventos7Dias.length,
       eventos7DiasAnteriores.length
    );
+
+   const eventosUltimos7Dias = filtrarUltimos7Dias(events);
+   const motoristasUltimos7Dias = filtrarUltimos7Dias(motoristas);
+   const carrosUltimos7Dias = filtrarUltimos7Dias(carro);
+   const gestoresUltimos7Dias = filtrarUltimos7Dias(gestores);
+
+   const eventosPorDia = agruparPorDiaDaSemana(eventosUltimos7Dias);
+   const motoristasPorDia = agruparPorDiaDaSemana(motoristasUltimos7Dias);
+   const carrosPorDia = agruparPorDiaDaSemana(carrosUltimos7Dias);
+   const gestoresPorDia = agruparPorDiaDaSemana(gestoresUltimos7Dias);
+
+   const data = [
+      {
+         week: "Dom",
+         evento: eventosPorDia[0].count,
+         motorista: motoristasPorDia[0].count,
+         carro: carrosPorDia[0].count,
+         gestor: gestoresPorDia[0].count,
+      },
+      {
+         week: "Seg",
+         evento: eventosPorDia[1].count,
+         motorista: motoristasPorDia[1].count,
+         carro: carrosPorDia[1].count,
+         gestor: gestoresPorDia[1].count,
+      },
+      {
+         week: "Ter",
+         evento: eventosPorDia[2].count,
+         motorista: motoristasPorDia[2].count,
+         carro: carrosPorDia[2].count,
+         gestor: gestoresPorDia[2].count,
+      },
+      {
+         week: "Qua",
+         evento: eventosPorDia[3].count,
+         motorista: motoristasPorDia[3].count,
+         carro: carrosPorDia[3].count,
+         gestor: gestoresPorDia[3].count,
+      },
+      {
+         week: "Qui",
+         evento: eventosPorDia[4].count,
+         motorista: motoristasPorDia[4].count,
+         carro: carrosPorDia[4].count,
+         gestor: gestoresPorDia[4].count,
+      },
+      {
+         week: "Sex",
+         evento: eventosPorDia[5].count,
+         motorista: motoristasPorDia[5].count,
+         carro: carrosPorDia[5].count,
+         gestor: gestoresPorDia[5].count,
+      },
+      {
+         week: "Sab",
+         evento: eventosPorDia[6].count,
+         motorista: motoristasPorDia[6].count,
+         carro: carrosPorDia[6].count,
+         gestor: gestoresPorDia[6].count,
+      },
+   ];
 
    return (
       <>
@@ -147,45 +250,63 @@ function Home() {
                         </Link>
                      </div>
                      <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800 p-6 transition-all duration-300 hover:shadow-lg">
-                        <div className="flex flex-col gap-5">
-                           <div className="flex items-center gap-3 text-bee-primary-500 dark:text-white">
-                              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gray-100 dark:bg-gray-800">
-                                 <Icon name="evento"  className="text-bee-dark-600 size-6 dark:text-bee-alert-500" />
-                              </div>
-                              <h2 className="text-xl font-semibold tracking-tight">
-                                 Gerenciar Eventos
-                              </h2>
-                           </div>
-
-                           <div className="space-y-2">
-                              <p className="text-sm sm:text-base text-bee-dark-700 dark:text-bee-dark-100 leading-relaxed">
-                                 Para registrar a{" "}
-                                 <strong className="font-medium">
-                                    chegada
-                                 </strong>{" "}
-                                 ou{" "}
-                                 <strong className="font-medium">saída</strong>{" "}
-                                 de um carro, acesse a página de{" "}
-                                 <strong className="font-medium">
-                                    gerenciamento de eventos
-                                 </strong>
-                                 .
-                              </p>
-                           </div>
-
-                           <div className="mt-2">
-                              <Link href="/event">
-                                 <Btn
-                                    texto="Acessar gerenciamento"
-                                    className="w-fit px-5 py-2.5 bg-bee-primary-500 hover:bg-bee-primary-600 text-white rounded-lg transition-all hover:scale-[1.02] font-medium text-sm"
-                                 />
-                              </Link>
+                        <h1 className="text-xl mb-5 font-semibold">
+                           Criações dos últimos 7 dias
+                        </h1>
+                        <div>
+                           <div style={{ width: "100%", height: 260 }}>
+                              <ResponsiveContainer>
+                                 <BarChart data={data} barSize={30}>
+                                    <CartesianGrid strokeDasharray="1" />
+                                    <XAxis dataKey="week" stroke="#ccc" />
+                                    <YAxis stroke="#ccc" />
+                                    <Tooltip
+                                       contentStyle={{
+                                          borderRadius: "8px",
+                                          border: "none",
+                                          boxShadow:
+                                             "0 2px 10px rgba(0,0,0,0.1)",
+                                       }}
+                                    />
+                                    <Legend iconType="circle" iconSize={10} />
+                                    <Bar
+                                       stackId="a"
+                                       dataKey="gestor"
+                                       fill="#f54900"
+                                       name="Gestores"
+                                       animationDuration={800}
+                                    />
+                                    <Bar
+                                       stackId="a"
+                                       dataKey="motorista"
+                                       fill="#9810fa"
+                                       name="Motoristas"
+                                       animationDuration={800}
+                                    />
+                                    <Bar
+                                       stackId="a"
+                                       dataKey="carro"
+                                       fill="#155dfc"
+                                       name="Carros"
+                                       animationDuration={800}
+                                    />
+                                    <Bar
+                                       stackId="a"
+                                       dataKey="evento"
+                                       fill="#00a63e"
+                                       name="Eventos"
+                                       animationDuration={800}
+                                       radius={[10, 10, 0, 0]}
+                                    />
+                                 </BarChart>
+                              </ResponsiveContainer>
                            </div>
                         </div>
                      </div>
                   </div>
                   <div className="col-span-12 xl:col-span-6">
-                     <RecentEvent />
+                     {/* <RecentEvent /> */}
+                     <RecentAtualizacao />
                   </div>
                </div>
             </>
