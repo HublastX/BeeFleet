@@ -24,6 +24,7 @@ const Badge = ({
          success: "bg-bee-alert-200 text-bee-alert-100",
          error: "bg-bee-alert-400 text-bee-alert-300",
          warning: "bg-bee-alert-700 text-orange-400",
+         info: "bg-blue-500/30 text-blue-600"
       },
       solid: {
          success: "bg-bee-alert-200 text-white ",

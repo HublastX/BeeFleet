@@ -65,14 +65,14 @@ const Card = ({ icone, titulo, quantidade, estado, porcentagem, color }) => {
             <Badge
                color="error"
                size="md"
-               className="flex flex-row text-nowrap h-fit p-2"
+               className="flex flex-row text-nowrap h-fit p-2 self-end"
             >
                <Icon name="sBaixo" className="size-3" strokeWidth={3} />
                {porcentagem}%
             </Badge>
          )}
          {estado === "estavel" && (
-            <p className="text-xl font-black text-gray-400 italic">-</p>
+            <p className="text-xl font-black text-gray-400 italic self-end">-</p>
          )}
       </div>
    );
