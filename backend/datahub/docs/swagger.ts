@@ -45,6 +45,10 @@ const options: swaggerJSDoc.Options = {
                 name: "4. Motoristas",
                 tags: ["Drivers"],
             },
+            {
+                name: "5. Bot",
+                tags: ["Bot"],
+            },
         ],
     },
     apis: [path.join(__dirname, "./**/*.ts")],
