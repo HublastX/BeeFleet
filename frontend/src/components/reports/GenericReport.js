@@ -16,13 +16,45 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
       return date.toLocaleString("pt-BR");
    };
 
+   const getItemInfo = () => {
+      if (!filters.selectedItem?.id) return "";
+      if (!reportData) return "";
+      if (!reportData.managers) return "";
+
+      switch (filters.filterType) {
+         case "carro":
+            const car = reportData.managers
+               .flatMap((m) => m.cars || [])
+               .find((c) => c.id === filters.selectedItem.id);
+            return car?.plate || "";
+         case "motorista":
+            const driver = reportData.managers
+               .flatMap((m) => m.drivers || [])
+               .find((d) => d.id === filters.selectedItem.id);
+            return driver?.name || "";
+         case "manager":
+            const manager = reportData.managers.find(
+               (m) => m.id === filters.selectedItem.id
+            );
+            return manager?.name || "";
+         case "event":
+            const event = reportData.managers
+               .flatMap((m) => m.events || [])
+               .find((e) => e.id === filters.selectedItem.id);
+            return event ? `${event.carInfo} - ${event.driverName}` : "";
+         default:
+            return "";
+      }
+   };
+
    if (!isOpen) return null;
 
    // Renderização condicional das tabelas conforme filtro
-   const showManagers = filters.searchCriteria === "manager";
-   const showDrivers = filters.searchCriteria === "motorista";
-   const showCars = filters.searchCriteria === "carro";
-   const showEvents = filters.searchCriteria === "event";
+   const showManagers = filters.filterType === "manager";
+   const showDrivers = filters.filterType === "motorista";
+   const showCars = filters.filterType === "carro";
+   const showEvents = filters.filterType === "event";
+   const showAll = filters.filterType === "all";
 
    const handlePrint = () => {
       window.print();
@@ -266,13 +298,13 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
             <div className="flex justify-between items-start">
                <div>
                   <h1 className="text-3xl font-bold">
-                     {filters.searchCriteria === "carro"
+                     {filters.filterType === "carro"
                         ? "Relatório de Veículos"
-                        : filters.searchCriteria === "motorista"
+                        : filters.filterType === "motorista"
                           ? "Relatório de Motoristas"
-                          : filters.searchCriteria === "manager"
+                          : filters.filterType === "manager"
                             ? "Relatório de Gestores"
-                            : filters.searchCriteria === "event"
+                            : filters.filterType === "event"
                               ? "Relatório de Eventos"
                               : "Relatório Completo"}
                   </h1>
@@ -308,9 +340,9 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                   <div>
                      <p className="text-sm text-gray-500">Período:</p>
                      <p>
-                        {filters.dateRange === "all"
+                        {filters.period === "all"
                            ? "Todas as datas"
-                           : filters.dateRange === "today"
+                           : filters.period === "today"
                              ? "Hoje"
                              : "Intervalo personalizado"}
                      </p>
@@ -319,17 +351,14 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                      <div>
                         <p className="text-sm text-gray-500">Filtro:</p>
                         <p>
-                           {filters.searchCriteria === "carro"
+                           {filters.filterType === "carro"
                               ? "Veículo: "
-                              : filters.searchCriteria === "motorista"
+                              : filters.filterType === "motorista"
                                 ? "Motorista: "
-                                : filters.searchCriteria === "manager"
+                                : filters.filterType === "manager"
                                   ? "Gestor: "
                                   : "Evento: "}
-                           {filters.selectedItem.name ||
-                              filters.selectedItem.plate ||
-                              filters.selectedItem.driverName ||
-                              `${filters.selectedItem.checkoutEventId.substring(0, 10)}...`}
+                           {getItemInfo()}
                         </p>
                      </div>
                   )}
@@ -339,7 +368,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
          {/* Corpo do Relatório */}
          <div className="space-y-8">
             {/* Estatísticas Gerais */}
-            {filters.searchCriteria === "none" && (
+            {filters.filterType === "all" && (
                <>
                   <section>
                      <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
@@ -604,7 +633,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                      </h2>
                      <div className="overflow-x-auto">
                         {reportData.managers
-                           .flatMap((manager) => manager.events)
+                           .flatMap((manager) => manager.events || [])
                            .filter((event) => event.eventType === "RETURN")
                            .length > 0 ? (
                            <table className="min-w-full divide-y divide-gray-200">

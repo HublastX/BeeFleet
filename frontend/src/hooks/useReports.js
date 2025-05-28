@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import useAuth from "./useAuth";
 import { useToast } from "@/utils/ToastContext";
 
@@ -26,52 +26,55 @@ export default function useReports() {
       showToast("Erro", type, msg, 5000);
    };
 
-   const getFullReport = async (startDate, endDate) => {
-      if (!gestor?.token) return;
+   const getFullReport = useCallback(
+      async (startDate, endDate) => {
+         if (!gestor?.token) return;
 
-      setCarregando(true);
-      setErro(null);
-      setRelatorio(null);
+         setCarregando(true);
+         setErro(null);
+         setRelatorio(null);
 
-      try {
-         const params = new URLSearchParams();
-         if (startDate) params.append("startDate", startDate);
-         if (endDate) params.append("endDate", endDate);
+         try {
+            const params = new URLSearchParams();
+            if (startDate) params.append("startDate", startDate);
+            if (endDate) params.append("endDate", endDate);
 
-         const res = await fetch(
-            `${API_URL}/api/report/complete-report?${params.toString()}`,
-            {
-               method: "GET",
-               headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${gestor.token}`,
-               },
+            const res = await fetch(
+               `${API_URL}/api/report/complete-report?${params.toString()}`,
+               {
+                  method: "GET",
+                  headers: {
+                     "Content-Type": "application/json",
+                     Authorization: `Bearer ${gestor.token}`,
+                  },
+               }
+            );
+
+            if (!res.ok) {
+               const errorData = await res.json();
+               throw new Error(errorData.error || "Erro ao buscar relatório.");
             }
-         );
 
-         if (!res.ok) {
-            const errorData = await res.json();
-            throw new Error(errorData.error || "Erro ao buscar relatório.");
+            const data = await res.json();
+            setRelatorio(data);
+
+            showToast(
+               "Relatório carregado!",
+               "success",
+               "Relatório carregado com sucesso.",
+               4000
+            );
+
+            setCarregando(false);
+            return data;
+         } catch (error) {
+            handleError(error, "Erro ao gerar relatório.");
+            setCarregando(false);
+            return null;
          }
-
-         const data = await res.json();
-         setRelatorio(data);
-
-         showToast(
-            "Relatório carregado!",
-            "success",
-            "Relatório carregado com sucesso.",
-            4000
-         );
-
-         return data;
-      } catch (error) {
-         handleError(error, "Erro ao gerar relatório.");
-         return null;
-      } finally {
-         setCarregando(false);
-      }
-   };
+      },
+      [gestor?.token, API_URL, showToast]
+   );
 
    return {
       relatorio,
