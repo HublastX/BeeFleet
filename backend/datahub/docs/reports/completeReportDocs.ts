@@ -7,6 +7,21 @@ export const DOCS_COMPLETE_REPORT = {
      *     description: Obtém um relatório completo de todos os gestores, incluindo carros, motoristas e eventos ativos e excluídos
      *     tags:
      *       - Reports
+     *     parameters:
+     *       - in: query
+     *         name: startDate
+     *         schema:
+     *           type: string
+     *           format: date
+     *         description: Data inicial para filtrar os resultados (formato YYYY-MM-DD)
+     *         required: false
+     *       - in: query
+     *         name: endDate
+     *         schema:
+     *           type: string
+     *           format: date
+     *         description: Data final para filtrar os resultados (formato YYYY-MM-DD)
+     *         required: false
      *     responses:
      *       200:
      *         description: Relatório completo com todos os dados ativos e excluídos
@@ -229,6 +244,19 @@ export const DOCS_COMPLETE_REPORT = {
      *                       type: integer
      *                     totalDeletedEvents:
      *                       type: integer
+     *                 filters:
+     *                   type: object
+     *                   properties:
+     *                     startDate:
+     *                       type: string
+     *                       format: date
+     *                       nullable: true
+     *                       description: Data inicial utilizada no filtro
+     *                     endDate:
+     *                       type: string
+     *                       format: date
+     *                       nullable: true
+     *                       description: Data final utilizada no filtro
      *       500:
      *         description: Erro interno do servidor
      */
