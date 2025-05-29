@@ -116,13 +116,13 @@ export default function RecentAtualizacao() {
                      <TableRow>
                         <TableCell
                            isHeader
-                           className="py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[100px]"
+                           className="py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[90px]"
                         >
                            Categoria
                         </TableCell>
                         <TableCell
                            isHeader
-                           className="table-cell py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[80px]"
+                           className="table-cell py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[100px]"
                         >
                            Detalhes
                         </TableCell>
@@ -156,10 +156,10 @@ export default function RecentAtualizacao() {
 
                            return (
                               <TableRow key={index}>
-                                 <TableCell className="py-3 pl-1 max-w-[100px] truncate">
+                                 <TableCell className="py-3 pl-1 max-w-[90px] truncate">
                                     {atualizacao.categoria}
                                  </TableCell>
-                                 <TableCell className="py-3 max-w-[120px] truncate">
+                                 <TableCell className="py-3 max-w-[100px] truncate">
                                     {atualizacao.detalhes}
                                  </TableCell>
                                  <TableCell className="py-3 max-w-[70px] truncate">
