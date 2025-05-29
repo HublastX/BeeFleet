@@ -6,29 +6,29 @@ const [openIndex, setOpenIndex] = useState(null);
 
    const faqs = [
       {
-         question: "Como posso cadastrar um novo veículo?",
+         question: "Quais são os requisitos para alugar um veículo?",
          answer:
-            "Para cadastrar um novo veículo, acesse o menu 'Veículos' e clique em 'Adicionar Veículo'. Preencha os dados solicitados e salve.",
+            "Nome completo, CNH e Número de Telefone",
       },
       {
-         question: "Como gerenciar motoristas vinculados à minha conta?",
+         question: "Posso alugar o carro com uma CNH provisória?",
          answer:
-            "No painel do gestor, vá até a seção 'Motoristas' para visualizar, editar ou remover motoristas vinculados à sua gestão.",
+            "Sim, motoristas recém habilitados podem alugar carros com a CNH provisória",
       },
       {
-         question: "O que são eventos e como acompanhá-los?",
+         question: "Quais tipos de veículos estão disponiveis para alocação?",
          answer:
-            "Eventos representam saídas e retornos de veículos. Você pode acompanhar todos os eventos em tempo real na aba 'Eventos'.",
+            "Estão disponíveis desde carros a minivans no nosso catalogo",
       },
       {
-         question: "Como alterar meus dados de perfil?",
+         question: "Posso trocar de veículo durante a locação?",
          answer:
-            "Clique em 'Perfil' no menu superior e depois em 'Editar perfil' para atualizar suas informações pessoais.",
+            "Não, o motorista só pode alugar um carro por vez, caso queira trocar de veículo será necessário uma nova locação",
       },
       {
-         question: "Preciso de suporte. Como entro em contato?",
+         question: "Há restrições de uso para os veículos alugados?",
          answer:
-            "Caso precise de ajuda, acesse a página 'Contato' ou envie um e-mail para suporte@beefleet.com.br.",
+            "Não, entretanto, qualquer avaria ou dano que houver no veículo após o fim da locação, o motorista será responsabilizado",
       },
    ];
 
