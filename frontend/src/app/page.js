@@ -5,9 +5,7 @@ import Card from "@/elements/card";
 import useAuth from "@/hooks/useAuth";
 import useCar from "@/hooks/useCar";
 import useDrivers from "@/hooks/useDrivers";
-import RecentEvent from "@/components/table/homeTable";
 import HomeSkeleton from "@/elements/ui/skeleton/HomeSkeleton";
-import Icon from "@/elements/Icon";
 import useEvents from "@/hooks/useEvent";
 import {
    BarChart,
@@ -191,23 +189,34 @@ function Home() {
             <>
                <div
                   className={`fixed overflow-hidden top-0 left-0 right-0 bottom-0  items-center justify-center z-5 backdrop-blur-sm ${show}`}
+                  role="dialog"
+                  aria-label="Aviso de acesso restrito"
                >
                   <div className="flex flex-col items-center justify-center gap-4">
-                     <p className="text-3xl font-extrabold text-bee-alert-300 flex items-center gap-2">
-                        <span>⚠️</span> Acesso Restrito
+                     <p
+                        className="text-3xl font-extrabold text-bee-alert-300 flex items-center gap-2"
+                        role="alert"
+                     >
+                        <span aria-hidden="true">⚠️</span> Acesso Restrito
                      </p>
                      <p className="font-medium text-lg text-bee-dark-600 dark:text-white text-center">
                         Para acessar, realize o login!
                      </p>
-                     <Link href="/login">
+                     <Link href="/login" aria-label="Ir para página de login">
                         <Btn>Fazer Login</Btn>
                      </Link>
                   </div>
                </div>
-               <div className="grid grid-cols-12 gap-4 md:gap-6">
+               <main role="main" className="grid grid-cols-12 gap-4 md:gap-6">
                   <div className="col-span-12 space-y-5 xl:col-span-6">
-                     <div className="flex row gap-5 overflow-x-scroll md:grid grid-cols-1 sm:grid-cols-2 md:gap-6 no-scrollbar">
-                        <Link href="/drivers">
+                     <nav
+                        className="flex row gap-5 overflow-x-scroll md:grid grid-cols-1 sm:grid-cols-2 md:gap-6 no-scrollbar"
+                        aria-label="Cards de navegação"
+                     >
+                        <Link
+                           href="/drivers"
+                           aria-label={`Ver todos os ${motoristas.length} motoristas`}
+                        >
                            <Card
                               titulo="Motoristas"
                               icone="users"
@@ -217,7 +226,10 @@ function Home() {
                               color="purple"
                            />
                         </Link>
-                        <Link href="/cars">
+                        <Link
+                           href="/cars"
+                           aria-label={`Ver todos os ${carro.length} carros`}
+                        >
                            <Card
                               titulo="Carros"
                               icone="car"
@@ -228,7 +240,10 @@ function Home() {
                            />
                         </Link>
 
-                        <Link href="/managers">
+                        <Link
+                           href="/managers"
+                           aria-label={`Ver todos os ${gestores.length} gestores`}
+                        >
                            <Card
                               titulo="Gestores"
                               icone="gestor"
@@ -238,7 +253,10 @@ function Home() {
                               color="orange"
                            />
                         </Link>
-                        <Link href="/event">
+                        <Link
+                           href="/event"
+                           aria-label={`Ver todos os ${events.length} eventos`}
+                        >
                            <Card
                               titulo="Eventos"
                               icone="evento"
@@ -248,13 +266,20 @@ function Home() {
                               color="green"
                            />
                         </Link>
-                     </div>
-                     <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800 p-6 transition-all duration-300 hover:shadow-lg">
+                     </nav>
+                     <section
+                        aria-label="Gráfico de criações dos últimos 7 dias"
+                        className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800 p-6 transition-all duration-300 hover:shadow-lg"
+                     >
                         <h1 className="text-xl mb-5 font-semibold">
                            Criações dos últimos 7 dias
                         </h1>
                         <div>
-                           <div style={{ width: "100%", height: 264 }}>
+                           <div
+                              style={{ width: "100%", height: 264 }}
+                              role="img"
+                              aria-label="Gráfico de barras mostrando criações dos últimos 7 dias"
+                           >
                               <ResponsiveContainer>
                                  <BarChart data={data} barSize={30}>
                                     <CartesianGrid strokeDasharray="1" />
@@ -272,7 +297,7 @@ function Home() {
                                     <Bar
                                        stackId="a"
                                        dataKey="gestor"
-                                       fill="rgba(245, 73, 0, 0.9)" 
+                                       fill="rgba(245, 73, 0, 0.9)"
                                        name="Gestores"
                                        animationDuration={800}
                                     />
@@ -286,7 +311,7 @@ function Home() {
                                     <Bar
                                        stackId="a"
                                        dataKey="carro"
-                                       fill="rgba(21, 93, 252, 0.9)" 
+                                       fill="rgba(21, 93, 252, 0.9)"
                                        name="Carros"
                                        animationDuration={800}
                                     />
@@ -302,13 +327,15 @@ function Home() {
                               </ResponsiveContainer>
                            </div>
                         </div>
-                     </div>
+                     </section>
                   </div>
-                  <div className="col-span-12 xl:col-span-6">
-                     {/* <RecentEvent /> */}
+                  <aside
+                     className="col-span-12 xl:col-span-6"
+                     aria-label="Atualizações recentes"
+                  >
                      <RecentAtualizacao />
-                  </div>
-               </div>
+                  </aside>
+               </main>
             </>
          )}
       </>
