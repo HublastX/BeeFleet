@@ -2,21 +2,19 @@
 import GenericReport from "@/components/reports/GenericReport";
 import useReports from "@/hooks/useReports";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import withAuth from "@/utils/withAuth";
 
-function ReportResultPage() {
+function ReportContent() {
    const searchParams = useSearchParams();
    const { carregando, erro, relatorio, getFullReport } = useReports();
 
-   // Extrai os parâmetros da URL
    const period = searchParams.get("period") || "all";
    const filterType = searchParams.get("filterType") || "all";
    const filterId = searchParams.get("filterId");
    const startDate = searchParams.get("startDate");
    const endDate = searchParams.get("endDate");
 
-   // Busca os dados quando os parâmetros mudam
    useEffect(() => {
       let actualStartDate = startDate;
       let actualEndDate = endDate;
@@ -65,7 +63,6 @@ function ReportResultPage() {
          }
       });
 
-      // Recalcula as estatísticas globais
       const newGlobalStats = {
          totalManagers: filteredManagers.length,
          totalDrivers: filteredManagers.reduce(
@@ -101,7 +98,6 @@ function ReportResultPage() {
       };
    };
 
-   // Prepara os filtros para exibição
    const displayFilters = {
       period,
       filterType,
@@ -142,4 +138,13 @@ function ReportResultPage() {
       </div>
    );
 }
+
+function ReportResultPage() {
+   return (
+      <Suspense fallback={<div>Carregando...</div>}>
+         <ReportContent />
+      </Suspense>
+   );
+}
+
 export default withAuth(ReportResultPage);
