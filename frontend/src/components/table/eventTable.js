@@ -263,7 +263,7 @@ export default function EventTable() {
                               </TableCell>
                               <TableCell className="shadow-lg lg:shadow-none py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-21 w-20 min-w-[6rem]">
                                  <Link
-                                    href="/report"
+                                    href={`/report?filterType=event&filterId=${event.id}`}
                                     className="inline-flex p-1 items-center justify-center rounded-full hover:bg-bee-yellow-100  transition-colors"
                                  >
                                     <Icon
@@ -293,16 +293,16 @@ export default function EventTable() {
                </TableBody>
             </Table>
          </div>
-            {!carregando && !erro && totalPages > 1 && (
-               <div className="flex justify-end px-6 py-3 border-t border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
-                  <Pagination
-                     currentPage={currentPage}
-                     totalPages={totalPages}
-                     onPageChange={setCurrentPage}
-                     totalItems={eventosFiltrados.length}
-                  />
-               </div>
-            )}
+         {!carregando && !erro && totalPages > 1 && (
+            <div className="flex justify-end px-6 py-3 border-t border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
+               <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  totalItems={eventosFiltrados.length}
+               />
+            </div>
+         )}
          {modalAberto && (
             <DeleteConfirmation
                link={confirmarDelete}
