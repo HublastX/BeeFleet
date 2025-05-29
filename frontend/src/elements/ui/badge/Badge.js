@@ -7,7 +7,10 @@ const Badge = ({
    startIcon,
    endIcon,
    children,
-   className
+   className,
+   "aria-label": ariaLabel,
+   role = "status",
+   ...props
 }) => {
    const baseStyles =
       " items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium";
@@ -24,7 +27,7 @@ const Badge = ({
          success: "bg-bee-alert-200 text-bee-alert-100",
          error: "bg-bee-alert-400 text-bee-alert-300",
          warning: "bg-bee-alert-700 text-orange-400",
-         info: "bg-blue-500/30 text-blue-600"
+         info: "bg-blue-500/30 text-blue-600",
       },
       solid: {
          success: "bg-bee-alert-200 text-white ",
@@ -37,10 +40,23 @@ const Badge = ({
    const colorStyles = variants[variant][color];
 
    return (
-      <span className={`${baseStyles} ${sizeClass} ${colorStyles} ${className}`}>
-         {startIcon && <span className="mr-1">{startIcon}</span>}
+      <span
+         className={`${baseStyles} ${sizeClass} ${colorStyles} ${className}`}
+         role={role}
+         aria-label={ariaLabel}
+         {...props}
+      >
+         {startIcon && (
+            <span className="mr-1" aria-hidden="true">
+               {startIcon}
+            </span>
+         )}
          {children}
-         {endIcon && <span className="ml-1">{endIcon}</span>}
+         {endIcon && (
+            <span className="ml-1" aria-hidden="true">
+               {endIcon}
+            </span>
+         )}
       </span>
    );
 };
