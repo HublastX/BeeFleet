@@ -9,25 +9,35 @@ export const getCompleteManagersReport = async (
     try {
         const { startDate, endDate } = req.query;
 
-        // Construir filtro de data opcional
         let dateFilter = {};
         if (startDate && endDate) {
+            const endDateTime = new Date(endDate as string);
+            endDateTime.setHours(23, 59, 59, 999);
+
             dateFilter = {
                 createdAt: {
                     gte: new Date(startDate as string),
-                    lte: new Date(endDate as string),
+                    lte: endDateTime,
                 },
             };
         } else if (startDate) {
+            const startDateTime = new Date(startDate as string);
+            const endDateTime = new Date(startDate as string);
+            endDateTime.setHours(23, 59, 59, 999);
+
             dateFilter = {
                 createdAt: {
-                    gte: new Date(startDate as string),
+                    gte: startDateTime,
+                    lte: endDateTime,
                 },
             };
         } else if (endDate) {
+            const endDateTime = new Date(endDate as string);
+            endDateTime.setHours(23, 59, 59, 999);
+
             dateFilter = {
                 createdAt: {
-                    lte: new Date(endDate as string),
+                    lte: endDateTime,
                 },
             };
         }
