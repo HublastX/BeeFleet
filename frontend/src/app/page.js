@@ -254,7 +254,7 @@ function Home() {
                            Criações dos últimos 7 dias
                         </h1>
                         <div>
-                           <div style={{ width: "100%", height: 260 }}>
+                           <div style={{ width: "100%", height: 264 }}>
                               <ResponsiveContainer>
                                  <BarChart data={data} barSize={30}>
                                     <CartesianGrid strokeDasharray="1" />
@@ -272,28 +272,28 @@ function Home() {
                                     <Bar
                                        stackId="a"
                                        dataKey="gestor"
-                                       fill="#f54900"
+                                       fill="rgba(245, 73, 0, 0.9)" 
                                        name="Gestores"
                                        animationDuration={800}
                                     />
                                     <Bar
                                        stackId="a"
                                        dataKey="motorista"
-                                       fill="#9810fa"
+                                       fill="rgba(152, 16, 250, 0.9)"
                                        name="Motoristas"
                                        animationDuration={800}
                                     />
                                     <Bar
                                        stackId="a"
                                        dataKey="carro"
-                                       fill="#155dfc"
+                                       fill="rgba(21, 93, 252, 0.9)" 
                                        name="Carros"
                                        animationDuration={800}
                                     />
                                     <Bar
                                        stackId="a"
                                        dataKey="evento"
-                                       fill="#00a63e"
+                                       fill="rgba(0, 166, 62, 0.9)"
                                        name="Eventos"
                                        animationDuration={800}
                                        radius={[10, 10, 0, 0]}
