@@ -2,12 +2,21 @@
 import Btn from "@/elements/btn";
 import Icon from "@/elements/Icon";
 import InputText from "@/elements/inputText";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
 import ReportList from "../profileList/reportList";
+import useAuth from "@/hooks/useAuth";
+import useCar from "@/hooks/useCar";
+import useDrivers from "@/hooks/useDrivers";
+import useEvents from "@/hooks/useEvent";
 
 export default function ReportForm() {
    const router = useRouter();
+   const searchParams = useSearchParams();
+   const { gestor } = useAuth();
+   const { getCar } = useCar();
+   const { getDriver } = useDrivers();
+   const { getEvent } = useEvents();
    const [dateRangeOption, setDateRangeOption] = useState("all");
    const [searchCriteria, setSearchCriteria] = useState("all");
    const [showSummary, setShowSummary] = useState(false);
@@ -15,6 +24,69 @@ export default function ReportForm() {
    const [selectedItem, setSelectedItem] = useState(null);
    const [rangeStart, setRangeStart] = useState("");
    const [rangeEnd, setRangeEnd] = useState("");
+
+   useEffect(() => {
+      const filterType = searchParams.get("filterType");
+      const filterId = searchParams.get("filterId");
+
+      if (filterType) {
+         setSearchCriteria(filterType);
+
+         if (filterId) {
+            if (filterType === "manager" && gestor && gestor.id === filterId) {
+               setSelectedItem({
+                  id: gestor.id,
+                  name: gestor.name,
+               });
+            } else if (filterType === "carro") {
+               const fetchCar = async () => {
+                  try {
+                     const carData = await getCar(filterId);
+                     if (carData) {
+                        setSelectedItem({
+                           id: carData.id,
+                           plate: carData.plate,
+                        });
+                     }
+                  } catch (error) {
+                     console.error("Erro ao buscar dados do carro:", error);
+                  }
+               };
+               fetchCar();
+            } else if (filterType === "motorista") {
+               const fetchDriver = async () => {
+                  try {
+                     const driverData = await getDriver(filterId);
+                     if (driverData) {
+                        setSelectedItem({
+                           id: driverData.id,
+                           name: driverData.name,
+                        });
+                     }
+                  } catch (error) {
+                     console.error("Erro ao buscar dados do motorista:", error);
+                  }
+               };
+               fetchDriver();
+            } else if (filterType === "event") {
+               const fetchEvent = async () => {
+                  try {
+                     const eventData = await getEvent(filterId);
+                     if (eventData) {
+                        setSelectedItem({
+                           id: eventData.id,
+                           checkoutEventId: eventData.id,
+                        });
+                     }
+                  } catch (error) {
+                     console.error("Erro ao buscar dados do evento:", error);
+                  }
+               };
+               fetchEvent();
+            }
+         }
+      }
+   }, [searchParams, gestor, getCar, getDriver, getEvent]);
 
    const toggleSummary = () => {
       setShowSummary(!showSummary);

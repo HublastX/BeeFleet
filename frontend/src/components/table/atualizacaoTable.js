@@ -74,7 +74,10 @@ export default function RecentAtualizacao() {
       motoristas.forEach((motorista) => {
          allUpdates.push({
             categoria: "Motorista",
-            detalhes: motorista.name,
+            detalhes:
+               motorista.name.length > 11
+                  ? `${motorista.name.slice(0, 10)}...`
+                  : motorista.name,
             data: motorista.updatedAt || motorista.createdAt,
             subtipo:
                motorista.createdAt === motorista.updatedAt
@@ -88,7 +91,10 @@ export default function RecentAtualizacao() {
       gestores.forEach((gestor) => {
          allUpdates.push({
             categoria: "Gestor",
-            detalhes: gestor.name,
+            detalhes:
+               gestor.name.length > 11
+                  ? `${gestor.name.slice(0, 10)}...`
+                  : gestor.name,
             data: gestor.updatedAt || gestor.createdAt,
             subtipo:
                gestor.createdAt === gestor.updatedAt ? "Criado" : "Editado",
@@ -102,39 +108,60 @@ export default function RecentAtualizacao() {
    const ultimasAtualizacoes = prepareData();
 
    return (
-      <div className="px-6 max-w-full overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
-         <h1 className="mt-3 text-xl font-semibold text-gray-800 dark:text-white/90">
+      <div
+         className="px-6 max-w-full overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800"
+         role="region"
+         aria-labelledby="atualizacoes-titulo"
+      >
+         <h1
+            id="atualizacoes-titulo"
+            className="mt-3 text-xl font-semibold text-gray-800 dark:text-white/90"
+         >
             Últimas Atualizações
          </h1>
 
          {carregando ? (
-            <div className="py-4 text-center">Carregando dados...</div>
+            <div className="py-4 text-center" role="status" aria-live="polite">
+               Carregando dados...
+            </div>
          ) : (
             <div className="relative overflow-x-auto w-full no-scrollbar">
-               <Table>
+               <Table role="table" aria-label="Tabela de últimas atualizações">
                   <TableHeader className="border-b border-bee-dark-300 dark:border-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
-                     <TableRow>
+                     <TableRow role="row">
                         <TableCell
                            isHeader
                            className="py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[90px]"
+                           role="columnheader"
+                           scope="col"
+                           aria-sort="none"
                         >
                            Categoria
                         </TableCell>
                         <TableCell
                            isHeader
                            className="table-cell py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[100px]"
+                           role="columnheader"
+                           scope="col"
+                           aria-sort="none"
                         >
                            Detalhes
                         </TableCell>
                         <TableCell
                            isHeader
                            className="table-cell py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[70px]"
+                           role="columnheader"
+                           scope="col"
+                           aria-sort="none"
                         >
                            Data/Hora
                         </TableCell>
                         <TableCell
                            isHeader
                            className="sticky right-0 bg-bee-dark-100 dark:bg-bee-dark-800 py-3 px-2 text-center font-medium text-gray-500 dark:text-gray-400 shadow-lg lg:shadow-none"
+                           role="columnheader"
+                           scope="col"
+                           aria-sort="none"
                         >
                            Status
                         </TableCell>
@@ -155,28 +182,47 @@ export default function RecentAtualizacao() {
                               badgeColor = "warning";
 
                            return (
-                              <TableRow key={index}>
-                                 <TableCell className="py-3 pl-1 max-w-[90px] truncate">
+                              <TableRow
+                                 key={index}
+                                 role="row"
+                                 aria-rowindex={index + 1}
+                              >
+                                 <TableCell
+                                    className="py-3 pl-1 max-w-[90px] truncate"
+                                    role="cell"
+                                 >
                                     {atualizacao.categoria}
                                  </TableCell>
-                                 <TableCell className="py-3 max-w-[100px] truncate">
+                                 <TableCell
+                                    className="py-3 max-w-[100px] truncate"
+                                    role="cell"
+                                 >
                                     {atualizacao.detalhes}
                                  </TableCell>
-                                 <TableCell className="py-3 max-w-[70px] truncate">
-                                    <div className="grid grid-cols-1">
+                                 <TableCell
+                                    className="py-3 max-w-[70px] truncate"
+                                    role="cell"
+                                 >
+                                    <div>
                                        {formatDate(atualizacao.data).slice(
                                           0,
                                           6
                                        )}
-                                       <span className="text-sm text-gray-500">
+                                       <span className="text-xs text-gray-500 align-baseline">
                                           {formatDate(atualizacao.data).slice(
                                              6
                                           )}
                                        </span>
                                     </div>
                                  </TableCell>
-                                 <TableCell className="sticky right-0 px-2 bg-bee-dark-100 dark:bg-bee-dark-800 py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400 shadow-lg lg:shadow-none">
-                                    <Badge color={badgeColor}>
+                                 <TableCell
+                                    className="sticky right-0 px-2 bg-bee-dark-100 dark:bg-bee-dark-800 py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400 shadow-lg lg:shadow-none"
+                                    role="cell"
+                                 >
+                                    <Badge
+                                       color={badgeColor}
+                                       aria-label={`Status: ${atualizacao.subtipo}`}
+                                    >
                                        {atualizacao.subtipo}
                                     </Badge>
                                  </TableCell>
@@ -184,8 +230,13 @@ export default function RecentAtualizacao() {
                            );
                         })
                      ) : (
-                        <TableRow>
-                           <TableCell colSpan={4} className="py-4 text-center">
+                        <TableRow role="row">
+                           <TableCell
+                              colSpan={4}
+                              className="py-4 text-center"
+                              role="cell"
+                              aria-label="Mensagem de tabela vazia"
+                           >
                               Nenhuma atualização recente encontrada
                            </TableCell>
                         </TableRow>
