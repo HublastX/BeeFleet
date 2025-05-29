@@ -67,44 +67,105 @@ const NavBar = () => {
          {navItems.map((nav, index) => (
             <li key={nav.name}>
                {nav.subItems ? (
-                  <button
-                     onClick={() => handleSubmenuToogle(index, menuType)}
-                     className={`
-                          group menu-item ${
-                             openSubmenu?.type === menuType &&
-                             openSubmenu?.index === index
-                                ? " dark:text-bee-yellow-600 text-bee-yellow-700 bg-bee-yellow-100"
-                                : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
-                          } ${
-                             !isExpanded && !isHovered
-                                ? "lg:justify-center"
-                                : "lg:justify-start"
-                          } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                     disabled={!gestor}
-                  >
-                     <Icon name={nav.icon} className="w-6 h-6" />
-                     {(isExpanded || isHovered || isMobileOpen) && (
-                        <span className="inline">{nav.name}</span>
-                     )}
-                     {(isExpanded || isHovered || isMobileOpen) && (
+                  <>
+                     <button
+                        onClick={() => handleSubmenuToogle(index, menuType)}
+                        className={`
+                             group menu-item ${
+                                openSubmenu?.type === menuType &&
+                                openSubmenu?.index === index
+                                   ? " dark:text-bee-yellow-600 text-bee-yellow-700 bg-bee-yellow-100"
+                                   : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
+                             } ${
+                                !isExpanded && !isHovered
+                                   ? "lg:justify-center"
+                                   : "lg:justify-start"
+                             } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                        disabled={!gestor}
+                        role="menuitem"
+                        aria-haspopup="true"
+                        aria-expanded={
+                           openSubmenu?.type === menuType &&
+                           openSubmenu?.index === index
+                        }
+                        aria-label={`${nav.name} ${!gestor ? "(acesso restrito)" : ""}`}
+                     >
                         <Icon
-                           name="prabaixo"
-                           className={`ml-auto w-4 h-4 transition-transform duration-200 ${
-                              openSubmenu?.type === menuType &&
-                              openSubmenu?.index === index
-                                 ? "rotate-180 text-brand-500"
-                                 : ""
-                           }`}
-                           strokeWidth={3}
+                           name={nav.icon}
+                           className="w-6 h-6"
+                           aria-hidden="true"
                         />
-                     )}
-                  </button>
+                        {(isExpanded || isHovered || isMobileOpen) && (
+                           <span className="inline">{nav.name}</span>
+                        )}
+                        {(isExpanded || isHovered || isMobileOpen) && (
+                           <Icon
+                              name="prabaixo"
+                              className={`ml-auto w-4 h-4 transition-transform duration-200 ${
+                                 openSubmenu?.type === menuType &&
+                                 openSubmenu?.index === index
+                                    ? "rotate-180 text-brand-500"
+                                    : ""
+                              }`}
+                              strokeWidth={3}
+                              aria-hidden="true"
+                           />
+                        )}
+                     </button>
+                     {nav.subItems &&
+                        (isExpanded || isHovered || isMobileOpen) && (
+                           <div
+                              ref={(el) => {
+                                 subMenuRefs.current[`${menuType}-${index}`] =
+                                    el;
+                              }}
+                              className="overflow-hidden transition-all duration-300"
+                              style={{
+                                 height:
+                                    openSubmenu?.type === menuType &&
+                                    openSubmenu?.index === index
+                                       ? `${subMenuHeight[`${menuType}-${index}`]}px`
+                                       : "0px",
+                              }}
+                              role="menu"
+                              aria-label={`Submenu de ${nav.name}`}
+                           >
+                              <ul className="mt-2 space-y-1 ml-9">
+                                 {nav.subItems.map((subItem) => (
+                                    <li key={subItem.name}>
+                                       <Link
+                                          passHref
+                                          href={subItem.path}
+                                          className={`menu-dropdown-item  ${
+                                             isActive(subItem.path)
+                                                ? " bg-bee-yellow-100 text-bee-yellow-600"
+                                                : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
+                                          } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                                          onClick={(e) => {
+                                             if (!gestor) e.preventDefault();
+                                          }}
+                                          role="menuitem"
+                                          aria-current={
+                                             isActive(subItem.path)
+                                                ? "page"
+                                                : undefined
+                                          }
+                                          aria-label={`${subItem.name} ${!gestor ? "(acesso restrito)" : ""}`}
+                                       >
+                                          {subItem.name}
+                                       </Link>
+                                    </li>
+                                 ))}
+                              </ul>
+                           </div>
+                        )}
+                  </>
                ) : (
                   nav.path && (
                      <Link
                         href={nav.path}
                         passHref
-                        className={`menu-item group ${
+                        className={`menu-item group  ${
                            isActive(nav.path)
                               ? " dark:text-bee-yellow-600 text-bee-yellow-700 bg-bee-yellow-100"
                               : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
@@ -112,49 +173,20 @@ const NavBar = () => {
                         onClick={(e) => {
                            if (!gestor) e.preventDefault();
                         }}
+                        role="menuitem"
+                        aria-current={isActive(nav.path) ? "page" : undefined}
+                        aria-label={`${nav.name} ${!gestor ? "(acesso restrito)" : ""}`}
                      >
-                        <Icon name={nav.icon} className="w-6 h-6" />
+                        <Icon
+                           name={nav.icon}
+                           className="w-6 h-6"
+                           aria-hidden="true"
+                        />
                         {(isExpanded || isHovered || isMobileOpen) && (
                            <span className="inline">{nav.name}</span>
                         )}
                      </Link>
                   )
-               )}
-               {nav.subItems && (isExpanded || isHovered || isMobileOpen) && (
-                  <div
-                     ref={(el) => {
-                        subMenuRefs.current[`${menuType}-${index}`] = el;
-                     }}
-                     className="overflow-hidden transition-all duration-300"
-                     style={{
-                        height:
-                           openSubmenu?.type === menuType &&
-                           openSubmenu?.index === index
-                              ? `${subMenuHeight[`${menuType}-${index}`]}px`
-                              : "0px",
-                     }}
-                  >
-                     <ul className="mt-2 space-y-1 ml-9">
-                        {nav.subItems.map((subItem) => (
-                           <li key={subItem.name}>
-                              <Link
-                                 passHref
-                                 href={subItem.path}
-                                 className={`menu-dropdown-item ${
-                                    isActive(subItem.path)
-                                       ? " bg-bee-yellow-100 text-bee-yellow-600"
-                                       : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
-                                 } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
-                                 onClick={(e) => {
-                                    if (!gestor) e.preventDefault();
-                                 }}
-                              >
-                                 {subItem.name}
-                              </Link>
-                           </li>
-                        ))}
-                     </ul>
-                  </div>
                )}
             </li>
          ))}
@@ -229,18 +261,24 @@ const NavBar = () => {
          } ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
          onMouseEnter={() => !isExpanded && setIsHovered(true)}
          onMouseLeave={() => setIsHovered(false)}
+         role="navigation"
+         aria-label="Menu principal"
       >
          <div
             className={`py-4 flex ${
                !isExpanded && !isHovered ? "lg:justify-center" : "justify-start"
             }`}
          >
-            <Link href="/" className="flex items-center gap-0">
+            <Link
+               href="/"
+               className="flex items-center gap-0  rounded-lg"
+               aria-label="Ir para página inicial"
+            >
                {isExpanded || isHovered || isMobileOpen ? (
                   <>
                      <Image
                         src="/beefleet/image/logo.svg"
-                        alt="Logo"
+                        alt="Logo BeeFleet"
                         className="w-16"
                         width={60}
                         height={60}
@@ -252,7 +290,7 @@ const NavBar = () => {
                ) : (
                   <Image
                      src="/beefleet/image/logo.svg"
-                     alt="Logo"
+                     alt="Logo BeeFleet"
                      width={60}
                      height={60}
                   />
@@ -260,7 +298,7 @@ const NavBar = () => {
             </Link>
          </div>
          <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
-            <nav className="mb-6">
+            <nav className="mb-6" aria-label="Menu de navegação">
                <div className="flex flex-col gap-3">
                   <div>
                      <h2
@@ -269,31 +307,45 @@ const NavBar = () => {
                               ? "lg:justify-center"
                               : "justify-start"
                         }`}
+                        id="menu-principal"
                      >
                         {isExpanded || isHovered || isMobileOpen ? (
                            "Menu"
                         ) : (
-                           <Icon name="reticencias" className="w-10" />
+                           <Icon
+                              name="reticencias"
+                              className="w-10"
+                              aria-hidden="true"
+                           />
                         )}
                      </h2>
-                     {menuItem(navItem, "main")}
+                     <div role="menu" aria-labelledby="menu-principal">
+                        {menuItem(navItem, "main")}
+                     </div>
                   </div>
 
-                  <div className="">
+                  <div>
                      <h2
                         className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
                            !isExpanded && !isHovered
                               ? "lg:justify-center"
                               : "justify-start"
                         }`}
+                        id="menu-outros"
                      >
                         {isExpanded || isHovered || isMobileOpen ? (
                            "Outros"
                         ) : (
-                           <Icon name="reticencias" className="w-10" />
+                           <Icon
+                              name="reticencias"
+                              className="w-10"
+                              aria-hidden="true"
+                           />
                         )}
                      </h2>
-                     {menuItem(othersItems, "others")}
+                     <div role="menu" aria-labelledby="menu-outros">
+                        {menuItem(othersItems, "others")}
+                     </div>
                   </div>
                </div>
             </nav>
