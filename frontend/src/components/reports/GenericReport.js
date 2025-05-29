@@ -286,7 +286,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
          cell.alignment = { vertical: "middle", horizontal: "center" };
       });
 
-      // Gerar e salvar arquivo
       const buffer = await workbook.xlsx.writeBuffer();
       saveAs(new Blob([buffer]), "relatorio_beefleet.xlsx");
    };
@@ -767,43 +766,49 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                            </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                           {reportData.managers.map((manager) => (
-                              <tr key={manager.id}>
-                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="font-medium">
-                                       {manager.name}
-                                    </div>
-                                 </td>
-                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="text-sm text-gray-500">
-                                       {manager.email}
-                                    </div>
-                                 </td>
-                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="font-medium">
-                                       {manager.summary.totalDrivers} ativos
-                                    </div>
-                                    <div className="text-sm text-gray-500">
-                                       {manager.summary.totalDeletedDrivers}{" "}
-                                       removidos
-                                    </div>
-                                 </td>
-                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="font-medium">
-                                       {manager.summary.totalCars} ativos
-                                    </div>
-                                    <div className="text-sm text-gray-500">
-                                       {manager.summary.totalDeletedCars}{" "}
-                                       removidos
-                                    </div>
-                                 </td>
-                                 <td className="px-6 py-4 whitespace-nowrap">
-                                    <div className="font-medium">
-                                       {manager.summary.totalEvents}
-                                    </div>
-                                 </td>
-                              </tr>
-                           ))}
+                           {reportData.managers
+                              .filter(
+                                 (manager) =>
+                                    !filters.selectedItem?.id ||
+                                    manager.id === filters.selectedItem.id
+                              )
+                              .map((manager) => (
+                                 <tr key={manager.id}>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       <div className="font-medium">
+                                          {manager.name}
+                                       </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       <div className="text-sm text-gray-500">
+                                          {manager.email}
+                                       </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       <div className="font-medium">
+                                          {manager.summary.totalDrivers} ativos
+                                       </div>
+                                       <div className="text-sm text-gray-500">
+                                          {manager.summary.totalDeletedDrivers}{" "}
+                                          removidos
+                                       </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       <div className="font-medium">
+                                          {manager.summary.totalCars} ativos
+                                       </div>
+                                       <div className="text-sm text-gray-500">
+                                          {manager.summary.totalDeletedCars}{" "}
+                                          removidos
+                                       </div>
+                                    </td>
+                                    <td className="px-6 py-4 whitespace-nowrap">
+                                       <div className="font-medium">
+                                          {manager.summary.totalEvents}
+                                       </div>
+                                    </td>
+                                 </tr>
+                              ))}
                         </tbody>
                      </table>
                   </div>
@@ -839,6 +844,11 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                            <tbody className="divide-y divide-gray-200">
                               {reportData.managers
                                  .flatMap((manager) => manager.drivers)
+                                 .filter(
+                                    (driver) =>
+                                       !filters.selectedItem?.id ||
+                                       driver.id === filters.selectedItem.id
+                                 )
                                  .sort(
                                     (a, b) =>
                                        new Date(b.createdAt) -
@@ -911,6 +921,11 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                            <tbody className="divide-y divide-gray-200">
                               {reportData.managers
                                  .flatMap((manager) => manager.cars)
+                                 .filter(
+                                    (car) =>
+                                       !filters.selectedItem?.id ||
+                                       car.id === filters.selectedItem.id
+                                 )
                                  .sort(
                                     (a, b) =>
                                        new Date(b.createdAt) -
@@ -996,6 +1011,11 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                            <tbody className="divide-y divide-gray-200">
                               {reportData.managers
                                  .flatMap((manager) => manager.events)
+                                 .filter(
+                                    (event) =>
+                                       !filters.selectedItem?.id ||
+                                       event.id === filters.selectedItem.id
+                                 )
                                  .sort(
                                     (a, b) =>
                                        new Date(b.createdAt) -
