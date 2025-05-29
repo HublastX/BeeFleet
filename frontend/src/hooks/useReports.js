@@ -10,24 +10,26 @@ export default function useReports() {
    const { showToast } = useToast();
    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
-   const handleError = (
-      error,
-      fallbackMessage = "Erro inesperado.",
-      type = "error"
-   ) => {
-      if (["error", "warning", "success"].includes(fallbackMessage)) {
-         type = fallbackMessage;
-         fallbackMessage = "Erro inesperado.";
-      }
-
-      const msg =
-         typeof error === "string" ? error : error.message || fallbackMessage;
-      setErro(msg);
-      showToast("Erro", type, msg, 5000);
-   };
-
    const getFullReport = useCallback(
       async (startDate, endDate) => {
+         const handleError = (
+            error,
+            fallbackMessage = "Erro inesperado.",
+            type = "error"
+         ) => {
+            if (["error", "warning", "success"].includes(fallbackMessage)) {
+               type = fallbackMessage;
+               fallbackMessage = "Erro inesperado.";
+            }
+
+            const msg =
+               typeof error === "string"
+                  ? error
+                  : error.message || fallbackMessage;
+            setErro(msg);
+            showToast("Erro", type, msg, 5000);
+         };
+
          if (!gestor?.token) return;
 
          setCarregando(true);
