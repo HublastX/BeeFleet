@@ -239,7 +239,7 @@ function DriverPage() {
                   <h2 className="text-xl font-semibold">
                      Histórico de Viagens
                   </h2>
-                  <Link href="/report">
+                  <Link href={`/report?filterType=motorista&filterId=${id}`}>
                      <button
                         variant="link"
                         icon="report"
@@ -286,7 +286,7 @@ function DriverPage() {
                            </span>
                         </Link>
                         <Link
-                           href="/report"
+                           href={`/report?filterType=motorista&filterId=${id}`}
                            className="flex items-center gap-3 p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
                            onClick={() => setShowMenu(false)}
                         >
