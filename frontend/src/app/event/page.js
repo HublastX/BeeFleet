@@ -15,6 +15,7 @@ import {
    ResponsiveContainer,
    Tooltip,
 } from "recharts";
+import Link from "next/link";
 
 function Events() {
    const [tipoEvento, setTipoEvento] = useState("");
@@ -220,9 +221,7 @@ function Events() {
 
                {/* tipos de evento */}
                <div className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover">
-                  <h3 className="text-xl font-bold mb-4">
-                     Tipos de Evento
-                  </h3>
+                  <h3 className="text-xl font-bold mb-4">Tipos de Evento</h3>
                   <div className="space-y-3">
                      <div>
                         <div className="flex justify-between text-sm mb-1">
@@ -293,10 +292,13 @@ function Events() {
                      <Icon name="evento" className="size-5 text-green-500" />
                      <span>Registrar Chegada</span>
                   </button>
-                  <button className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors hover:bg-blue-500/10">
+                  <Link
+                     href="/report?filterType=event"
+                     className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors hover:bg-blue-500/10"
+                  >
                      <Icon name="reports" className="size-5 text-blue-500" />
                      <span>Gerar Relatório</span>
-                  </button>
+                  </Link>
                </div>
             </div>
 
