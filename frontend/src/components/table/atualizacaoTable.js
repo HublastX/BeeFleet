@@ -38,7 +38,6 @@ export default function RecentAtualizacao() {
       // Eventos
       events.forEach((event) => {
          allUpdates.push({
-            quem: event.driver?.name || "Motorista não informado",
             categoria: "Evento",
             detalhes: (
                <div className="grid grid-cols-1">
@@ -58,7 +57,6 @@ export default function RecentAtualizacao() {
       // Carro
       carro.forEach((carro) => {
          allUpdates.push({
-            quem: carro.plate,
             categoria: "Carro",
             detalhes: (
                <div className="grid grid-cols-1">
@@ -75,9 +73,8 @@ export default function RecentAtualizacao() {
       // Motoristas
       motoristas.forEach((motorista) => {
          allUpdates.push({
-            quem: motorista.name,
             categoria: "Motorista",
-            detalhes: `${motorista.phone.slice(5, 10)}...`,
+            detalhes: motorista.name,
             data: motorista.updatedAt || motorista.createdAt,
             subtipo:
                motorista.createdAt === motorista.updatedAt
@@ -90,9 +87,8 @@ export default function RecentAtualizacao() {
       // Gestores
       gestores.forEach((gestor) => {
          allUpdates.push({
-            quem: gestor.name,
             categoria: "Gestor",
-            detalhes: gestor.email,
+            detalhes: gestor.name,
             data: gestor.updatedAt || gestor.createdAt,
             subtipo:
                gestor.createdAt === gestor.updatedAt ? "Criado" : "Editado",
@@ -126,19 +122,13 @@ export default function RecentAtualizacao() {
                         </TableCell>
                         <TableCell
                            isHeader
-                           className="py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[100px]"
-                        >
-                           Quem
-                        </TableCell>
-                        <TableCell
-                           isHeader
                            className="table-cell py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[80px]"
                         >
                            Detalhes
                         </TableCell>
                         <TableCell
                            isHeader
-                           className="table-cell py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[80px]"
+                           className="table-cell py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[70px]"
                         >
                            Data/Hora
                         </TableCell>
@@ -169,13 +159,10 @@ export default function RecentAtualizacao() {
                                  <TableCell className="py-3 pl-1 max-w-[100px] truncate">
                                     {atualizacao.categoria}
                                  </TableCell>
-                                 <TableCell className="py-3 pl-1 max-w-[100px] truncate">
-                                    {atualizacao.quem}
-                                 </TableCell>
                                  <TableCell className="py-3 max-w-[120px] truncate">
                                     {atualizacao.detalhes}
                                  </TableCell>
-                                 <TableCell className="py-3 max-w-[80px] truncate">
+                                 <TableCell className="py-3 max-w-[70px] truncate">
                                     <div className="grid grid-cols-1">
                                        {formatDate(atualizacao.data).slice(
                                           0,
