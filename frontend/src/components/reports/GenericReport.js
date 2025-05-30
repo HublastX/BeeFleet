@@ -16,6 +16,24 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
       return date.toLocaleString("pt-BR");
    };
 
+   const hasActivityToday = (manager) => {
+      const today = new Date().toLocaleDateString("pt-BR");
+      return (
+         manager.events?.some(
+            (event) => formatDate(event.createdAt) === today
+         ) ||
+         manager.drivers?.some(
+            (driver) => formatDate(driver.createdAt) === today
+         ) ||
+         manager.cars?.some((car) => formatDate(car.createdAt) === today)
+      );
+   };
+
+   const getActiveManagers = () => {
+      if (filters.period !== "today") return reportData.managers;
+      return reportData.managers.filter((manager) => hasActivityToday(manager));
+   };
+
    const getItemInfo = () => {
       if (!filters.selectedItem?.id) return "";
       if (!reportData) return "";
@@ -74,7 +92,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
          { header: "Veículos Removidos", key: "carsRemoved", width: 20 },
          { header: "Eventos", key: "events", width: 15 },
       ];
-      reportData.managers.forEach((manager) => {
+      getActiveManagers().forEach((manager) => {
          managersSheet.addRow({
             name: manager.name,
             email: manager.email,
@@ -119,7 +137,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
          { header: "Status", key: "status", width: 15 },
          { header: "Gestor", key: "manager", width: 30 },
       ];
-      reportData.managers.forEach((manager) => {
+      getActiveManagers().forEach((manager) => {
          (manager.drivers || []).forEach((driver) => {
             driversSheet.addRow({
                name: driver.name,
@@ -164,7 +182,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
          { header: "Status", key: "status", width: 15 },
          { header: "Gestor", key: "manager", width: 30 },
       ];
-      reportData.managers.forEach((manager) => {
+      getActiveManagers().forEach((manager) => {
          (manager.cars || []).forEach((car) => {
             carsSheet.addRow({
                model: car.model,
@@ -212,7 +230,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
          { header: "Odômetro", key: "odometer", width: 15 },
          { header: "Gestor", key: "manager", width: 30 },
       ];
-      reportData.managers.forEach((manager) => {
+      getActiveManagers().forEach((manager) => {
          (manager.events || []).forEach((event) => {
             eventsSheet.addRow({
                type: event.eventType === "CHECKOUT" ? "Saída" : "Retorno",
@@ -342,8 +360,8 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         {filters.period === "all"
                            ? "Todas as datas"
                            : filters.period === "today"
-                             ? "Hoje"
-                             : "Intervalo personalizado"}
+                             ? `Hoje (${new Date().toLocaleDateString("pt-BR")})`
+                             : `${formatDate(filters.dateRange.start)} - ${formatDate(filters.dateRange.end)}`}
                      </p>
                   </div>
                   {filters.selectedItem && (
@@ -356,7 +374,9 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                 ? "Motorista: "
                                 : filters.filterType === "manager"
                                   ? "Gestor: "
-                                  : "Evento: "}
+                                  : filters.filterType === "event"
+                                    ? "Evento: "
+                                    : "5 últimas adições"}
                            {getItemInfo()}
                         </p>
                      </div>
@@ -441,56 +461,63 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         Gestores
                      </h2>
                      <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-200">
-                           <thead className="bg-gray-50">
-                              <tr>
-                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Nome
-                                 </th>
-                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Email
-                                 </th>
-                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Motoristas
-                                 </th>
-                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Veículos
-                                 </th>
-                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Eventos
-                                 </th>
-                              </tr>
-                           </thead>
-                           <tbody className="divide-y divide-gray-200">
-                              {reportData.managers
-                                 .slice()
-                                 .sort(
-                                    (a, b) =>
-                                       new Date(b.createdAt) -
-                                       new Date(a.createdAt)
-                                 )
-                                 .slice(0, 5)
-                                 .map((manager) => (
-                                    <tr key={manager.id}>
-                                       <td className="px-6 py-4 whitespace-nowrap">
-                                          {manager.name}
-                                       </td>
-                                       <td className="px-6 py-4 whitespace-nowrap">
-                                          {manager.email}
-                                       </td>
-                                       <td className="px-6 py-4 whitespace-nowrap">
-                                          {manager.summary.totalDrivers} ativos
-                                       </td>
-                                       <td className="px-6 py-4 whitespace-nowrap">
-                                          {manager.summary.totalCars} ativos
-                                       </td>
-                                       <td className="px-6 py-4 whitespace-nowrap">
-                                          {manager.summary.totalEvents}
-                                       </td>
-                                    </tr>
-                                 ))}
-                           </tbody>
-                        </table>
+                        {getActiveManagers().length > 0 ? (
+                           <table className="min-w-full divide-y divide-gray-200">
+                              <thead className="bg-gray-50">
+                                 <tr>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                       Nome
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                       Email
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                       Motoristas
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                       Veículos
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                       Eventos
+                                    </th>
+                                 </tr>
+                              </thead>
+                              <tbody className="divide-y divide-gray-200">
+                                 {getActiveManagers()
+                                    .slice()
+                                    .sort(
+                                       (a, b) =>
+                                          new Date(b.createdAt) -
+                                          new Date(a.createdAt)
+                                    )
+                                    .slice(0, 5)
+                                    .map((manager) => (
+                                       <tr key={manager.id}>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {manager.name}
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {manager.email}
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {manager.summary.totalDrivers}{" "}
+                                             ativos
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {manager.summary.totalCars} ativos
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {manager.summary.totalEvents}
+                                          </td>
+                                       </tr>
+                                    ))}
+                              </tbody>
+                           </table>
+                        ) : (
+                           <div className="p-4 text-gray-500">
+                              Nenhum gestor encontrado.
+                           </div>
+                        )}
                      </div>
                   </section>
                   {/* Tabela de Motoristas */}
@@ -500,7 +527,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         Motoristas
                      </h2>
                      <div className="overflow-x-auto">
-                        {reportData.managers.flatMap(
+                        {getActiveManagers().flatMap(
                            (manager) => manager.drivers
                         ).length > 0 ? (
                            <table className="min-w-full divide-y divide-gray-200">
@@ -521,7 +548,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                  </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200">
-                                 {reportData.managers
+                                 {getActiveManagers()
                                     .flatMap((manager) => manager.drivers)
                                     .sort(
                                        (a, b) =>
@@ -563,7 +590,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         Veículos
                      </h2>
                      <div className="overflow-x-auto">
-                        {reportData.managers.flatMap((manager) => manager.cars)
+                        {getActiveManagers().flatMap((manager) => manager.cars)
                            .length > 0 ? (
                            <table className="min-w-full divide-y divide-gray-200">
                               <thead className="bg-gray-50">
@@ -586,7 +613,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                  </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200">
-                                 {reportData.managers
+                                 {getActiveManagers()
                                     .flatMap((manager) => manager.cars)
                                     .sort(
                                        (a, b) =>
@@ -631,7 +658,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         Eventos Finalizados
                      </h2>
                      <div className="overflow-x-auto">
-                        {reportData.managers
+                        {getActiveManagers()
                            .flatMap((manager) => manager.events || [])
                            .filter((event) => event.eventType === "RETURN")
                            .length > 0 ? (
@@ -656,7 +683,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                  </tr>
                               </thead>
                               <tbody className="divide-y divide-gray-200">
-                                 {reportData.managers
+                                 {getActiveManagers()
                                     .flatMap((manager) => manager.events)
                                     .filter(
                                        (event) => event.eventType === "RETURN"
@@ -766,7 +793,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                            </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">
-                           {reportData.managers
+                           {getActiveManagers()
                               .filter(
                                  (manager) =>
                                     !filters.selectedItem?.id ||
@@ -822,7 +849,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                      Motoristas
                   </h2>
                   <div className="overflow-x-auto">
-                     {reportData.managers.flatMap((manager) => manager.drivers)
+                     {getActiveManagers().flatMap((manager) => manager.drivers)
                         .length > 0 ? (
                         <table className="min-w-full divide-y divide-gray-200">
                            <thead className="bg-gray-50">
@@ -842,7 +869,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               </tr>
                            </thead>
                            <tbody className="divide-y divide-gray-200">
-                              {reportData.managers
+                              {getActiveManagers()
                                  .flatMap((manager) => manager.drivers)
                                  .filter(
                                     (driver) =>
@@ -890,7 +917,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                      Veículos
                   </h2>
                   <div className="overflow-x-auto">
-                     {reportData.managers.flatMap((manager) => manager.cars)
+                     {getActiveManagers().flatMap((manager) => manager.cars)
                         .length > 0 ? (
                         <table className="min-w-full divide-y divide-gray-200">
                            <thead className="bg-gray-50">
@@ -919,7 +946,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               </tr>
                            </thead>
                            <tbody className="divide-y divide-gray-200">
-                              {reportData.managers
+                              {getActiveManagers()
                                  .flatMap((manager) => manager.cars)
                                  .filter(
                                     (car) =>
@@ -981,7 +1008,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                      Eventos
                   </h2>
                   <div className="overflow-x-auto">
-                     {reportData.managers.flatMap((manager) => manager.events)
+                     {getActiveManagers().flatMap((manager) => manager.events)
                         .length > 0 ? (
                         <table className="min-w-full divide-y divide-gray-200">
                            <thead className="bg-gray-50">
@@ -1009,7 +1036,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               </tr>
                            </thead>
                            <tbody className="divide-y divide-gray-200">
-                              {reportData.managers
+                              {getActiveManagers()
                                  .flatMap((manager) => manager.events)
                                  .filter(
                                     (event) =>
