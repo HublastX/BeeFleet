@@ -13,13 +13,19 @@ export default function ProfileListModal({ open, onClose, tipo }) {
    let titulo = "";
 
    if (tipo === "motoristas") {
-      lista = getDriversByManager();
+      lista = getDriversByManager().sort(
+         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
       titulo = "Motoristas adicionados";
    } else if (tipo === "carros") {
-      lista = getCarByManager();
+      lista = getCarByManager().sort(
+         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
       titulo = "Carros adicionados";
    } else if (tipo === "eventos") {
-      lista = getEventsByManager();
+      lista = getEventsByManager().sort(
+         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
       titulo = "Eventos criados";
    }
 
@@ -72,9 +78,7 @@ export default function ProfileListModal({ open, onClose, tipo }) {
                            "bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400";
                      } else if (tipo === "eventos") {
                         iconName =
-                           item.eventType === "CHECKOUT"
-                              ? "eventoL"
-                              : "evento";
+                           item.eventType === "CHECKOUT" ? "eventoL" : "evento";
                         iconColor =
                            item.eventType === "CHECKOUT"
                               ? "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400"
@@ -120,32 +124,37 @@ export default function ProfileListModal({ open, onClose, tipo }) {
                               )}
 
                               {tipo === "eventos" && (
-                                 <>
+                                 <div className="flex-1 min-w-0">
                                     <div className="flex justify-between items-start">
-                                       <span className="font-semibold text-gray-800 dark:text-gray-100 capitalize">
-                                          {item.eventType === "CHECKOUT"
-                                             ? "Saída"
-                                             : "Chegada"}
+                                       <span className="font-semibold text-gray-800 dark:text-gray-100">
+                                          {item.driver.name} - {item.car.model}{" "}
+                                          {item.car.brand}
                                        </span>
-                                       <span className="text-xs bg-gray-100 dark:bg-bee-dark-400 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-full">
+                                    </div>
+                                    <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+                                       <span className="flex items-center text-gray-500 dark:text-gray-400">
+                                          <Icon
+                                             name="calendar"
+                                             className="size-3.5 mr-1.5"
+                                          />
                                           {new Date(
                                              item.createdAt
-                                          ).toLocaleDateString("pt-BR")}
+                                          ).toLocaleDateString()}
+                                       </span>
+                                       <span className="flex items-center text-gray-500 dark:text-gray-400">
+                                          <Icon
+                                             name="clock"
+                                             className="size-3.5 mr-1.5"
+                                          />
+                                          {new Date(
+                                             item.createdAt
+                                          ).toLocaleTimeString([], {
+                                             hour: "2-digit",
+                                             minute: "2-digit",
+                                          })}
                                        </span>
                                     </div>
-                                    <div className="mt-1 flex items-center text-sm text-gray-500 dark:text-gray-400">
-                                       <Icon
-                                          name="clock"
-                                          className="size-3.5 mr-1.5"
-                                       />
-                                       {new Date(
-                                          item.createdAt
-                                       ).toLocaleTimeString("pt-BR", {
-                                          hour: "2-digit",
-                                          minute: "2-digit",
-                                       })}
-                                    </div>
-                                 </>
+                                 </div>
                               )}
                            </div>
                         </div>
