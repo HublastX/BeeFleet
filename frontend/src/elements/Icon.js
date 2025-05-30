@@ -32,6 +32,9 @@ import {
    InboxIcon,
    ClockIcon,
    PhoneIcon,
+   SunIcon,
+   MoonIcon,
+   ComputerDesktopIcon,
 } from "@heroicons/react/24/solid";
 import {
    ChevronUpIcon,
@@ -105,7 +108,10 @@ const icons = {
    clock: ClockIcon,
    phone: PhoneIcon,
    circle: Circle,
-   enviar: PaperAirplaneIcon
+   enviar: PaperAirplaneIcon,
+   moon: MoonIcon,
+   sun: SunIcon,
+   computer: ComputerDesktopIcon,
 };
 
 export default function Icon({ name, className, strokeWidth }) {

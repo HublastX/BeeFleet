@@ -3,11 +3,14 @@ import { Dropdown } from "../../elements/ui/dropdown/Dropdown";
 import { DropdownItem } from "../../elements/ui/dropdown/DropdownItem";
 import Icon from "@/elements/Icon";
 import Image from "next/image";
-import useAuth  from "@/hooks/useAuth";
+import useAuth from "@/hooks/useAuth";
+import useTheme from "@/hooks/useTheme";
 
 export default function UserDropdown() {
    const [isOpen, setIsOpen] = useState(false);
-   const { gestor, logout } = useAuth(); 
+   const { gestor, logout } = useAuth();
+   const { theme, toggleTheme } = useTheme();
+
    function toggleDropdown(e) {
       e.stopPropagation();
       setIsOpen((prev) => !prev);
@@ -19,7 +22,6 @@ export default function UserDropdown() {
 
    if (!gestor) return null;
 
-
    return (
       <div className="relative">
          <button
@@ -30,7 +32,13 @@ export default function UserDropdown() {
                {!gestor.image ? (
                   <Icon name="UserCircle" />
                ) : (
-                  <Image src={gestor.image} alt="Profile" width={100} height={100} className="object-cover h-full w-full" />
+                  <Image
+                     src={gestor.image}
+                     alt="Profile"
+                     width={100}
+                     height={100}
+                     className="object-cover h-full w-full"
+                  />
                )}
             </span>
 
@@ -54,7 +62,9 @@ export default function UserDropdown() {
          >
             <div className="dark:text-bee-alert-500 text-bee-dark-600">
                <span className="block font-medium">{gestor.name}</span>
-               <span className="mt-0.5 block text-theme-xs">{gestor.email}</span>
+               <span className="mt-0.5 block text-theme-xs">
+                  {gestor.email}
+               </span>
             </div>
             <ul className="flex flex-col gap-1 pt-4 pb-3 border-b border-bee-dark-300 dark:border-bee-dark-400">
                <li>
@@ -72,9 +82,34 @@ export default function UserDropdown() {
                      Editar perfil
                   </DropdownItem>
                </li>
+               <li>
+                  <DropdownItem
+                     onItemClick={() => {
+                        toggleTheme();
+                        closeDropdown();
+                     }}
+                     className="flex items-center gap-3 px-3 py-2 w-full font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
+                  >
+                     <Icon
+                        name={
+                           theme === "system"
+                              ? "computer"
+                              : theme === "dark"
+                                ? "sun"
+                                : "moon"
+                        }
+                        className="w-6 h-6"
+                     />
+                     {theme === "system"
+                        ? "Tema do sistema"
+                        : theme === "dark"
+                          ? "Modo claro"
+                          : "Modo escuro"}
+                  </DropdownItem>
+               </li>
             </ul>
             <button
-               onClick={() => logout()} 
+               onClick={() => logout()}
                className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
             >
                <Icon name="sair" className="w-6 h-6" strokeWidth={1.5} />
