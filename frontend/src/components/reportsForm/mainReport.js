@@ -24,6 +24,7 @@ export default function ReportForm() {
    const [selectedItem, setSelectedItem] = useState(null);
    const [rangeStart, setRangeStart] = useState("");
    const [rangeEnd, setRangeEnd] = useState("");
+   const [dateError, setDateError] = useState("");
 
    useEffect(() => {
       const filterType = searchParams.get("filterType");
@@ -94,6 +95,28 @@ export default function ReportForm() {
 
    const handleSubmit = (e) => {
       e.preventDefault();
+      setDateError("");
+
+      if (dateRangeOption === "range") {
+         if (rangeStart && rangeEnd) {
+            const startDate = new Date(rangeStart);
+            const endDate = new Date(rangeEnd);
+            const today = new Date();
+            today.setHours(23, 59, 59, 999); // Define para o final do dia atual
+
+            if (endDate < startDate) {
+               setDateError(
+                  "A data final não pode ser menor que a data inicial"
+               );
+               return;
+            }
+
+            if (endDate > today) {
+               setDateError("A data final não pode ser maior que hoje");
+               return;
+            }
+         }
+      }
 
       const params = new URLSearchParams();
 
@@ -175,8 +198,16 @@ export default function ReportForm() {
                               className="w-full"
                               value={rangeEnd}
                               onChange={(e) => setRangeEnd(e.target.value)}
+                              max={new Date().toISOString().split("T")[0]}
                            />
                         </div>
+                        {dateError && (
+                           <div className="col-span-2">
+                              <p className="text-red-500 text-sm">
+                                 {dateError}
+                              </p>
+                           </div>
+                        )}
                      </div>
                   )}
                </div>
