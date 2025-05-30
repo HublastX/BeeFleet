@@ -293,7 +293,12 @@ function Home() {
                                              "0 2px 10px rgba(0,0,0,0.1)",
                                        }}
                                     />
-                                    <Legend iconType="circle" iconSize={10} />
+                                    <Legend
+                                       iconType="circle"
+                                       iconSize={10}
+                                       layout="horizontal"
+                                       width={"100%"}
+                                    />
                                     <Bar
                                        stackId="a"
                                        dataKey="gestor"
