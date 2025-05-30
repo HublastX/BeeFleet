@@ -122,9 +122,6 @@ export default function EventTable() {
                   onChange={(e) => setSearchTerm(e.target.value)}
                />
             </div>
-            {/* <Btn variant="secondary">
-               <Icon name="filtro" className="size-7" />
-            </Btn> */}
          </div>
          <div className="w-full overflow-x-auto lg:overflow-hidden no-scrollbar">
             <Table className="min-w-max md:min-w-full">
@@ -263,7 +260,8 @@ export default function EventTable() {
                               </TableCell>
                               <TableCell className="shadow-lg lg:shadow-none py-4 text-center border-l border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-21 w-20 min-w-[6rem]">
                                  <Link
-                                    href={`/report?filterType=event&filterId=${event.id}`}
+                                    // href={`/report?filterType=event&filterId=${event.id}`}
+                                    href={`/report/result?period=all&filterType=event&filterId=${event.id}`}
                                     className="inline-flex p-1 items-center justify-center rounded-full hover:bg-bee-yellow-100  transition-colors"
                                  >
                                     <Icon

@@ -29,9 +29,77 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
       );
    };
 
+   const hasActivityInRange = (manager) => {
+      const startDate = new Date(filters.dateRange.start).toLocaleDateString(
+         "pt-BR"
+      );
+      const endDate = new Date(filters.dateRange.end).toLocaleDateString(
+         "pt-BR"
+      );
+
+      return (
+         manager.events?.some((event) => {
+            const eventDate = formatDate(event.createdAt);
+            return eventDate >= startDate && eventDate <= endDate;
+         }) ||
+         manager.drivers?.some((driver) => {
+            const driverDate = formatDate(driver.createdAt);
+            return driverDate >= startDate && driverDate <= endDate;
+         }) ||
+         manager.cars?.some((car) => {
+            const carDate = formatDate(car.createdAt);
+            return carDate >= startDate && carDate <= endDate;
+         })
+      );
+   };
+
    const getActiveManagers = () => {
-      if (filters.period !== "today") return reportData.managers;
-      return reportData.managers.filter((manager) => hasActivityToday(manager));
+      if (filters.period === "today") {
+         return reportData.managers.filter((manager) =>
+            hasActivityToday(manager)
+         );
+      }
+      if (filters.period === "range" && filters.dateRange) {
+         return reportData.managers.filter((manager) =>
+            hasActivityInRange(manager)
+         );
+      }
+      return reportData.managers;
+   };
+
+   const getFilteredGlobalStats = () => {
+      const activeManagers = getActiveManagers();
+
+      return {
+         totalManagers: activeManagers.length,
+         totalDrivers: activeManagers.reduce(
+            (total, manager) => total + (manager.summary?.totalDrivers || 0),
+            0
+         ),
+         totalDeletedDrivers: activeManagers.reduce(
+            (total, manager) =>
+               total + (manager.summary?.totalDeletedDrivers || 0),
+            0
+         ),
+         totalCars: activeManagers.reduce(
+            (total, manager) => total + (manager.summary?.totalCars || 0),
+            0
+         ),
+         totalDeletedCars: activeManagers.reduce(
+            (total, manager) =>
+               total + (manager.summary?.totalDeletedCars || 0),
+            0
+         ),
+         totalEvents: activeManagers.reduce(
+            (total, manager) => total + (manager.summary?.totalEvents || 0),
+            0
+         ),
+         totalDeletedEvents: activeManagers.reduce(
+            (total, manager) =>
+               total + (manager.summary?.totalDeletedEvents || 0),
+            0
+         ),
+      };
    };
 
    const getItemInfo = () => {
@@ -62,6 +130,352 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
             return event ? `${event.carInfo} - ${event.driverName}` : "";
          default:
             return "";
+      }
+   };
+
+   const getSelectedItemDetails = () => {
+      if (!filters.selectedItem?.id) return null;
+
+      const DetailCard = ({ title, children }) => (
+         <div className="bg-white p-4 rounded-lg border border-gray-200">
+            <h3 className="text-lg font-semibold mb-3 text-bee-dark-600">
+               {title}
+            </h3>
+            <div className="space-y-2">{children}</div>
+         </div>
+      );
+
+      const InfoItem = ({ label, value }) => (
+         <div className="flex justify-between items-center py-1 border-b border-gray-100 last:border-0">
+            <span className="text-gray-600">{label}</span>
+            <span className="font-medium">{value}</span>
+         </div>
+      );
+
+      const StatCard = ({ label, value, icon }) => (
+         <div className="bg-white p-4 rounded-lg border border-gray-200">
+            <div className="flex items-center gap-2 mb-2">
+               <Icon name={icon} className="size-5 text-bee-dark-600" />
+               <p className="text-sm text-gray-600">{label}</p>
+            </div>
+            <p className="text-2xl font-bold text-bee-dark-600">{value}</p>
+         </div>
+      );
+
+      const EventCard = ({ event }) => (
+         <div className="bg-white p-3 rounded-lg border border-gray-200">
+            <div className="flex items-center justify-between mb-1">
+               <span className="font-medium">
+                  {event.eventType === "CHECKOUT" ? "Saída" : "Retorno"}
+               </span>
+               <span className="text-sm text-gray-500">
+                  {formatDateTime(event.createdAt)}
+               </span>
+            </div>
+            <div className="text-sm space-y-1">
+               <p className="text-gray-600">
+                  {event.eventType === "CHECKOUT"
+                     ? "Veículo: "
+                     : "Finalizado: "}
+                  {event.eventType === "CHECKOUT"
+                     ? event.carInfo
+                     : formatDateTime(event.endedAt)}
+               </p>
+               <p className="text-gray-600">
+                  {event.eventType === "CHECKOUT"
+                     ? "Motorista: "
+                     : "Hodômetro: "}
+                  {event.eventType === "CHECKOUT"
+                     ? event.driverName
+                     : `${event.odometer}km`}
+               </p>
+            </div>
+         </div>
+      );
+
+      switch (filters.filterType) {
+         case "manager":
+            const manager = reportData.managers.find(
+               (m) => m.id === filters.selectedItem.id
+            );
+            if (!manager) return null;
+            return (
+               <div className="mb-8">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-200">
+                     <div className="p-2 bg-bee-dark-100 rounded-lg">
+                        <Icon
+                           name="gestor"
+                           className="size-8 text-bee-dark-600"
+                        />
+                     </div>
+                     <div>
+                        <h2 className="text-2xl font-bold text-bee-dark-600">
+                           {manager.name}
+                        </h2>
+                        <p className="text-gray-500">Gestor</p>
+                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6">
+                     <div>
+                        <DetailCard title="Informações Gerais">
+                           <InfoItem label="Email" value={manager.email} />
+                           <InfoItem
+                              label="Data de Cadastro"
+                              value={formatDate(manager.createdAt)}
+                           />
+                        </DetailCard>
+                     </div>
+
+                     <div>
+                        <div className="grid grid-cols-2 gap-4">
+                           <StatCard
+                              label="Motoristas Ativos"
+                              value={manager.summary.totalDrivers}
+                              icon="users"
+                           />
+                           <StatCard
+                              label="Veículos Ativos"
+                              value={manager.summary.totalCars}
+                              icon="car"
+                           />
+                           <StatCard
+                              label="Total de Eventos"
+                              value={manager.summary.totalEvents}
+                              icon="eventoL"
+                           />
+                           <StatCard
+                              label="Itens Removidos"
+                              value={
+                                 manager.summary.totalDeletedDrivers +
+                                 manager.summary.totalDeletedCars
+                              }
+                              icon="trash"
+                           />
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            );
+
+         case "motorista":
+            const driver = reportData.managers
+               .flatMap((m) => m.drivers || [])
+               .find((d) => d.id === filters.selectedItem.id);
+            const driverManager = reportData.managers.find((m) =>
+               m.drivers?.some((d) => d.id === filters.selectedItem.id)
+            );
+            if (!driver) return null;
+
+            const driverEvents =
+               driverManager?.events
+                  ?.filter((e) => e.driverName === driver.name)
+                  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                  .slice(0, 5) || [];
+
+            return (
+               <div className="mb-8">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-200">
+                     <div className="p-2 bg-bee-dark-100 rounded-lg">
+                        <Icon
+                           name="user"
+                           className="size-8 text-bee-dark-600"
+                        />
+                     </div>
+                     <div>
+                        <h2 className="text-2xl font-bold text-bee-dark-600">
+                           {driver.name}
+                        </h2>
+                        <p className="text-gray-500">Motorista</p>
+                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6">
+                     <DetailCard title="Informações do Motorista">
+                        <InfoItem label="Telefone" value={driver.phone} />
+                        <InfoItem label="CNH" value={driver.license} />
+                        <InfoItem
+                           label="Status"
+                           value={
+                              driver.isAvailable ? "Disponível" : "Indisponível"
+                           }
+                        />
+                        <InfoItem
+                           label="Data de Cadastro"
+                           value={formatDate(driver.createdAt)}
+                        />
+                        <InfoItem
+                           label="Gestor Responsável"
+                           value={driverManager?.name}
+                        />
+                     </DetailCard>
+
+                     <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-bee-dark-600">
+                           Últimos Eventos
+                        </h3>
+                        {driverEvents.length > 0 ? (
+                           <div className="space-y-3">
+                              {driverEvents.map((event) => (
+                                 <EventCard key={event.id} event={event} />
+                              ))}
+                           </div>
+                        ) : (
+                           <p className="text-gray-500">
+                              Nenhum evento registrado
+                           </p>
+                        )}
+                     </div>
+                  </div>
+               </div>
+            );
+
+         case "carro":
+            const car = reportData.managers
+               .flatMap((m) => m.cars || [])
+               .find((c) => c.id === filters.selectedItem.id);
+            const carManager = reportData.managers.find((m) =>
+               m.cars?.some((c) => c.id === filters.selectedItem.id)
+            );
+            if (!car) return null;
+
+            const carEvents =
+               carManager?.events
+                  ?.filter((e) => e.carInfo.includes(car.plate))
+                  .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                  .slice(0, 5) || [];
+
+            return (
+               <div className="mb-8">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-200">
+                     <div className="p-2 bg-bee-dark-100 rounded-lg">
+                        <Icon name="car" className="size-8 text-bee-dark-600" />
+                     </div>
+                     <div>
+                        <h2 className="text-2xl font-bold text-bee-dark-600">
+                           {car.model}
+                        </h2>
+                        <p className="text-gray-500">{car.brand}</p>
+                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6">
+                     <DetailCard title="Informações do Veículo">
+                        <InfoItem label="Placa" value={car.plate} />
+                        <InfoItem label="Ano" value={car.year} />
+                        <InfoItem label="Cor" value={car.color} />
+                        <InfoItem label="Renavam" value={car.renavam} />
+                        <InfoItem label="Chassi" value={car.chassis} />
+                        <InfoItem
+                           label="Hodômetro"
+                           value={`${car.odometer}km`}
+                        />
+                        <InfoItem
+                           label="Status"
+                           value={
+                              car.status === "IN_USE" ? "Em uso" : "Disponível"
+                           }
+                        />
+                        <InfoItem
+                           label="Data de Cadastro"
+                           value={formatDate(car.createdAt)}
+                        />
+                        <InfoItem
+                           label="Gestor Responsável"
+                           value={carManager?.name}
+                        />
+                     </DetailCard>
+
+                     <div className="space-y-4">
+                        <h3 className="text-lg font-semibold text-bee-dark-600">
+                           Últimos Eventos
+                        </h3>
+                        {carEvents.length > 0 ? (
+                           <div className="space-y-3">
+                              {carEvents.map((event) => (
+                                 <EventCard key={event.id} event={event} />
+                              ))}
+                           </div>
+                        ) : (
+                           <p className="text-gray-500">
+                              Nenhum evento registrado
+                           </p>
+                        )}
+                     </div>
+                  </div>
+               </div>
+            );
+
+         case "event":
+            const event = reportData.managers
+               .flatMap((m) => m.events || [])
+               .find((e) => e.id === filters.selectedItem.id);
+            const eventManager = reportData.managers.find((m) =>
+               m.events?.some((e) => e.id === filters.selectedItem.id)
+            );
+            if (!event) return null;
+
+            return (
+               <div className="mb-8">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-200">
+                     <div className="p-2 bg-bee-dark-100 rounded-lg">
+                        <Icon
+                           name="eventoL"
+                           className="size-8 text-bee-dark-600"
+                        />
+                     </div>
+                     <div>
+                        <h2 className="text-2xl font-bold text-bee-dark-600">
+                           {event.eventType === "CHECKOUT"
+                              ? "Saída de Veículo"
+                              : "Retorno de Veículo"}
+                        </h2>
+                        <p className="text-gray-500">
+                           {formatDateTime(event.createdAt)}
+                        </p>
+                     </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-6">
+                     <DetailCard title="Detalhes do Evento">
+                        <InfoItem
+                           label="Status"
+                           value={
+                              event.status === "COMPLETED"
+                                 ? "Concluído"
+                                 : "Ativo"
+                           }
+                        />
+                        <InfoItem
+                           label="Iniciado em"
+                           value={formatDateTime(event.createdAt)}
+                        />
+                        {event.endedAt && (
+                           <InfoItem
+                              label="Finalizado em"
+                              value={formatDateTime(event.endedAt)}
+                           />
+                        )}
+                        <InfoItem
+                           label="Gestor Responsável"
+                           value={eventManager?.name}
+                        />
+                     </DetailCard>
+
+                     <DetailCard title="Informações da Viagem">
+                        <InfoItem label="Motorista" value={event.driverName} />
+                        <InfoItem label="Veículo" value={event.carInfo} />
+                        <InfoItem
+                           label="Hodômetro"
+                           value={`${event.odometer}km`}
+                        />
+                     </DetailCard>
+                  </div>
+               </div>
+            );
+
+         default:
+            return null;
       }
    };
 
@@ -268,31 +682,31 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
       const statsSheet = workbook.addWorksheet("Estatísticas");
       statsSheet.addRow([
          "Total de Gestores",
-         reportData.globalStats.totalManagers || 0,
+         getFilteredGlobalStats().totalManagers || 0,
       ]);
       statsSheet.addRow([
          "Total de Motoristas",
-         reportData.globalStats.totalDrivers || 0,
+         getFilteredGlobalStats().totalDrivers || 0,
       ]);
       statsSheet.addRow([
          "Total de Veículos",
-         reportData.globalStats.totalCars || 0,
+         getFilteredGlobalStats().totalCars || 0,
       ]);
       statsSheet.addRow([
          "Total de Eventos",
-         reportData.globalStats.totalEvents || 0,
+         getFilteredGlobalStats().totalEvents || 0,
       ]);
       statsSheet.addRow([
          "Motoristas Excluídos",
-         reportData.globalStats.totalDeletedDrivers || 0,
+         getFilteredGlobalStats().totalDeletedDrivers || 0,
       ]);
       statsSheet.addRow([
          "Veículos Excluídos",
-         reportData.globalStats.totalDeletedCars || 0,
+         getFilteredGlobalStats().totalDeletedCars || 0,
       ]);
       statsSheet.addRow([
          "Eventos Excluídos",
-         reportData.globalStats.totalDeletedEvents || 0,
+         getFilteredGlobalStats().totalDeletedEvents || 0,
       ]);
       statsSheet.getRow(1).eachCell((cell) => {
          cell.fill = {
@@ -309,7 +723,23 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
    };
 
    return (
-      <div className="print-area bg-white text-black h-full">
+      <div className="print-area bg-white text-black h-full w-full">
+         <div className="flex gap-3 print:hidden mb-10 w-full justify-end">
+            <button
+               onClick={exportExcel}
+               className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg transition-colors"
+            >
+               <Icon name="download" className="size-5" />
+               <span>Exportar Excel</span>
+            </button>
+            <button
+               onClick={handlePrint}
+               className="flex items-center gap-2 px-4 py-2 bg-bee-dark-600 hover:bg-bee-dark-700 text-white rounded-lg transition-colors"
+            >
+               <Icon name="reports" className="size-5" />
+               <span>Imprimir Relatório</span>
+            </button>
+         </div>
          {/* Cabeçalho */}
          <header className="border-b border-bee-dark-300 pb-4 mb-6">
             <div className="flex justify-between items-start">
@@ -353,7 +783,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
             {/* Filtros aplicados */}
             <div className="mt-4">
                <h2 className="text-lg font-semibold mb-2">Filtros Aplicados</h2>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+               <div className="grid grid-cols-2 gap-4">
                   <div>
                      <p className="text-sm text-gray-500">Período:</p>
                      <p>
@@ -384,6 +814,10 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                </div>
             </div>
          </header>
+
+         {/* Detalhes do Item Selecionado */}
+         {getSelectedItemDetails()}
+
          {/* Corpo do Relatório */}
          <div className="space-y-8">
             {/* Estatísticas Gerais */}
@@ -400,7 +834,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               Total de Gestores
                            </p>
                            <p className="text-2xl font-bold">
-                              {reportData.globalStats.totalManagers || 0}
+                              {getFilteredGlobalStats().totalManagers || 0}
                            </p>
                         </div>
                         <div className="p-4 rounded-lg border">
@@ -408,7 +842,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               Total de Motoristas
                            </p>
                            <p className="text-2xl font-bold">
-                              {reportData.globalStats.totalDrivers || 0}
+                              {getFilteredGlobalStats().totalDrivers || 0}
                            </p>
                         </div>
                         <div className="p-4 rounded-lg border">
@@ -416,7 +850,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               Total de Veículos
                            </p>
                            <p className="text-2xl font-bold">
-                              {reportData.globalStats.totalCars || 0}
+                              {getFilteredGlobalStats().totalCars || 0}
                            </p>
                         </div>
                      </div>
@@ -433,7 +867,8 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               Motoristas excluídos
                            </p>
                            <p className="text-xl font-bold text-red-700">
-                              {reportData.globalStats.totalDeletedDrivers || 0}
+                              {getFilteredGlobalStats().totalDeletedDrivers ||
+                                 0}
                            </p>
                         </div>
                         <div className="p-4 rounded-lg border bg-red-50">
@@ -441,7 +876,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               Veículos excluídos
                            </p>
                            <p className="text-xl font-bold text-red-700">
-                              {reportData.globalStats.totalDeletedCars || 0}
+                              {getFilteredGlobalStats().totalDeletedCars || 0}
                            </p>
                         </div>
                         <div className="p-4 rounded-lg border bg-red-50">
@@ -449,7 +884,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               Eventos excluídos
                            </p>
                            <p className="text-xl font-bold text-red-700">
-                              {reportData.globalStats.totalDeletedEvents || 0}
+                              {getFilteredGlobalStats().totalDeletedEvents || 0}
                            </p>
                         </div>
                      </div>
@@ -765,7 +1200,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                </>
             )}
             {/* Lista de Gestores */}
-            {showManagers && (
+            {showManagers && !filters.selectedItem?.id && (
                <section>
                   <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
                      <Icon name="gestor" className="size-5" />
@@ -842,7 +1277,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                </section>
             )}
             {/* Lista de Motoristas */}
-            {showDrivers && (
+            {showDrivers && !filters.selectedItem?.id && (
                <section>
                   <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
                      <Icon name="users" className="size-5" />
@@ -910,7 +1345,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                </section>
             )}
             {/* Lista de Veículos */}
-            {showCars && (
+            {showCars && !filters.selectedItem?.id && (
                <section>
                   <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
                      <Icon name="car" className="size-5" />
@@ -1001,7 +1436,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                </section>
             )}
             {/* Lista de Eventos */}
-            {showEvents && (
+            {showEvents && !filters.selectedItem?.id && (
                <section>
                   <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
                      <Icon name="eventoL" className="size-5" />
@@ -1112,18 +1547,11 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
          </div>
          {/* Rodapé */}
          <footer className="mt-8 pb-3 pt-6 border-t border-bee-dark-300">
-            <div className="flex justify-between items-center">
-               <div className="text-xs text-gray-500">
-                  <p>Relatório gerado automaticamente pelo sistema Bee Fleet</p>
-                  <p className="mt-1">
-                     © {new Date().getFullYear()} - Todos os direitos
-                     reservados
-                  </p>
-               </div>
-               <div className="flex gap-3 print:hidden">
-                  <Btn texto="Exportar Excel" onClick={exportExcel} />
-                  <Btn texto="Imprimir Relatório" onClick={handlePrint} />
-               </div>
+            <div className="text-xs text-gray-500">
+               <p>Relatório gerado automaticamente pelo sistema Bee Fleet</p>
+               <p className="mt-1">
+                  © {new Date().getFullYear()} - Todos os direitos reservados
+               </p>
             </div>
          </footer>
       </div>
