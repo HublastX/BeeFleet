@@ -337,6 +337,73 @@ export default function useCar() {
       }
    };
 
+   // super delete
+   const superDeleteCar = async (id) => {
+      if (!gestor?.token) {
+         setErro("Token do gestor não encontrado.");
+         return;
+      }
+
+      try {
+         const res = await fetch(`${API_URL}/api/cars/${id}`, {
+            method: "DELETE",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+
+         if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || "Erro ao deletar carro");
+         }
+
+         showToast("Sucesso", "success", "Carro deletado com sucesso!", 5000);
+         setCarro((prev) => prev.filter((car) => car.id !== id));
+      } catch (error) {
+         handleError(error, "Erro ao deletar carro");
+         throw error;
+      } finally {
+         setCarregando(false);
+      }
+   };
+
+   const restoreCar = async (id) => {
+      if (!gestor?.token) {
+         handleError("Gestor não autenticado", "warning");
+         return;
+      }
+
+      try {
+         const res = await fetch(`${API_URL}/api/restore/car/${id}`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+            body: JSON.stringify({
+               managerId: gestor.id,
+            }),
+         });
+
+         if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || "Erro ao restaurar carro");
+         }
+
+         showToast("Sucesso", "success", "Carro restaurado com sucesso!", 5000);
+
+         // Atualiza a lista de carros
+         const updatedCar = await getCar(id);
+         if (updatedCar) {
+            setCarro((prev) => [...prev, updatedCar]);
+         }
+      } catch (error) {
+         handleError(error, "Erro ao restaurar carro");
+         throw error;
+      }
+   };
+
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
       const toastType = localStorage.getItem("toastType");
@@ -359,6 +426,8 @@ export default function useCar() {
       erro,
       createCar,
       deleteCar,
+      superDeleteCar,
+      restoreCar,
       getCar,
       updateCar,
       getCarByManager,

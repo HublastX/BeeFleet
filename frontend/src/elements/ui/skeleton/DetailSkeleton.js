@@ -2,32 +2,60 @@ import React from "react";
 
 export default function DetailSkeleton() {
    return (
-      <div className="gap-5 flex flex-col animate-pulse">
-         <div className="flex flex-col md:flex-row gap-6">
-            {/* Card 1: Imagem e placa */}
-            <div className="flex flex-col px-4 py-5 items-center gap-4 w-full h-fit md:w-80 bg-gray-100 dark:bg-gray-800 rounded-md border border-gray-300 dark:border-gray-700">
-               <div className="relative w-full h-40 rounded-md overflow-hidden bg-gray-200 dark:bg-gray-700" />
-               {/* <div className="bg-gray-100 w-full p-3 rounded-md shadow-sm border-t-8 border-blue-700">
-                  <div className="h-8 bg-gray-200 rounded w-3/4 mx-auto" />
-               </div> */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-pulse">
+         {/* Header */}
+         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div>
+               <div className="flex items-center gap-4">
+                  <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-48" />
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-24" />
+               </div>
+               <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-40 mt-1" />
             </div>
-            {/* Card 2: Detalhes do carro */}
-            <div className="flex flex-col w-full md:px-4 px-0 py-5 gap-6 bg-transparent md:bg-gray-100 md:dark:bg-gray-800 rounded-md md:border border-gray-300 dark:border-gray-700">
-               <div className="flex justify-between items-center pb-3 text-center border-b-2 dark:border-gray-700">
-                  <div className="h-8 bg-gray-200 rounded w-1/2" />
-                  <div className="h-6 bg-gray-200 rounded w-20" />
-               </div>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {Array.from({ length: 8 }).map((_, i) => (
-                     <div key={i} className="flex flex-col gap-2">
-                        <div className="h-4 bg-gray-200 rounded w-1/3" />
-                        <div className="h-6 bg-gray-200 rounded w-2/3" />
+            <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded w-24" />
+         </div>
+
+         {/* Principal */}
+         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-3 grid grid-cols-1 lg:grid-cols-3 gap-8">
+               {/* Foto */}
+               <div className="bg-white dark:bg-gray-800 h-fit rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                  <div className="h-48 bg-gray-200 dark:bg-gray-700" />
+                  <div className="p-6">
+                     <div className="space-y-6">
+                        {Array.from({ length: 3 }).map((_, i) => (
+                           <div key={i}>
+                              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-20 mb-1" />
+                              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-32" />
+                           </div>
+                        ))}
                      </div>
-                  ))}
+                  </div>
                </div>
+
+               {/* Informações */}
+               <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-6" />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                     {Array.from({ length: 7 }).map((_, i) => (
+                        <div key={i} className={i === 6 ? "md:col-span-2" : ""}>
+                           <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-24 mb-1" />
+                           <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-40" />
+                        </div>
+                     ))}
+                  </div>
+               </div>
+            </div>
+
+            {/* Histórico */}
+            <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+               <div className="flex justify-between items-center mb-6">
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-48" />
+                  <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-32" />
+               </div>
+               <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded" />
             </div>
          </div>
-         <div className="h-40 bg-gray-200 dark:bg-gray-700 rounded-md" />
       </div>
    );
 }

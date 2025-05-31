@@ -269,6 +269,78 @@ export default function useEvents() {
       }
    };
 
+   // super delete
+   const superDeleteEvent = async (id) => {
+      if (!gestor?.token) {
+         handleError("Gestor não autenticado", "warning");
+         return;
+      }
+
+      try {
+         const res = await fetch(`${API_URL}/api/events/checkout/${id}`, {
+            method: "DELETE",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+
+         if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || "Erro ao deletar evento");
+         }
+
+         showToast("Sucesso", "success", "Evento deletado com sucesso!", 5000);
+         setEvents((prev) => prev.filter((event) => event.id !== id));
+      } catch (error) {
+         handleError(error, "Erro ao deletar evento");
+         throw error;
+      } finally {
+         setCarregando(false);
+      }
+   };
+
+   const restoreEvent = async (id) => {
+      if (!gestor?.token) {
+         handleError("Gestor não autenticado", "warning");
+         return;
+      }
+
+      try {
+         const res = await fetch(`${API_URL}/api/restore/event/${id}`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+            body: JSON.stringify({
+               managerId: gestor.id,
+            }),
+         });
+
+         if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || "Erro ao restaurar evento");
+         }
+
+         showToast(
+            "Sucesso",
+            "success",
+            "Evento restaurado com sucesso!",
+            5000
+         );
+
+         // Atualiza a lista de eventos
+         const updatedEvent = await getEvent(id);
+         if (updatedEvent) {
+            setEvents((prev) => [...prev, updatedEvent]);
+         }
+      } catch (error) {
+         handleError(error, "Erro ao restaurar evento");
+         throw error;
+      }
+   };
+
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
       const toastType = localStorage.getItem("toastType");
@@ -294,5 +366,7 @@ export default function useEvents() {
       getEventsByManager,
       countEventsByManager: getEventsByManager().length,
       deleteEvent,
+      superDeleteEvent,
+      restoreEvent,
    };
 }
