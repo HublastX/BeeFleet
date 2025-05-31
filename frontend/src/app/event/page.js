@@ -110,8 +110,8 @@ function Events() {
                            data={eventTypeData}
                            cx="50%"
                            cy="50%"
-                           innerRadius={60}
-                           outerRadius={80}
+                           innerRadius={40}
+                           outerRadius={63}
                            fill="#8884d8"
                            paddingAngle={2}
                            dataKey="value"
