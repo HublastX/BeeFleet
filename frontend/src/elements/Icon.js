@@ -56,6 +56,7 @@ import {
    ExclamationTriangleIcon,
    ListBulletIcon,
    PaperAirplaneIcon,
+   ArrowPathIcon,
 } from "@heroicons/react/24/outline";
 
 const icons = {
@@ -112,6 +113,7 @@ const icons = {
    moon: MoonIcon,
    sun: SunIcon,
    computer: ComputerDesktopIcon,
+   arrowPath: ArrowPathIcon,
 };
 
 export default function Icon({ name, className, strokeWidth }) {

@@ -285,6 +285,37 @@ export default function useAuth() {
       }
    };
 
+   // super delete
+   const superDeleteManager = async (id) => {
+      if (!gestor?.token) {
+         setErro("Token do gestor não encontrado.");
+         return;
+      }
+
+      try {
+         const res = await fetch(`${API_URL}/api/managers/${id}`, {
+            method: "DELETE",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+
+         if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || "Erro ao deletar gestor");
+         }
+
+         showToast("Sucesso", "success", "Gestor deletado com sucesso!", 5000);
+         setGestores((prev) => prev.filter((manager) => manager.id !== id));
+      } catch (error) {
+         handleError(error, "Erro ao deletar gestor");
+         throw error;
+      } finally {
+         setCarregando(false);
+      }
+   };
+
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
       const toastType = localStorage.getItem("toastType");
@@ -311,5 +342,6 @@ export default function useAuth() {
       logout,
       putManager,
       deleteManager,
+      superDeleteManager,
    };
 }

@@ -338,6 +338,83 @@ export default function useDrivers() {
       }
    };
 
+   // super delete
+   const superDeleteDriver = async (id) => {
+      if (!gestor?.token) {
+         setErro("Token do gestor não encontrado.");
+         return;
+      }
+
+      try {
+         const res = await fetch(`${API_URL}/api/drivers/${id}`, {
+            method: "DELETE",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+
+         if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || "Erro ao deletar motorista");
+         }
+
+         showToast(
+            "Sucesso",
+            "success",
+            "Motorista deletado com sucesso!",
+            5000
+         );
+         setMotoristas((prev) => prev.filter((driver) => driver.id !== id));
+      } catch (error) {
+         handleError(error, "Erro ao deletar motorista");
+         throw error;
+      } finally {
+         setCarregando(false);
+      }
+   };
+
+   const restoreDriver = async (id) => {
+      if (!gestor?.token) {
+         handleError("Gestor não autenticado", "warning");
+         return;
+      }
+
+      try {
+         const res = await fetch(`${API_URL}/api/restore/driver/${id}`, {
+            method: "POST",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+            body: JSON.stringify({
+               managerId: gestor.id,
+            }),
+         });
+
+         if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || "Erro ao restaurar motorista");
+         }
+
+         showToast(
+            "Sucesso",
+            "success",
+            "Motorista restaurado com sucesso!",
+            5000
+         );
+
+         // Atualiza a lista de motoristas
+         const updatedDriver = await getDriver(id);
+         if (updatedDriver) {
+            setMotoristas((prev) => [...prev, updatedDriver]);
+         }
+      } catch (error) {
+         handleError(error, "Erro ao restaurar motorista");
+         throw error;
+      }
+   };
+
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
       const toastType = localStorage.getItem("toastType");
@@ -360,6 +437,8 @@ export default function useDrivers() {
       erro,
       createDriver,
       deleteDriver,
+      superDeleteDriver,
+      restoreDriver,
       getDriver,
       updateDriver,
       getDriversByManager,

@@ -139,35 +139,6 @@ export default function Saida() {
       }
    }, [carro, searchParams, selecionarCarro]);
 
-   useEffect(() => {
-      const handleRadioChange = () => {
-         const customContainer = document.getElementById(
-            "customDateTimeContainer"
-         );
-         const customOption = document.querySelector(
-            "input[name='horaOption'][value='custom']"
-         );
-
-         if (customOption.checked) {
-            customContainer.classList.remove("hidden");
-         } else {
-            customContainer.classList.add("hidden");
-         }
-      };
-
-      const radioButtons = document.querySelectorAll(
-         "input[name='horaOption']"
-      );
-      radioButtons.forEach((radio) => {
-         radio.addEventListener("change", handleRadioChange);
-      });
-
-      return () => {
-         radioButtons.forEach((radio) => {
-            radio.removeEventListener("change", handleRadioChange);
-         });
-      };
-   }, []);
 
    const toggleInfoSection = () => {
       setShowInfo(!showInfo);
@@ -445,49 +416,6 @@ export default function Saida() {
                </div>
             </div>
 
-            {/* Seção Data/Hora */}
-            <div className="p-6 text-gray-300 italic cursor-not-allowed">
-               <div className="flex items-center gap-3 mb-4">
-                  <Icon name="calendar" className="size-6" />
-                  <h2 className="text-xl font-bold">Data/Hora</h2>
-                  <p className="text-red-500 italic">*ainda nao implementado</p>
-               </div>
-
-               <div className="space-y-4">
-                  <div className="flex items-center gap-4">
-                     <label className="inline-flex items-center">
-                        <input
-                           type="radio"
-                           name="horaOption"
-                           value="now"
-                           checked={horaOption === "now"}
-                           onChange={() => setHoraOption("now")}
-                        />
-                        <span className="ml-2">Usar hora atual</span>
-                     </label>
-
-                     <label className="inline-flex items-center">
-                        <input
-                           type="radio"
-                           name="horaOption"
-                           value="custom"
-                           checked={horaOption === "custom"}
-                           onChange={() => setHoraOption("custom")}
-                        />
-                        <span className="ml-2">Personalizada</span>
-                     </label>
-                  </div>
-
-                  <div className="hidden" id="customDateTimeContainer">
-                     <InputText
-                        type="datetime-local"
-                        id="customDateTime"
-                        className="w-full md:w-64"
-                     />
-                  </div>
-               </div>
-            </div>
-
             {/* Seção Confirmação */}
             <div className="bg-bee-dark-100 dark:bg-gray-800 rounded-lg p-6">
                <div
@@ -547,22 +475,6 @@ export default function Saida() {
                                  </p>
                               )}
                            </div>
-                        </div>
-                        <div className="mt-4">
-                           <h4 className="font-medium mb-2 italic text-gray-300">
-                              Data/Hora
-                           </h4>
-                           {/* <p>
-                              {document.querySelector(
-                                 'input[name="horaOption"]:checked'
-                              ).value === "now"
-                                 ? "Agora"
-                                 : new Date(
-                                      document.getElementById(
-                                         "customDateTime"
-                                      ).value
-                                   ).toLocaleString()}
-                           </p> */}
                         </div>
                      </div>
                   </div>

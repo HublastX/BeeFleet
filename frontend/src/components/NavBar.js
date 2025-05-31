@@ -56,6 +56,19 @@ const othersItems = [
    },
 ];
 
+const adminItems = [
+   {
+      icon: "trash",
+      name: "apagar",
+      path: "/superDelete",
+   },
+   {
+      icon: "arrowPath",
+      name: "restaurar",
+      path: "/restore",
+   }
+];
+
 const NavBar = () => {
    const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useNavBar();
    const { gestor } = useAuth();
@@ -345,6 +358,30 @@ const NavBar = () => {
                      </h2>
                      <div role="menu" aria-labelledby="menu-outros">
                         {menuItem(othersItems, "others")}
+                     </div>
+                  </div>
+
+                  <div>
+                     <h2
+                        className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
+                           !isExpanded && !isHovered
+                              ? "lg:justify-center"
+                              : "justify-start"
+                        }`}
+                        id="menu-admin"
+                     >
+                        {isExpanded || isHovered || isMobileOpen ? (
+                           "Admin"
+                        ) : (
+                           <Icon
+                              name="reticencias"
+                              className="w-10"
+                              aria-hidden="true"
+                           />
+                        )}
+                     </h2>
+                     <div role="menu" aria-labelledby="menu-admin">
+                        {menuItem(adminItems, "admin")}
                      </div>
                   </div>
                </div>
