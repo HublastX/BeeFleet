@@ -5,6 +5,7 @@ import { useNavBar } from "@/components/navbar/navBarContext";
 import { NavBarProvider } from "@/components/navbar/navBarContext";
 import { metadata } from "./metadata";
 import { ToastProvider } from "@/utils/ToastContext";
+import GTM from "@/utils/GTM";
 
 // componentes
 import Header from "../components/Header";
@@ -19,26 +20,34 @@ const karla = Karla({
 export default function RootLayout({ children }) {
    return (
       <ToastProvider>
-      <NavBarProvider>
-         <html lang="pt-br">
-            <head>
-               <title>{metadata.title}</title>
-               <meta name="description" content={metadata.description} />
-               <meta name="apple-mobile-web-app-title" content="BeeFleet" />
-            </head>
-            <body
-               className={`${karla.variable} antialiased flex row justify-between`}
-            >
-               <div className="min-h-screen xl:flex">
-                  <NavBar />
-               </div>
+         <NavBarProvider>
+            <html lang="pt-br">
+               <head>
+                  <title>{metadata.title}</title>
+                  <meta name="description" content={metadata.description} />
+                  <meta name="apple-mobile-web-app-title" content="BeeFleet" />
+               </head>
+               <body
+                  className={`${karla.variable} antialiased flex row justify-between`}
+               >
+                  <noscript>
+                     <iframe
+                        src={`https://www.googletagmanager.com/ns.html?id=${process.env.NEXT_PUBLIC_GTM_ID}`}
+                        height="0"
+                        width="0"
+                        style={{ display: "none", visibility: "hidden" }}
+                     />
+                  </noscript>
+                  <GTM />
 
-               <MainContent>
-                  {children}
-               </MainContent>
-            </body>
-         </html>
-      </NavBarProvider>
+                  <div className="min-h-screen xl:flex">
+                     <NavBar />
+                  </div>
+
+                  <MainContent>{children}</MainContent>
+               </body>
+            </html>
+         </NavBarProvider>
       </ToastProvider>
    );
 }
