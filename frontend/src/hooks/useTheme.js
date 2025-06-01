@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 export default function useTheme() {
    const [theme, setTheme] = useState(() => {
@@ -10,22 +10,25 @@ export default function useTheme() {
       return "system";
    });
 
-   const getSystemTheme = () => {
+   const getSystemTheme = useCallback(() => {
       return window.matchMedia("(prefers-color-scheme: dark)").matches
          ? "dark"
          : "light";
-   };
+   }, []);
 
-   const updateThemeClass = (newTheme) => {
-      const isDark =
-         newTheme === "dark" ||
-         (newTheme === "system" && getSystemTheme() === "dark");
-      if (isDark) {
-         document.documentElement.classList.add("dark");
-      } else {
-         document.documentElement.classList.remove("dark");
-      }
-   };
+   const updateThemeClass = useCallback(
+      (newTheme) => {
+         const isDark =
+            newTheme === "dark" ||
+            (newTheme === "system" && getSystemTheme() === "dark");
+         if (isDark) {
+            document.documentElement.classList.add("dark");
+         } else {
+            document.documentElement.classList.remove("dark");
+         }
+      },
+      [getSystemTheme]
+   );
 
    useEffect(() => {
       updateThemeClass(theme);
