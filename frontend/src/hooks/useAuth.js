@@ -100,6 +100,7 @@ export default function useAuth() {
          formData.append("email", email);
          formData.append("password", password);
          formData.append("image", image);
+         formData.append("isAdmin", false);
 
          const res = await fetch(`${API_URL}/api/managers/create`, {
             method: "POST",
