@@ -361,7 +361,7 @@ const NavBar = () => {
                      </div>
                   </div>
 
-                  {gestor.isAdmin === true && (
+                  {gestor?.isAdmin === true && (
                      <div>
                         <h2
                            className={`mb-4 text-xs uppercase flex leading-[20px] text-gray-400 ${
