@@ -39,7 +39,7 @@ export default function useTheme() {
 
       mediaQuery.addEventListener("change", handleChange);
       return () => mediaQuery.removeEventListener("change", handleChange);
-   }, [theme]);
+   }, [theme, updateThemeClass]);
 
    const toggleTheme = () => {
       const themeOrder = ["light", "dark", "system"];
