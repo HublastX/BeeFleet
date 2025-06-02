@@ -102,8 +102,7 @@ export default function ReportForm() {
             const startDate = new Date(rangeStart);
             const endDate = new Date(rangeEnd);
             const today = new Date();
-            today.setHours(23, 59, 59, 999); // Define para o final do dia atual
-
+            today.setHours(23, 59, 59, 999);
             if (endDate < startDate) {
                setDateError(
                   "A data final não pode ser menor que a data inicial"

@@ -91,12 +91,12 @@ export default function CarTable({ searchTerm }) {
             />
             <div className="text-center">
                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                  Nenhum carro encontrado
+                  Nenhum veículo encontrado
                </h3>
                <p className="text-gray-500 dark:text-gray-400 mt-1">
                   {searchTerm
                      ? "Tente ajustar sua busca"
-                     : "Adicione um novo carro para começar"}
+                     : "Adicione um novo veículo para começar"}
                </p>
             </div>
          </div>
@@ -121,7 +121,7 @@ export default function CarTable({ searchTerm }) {
                                  }
                                  className="cursor-pointer hover:underline w-fit"
                               >
-                                 Carro
+                                 Veículo
                               </div>
                            </TableCell>
 
@@ -179,7 +179,7 @@ export default function CarTable({ searchTerm }) {
                                        {carro.image ? (
                                           <Image
                                              src={carro.image}
-                                             alt={`Imagem do carro ${carro.model}`}
+                                             alt={`Imagem do veículo ${carro.model}`}
                                              width={100}
                                              height={100}
                                              objectFit="cover"
@@ -210,7 +210,7 @@ export default function CarTable({ searchTerm }) {
                                        {carro.image ? (
                                           <Image
                                              src={carro.image}
-                                             alt={`Imagem do carro ${carro.model}`}
+                                             alt={`Imagem do veículo ${carro.model}`}
                                              width={100}
                                              height={100}
                                              objectFit="cover"
@@ -296,7 +296,7 @@ export default function CarTable({ searchTerm }) {
          {modalAberto && (
             <DeleteConfirmation
                link={confirmarDelete}
-               tipo="carro"
+               tipo="veículo"
                onClose={() => setModalAberto(false)}
             />
          )}

@@ -44,7 +44,7 @@ export default function RecentEvent() {
                            isHeader
                            className="py-3 font-medium text-gray-500 text-start dark:text-gray-400 min-w-[100px]"
                         >
-                           Carro
+                           Veículo
                         </TableCell>
                         <TableCell
                            isHeader
@@ -71,16 +71,14 @@ export default function RecentEvent() {
                            .slice(0, 7)
                            .map((event) => {
                               return (
-                                 <TableRow
-                                    key={event.id}
-                                 >
+                                 <TableRow key={event.id}>
                                     <TableCell className="table-cell py-3 pl-1 max-w-[80px] truncate">
                                        {event.driver?.name ||
                                           "Motorista não informado"}
                                     </TableCell>
                                     <TableCell className="table-cell py-3 max-w-[80px] truncate">
                                        {event.car?.plate ||
-                                          "Carro não informado"}
+                                          "Veículo não informado"}
                                     </TableCell>
                                     <TableCell className="table-cell py-3 max-w-[80px] truncate">
                                        {formatDate(event.createdAt)}

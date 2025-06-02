@@ -131,7 +131,7 @@ export default function EventTable() {
                         isHeader
                         className="px-6 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
                      >
-                        Placa do Carro
+                        Placa do Veículo
                      </TableCell>
                      <TableCell
                         isHeader

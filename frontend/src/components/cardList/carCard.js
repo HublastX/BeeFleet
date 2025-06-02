@@ -51,12 +51,12 @@ export default function CarCard({ searchTerm }) {
                />
                <div className="text-center">
                   <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">
-                     Nenhum carro encontrado
+                     Nenhum veículo encontrado
                   </h3>
                   <p className="text-gray-500 dark:text-gray-400 mt-1">
                      {searchTerm
                         ? "Tente ajustar sua busca"
-                        : "Adicione um novo carro para começar"}
+                        : "Adicione um novo veículo para começar"}
                   </p>
                </div>
             </div>
@@ -91,7 +91,7 @@ export default function CarCard({ searchTerm }) {
                      {car.image ? (
                         <Image
                            src={car.image}
-                           alt={`Foto do carro ${car.model}`}
+                           alt={`Foto do veículo ${car.model}`}
                            fill
                            className="object-cover transition-transform duration-500 group-hover:scale-105"
                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

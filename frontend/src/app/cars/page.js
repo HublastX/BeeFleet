@@ -16,13 +16,13 @@ function Cars() {
       <div>
          <div className="p-2 mb-3 flex flex-row items-center gap-6">
             <Link href="/cars/create">
-            <Btn
-               texto="Novo carro"
-               variant="primary"
-               className="gap-3 text-nowrap ursor-pointer hidden md:flex"
-            >
-               <Icon name="carPlus" className="size-6" />
-            </Btn>
+               <Btn
+                  texto="Novo veículo"
+                  variant="primary"
+                  className="gap-3 text-nowrap cursor-pointer hidden md:flex"
+               >
+                  <Icon name="carPlus" className="size-6" />
+               </Btn>
             </Link>
             <div className="w-full md:flex-1">
                <InputText
@@ -50,7 +50,10 @@ function Cars() {
          </div>
 
          <div className="md:hidden flex">
-            <Link href="/cars/create"  className="fixed bottom-0 right-0 m-4 z-50 p-6 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300">
+            <Link
+               href="/cars/create"
+               className="fixed bottom-0 right-0 m-4 z-50 p-6 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300"
+            >
                <Icon name="carPlus" className="size-6" />
             </Link>
          </div>

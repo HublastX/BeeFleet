@@ -125,7 +125,7 @@ export default function DetailCarTable() {
       </div>
    ) : (
       <div className="text-center text-bee-dark-600 dark:text-bee-alert-500 py-4">
-         Ainda não há nenhum evento registrado com este carro.
+         Ainda não há nenhum evento registrado com este veículo.
       </div>
    );
 }
