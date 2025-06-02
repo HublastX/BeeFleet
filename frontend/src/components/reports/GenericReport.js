@@ -806,7 +806,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                   ? "Gestor: "
                                   : filters.filterType === "event"
                                     ? "Evento: "
-                                    : "5 últimas adições"}
+                                    : "Tudo"}
                            {getItemInfo()}
                         </p>
                      </div>
