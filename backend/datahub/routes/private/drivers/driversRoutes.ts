@@ -5,6 +5,7 @@ import { getDriver } from "../../../controllers/drivers/getDriver";
 import { getAllDrivers } from "../../../controllers/drivers/getAllDriver";
 import { putDriver } from "../../../controllers/drivers/putDriver";
 import { deleteDriver } from "../../../controllers/drivers/deleteDriver";
+import { softDeleteDriver } from "../../../controllers/managers/softDeletes/softDeleteDriver";
 import { authenticateManager } from "../../../middlewares/auth";
 import { validate } from "../../../middlewares/validate";
 import {
@@ -12,7 +13,6 @@ import {
     updateDriverSchema,
 } from "../../../schemas/driverInterface";
 import { createImageUploader } from "./../../../config/storage/storage";
-import { softDeleteDriver } from "../../../controllers/managers/softDeleteController";
 
 export const uploadDriverImage = createImageUploader("uploads/drivers");
 const driverRoutes: Router = express.Router();

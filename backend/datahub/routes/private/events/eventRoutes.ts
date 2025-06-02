@@ -5,8 +5,8 @@ import { getEvent } from "../../../controllers/events/getEvent";
 import { getAllEvents } from "../../../controllers/events/getAllEvent";
 import { putEvent } from "../../../controllers/events/putEvent";
 import { deleteEvent } from "../../../controllers/events/deleteEvent";
+import { softDeleteEvent } from "../../../controllers/managers/softDeletes/softDeleteEvent";
 import { authenticateManager } from "../../../middlewares/auth";
-import { softDeleteEvent } from "../../../controllers/managers/softDeleteController";
 
 const eventRoutes: Router = express.Router();
 

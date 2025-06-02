@@ -5,15 +5,17 @@ import { getCar } from "../../../controllers/cars/getCar";
 import { getAllCars } from "../../../controllers/cars/getAllCar";
 import { putCar } from "../../../controllers/cars/putCar";
 import { deleteCar } from "../../../controllers/cars/deleteCar";
+import { softDeleteCar } from "../../../controllers/managers/softDeletes/softDeleteCar";
 import { authenticateManager } from "../../../middlewares/auth";
-import { CreateCarRequestBody } from "../../../schemas/carInterface";
 import { validate } from "../../../middlewares/validate";
-import { carSchema, updateCarSchema } from "../../../schemas/carInterface";
-import { softDeleteCar } from "../../../controllers/managers/softDeleteController";
+import {
+    carSchema,
+    updateCarSchema
+} from "../../../schemas/carInterface";
 import { createImageUploader } from "./../../../config/storage/storage";
+import { CreateCarRequestBody } from "../../../schemas/carInterface";
 
 export const uploadCarImage = createImageUploader("uploads/cars");
-
 const carRoutes: Router = express.Router();
 
 carRoutes.post(
