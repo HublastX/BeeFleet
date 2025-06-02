@@ -230,7 +230,7 @@ export default function UserTable({ searchTerm }) {
                            </Link>
                         </TableCell>
 
-                        <TableCell className="shadow-lg lg:shadow-none py-3 text-center bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-0">
+                        <TableCell className="shadow-lg lg:shadow-none py-3 text-center bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-0 border-l border-bee-dark-300 dark:border-bee-dark-400">
                            <button
                               onClick={() => abrirModalDeletar(motorista)}
                               className="inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-bee-alert-400 dark:hover:bg-bee-dark-700 transition-colors"
