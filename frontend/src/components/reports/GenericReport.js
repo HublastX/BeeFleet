@@ -201,7 +201,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
             if (!manager) return null;
             return (
                <div className="mb-8">
-                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-200">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-300">
                      <div className="p-2 bg-bee-dark-100 rounded-lg">
                         <Icon
                            name="gestor"
@@ -275,7 +275,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
 
             return (
                <div className="mb-8">
-                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-200">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-300">
                      <div className="p-2 bg-bee-dark-100 rounded-lg">
                         <Icon
                            name="user"
@@ -347,7 +347,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
 
             return (
                <div className="mb-8">
-                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-200">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-300">
                      <div className="p-2 bg-bee-dark-100 rounded-lg">
                         <Icon name="car" className="size-8 text-bee-dark-600" />
                      </div>
@@ -417,7 +417,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
 
             return (
                <div className="mb-8">
-                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-200">
+                  <div className="flex items-center gap-3 mb-6 pb-4 border-b border-bee-dark-300">
                      <div className="p-2 bg-bee-dark-100 rounded-lg">
                         <Icon
                            name="eventoL"
@@ -723,7 +723,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
    };
 
    return (
-      <div className="print-area bg-white text-black h-full w-full">
+      <div className="print-area h-full w-full print:text-black">
          <div className="flex gap-3 print:hidden mb-10 w-full justify-end">
             <button
                onClick={exportExcel}
@@ -734,7 +734,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
             </button>
             <button
                onClick={handlePrint}
-               className="flex items-center gap-2 px-4 py-2 bg-bee-dark-600 hover:bg-bee-dark-700 text-white rounded-lg transition-colors"
+               className="flex items-center gap-2 px-4 py-2 bg-bee-dark-600 hover:bg-bee-dark-700 text-white dark:bg-bee-dark-100 dark:text-bee-dark-600 dark:hover:bg-bee-alert-500 rounded-lg transition-colors"
             >
                <Icon name="reports" className="size-5" />
                <span>Imprimir Relatório</span>
@@ -862,7 +862,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         Itens Excluídos
                      </h2>
                      <div className="grid grid-cols-3 gap-4">
-                        <div className="p-4 rounded-lg border bg-red-50">
+                        <div className="p-4 rounded-lg border ">
                            <p className="text-sm text-red-700">
                               Motoristas excluídos
                            </p>
@@ -871,7 +871,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                  0}
                            </p>
                         </div>
-                        <div className="p-4 rounded-lg border bg-red-50">
+                        <div className="p-4 rounded-lg border">
                            <p className="text-sm text-red-700">
                               Veículos excluídos
                            </p>
@@ -879,7 +879,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               {getFilteredGlobalStats().totalDeletedCars || 0}
                            </p>
                         </div>
-                        <div className="p-4 rounded-lg border bg-red-50">
+                        <div className="p-4 rounded-lg border">
                            <p className="text-sm text-red-700">
                               Eventos excluídos
                            </p>
@@ -897,8 +897,8 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                      </h2>
                      <div className="overflow-x-auto">
                         {getActiveManagers().length > 0 ? (
-                           <table className="min-w-full divide-y divide-gray-200">
-                              <thead className="bg-gray-50">
+                           <table className="min-w-full divide-y print:divide-gray-200 divide-gray-200 dark:divide-gray-700">
+                              <thead className=" bg-gray-50 dark:bg-gray-800 print:bg-gray-50">
                                  <tr>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                        Nome
@@ -925,7 +925,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                           new Date(b.createdAt) -
                                           new Date(a.createdAt)
                                     )
-                                    .slice(0, 5)
                                     .map((manager) => (
                                        <tr key={manager.id}>
                                           <td className="px-6 py-4 whitespace-nowrap">
@@ -990,7 +989,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                           new Date(b.createdAt) -
                                           new Date(a.createdAt)
                                     )
-                                    .slice(0, 5)
                                     .map((driver) => (
                                        <tr key={driver.id}>
                                           <td className="px-6 py-4 whitespace-nowrap">
@@ -1055,7 +1053,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                           new Date(b.createdAt) -
                                           new Date(a.createdAt)
                                     )
-                                    .slice(0, 5)
                                     .map((car) => (
                                        <tr key={car.id}>
                                           <td className="px-6 py-4 whitespace-nowrap">
@@ -1128,7 +1125,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                           new Date(b.createdAt) -
                                           new Date(a.createdAt)
                                     )
-                                    .slice(0, 5)
                                     .map((event) => (
                                        <tr key={event.id}>
                                           <td className="px-6 py-4 whitespace-nowrap">
