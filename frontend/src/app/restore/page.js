@@ -43,8 +43,12 @@ const Restore = () => {
                break;
             case "cars":
                const cars = getDeletedCars();
-               console.log(getDeletedCars());
-               setItems(cars);
+               setItems(
+                  cars.map((car) => ({
+                     id: car.id,
+                     name: `${car.brand} ${car.model} - ${car.plate}`,
+                  }))
+               );
                break;
             case "events":
                const events = getDeletedEvent();
