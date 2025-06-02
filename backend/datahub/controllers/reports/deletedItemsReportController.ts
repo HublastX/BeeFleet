@@ -3,8 +3,10 @@ import { Request, Response } from "express";
 
 const prisma = new PrismaClient();
 
-// Obter relatório de todos os carros excluídos
-export const getDeletedCarsReport = async (req: Request, res: Response) => {
+export const getDeletedCarsReport = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const { managerId } = req.query;
 
@@ -45,7 +47,6 @@ export const getDeletedCarsReport = async (req: Request, res: Response) => {
     }
 };
 
-// Obter relatório de todos os motoristas excluídos
 export const getDeletedDriversReport = async (req: Request, res: Response) => {
     try {
         const { managerId } = req.query;
@@ -87,7 +88,6 @@ export const getDeletedDriversReport = async (req: Request, res: Response) => {
     }
 };
 
-// Obter relatório de todos os eventos excluídos
 export const getDeletedEventsReport = async (req: Request, res: Response) => {
     try {
         const { managerId } = req.query;
@@ -144,7 +144,6 @@ export const getDeletedEventsReport = async (req: Request, res: Response) => {
     }
 };
 
-// Obter relatório completo de todos os itens excluídos
 export const getAllDeletedItemsReport = async (req: Request, res: Response) => {
     try {
         const { managerId } = req.query;
@@ -154,7 +153,6 @@ export const getAllDeletedItemsReport = async (req: Request, res: Response) => {
             ...(managerId ? { managerId: String(managerId) } : {}),
         };
 
-        // Buscar todos os dados em paralelo
         const [deletedCars, deletedDrivers, deletedEvents] = await Promise.all([
             prisma.car.findMany({
                 where: whereClause,

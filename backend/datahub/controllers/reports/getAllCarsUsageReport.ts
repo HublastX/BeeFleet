@@ -6,7 +6,10 @@ import {
     DriverUsageDetail,
 } from "../../schemas/reportInterface";
 
-export const getAllCarsUsageReport = async (req: Request, res: Response) => {
+export const getAllCarsUsageReport = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const cars: Car[] = await prisma.car.findMany({
             include: {
@@ -17,7 +20,7 @@ export const getAllCarsUsageReport = async (req: Request, res: Response) => {
                         }
                     },
                     include: { driver: true },
-                    orderBy: { createdAt: "asc" }, // ordena do mais antigo ao mais novo
+                    orderBy: { createdAt: "asc" },
                 },
             },
         });

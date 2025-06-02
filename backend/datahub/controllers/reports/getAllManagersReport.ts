@@ -1,22 +1,23 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
-import { ManagerReport } from "../../schemas/reportInterface";
+import {
+    ManagerReport
+} from "../../schemas/reportInterface";
 
-export const getAllManagersReport = async (req: Request, res: Response) => {
+export const getAllManagersReport = async (
+    req: Request,
+    res: Response
+) => {
     try {
-        // Buscar todos os gestores - incluir todos os relacionamentos para depuração
         const managers = await prisma.manager.findMany();
 
         console.log(`Total de gestores encontrados: ${managers.length}`);
 
-        // Lista para armazenar os relatórios de cada gestor
         const managersReport: ManagerReport[] = [];
 
-        // Para cada gestor, busque todos os seus dados relacionados
         for (const manager of managers) {
             console.log(`Processando gestor: ${manager.name} (${manager.id})`);
 
-            // Buscar todos os motoristas deste gestor
             const drivers = await prisma.driver.findMany({
                 where: {
                     managerId: manager.id,

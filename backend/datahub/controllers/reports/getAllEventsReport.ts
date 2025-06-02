@@ -4,7 +4,10 @@ import {
     EventReport
 } from "../../schemas/reportInterface";
 
-export const getAllEventsReport = async (req: Request, res: Response) => {
+export const getAllEventsReport = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const events = await prisma.event.findMany({
             include: {
