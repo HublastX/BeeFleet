@@ -6,6 +6,7 @@ import { getAllEvents } from "../../../controllers/events/getAllEvent";
 import { putEvent } from "../../../controllers/events/putEvent";
 import { deleteEvent } from "../../../controllers/events/deleteEvent";
 import { authenticateManager } from "../../../middlewares/auth";
+import { softDeleteEvent } from "../../../controllers/managers/softDeleteController";
 
 const eventRoutes: Router = express.Router();
 
@@ -61,4 +62,19 @@ eventRoutes.delete(
     deleteEvent as (req: Request, res: Response) => void
 );
 
+eventRoutes.patch(
+    "/event/:id/soft-delete",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    async (req: Request, res: Response) => {
+        try {
+            await softDeleteEvent(req, res);
+        } catch (error) {
+            res.status(500).send({ error: "Internal Server Error" });
+        }
+    }
+);
 export default eventRoutes;

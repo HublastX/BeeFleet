@@ -12,6 +12,7 @@ import {
     updateDriverSchema,
 } from "../../../schemas/driverInterface";
 import { createImageUploader } from "./../../../config/storage/storage";
+import { softDeleteDriver } from "../../../controllers/managers/softDeleteController";
 
 export const uploadDriverImage = createImageUploader("uploads/drivers");
 const driverRoutes: Router = express.Router();
@@ -70,4 +71,19 @@ driverRoutes.delete(
     deleteDriver as (req: Request, res: Response) => void
 );
 
+driverRoutes.patch(
+    "/driver/:id/soft-delete",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    async (req: Request, res: Response) => {
+        try {
+            await softDeleteDriver(req, res);
+        } catch (error) {
+            res.status(500).send({ error: "Internal Server Error" });
+        }
+    }
+);
 export default driverRoutes;

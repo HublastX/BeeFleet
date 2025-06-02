@@ -9,7 +9,7 @@ import { authenticateManager } from "../../../middlewares/auth";
 import { CreateCarRequestBody } from "../../../schemas/carInterface";
 import { validate } from "../../../middlewares/validate";
 import { carSchema, updateCarSchema } from "../../../schemas/carInterface";
-
+import { softDeleteCar } from "../../../controllers/managers/softDeleteController";
 import { createImageUploader } from "./../../../config/storage/storage";
 
 export const uploadCarImage = createImageUploader("uploads/cars");
@@ -74,4 +74,19 @@ carRoutes.delete(
     deleteCar as (req: Request, res: Response) => void
 );
 
+carRoutes.patch(
+    "/car/:id/soft-delete",
+    authenticateManager as (
+        req: Request,
+        res: Response,
+        next: NextFunction
+    ) => void,
+    async (req: Request, res: Response) => {
+        try {
+            await softDeleteCar(req, res);
+        } catch (error) {
+            res.status(500).send({ error: "Internal Server Error" });
+        }
+    }
+);
 export default carRoutes;

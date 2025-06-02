@@ -169,6 +169,64 @@ export const DOCS_SOFT_DELETE = {
      *       500:
      *         description: Erro interno do servidor
      *
+     * /api/managers/soft-delete/{id}:
+     *   patch:
+     *     summary: Oculta um gestor (soft delete)
+     *     description: Marca um gestor como ocultado, mas mantém os dados no sistema para relatórios. Apenas administradores podem realizar esta operação.
+     *     tags:
+     *       - Data Management
+     *     parameters:
+     *       - in: path
+     *         name: id
+     *         required: true
+     *         schema:
+     *           type: string
+     *         description: ID do gestor a ser ocultado
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               adminId:
+     *                 type: string
+     *                 description: ID do administrador que está ocultando o gestor
+     *               reason:
+     *                 type: string
+     *                 description: Motivo pelo qual o gestor está sendo ocultado
+     *     responses:
+     *       200:
+     *         description: Gestor ocultado com sucesso
+     *         content:
+     *           application/json:
+     *             schema:
+     *               type: object
+     *               properties:
+     *                 message:
+     *                   type: string
+     *                 success:
+     *                   type: boolean
+     *                 managerId:
+     *                   type: string
+     *                 managerName:
+     *                   type: string
+     *                 deletedById:
+     *                   type: string
+     *                 deletedAt:
+     *                   type: string
+     *                   format: date-time
+     *                 canBeRestored:
+     *                   type: boolean
+     *       400:
+     *         description: Requisição inválida
+     *       403:
+     *         description: Permissão negada. Apenas administradores podem ocultar gestores.
+     *       404:
+     *         description: Gestor não encontrado
+     *       500:
+     *         description: Erro interno do servidor
+     *
      * /api/restore/{itemType}/{itemId}:
      *   patch:
      *     summary: Restaura um item previamente ocultado
@@ -181,8 +239,8 @@ export const DOCS_SOFT_DELETE = {
      *         required: true
      *         schema:
      *           type: string
-     *           enum: [car, driver, event]
-     *         description: Tipo do item a ser restaurado (car, driver ou event)
+     *           enum: [car, driver, event, manager]
+     *         description: Tipo do item a ser restaurado (car, driver, event ou manager)
      *       - in: path
      *         name: itemId
      *         required: true
@@ -222,6 +280,8 @@ export const DOCS_SOFT_DELETE = {
      *                   format: date-time
      *       400:
      *         description: Requisição inválida
+     *       403:
+     *         description: Permissão negada. Para restaurar gestores, é necessário ser administrador.
      *       404:
      *         description: Item não encontrado
      *       500:

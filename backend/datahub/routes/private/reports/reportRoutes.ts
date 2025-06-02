@@ -117,68 +117,7 @@ reportRoutes.get(
     }
 );
 
-reportRoutes.patch(
-    "/car/:id/soft-delete",
-    authenticateManager as (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => void,
-    async (req: Request, res: Response) => {
-        try {
-            await softDeleteCar(req, res);
-        } catch (error) {
-            res.status(500).send({ error: "Internal Server Error" });
-        }
-    }
-);
-
-reportRoutes.patch(
-    "/driver/:id/soft-delete",
-    authenticateManager as (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => void,
-    async (req: Request, res: Response) => {
-        try {
-            await softDeleteDriver(req, res);
-        } catch (error) {
-            res.status(500).send({ error: "Internal Server Error" });
-        }
-    }
-);
-
-reportRoutes.patch(
-    "/event/:id/soft-delete",
-    authenticateManager as (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => void,
-    async (req: Request, res: Response) => {
-        try {
-            await softDeleteEvent(req, res);
-        } catch (error) {
-            res.status(500).send({ error: "Internal Server Error" });
-        }
-    }
-);
-
-reportRoutes.patch(
-    "/restore/:itemType/:itemId",
-    authenticateManager as (
-        req: Request,
-        res: Response,
-        next: NextFunction
-    ) => void,
-    async (req: Request, res: Response) => {
-        try {
-            await restoreDeletedItem(req, res);
-        } catch (error) {
-            res.status(500).send({ error: "Internal Server Error" });
-        }
-    }
-);
+reportRoutes.get("/all-managers", getAllManagersReport);
+reportRoutes.get("/complete-report", getCompleteManagersReport);
 
 export default reportRoutes;

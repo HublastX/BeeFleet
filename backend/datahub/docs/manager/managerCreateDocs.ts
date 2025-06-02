@@ -2,13 +2,13 @@ export const DOCS_MANAGER_CREATE = {
     /**
      * @swagger
      * tags:
-     *   - name: Manager
+     *   - name: Auth
      *     description: Endpoints para gestão de administradores
      *
      * /api/managers/create:
      *   post:
      *     tags:
-     *       - Manager
+     *       - Auth
      *     summary: Cria um novo gestor
      *     description: Cria um novo gestor com nome, e-mail, senha e imagem opcional
      *     consumes:
