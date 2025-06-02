@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import useAuth from "@/hooks/useAuth";
 import useDrivers from "@/hooks/useDrivers";
 import useEvent from "@/hooks/useEvent";
@@ -9,16 +10,17 @@ import ConfirmRestoreModal from "@/components/ConfirmRestoreModal";
 import AdminSkeleton from "@/elements/ui/skeleton/AdminSkeleton";
 
 const Restore = () => {
-   const { gestores } = useAuth();
-   const { motoristas, restoreDriver } = useDrivers();
-   const { carro, restoreCar } = useCar();
-   const { events, restoreEvent } = useEvent();
+   const { gestor } = useAuth();
+   const { getDeletedDrivers, restoreDriver } = useDrivers();
+   const { getDeletedCars, restoreCar } = useCar();
+   const { getDeletedEvent, restoreEvent } = useEvent();
 
    const [selectedType, setSelectedType] = useState("");
    const [items, setItems] = useState([]);
    const [loading, setLoading] = useState(false);
    const [error, setError] = useState("");
    const [itemToRestore, setItemToRestore] = useState(null);
+   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
    const router = useRouter();
 
    const dataTypes = [
@@ -27,36 +29,29 @@ const Restore = () => {
       { value: "events", label: "Eventos" },
    ];
 
-   const handleTypeChange = (type) => {
+   const handleTypeChange = async (type) => {
       setSelectedType(type);
       setError("");
+      setIsDropdownOpen(false);
+      setLoading(true);
 
-      switch (type) {
-         case "drivers":
-            setItems(
-               motoristas
-                  .filter((m) => m.deletedAt)
-                  .map((m) => ({
-                     id: m.id,
-                     name: m.name,
-                  }))
-            );
-            break;
-         case "cars":
-            setItems(
-               carro
-                  .filter((c) => c.deletedAt)
-                  .map((c) => ({
-                     id: c.id,
-                     name: c.plate,
-                  }))
-            );
-            break;
-         case "events":
-            setItems(
-               events
-                  .filter((e) => e.deletedAt)
-                  .map((e) => {
+      try {
+         switch (type) {
+            case "drivers":
+               const drivers = getDeletedDrivers();
+               setItems(drivers);
+               break;
+            case "cars":
+               const cars = getDeletedCars();
+               console.log(getDeletedCars());
+               setItems(cars);
+               break;
+            case "events":
+               const events = getDeletedEvent();
+               const motoristas = getDeletedDrivers();
+               const carro = getDeletedCars();
+               setItems(
+                  events.map((e) => {
                      const driver = motoristas.find((m) => m.id === e.driverId);
                      const car = carro.find((c) => c.id === e.carId);
                      return {
@@ -64,10 +59,16 @@ const Restore = () => {
                         name: `${driver?.name || "Motorista removido"} - ${car?.plate || "Carro removido"}`,
                      };
                   })
-            );
-            break;
-         default:
-            setItems([]);
+               );
+               break;
+            default:
+               setItems([]);
+         }
+      } catch (err) {
+         setError("Erro ao carregar itens deletados");
+         console.error(err);
+      } finally {
+         setLoading(false);
       }
    };
 
@@ -94,7 +95,7 @@ const Restore = () => {
                throw new Error("Tipo inválido");
          }
 
-         setItems(items.filter((item) => item.id !== itemToRestore));
+         handleTypeChange(selectedType);
          setItemToRestore(null);
       } catch (err) {
          console.error("Erro na restauração:", err);
@@ -117,122 +118,202 @@ const Restore = () => {
       }
    };
 
+   if (gestor?.isAdmin === false) {
+      return router.push("404");
+   }
+
    return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-12">
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-               <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
-                  Restore
-               </h1>
-               <p className="text-lg text-gray-600 dark:text-gray-300">
-                  Restauração de itens excluídos
-               </p>
-            </div>
+      <div>
+         {gestor?.isAdmin === true && (
+            <div className="max-w-7xl mx-auto">
+               <header className="mb-12 text-center">
+                  <motion.h1
+                     initial={{ opacity: 0, y: -20 }}
+                     animate={{ opacity: 1, y: 0 }}
+                     className="text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-3"
+                  >
+                     Restaurar Itens
+                  </motion.h1>
+                  <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                     Área administrativa para restaurar itens excluídos do
+                     sistema
+                  </p>
+               </header>
 
-            {itemToRestore && (
-               <ConfirmRestoreModal
-                  tipo={getTipoLabel()}
-                  link={confirmRestore}
-                  onClose={() => setItemToRestore(null)}
-               />
-            )}
+               <AnimatePresence>
+                  {itemToRestore && (
+                     <ConfirmRestoreModal
+                        tipo={getTipoLabel()}
+                        link={confirmRestore}
+                        onClose={() => setItemToRestore(null)}
+                     />
+                  )}
+               </AnimatePresence>
 
-            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
-               <div className="mb-8">
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
-                     Selecione o tipo de dado
-                  </h2>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                     {dataTypes.map((type) => (
-                        <button
-                           key={type.value}
-                           onClick={() => handleTypeChange(type.value)}
-                           className={`p-6 rounded-xl transition-all transform hover:scale-105 flex flex-col items-center justify-center space-y-2 ${
-                              selectedType === type.value
-                                 ? "bg-gradient-to-r from-yellow-300 to-yellow-500 text-white shadow-lg"
-                                 : "bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white hover:shadow-md"
-                           }`}
+               <div className="bg-bee-dark-100 dark:bg-gray-800 rounded-2xl shadow-lg overflow-hidden">
+                  <div className="p-6 md:p-8">
+                     <div className="mb-8">
+                        <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+                           Selecione o tipo de dado
+                        </h2>
+
+                        {/* Mobile Dropdown */}
+                        <div className="md:hidden relative mb-6">
+                           <button
+                              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                              className="w-full flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-800 dark:text-white"
+                           >
+                              <span>
+                                 {selectedType
+                                    ? dataTypes.find(
+                                         (t) => t.value === selectedType
+                                      )?.label
+                                    : "Selecione um tipo"}
+                              </span>
+                              <span
+                                 className={`transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
+                              >
+                                 ▼
+                              </span>
+                           </button>
+
+                           <AnimatePresence>
+                              {isDropdownOpen && (
+                                 <motion.div
+                                    initial={{ opacity: 0, height: 0 }}
+                                    animate={{ opacity: 1, height: "auto" }}
+                                    exit={{ opacity: 0, height: 0 }}
+                                    className="absolute z-10 w-full mt-2 bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden"
+                                 >
+                                    {dataTypes.map((type) => (
+                                       <button
+                                          key={type.value}
+                                          onClick={() =>
+                                             handleTypeChange(type.value)
+                                          }
+                                          className={`w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-600 ${
+                                             selectedType === type.value
+                                                ? "bg-gray-200 dark:bg-gray-600"
+                                                : ""
+                                          }`}
+                                       >
+                                          {type.label}
+                                       </button>
+                                    ))}
+                                 </motion.div>
+                              )}
+                           </AnimatePresence>
+                        </div>
+
+                        {/* Desktop Tabs */}
+                        <div className="hidden md:grid grid-cols-3 gap-4">
+                           {dataTypes.map((type) => (
+                              <motion.button
+                                 key={type.value}
+                                 whileHover={{ scale: 1.02 }}
+                                 whileTap={{ scale: 0.98 }}
+                                 onClick={() => handleTypeChange(type.value)}
+                                 className={`p-5 rounded-xl transition-all ${
+                                    selectedType === type.value
+                                       ? "bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg"
+                                       : "bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white hover:shadow-md"
+                                 }`}
+                              >
+                                 <span className="font-medium block text-center">
+                                    {type.label}
+                                 </span>
+                              </motion.button>
+                           ))}
+                        </div>
+                     </div>
+
+                     {error && (
+                        <motion.div
+                           initial={{ opacity: 0, y: -10 }}
+                           animate={{ opacity: 1, y: 0 }}
+                           className="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border-l-4 border-red-500 text-red-700 dark:text-red-300 rounded-lg"
                         >
-                           {type.label}
-                        </button>
-                     ))}
+                           <p className="font-medium">Erro ao processar</p>
+                           <p>{error}</p>
+                        </motion.div>
+                     )}
+
+                     {loading ? (
+                        <AdminSkeleton />
+                     ) : (
+                        selectedType && (
+                           <motion.div
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700"
+                           >
+                              <div className="overflow-x-auto">
+                                 <table className="w-full">
+                                    <thead className="bg-gray-50 dark:bg-gray-700">
+                                       <tr>
+                                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                             ID
+                                          </th>
+                                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                             Nome
+                                          </th>
+                                          <th className="px-6 py-4 text-right text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                             Ações
+                                          </th>
+                                       </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                       {items.length > 0 ? (
+                                          items.map((item) => (
+                                             <tr
+                                                key={item.id}
+                                                className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                                             >
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600 dark:text-gray-300">
+                                                   {item.id}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
+                                                   {item.name}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
+                                                   <motion.button
+                                                      whileHover={{
+                                                         scale: 1.05,
+                                                      }}
+                                                      whileTap={{ scale: 0.95 }}
+                                                      onClick={() =>
+                                                         handleRestore(item.id)
+                                                      }
+                                                      className="px-4 py-2 rounded-lg text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 transition-colors focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2"
+                                                      disabled={loading}
+                                                   >
+                                                      {loading
+                                                         ? "Processando..."
+                                                         : "Restaurar"}
+                                                   </motion.button>
+                                                </td>
+                                             </tr>
+                                          ))
+                                       ) : (
+                                          <tr>
+                                             <td
+                                                colSpan="3"
+                                                className="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400"
+                                             >
+                                                Nenhum item excluído encontrado
+                                             </td>
+                                          </tr>
+                                       )}
+                                    </tbody>
+                                 </table>
+                              </div>
+                           </motion.div>
+                        )
+                     )}
                   </div>
                </div>
-
-               {loading ? (
-                  <AdminSkeleton />
-               ) : (
-                  selectedType && (
-                     <div className="overflow-hidden rounded-xl border border-gray-200 dark:border-gray-600">
-                        <table className="w-full">
-                           <thead>
-                              <tr className="bg-gray-50 dark:bg-gray-700">
-                                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                                    ID
-                                 </th>
-                                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                                    Nome
-                                 </th>
-                                 <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900 dark:text-white">
-                                    Ações
-                                 </th>
-                              </tr>
-                           </thead>
-                           <tbody className="divide-y divide-gray-200 dark:divide-gray-600">
-                              {items.length > 0 ? (
-                                 items.map((item) => (
-                                    <tr
-                                       key={item.id}
-                                       className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-                                    >
-                                       <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
-                                          {item.id}
-                                       </td>
-                                       <td className="px-6 py-4 text-sm text-gray-900 dark:text-white">
-                                          {item.name}
-                                       </td>
-                                       <td className="px-6 py-4">
-                                          <button
-                                             onClick={() =>
-                                                handleRestore(item.id)
-                                             }
-                                             className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium text-white bg-emerald-500 hover:bg-emerald-600 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-                                          >
-                                             <svg
-                                                className="w-4 h-4 mr-2"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                viewBox="0 0 24 24"
-                                             >
-                                                <path
-                                                   strokeLinecap="round"
-                                                   strokeLinejoin="round"
-                                                   strokeWidth="2"
-                                                   d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                                                />
-                                             </svg>
-                                             Restaurar
-                                          </button>
-                                       </td>
-                                    </tr>
-                                 ))
-                              ) : (
-                                 <tr>
-                                    <td
-                                       colSpan="3"
-                                       className="px-6 py-8 text-center text-sm text-gray-500 dark:text-gray-400"
-                                    >
-                                       Nenhum item encontrado
-                                    </td>
-                                 </tr>
-                              )}
-                           </tbody>
-                        </table>
-                     </div>
-                  )
-               )}
             </div>
-         </div>
+         )}
       </div>
    );
 };
