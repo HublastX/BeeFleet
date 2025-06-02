@@ -1,19 +1,20 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
 
-export const getEvents = async (req: Request, res: Response) => {
+export const getEvents = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const { managerId, showDeleted } = req.query;
         const showDeletedParam = showDeleted === "true";
 
         let whereClause: any = {};
 
-        // Filtrar por gestor se informado
         if (managerId) {
             whereClause.managerId = managerId as string;
         }
 
-        // Por padrão, excluir os "deletados" a menos que showDeleted seja true
         if (!showDeletedParam) {
             whereClause.deletedById = null;
         }
@@ -60,7 +61,6 @@ export const getEvents = async (req: Request, res: Response) => {
             },
         });
 
-        // Adicionar informação visual de status para cada evento
         const eventsWithStatus = events.map((event) => ({
             ...event,
             displayStatus: event.deletedById
@@ -72,12 +72,10 @@ export const getEvents = async (req: Request, res: Response) => {
                 : event.status === "COMPLETED"
                 ? "COMPLETED"
                 : "CANCELLED",
-            // Adicionar nome do gestor que excluiu, se aplicável
             deletedByName:
                 event.deletedById && event.deletedBy
                     ? event.deletedBy.name
                     : null,
-            // Adicionar informações formatadas do carro e motorista
             driverInfo: event.driver
                 ? `${event.driver.name} (${event.driver.license})`
                 : "N/A",
