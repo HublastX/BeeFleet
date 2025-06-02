@@ -111,7 +111,12 @@ export default function ManagersTable() {
                                     <Icon name="UserCircle" />
                                  </div>
                               )}
-                              {gestor.name}
+                              <div className="flex flex-col">
+                                 {gestor.name}
+                                 <span className="text-xs text-gray-500">
+                                    {gestor.isAdmin ? "Administrador" : ""}
+                                 </span>
+                              </div>
                            </div>
                         </TableCell>
                         <TableCell className="px-3 py-2 sm:px-4 sm:py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 whitespace-nowrap">
