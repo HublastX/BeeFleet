@@ -1,5 +1,5 @@
-import { EventType } from "@prisma/client";
 import { prisma } from "../../config/prisma";
+import { EventType } from "@prisma/client";
 import { parseISO } from "date-fns";
 import {
     DriverUsageReportRequest,
@@ -10,7 +10,10 @@ import {
     DriverUsageReport,
 } from "../../schemas/reportInterface";
 
-export const getDriverUsageReport = async (req, res) => {
+export const getDriverUsageReport = async (
+    req,
+    res
+) => {
     try {
         const { startDate, endDate, driverId, managerId } =
             req.query as DriverUsageReportRequest;

@@ -1,6 +1,8 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
-import { ManagerGlobalReport } from "../../schemas/reportInterface";
+import {
+    ManagerGlobalReport
+} from "../../schemas/reportInterface";
 
 export const getCompleteManagersReport = async (
     req: Request,
