@@ -7,6 +7,7 @@ import { useCallback } from "react";
 export default function useCar() {
    const { gestor } = useAuth();
    const [carro, setCarro] = useState([]);
+   const [carroDeletado, setCarroDeletado] = useState([]);
    const [carregando, setCarregando] = useState(true);
    const [erro, setErro] = useState(null);
    const router = useRouter();
@@ -67,6 +68,9 @@ export default function useCar() {
             const carroAtivo = data.data.filter(
                (carro) => carro.deletedAt === null
             );
+            const carroDeletado = data.data.filter(
+               (carro) => carro.deletedAt !== null
+            );
 
             const carroFormatado = carroAtivo.map((carro) => ({
                ...carro,
@@ -78,6 +82,7 @@ export default function useCar() {
             }));
 
             setCarro(carroFormatado);
+            setCarroDeletado(carroDeletado);
          } catch (err) {
             console.error("Erro na requisição:", err);
             setErro(err.message);
@@ -404,6 +409,11 @@ export default function useCar() {
       }
    };
 
+   // Obter carros deletados
+   const getDeletedCars = useCallback(() => {
+      return carroDeletado.filter((car) => car.deletedAt !== null);
+   }, [carroDeletado]);
+
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
       const toastType = localStorage.getItem("toastType");
@@ -431,6 +441,7 @@ export default function useCar() {
       getCar,
       updateCar,
       getCarByManager,
+      getDeletedCars,
       countCarsByManager: getCarByManager().length,
    };
 }

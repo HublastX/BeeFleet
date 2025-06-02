@@ -28,7 +28,7 @@ function formatDate(dateISO) {
 
 function DriverPage() {
    const { id } = useParams();
-   const { getDriver, carregando, erro, deleteDriver } = useDrivers();
+   const { getDriver, carregando, erro, deleteDriver, getDeletedDrivers } = useDrivers();
    const [driver, setDriver] = useState(null);
    const { gestores } = useAuth();
    const { carro } = useCar();
@@ -80,6 +80,49 @@ function DriverPage() {
             console.error("Erro ao deletar motorista:", error);
          }
       }
+   }
+
+   const deletedDrivers = getDeletedDrivers();
+   const MotoristaDeletado = deletedDrivers.find((c) => c.id === id);
+
+   if (MotoristaDeletado) {
+      return (
+         <div className=" flex items-center justify-center p-4">
+            <div className="w-full max-w-md bg-white rounded-lg overflow-hidden shadow-sm border border-gray-100">
+               <div className="p-6 space-y-5">
+                  <div className="text-center space-y-2">
+                     <h2 className="text-2xl font-light text-gray-800">
+                        Motorista <span className="font-medium">Excluido</span>
+                     </h2>
+                     {MotoristaDeletado.manager && (
+                        <p className="text-gray-500 text-sm">
+                           Ação realizada por: {MotoristaDeletado.manager.name}
+                        </p>
+                     )}
+                  </div>
+
+                  <div className="bg-gray-50/50 p-4 rounded-lg">
+                     <p className="text-gray-600 text-center">
+                        Para restaurar este cadastro, solicite ao time
+                        administrativo.
+                     </p>
+                  </div>
+               </div>
+
+               <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+                  <span className="text-xs text-gray-400 font-mono">
+                     ID: {id}
+                  </span>
+                  <button
+                     className="text-sm text-blue-500 hover:text-blue-700 transition-colors"
+                     onClick={() => window.history.back()}
+                  >
+                     Voltar
+                  </button>
+               </div>
+            </div>
+         </div>
+      );
    }
 
    if (carregando) return <DetailSkeleton />;

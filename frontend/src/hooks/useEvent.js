@@ -11,6 +11,7 @@ export default function useEvents() {
    const { motoristas } = useDrivers();
    const { carro } = useCar();
    const [events, setEvents] = useState([]);
+   const [eventsDeletados, setEventsDeletados] = useState([]);
    const [carregando, setCarregando] = useState(true);
    const [erro, setErro] = useState(null);
    const router = useRouter();
@@ -85,10 +86,15 @@ export default function useEvents() {
                (events) => events.deletedAt === null
             );
 
+            const eventsDeletados = data.data.filter(
+               (events) => events.deletedAt !== null
+            );
+
             const rawEvents = eventosAtivos || data;
 
             const enrichedEvents = enrichEvents(rawEvents);
             setEvents(enrichedEvents);
+            setEventsDeletados(eventsDeletados);
          } catch (err) {
             console.error("Erro na requisição:", err);
             setErro(err.message);
@@ -341,6 +347,11 @@ export default function useEvents() {
       }
    };
 
+   // eventos deletados
+   const getDeletedEvent = useCallback(() => {
+      return eventsDeletados.filter((e) => e.deletedAt !== null);
+   }, [eventsDeletados]);
+
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
       const toastType = localStorage.getItem("toastType");
@@ -366,6 +377,7 @@ export default function useEvents() {
       getEventsByManager,
       countEventsByManager: getEventsByManager().length,
       deleteEvent,
+      getDeletedEvent,
       superDeleteEvent,
       restoreEvent,
    };
