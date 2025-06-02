@@ -182,7 +182,7 @@ function Manager() {
                            className="px-3 py-1 bg-white dark:bg-bee-dark-600 text-xs font-medium rounded-full border border-gray-200 dark:border-bee-dark-500"
                            role="listitem"
                         >
-                           Gestor
+                           {gestor.isAdmin ? "Admin" : "Gestor"}
                         </span>
                         <span
                            className="px-3 py-1 bg-white dark:bg-bee-dark-600 text-xs font-medium rounded-full border border-gray-200 dark:border-bee-dark-500"
