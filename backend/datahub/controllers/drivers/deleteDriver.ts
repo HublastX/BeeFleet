@@ -1,7 +1,10 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
 
-export const deleteDriver = async (req : Request, res: Response) => {
+export const deleteDriver = async (
+    req : Request,
+    res: Response
+) => {
     try {
         const { id } = req.params;
         const driver = await prisma.driver.delete({ where: { id }});

@@ -1,7 +1,10 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
 
-export const getDriver = async (req: Request, res: Response) => {
+export const getDriver = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const { id } = req.params;
         const driver = await prisma.driver.findUnique({ where: { id } });
