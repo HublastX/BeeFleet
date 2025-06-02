@@ -1,7 +1,20 @@
 import { Request, Response } from "express";
 import { prisma } from "../../config/prisma";
 
-export const createDriver = async (req: Request, res: Response) => {
+declare global {
+    namespace Express {
+        interface Request {
+            file?: {
+                path: string;
+            };
+        }
+    }
+}
+
+export const createDriver = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const { name, phone, license, managerId } = req.body;
 

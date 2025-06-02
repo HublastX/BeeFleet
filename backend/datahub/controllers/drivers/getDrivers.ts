@@ -1,7 +1,10 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
 
-export const getDrivers = async (req: Request, res: Response) => {
+export const getDrivers = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const { managerId, showDeleted } = req.query;
         const showDeletedParam = showDeleted === "true";

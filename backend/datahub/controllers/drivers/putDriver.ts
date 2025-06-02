@@ -3,7 +3,10 @@ import { Request, Response } from "express";
 import { updateDriverSchema } from "../../schemas/driverInterface";
 import { z } from "zod";
 
-export const putDriver = async (req: Request, res: Response) => {
+export const putDriver = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const { params, body } = updateDriverSchema.parse({
             params: req.params,
