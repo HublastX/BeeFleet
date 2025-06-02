@@ -8,21 +8,25 @@ datasource db {
 }
 
 model Manager {
-    id             String   @id @default(uuid())
-    email          String   @unique
-    password       String
-    name           String
-    image          String?
-    createdAt      DateTime @default(now())
-    updatedAt      DateTime @updatedAt
-    isAdmin        Boolean  @default(false)
-    events         Event[]
-    reports        Report[]
-    drivers        Driver[]
-    cars           Car[]
-    deletedCars    Car[]    @relation("DeletedBy")
-    deletedDrivers Driver[] @relation("DeletedBy")
-    deletedEvents  Event[]  @relation("DeletedBy")
+    id              String    @id @default(uuid())
+    email           String    @unique
+    password        String
+    name            String
+    image           String?
+    createdAt       DateTime  @default(now())
+    updatedAt       DateTime  @updatedAt
+    isAdmin         Boolean   @default(false)
+    deletedAt       DateTime?
+    deletedBy       Manager?  @relation("ManagerDeletedBy", fields: [deletedById], references: [id])
+    deletedById     String?
+    deletedManagers Manager[] @relation("ManagerDeletedBy")
+    events          Event[]
+    reports         Report[]
+    drivers         Driver[]
+    cars            Car[]
+    deletedCars     Car[]     @relation("DeletedBy")
+    deletedDrivers  Driver[]  @relation("DeletedBy")
+    deletedEvents   Event[]   @relation("DeletedBy")
 }
 
 model Driver {
