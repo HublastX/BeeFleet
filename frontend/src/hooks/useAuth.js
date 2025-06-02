@@ -64,6 +64,7 @@ export default function useAuth() {
             localStorage.setItem("name", data.manager.name);
             localStorage.setItem("email", data.manager.email);
             localStorage.setItem("image", data.manager.image);
+            localStorage.setItem("isAdmin", data.manager.isAdmin);
 
             setGestor({
                id: data.manager.id,
@@ -71,6 +72,7 @@ export default function useAuth() {
                email: data.manager.email,
                token: data.token,
                image: getImageUrl(data.manager.image),
+               isAdmin: data.manager.isAdmin,
             });
 
             localStorage.setItem(
@@ -191,9 +193,10 @@ export default function useAuth() {
          let image = localStorage.getItem("image");
          if (image === "null" || image === "") image = null;
          else image = `${API_URL}/api${image}`;
+         const isAdmin = localStorage.getItem("isAdmin") === "true";
 
          if (token && id && name && email) {
-            return { id, name, email, token, image };
+            return { id, name, email, token, image, isAdmin };
          }
 
          return null;

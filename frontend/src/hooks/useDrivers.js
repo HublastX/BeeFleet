@@ -7,6 +7,7 @@ import { useCallback } from "react";
 export default function useDrivers() {
    const { gestor } = useAuth();
    const [motoristas, setMotoristas] = useState([]);
+   const [motoristasDeletados, setMotoristaDeletados] = useState([]);
    const [carregando, setCarregando] = useState(true);
    const [erro, setErro] = useState(null);
    const router = useRouter();
@@ -70,6 +71,10 @@ export default function useDrivers() {
                (motorista) => motorista.deletedAt === null
             );
 
+            const motoristasDeletados = data.data.filter(
+               (motorista) => motorista.deletedAt !== null
+            );
+
             const motoristasFormatados = motoristasAtivos.map((motorista) => ({
                ...motorista,
                managerId: motorista.managerId || gestor.id,
@@ -82,6 +87,7 @@ export default function useDrivers() {
             }));
 
             setMotoristas(motoristasFormatados);
+            setMotoristaDeletados(motoristasDeletados);
          } catch (err) {
             console.error("Erro na requisição:", err);
             setErro(err.message);
@@ -415,6 +421,11 @@ export default function useDrivers() {
       }
    };
 
+   //motoristas deletados
+   const getDeletedDrivers = useCallback(() => {
+      return motoristasDeletados.filter((d) => d.deletedAt !== null);
+   }, [motoristasDeletados]);
+
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
       const toastType = localStorage.getItem("toastType");
@@ -441,6 +452,7 @@ export default function useDrivers() {
       restoreDriver,
       getDriver,
       updateDriver,
+      getDeletedDrivers,
       getDriversByManager,
       countDriversByManager: getDriversByManager().length,
    };
