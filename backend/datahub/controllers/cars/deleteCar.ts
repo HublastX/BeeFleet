@@ -1,7 +1,10 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
 
-export const deleteCar = async (req: Request, res: Response) => {
+export const deleteCar = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const { id } = req.params;
         const car = await prisma.car.delete({ where: { id } });
