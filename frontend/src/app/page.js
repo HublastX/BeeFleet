@@ -228,10 +228,10 @@ function Home() {
                         </Link>
                         <Link
                            href="/cars"
-                           aria-label={`Ver todos os ${carro.length} carros`}
+                           aria-label={`Ver todos os ${carro.length} veículos`}
                         >
                            <Card
-                              titulo="Carros"
+                              titulo="Veículos"
                               icone="car"
                               estado={resultadoCarros.estado}
                               porcentagem={resultadoCarros.porcentagem}
@@ -317,7 +317,7 @@ function Home() {
                                        stackId="a"
                                        dataKey="carro"
                                        fill="rgba(21, 93, 252, 0.9)"
-                                       name="Carros"
+                                       name="Veículos"
                                        animationDuration={800}
                                     />
                                     <Bar

@@ -25,7 +25,7 @@ const Restore = () => {
 
    const dataTypes = [
       { value: "drivers", label: "Motoristas" },
-      { value: "cars", label: "Carros" },
+      { value: "cars", label: "Veículos" },
       { value: "events", label: "Eventos" },
    ];
 

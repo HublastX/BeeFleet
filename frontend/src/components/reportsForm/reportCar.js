@@ -57,7 +57,7 @@ export default function ReportCar() {
       setFormError("");
 
       if (reportType === "single" && !selectedCarro) {
-         setFormError("Selecione um carro para gerar o relatório.");
+         setFormError("Selecione um veículo para gerar o relatório.");
          return;
       }
 
@@ -73,7 +73,7 @@ export default function ReportCar() {
    return (
       <div className="max-w-4xl mx-auto p-4">
          <h1 className="text-2xl font-bold mb-6 flex items-center">
-            Relatório de Carro
+            Relatório de Veículo
          </h1>
          <form className="space-y-6" onSubmit={handleSubmit}>
             {/* Seção Tipo de Relatório */}
@@ -82,8 +82,8 @@ export default function ReportCar() {
                   <Icon name="reports" className="size-5" /> Tipo de Relatório
                </h2>
                <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-                  Selecione se deseja um relatório de um carro específico ou de
-                  todos os carros
+                  Selecione se deseja um relatório de um veículo específico ou
+                  de todos os veículos
                </p>
                <div className="flex flex-col sm:flex-row gap-3">
                   <label className="inline-flex items-center">
@@ -95,7 +95,7 @@ export default function ReportCar() {
                         checked={reportType === "single"}
                         onChange={() => setReportType("single")}
                      />
-                     <span className="ml-2">Carro específico</span>
+                     <span className="ml-2">Veículo específico</span>
                   </label>
                   <label className="inline-flex items-center">
                      <input
@@ -106,7 +106,7 @@ export default function ReportCar() {
                         checked={reportType === "all"}
                         onChange={() => setReportType("all")}
                      />
-                     <span className="ml-2">Todos os carros</span>
+                     <span className="ml-2">Todos os veículos</span>
                   </label>
                </div>
             </div>
@@ -114,7 +114,7 @@ export default function ReportCar() {
             {reportType === "single" && (
                <div className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-lg p-6 shadow">
                   <h2 className="text-xl font-bold flex gap-2 items-center mb-2">
-                     <Icon name="car" className="size-5" /> Carro
+                     <Icon name="car" className="size-5" /> Veículo
                   </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                      Você pode pesquisar por placa, RENAVAM ou chassi
@@ -154,7 +154,7 @@ export default function ReportCar() {
                                  : criterioCarro === "renavam"
                                    ? "RENAVAM"
                                    : "chassi"
-                           } do carro`}
+                           } do veículo`}
                            className={`${carroError || carroStatusError ? "border-red-500" : ""} w-full`}
                         />
                         {carroInput &&
@@ -180,7 +180,7 @@ export default function ReportCar() {
                   </div>
                   {carroError && (
                      <p className="text-red-500 text-sm font-bold mt-2">
-                        Esse carro ainda não foi cadastrado. Deseja adicionar?{" "}
+                        Esse veículo ainda não foi cadastrado. Deseja adicionar?{" "}
                         <Link
                            href="cars/create"
                            className="text-bee-purple-500"

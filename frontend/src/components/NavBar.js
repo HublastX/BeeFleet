@@ -20,7 +20,7 @@ const navItem = [
    },
    {
       icon: "car",
-      name: "Carros",
+      name: "Veículos",
       path: "/cars",
    },
    {

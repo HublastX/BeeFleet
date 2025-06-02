@@ -21,7 +21,7 @@ export default function ProfileListModal({ open, onClose, tipo }) {
       lista = getCarByManager().sort(
          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
-      titulo = "Carros adicionados";
+      titulo = "Veículos adicionados";
    } else if (tipo === "eventos") {
       lista = getEventsByManager().sort(
          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
