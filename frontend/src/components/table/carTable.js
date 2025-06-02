@@ -104,7 +104,7 @@ export default function CarTable({ searchTerm }) {
 
    return (
       <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
-         <div className="max-w-full overflow-x-auto">
+         <div className="w-full overflow-x-auto lg:overflow-hidden no-scrollbar">
             <div>
                {!carregando && !erro && (
                   <Table>
@@ -113,7 +113,7 @@ export default function CarTable({ searchTerm }) {
                         <TableRow>
                            <TableCell
                               isHeader
-                              className="px-5 py-3 text-start md:table-cell "
+                              className="px-5 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
                            >
                               <div
                                  onClick={() =>
@@ -127,19 +127,19 @@ export default function CarTable({ searchTerm }) {
 
                            <TableCell
                               isHeader
-                              className="px-5 py-3 text-start hidden md:table-cell"
+                              className="px-5 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
                            >
                               Placa
                            </TableCell>
                            <TableCell
                               isHeader
-                              className="px-5 py-3 text-start hidden md:table-cell"
+                              className="px-5 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
                            >
                               Odometro
                            </TableCell>
                            <TableCell
                               isHeader
-                              className="px-5 py-3 text-start hidden md:table-cell"
+                              className="px-5 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
                            >
                               <div
                                  onClick={() => {
@@ -153,13 +153,7 @@ export default function CarTable({ searchTerm }) {
 
                            <TableCell
                               isHeader
-                              className="px-3 md:px-1 py-3 text-center "
-                           >
-                              Vizualizar
-                           </TableCell>
-                           <TableCell
-                              isHeader
-                              className="px-3 md:px-1 py-3 text-center"
+                              className="shadow-lg lg:shadow-none px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200 bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-0"
                            >
                               Deletar
                            </TableCell>
@@ -167,45 +161,17 @@ export default function CarTable({ searchTerm }) {
                      </TableHeader>
 
                      {/* Table Body */}
-                     <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400">
+                     <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
                         {currentCar.map((carro) => (
                            <TableRow
                               key={carro.id}
                               className="dark:hover:bg-bee-alert-600 hover:bg-bee-alert-500"
                            >
-                              <TableCell className="block md:hidden px-5 py-4 text-start">
-                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 overflow-hidden rounded-full">
-                                       {carro.image ? (
-                                          <Image
-                                             src={carro.image}
-                                             alt={`Imagem do veículo ${carro.model}`}
-                                             width={100}
-                                             height={100}
-                                             objectFit="cover"
-                                             unoptimized
-                                             className="w-full h-full object-cover"
-                                          />
-                                       ) : (
-                                          <Icon name="car" />
-                                       )}
-                                    </div>
-                                    <div>
-                                       <span
-                                          className={`font-medium ${
-                                             carro.isAvailable
-                                                ? "text-green-600 dark:text-green-400"
-                                                : "text-red-600 dark:text-red-400"
-                                          }`}
-                                       >
-                                          {carro.model}
-                                       </span>
-                                    </div>
-                                 </div>
-                              </TableCell>
-
-                              <TableCell className="hidden md:table-cell px-5 py-4 sm:px-6 text-start">
-                                 <div className="flex items-center gap-3">
+                              <TableCell className="p-0">
+                                 <Link
+                                    href={`/cars/${carro.id}`}
+                                    className="px-5 py-4 text-start flex items-center gap-3 h-full w-full hover:text-inherit"
+                                 >
                                     <div className="w-12 h-12 overflow-hidden rounded-full">
                                        {carro.image ? (
                                           <Image
@@ -226,51 +192,56 @@ export default function CarTable({ searchTerm }) {
                                           {carro.brand} {carro.model}
                                        </span>
                                     </div>
-                                 </div>
-                              </TableCell>
-
-                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start dark:text-bee-alert-500">
-                                 {carro.plate}
-                              </TableCell>
-                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start dark:text-bee-alert-500">
-                                 {carro.odometer} km
-                              </TableCell>
-
-                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 dark:text-bee-alert-500">
-                                 <Badge
-                                    size="sm"
-                                    color={
-                                       carro.isAvailable ? "success" : "error"
-                                    }
-                                 >
-                                    {carro.isAvailable
-                                       ? "Disponível"
-                                       : "Indisponível"}
-                                 </Badge>
-                              </TableCell>
-
-                              <TableCell className="py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
-                                 <Link
-                                    href={`/cars/${carro.id}`}
-                                    className="inline-block text-bee-yellow-500 hover:text-bee-yellow-700"
-                                 >
-                                    <Icon
-                                       strokeWidth={2}
-                                       name="eye"
-                                       className="w-8 h-8 mx-auto"
-                                    />
                                  </Link>
                               </TableCell>
 
-                              <TableCell className=" py-3 text-center">
+                              <TableCell className="p-0">
+                                 <Link
+                                    href={`/cars/${carro.id}`}
+                                    className="px-4 py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 flex items-center h-full w-full hover:text-inherit"
+                                 >
+                                    {carro.plate}
+                                 </Link>
+                              </TableCell>
+
+                              <TableCell className="p-0">
+                                 <Link
+                                    href={`/cars/${carro.id}`}
+                                    className="px-4 py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 flex items-center h-full w-full hover:text-inherit"
+                                 >
+                                    {carro.odometer} km
+                                 </Link>
+                              </TableCell>
+
+                              <TableCell className="p-0">
+                                 <Link
+                                    href={`/cars/${carro.id}`}
+                                    className="px-4 py-3 text-bee-dark-600 dark:text-bee-alert-500 flex items-center h-full w-full hover:text-inherit"
+                                 >
+                                    <Badge
+                                       size="sm"
+                                       color={
+                                          carro.isAvailable
+                                             ? "success"
+                                             : "error"
+                                       }
+                                    >
+                                       {carro.isAvailable
+                                          ? "Disponível"
+                                          : "Indisponível"}
+                                    </Badge>
+                                 </Link>
+                              </TableCell>
+
+                              <TableCell className="shadow-lg lg:shadow-none py-3 text-center bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-0">
                                  <button
                                     onClick={() => abrirModalDeletar(carro)}
-                                    className="inline-block text-bee-alert-300 hover:text-bee-alert-400 bg-transparent hover:bg-transparent shadow-transparent cursor-pointer"
+                                    className="inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-bee-alert-400 dark:hover:bg-bee-dark-700 transition-colors"
                                  >
                                     <Icon
                                        strokeWidth={2}
                                        name="trash"
-                                       className="w-8 h-8 mx-auto"
+                                       className="size-6 text-bee-alert-300"
                                     />
                                  </button>
                               </TableCell>
@@ -282,7 +253,7 @@ export default function CarTable({ searchTerm }) {
 
                {/* paginacao */}
                {!carregando && !erro && totalPages > 1 && (
-                  <div className="flex justify-end md:px-6 px-2 py-4 sm:justify-center">
+                  <div className="flex justify-end px-6 py-3 border-t border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
                      <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}

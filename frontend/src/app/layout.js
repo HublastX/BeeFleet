@@ -62,7 +62,7 @@ function MainContent({ children }) {
 
    return (
       <div
-         className={`flex-1 transition-all  duration-300 ease-in-out ${mainContentMargin}`}
+         className={`flex-1 transition-all  duration-300 ease-in-out w-full ${mainContentMargin}`}
       >
          <Header />
          <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">

@@ -108,192 +108,156 @@ export default function UserTable({ searchTerm }) {
       );
 
    return (
-      <div className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800">
-         <div className="max-w-full overflow-x-auto">
-            <div>
-               {!carregando && !erro && (
-                  <Table>
-                     {/*  table header */}
-                     <TableHeader className="border-b border-bee-dark-300 dark:border-bee-dark-400 text-bee-dark-600 dark:text-bee-alert-500">
-                        <TableRow>
-                           <TableCell
-                              isHeader
-                              className="px-5 py-3 text-start md:table-cell"
+      <div className="overflow-hidden rounded-lg border border-bee-dark-300 dark:border-bee-dark-400">
+         <div className="w-full overflow-x-auto lg:overflow-hidden no-scrollbar">
+            <Table className="min-w-max md:min-w-full">
+               {/*  table header */}
+               <TableHeader className="border-b-2 border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
+                  <TableRow>
+                     <TableCell
+                        isHeader
+                        className="px-5 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
+                     >
+                        <div
+                           onClick={() => setOrdenarPorNome((prev) => !prev)}
+                           className="cursor-pointer hover:underline w-fit"
+                        >
+                           Motorista
+                        </div>
+                     </TableCell>
+
+                     <TableCell
+                        isHeader
+                        className="px-5 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
+                     >
+                        Telefone
+                     </TableCell>
+                     <TableCell
+                        isHeader
+                        className="px-5 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
+                     >
+                        CNH
+                     </TableCell>
+                     <TableCell
+                        isHeader
+                        className="px-5 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
+                     >
+                        <div
+                           onClick={() => {
+                              setOrdenarPorStatus((prev) => !prev);
+                           }}
+                           className="cursor-pointer hover:underline"
+                        >
+                           Status
+                        </div>
+                     </TableCell>
+
+                     <TableCell
+                        isHeader
+                        className="shadow-lg lg:shadow-none px-2 py-3 text-center font-medium text-bee-dark-700 dark:text-gray-200 bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-0"
+                     >
+                        Deletar
+                     </TableCell>
+                  </TableRow>
+               </TableHeader>
+
+               {/* Table Body */}
+               <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
+                  {currentDrivers.map((motorista) => (
+                     <TableRow
+                        key={motorista.id}
+                        className="hover:bg-bee-alert-500 hover:dark:bg-bee-alert-600"
+                     >
+                        <TableCell className="p-0">
+                           <Link
+                              href={`/drivers/${motorista.id}`}
+                              className="px-5 py-4 text-start flex items-center gap-3 h-full w-full hover:text-inherit"
                            >
-                              <div
-                                 onClick={() =>
-                                    setOrdenarPorNome((prev) => !prev)
+                              <div className="w-10 h-10 overflow-hidden rounded-full">
+                                 {!motorista.image ? (
+                                    <Icon name="UserCircle" />
+                                 ) : (
+                                    <Image
+                                       src={motorista.image}
+                                       width={200}
+                                       height={200}
+                                       className="w-full h-full object-cover"
+                                       alt="img do motorista"
+                                    />
+                                 )}
+                              </div>
+                              <div>
+                                 <span className="block text-bee-dark-600 dark:text-bee-alert-500">
+                                    {motorista.name}
+                                 </span>
+                              </div>
+                           </Link>
+                        </TableCell>
+
+                        <TableCell className="p-0">
+                           <Link
+                              href={`/drivers/${motorista.id}`}
+                              className="px-5 py-4 text-bee-dark-600 text-start dark:text-bee-alert-500 flex items-center h-full w-full hover:text-inherit"
+                           >
+                              {motorista.phone}
+                           </Link>
+                        </TableCell>
+
+                        <TableCell className="p-0">
+                           <Link
+                              href={`/drivers/${motorista.id}`}
+                              className="px-5 py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 flex items-center h-full w-full hover:text-inherit"
+                           >
+                              {motorista.license}
+                           </Link>
+                        </TableCell>
+
+                        <TableCell className="p-0">
+                           <Link
+                              href={`/drivers/${motorista.id}`}
+                              className="px-5 py-3 text-bee-dark-600 dark:text-bee-alert-500 flex items-center h-full w-full hover:text-inherit"
+                           >
+                              <Badge
+                                 size="sm"
+                                 color={
+                                    motorista.isAvailable ? "success" : "error"
                                  }
-                                 className="cursor-pointer hover:underline w-fit"
                               >
-                                 Motorista
-                              </div>
-                           </TableCell>
+                                 {motorista.isAvailable
+                                    ? "Disponível"
+                                    : "Indisponível"}
+                              </Badge>
+                           </Link>
+                        </TableCell>
 
-                           <TableCell
-                              isHeader
-                              className="px-5 py-3 text-start hidden md:table-cell"
+                        <TableCell className="shadow-lg lg:shadow-none py-3 text-center bg-bee-dark-100 dark:bg-bee-dark-800 z-10 sticky right-0">
+                           <button
+                              onClick={() => abrirModalDeletar(motorista)}
+                              className="inline-flex items-center justify-center w-9 h-9 rounded-full hover:bg-bee-alert-400 dark:hover:bg-bee-dark-700 transition-colors"
                            >
-                              Telefone
-                           </TableCell>
-                           <TableCell
-                              isHeader
-                              className="px-5 py-3 text-start hidden md:table-cell"
-                           >
-                              CNH
-                           </TableCell>
-                           <TableCell
-                              isHeader
-                              className="px-5 py-3 text-start hidden md:table-cell"
-                           >
-                              <div
-                                 onClick={() => {
-                                    setOrdenarPorStatus((prev) => !prev);
-                                 }}
-                                 className="cursor-pointer hover:underline"
-                              >
-                                 Status
-                              </div>
-                           </TableCell>
+                              <Icon
+                                 strokeWidth={2}
+                                 name="trash"
+                                 className="size-6 text-bee-alert-300"
+                              />
+                           </button>
+                        </TableCell>
+                     </TableRow>
+                  ))}
+               </TableBody>
+            </Table>
 
-                           <TableCell
-                              isHeader
-                              className="px-3 md:px-1 py-3 text-center"
-                           >
-                              Vizualizar
-                           </TableCell>
-                           <TableCell
-                              isHeader
-                              className="px-3 md:px-1 py-3 text-center"
-                           >
-                              Deletar
-                           </TableCell>
-                        </TableRow>
-                     </TableHeader>
-
-                     {/* Table Body */}
-                     <TableBody className="divide-y divide-bee-dark-300 dark:divide-bee-dark-400">
-                        {currentDrivers.map((motorista) => (
-                           <TableRow
-                              key={motorista.id}
-                              className="hover:bg-bee-alert-500 hover:dark:bg-bee-alert-600"
-                           >
-                              <TableCell className="block md:hidden px-5 py-4 text-start">
-                                 <div className="flex items-center gap-3">
-                                    <div className="w-12 h-12 overflow-hidden rounded-full">
-                                       {!motorista.image ? (
-                                          <Icon name="UserCircle" />
-                                       ) : (
-                                          <Image
-                                             src={motorista.image}
-                                             width={100}
-                                             height={100}
-                                             className="w-full h-full object-cover"
-                                             alt="img do motorista"
-                                          />
-                                       )}
-                                    </div>
-                                    <div>
-                                       <span
-                                          className={`font-medium  ${
-                                             motorista.isAvailable
-                                                ? "text-green-600 dark:text-green-400"
-                                                : "text-red-600 dark:text-red-400"
-                                          }`}
-                                       >
-                                          {motorista.name}
-                                       </span>
-                                    </div>
-                                 </div>
-                              </TableCell>
-
-                              <TableCell className="hidden md:table-cell px-5 py-4 sm:px-6 text-start">
-                                 <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 overflow-hidden rounded-full">
-                                       {!motorista.image ? (
-                                          <Icon name="UserCircle" />
-                                       ) : (
-                                          <Image
-                                             src={motorista.image}
-                                             width={200}
-                                             height={200}
-                                             className="w-full h-full object-cover"
-                                             alt="img do motorista"
-                                          />
-                                       )}
-                                    </div>
-                                    <div>
-                                       <span className="block  text-bee-dark-600 dark:text-bee-alert-500">
-                                          {motorista.name}
-                                       </span>
-                                    </div>
-                                 </div>
-                              </TableCell>
-
-                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start  dark:text-bee-alert-500">
-                                 {motorista.phone}
-                              </TableCell>
-                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 text-start  dark:text-bee-alert-500">
-                                 {motorista.license}
-                              </TableCell>
-
-                              <TableCell className="hidden md:table-cell px-4 py-3 text-bee-dark-600 dark:text-bee-alert-500">
-                                 <Badge
-                                    size="sm"
-                                    color={
-                                       motorista.isAvailable
-                                          ? "success"
-                                          : "error"
-                                    }
-                                 >
-                                    {motorista.isAvailable
-                                       ? "Disponível"
-                                       : "Indisponível"}
-                                 </Badge>
-                              </TableCell>
-
-                              <TableCell className="py-3 text-center border-l border-bee-dark-300 dark:border-bee-dark-400">
-                                 <Link
-                                    href={`/drivers/${motorista.id}`}
-                                    className="inline-block text-bee-yellow-500 hover:text-bee-yellow-700"
-                                 >
-                                    <Icon
-                                       strokeWidth={2}
-                                       name="eye"
-                                       className="w-8 h-8 mx-auto"
-                                    />
-                                 </Link>
-                              </TableCell>
-                              <TableCell className="py-3 text-center">
-                                 <button
-                                    onClick={() => abrirModalDeletar(motorista)}
-                                    className="inline-block text-bee-alert-300 hover:text-bee-alert-400 bg-transparent hover:bg-transparent shadow-transparent cursor-pointer"
-                                 >
-                                    <Icon
-                                       strokeWidth={2}
-                                       name="trash"
-                                       className="w-8 h-8 mx-auto"
-                                    />
-                                 </button>
-                              </TableCell>
-                           </TableRow>
-                        ))}
-                     </TableBody>
-                  </Table>
-               )}
-
-               {/* paginacao */}
-               {!carregando && !erro && totalPages > 1 && (
-                  <div className="flex justify-end md:px-6 px-2 py-4 sm:justify-center">
-                     <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        totalItems={motoristas.length}
-                     />
-                  </div>
-               )}
-            </div>
+            {/* paginacao */}
+            {!carregando && !erro && totalPages > 1 && (
+               <div className="flex justify-end px-6 py-3 border-t border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
+                  <Pagination
+                     currentPage={currentPage}
+                     totalPages={totalPages}
+                     onPageChange={setCurrentPage}
+                     totalItems={motoristas.length}
+                  />
+               </div>
+            )}
          </div>
 
          {modalAberto && (
