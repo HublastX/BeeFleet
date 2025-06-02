@@ -23,7 +23,7 @@ export const updateDriverSchema = z.object({
     params: z.object({
         id: z.string().uuid("ID do motorista inválido"),
     }),
-    body: driverSchema.partial(), // todos os campos opcionais no update
+    body: driverSchema.partial(),
 });
 
 export type UpdateDriverRequestParams = z.infer<
