@@ -189,8 +189,7 @@ export default function useDrivers() {
             body: formData,
          });
 
-         if (!res.ok)
-            throw new Error("Erro ao criar motorista. Tente novamente.");
+         if (!res.ok) throw new Error("Erro ao criar motorista");
 
          const data = await res.json();
 
@@ -416,7 +415,7 @@ export default function useDrivers() {
             setMotoristas((prev) => [...prev, updatedDriver]);
          }
       } catch (error) {
-         handleError(error, "Erro ao restaurar motorista");
+         handleError("Erro ao restaurar motorista");
          throw error;
       }
    };

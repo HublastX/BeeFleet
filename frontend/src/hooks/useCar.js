@@ -61,7 +61,7 @@ export default function useCar() {
                },
             });
 
-            if (!res.ok) throw new Error("Erro ao buscar carros");
+            if (!res.ok) throw new Error("Erro ao buscar veículos");
 
             const data = await res.json();
 
@@ -112,7 +112,7 @@ export default function useCar() {
             },
          });
 
-         if (!res.ok) throw new Error("Erro ao buscar carro");
+         if (!res.ok) throw new Error("Erro ao buscar veículo");
 
          const data = await res.json();
 
@@ -176,7 +176,7 @@ export default function useCar() {
                ? `${duplicatedFields[0]} já cadastrada.`
                : `${duplicatedFields.join(", ")} já cadastrados.`;
 
-         setErro("Carro já cadastrado");
+         setErro("Veículo já cadastrado");
          showToast("Erro", "error", message, 5000);
          setCarregando(false);
          return;
@@ -204,18 +204,19 @@ export default function useCar() {
             body: formData,
          });
 
-         if (!res.ok) throw new Error("Erro ao criar carro. Tente novamente.");
+         if (!res.ok)
+            throw new Error("Erro ao criar veículo. Tente novamente.");
 
          const data = await res.json();
 
          if (res.ok) {
             localStorage.setItem(
                "toastMessage",
-               "carro adicionado com sucesso!"
+               "veículo adicionado com sucesso!"
             );
             localStorage.setItem("toastType", "success");
          } else {
-            throw new Error(data.error || "Erro inesperado ao criar carro.");
+            throw new Error(data.error || "Erro inesperado ao criar veículo.");
          }
 
          if (data && !data.error) {
@@ -223,7 +224,7 @@ export default function useCar() {
             router.push("/cars");
          } else {
             handleError(
-               data.error || "Erro ao criar carro. Tente novamente.",
+               data.error || "Erro ao criar veículo. Tente novamente.",
                "error"
             );
          }
@@ -281,12 +282,14 @@ export default function useCar() {
             );
             localStorage.setItem(
                "toastMessage",
-               "Carro atualizado com sucesso!"
+               "Veículo atualizado com sucesso!"
             );
             localStorage.setItem("toastType", "success");
             router.push("/cars");
          } else {
-            setErro(data.error || "Erro ao atualizar carro. Tente novamente.");
+            setErro(
+               data.error || "Erro ao atualizar veículo. Tente novamente."
+            );
          }
       } catch (error) {
          handleError(error, "warning", "Erro ao conectar ao servidor.");
@@ -311,7 +314,7 @@ export default function useCar() {
             showToast(
                "Não é possível excluir",
                "error",
-               "Carro não pode ser deletado, pois não está disponível.",
+               "Veículo não pode ser deletado, pois não está disponível.",
                5000
             );
             return;
@@ -324,15 +327,15 @@ export default function useCar() {
             },
             body: JSON.stringify({
                managerId: gestor.id,
-               reason: "Carro deletado pelo gestor.",
+               reason: "Veículo deletado pelo gestor.",
             }),
          });
-         localStorage.setItem("toastMessage", "Carro deletado com sucesso!");
+         localStorage.setItem("toastMessage", "Veículo deletado com sucesso!");
          localStorage.setItem("toastType", "success");
          router.push("/cars");
 
          if (!res.ok)
-            throw new Error("Erro ao deletar carro. Tente novamente.");
+            throw new Error("Erro ao deletar veículo. Tente novamente.");
 
          setCarro((prev) => prev.filter((car) => car.id !== id));
       } catch (error) {
@@ -360,13 +363,13 @@ export default function useCar() {
 
          if (!res.ok) {
             const data = await res.json();
-            throw new Error(data.error || "Erro ao deletar carro");
+            throw new Error(data.error || "Erro ao deletar veículo");
          }
 
-         showToast("Sucesso", "success", "Carro deletado com sucesso!", 5000);
+         showToast("Sucesso", "success", "Veículo deletado com sucesso!", 5000);
          setCarro((prev) => prev.filter((car) => car.id !== id));
       } catch (error) {
-         handleError(error, "Erro ao deletar carro");
+         handleError(error, "Erro ao deletar veículo");
          throw error;
       } finally {
          setCarregando(false);
@@ -393,10 +396,15 @@ export default function useCar() {
 
          if (!res.ok) {
             const data = await res.json();
-            throw new Error(data.error || "Erro ao restaurar carro");
+            throw new Error(data.error || "Erro ao restaurar veículo");
          }
 
-         showToast("Sucesso", "success", "Carro restaurado com sucesso!", 5000);
+         showToast(
+            "Sucesso",
+            "success",
+            "Veículo restaurado com sucesso!",
+            5000
+         );
 
          // Atualiza a lista de carros
          const updatedCar = await getCar(id);
@@ -404,7 +412,7 @@ export default function useCar() {
             setCarro((prev) => [...prev, updatedCar]);
          }
       } catch (error) {
-         handleError(error, "Erro ao restaurar carro");
+         handleError(error, "Erro ao restaurar veículo");
          throw error;
       }
    };

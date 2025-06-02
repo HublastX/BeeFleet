@@ -37,7 +37,7 @@ export default function DetailDriverTable() {
 
    const getCarInfo = (carId) => {
       const car = carro.find((c) => c.id === carId);
-      return car ? `${car.model} - ${car.plate}` : "Carro não encontrado";
+      return car ? `${car.model} - ${car.plate}` : "Veículo não encontrado";
    };
 
    const translateStatus = (eventType) => {
@@ -70,7 +70,7 @@ export default function DetailDriverTable() {
                      isHeader
                      className="px-3 py-2 sm:px-5 sm:py-3 text-start whitespace-nowrap"
                   >
-                     Carro
+                     Veículo
                   </TableCell>
                   <TableCell
                      isHeader

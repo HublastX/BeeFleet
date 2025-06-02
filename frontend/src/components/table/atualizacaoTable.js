@@ -57,7 +57,7 @@ export default function RecentAtualizacao() {
       // Carro
       carro.forEach((carro) => {
          allUpdates.push({
-            categoria: "Carro",
+            categoria: "Veículo",
             detalhes: (
                <div className="grid grid-cols-1">
                   {carro.brand}
