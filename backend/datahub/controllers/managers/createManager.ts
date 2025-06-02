@@ -2,7 +2,10 @@ import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 
-export const createManager = async (req: Request, res: Response) => {
+export const createManager = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const { name, email, password } = req.body;
 
