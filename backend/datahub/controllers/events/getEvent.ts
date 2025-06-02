@@ -1,7 +1,10 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
 
-export const getEvent = async (req: Request, res: Response) => {
+export const getEvent = async (
+    req: Request,
+    res: Response
+) => {
     try {
         const { id } = req.params;
         const event = await prisma.event.findUnique({ where: { id } });

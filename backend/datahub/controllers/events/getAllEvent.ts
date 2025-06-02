@@ -1,7 +1,10 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
 
-export const getAllEvents = async (req: Request, res: Response): Promise<Response> => {
+export const getAllEvents = async (
+    req: Request,
+    res: Response
+): Promise<Response> => {
     try {
         const events = await prisma.event.findMany({
             include: {},
