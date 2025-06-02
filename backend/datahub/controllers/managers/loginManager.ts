@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { prisma } from "../../config/prisma";
 import { SECRET_KEY } from "../../config/constantes";
 import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs"; // Alterado para bcryptjs
+import bcrypt from "bcryptjs";
 import { LoginRequestBody } from "../../schemas/managerInterface";
 
 export const loginManager = async (
