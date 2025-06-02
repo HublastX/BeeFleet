@@ -36,14 +36,13 @@ export const softDeleteCar = async (req: Request, res: Response) => {
             });
         }
 
-        // Atualiza o carro (soft delete)
         const deletedCar = await prisma.car.update({
             where: { id },
             data: {
                 deletedAt: new Date(),
                 deletedById: managerId,
                 isAvailable: false,
-                status: "AVAILABLE", // Resetando o status
+                status: "AVAILABLE",
             },
         });
 
@@ -198,6 +197,78 @@ export const softDeleteEvent = async (req: Request, res: Response) => {
     }
 };
 
+// Controlador para soft delete de managers
+export const softDeleteManager = async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        const { adminId, reason } = req.body;
+
+        if (!id || !adminId) {
+            return res.status(400).json({
+                error: "ID do gestor a ser excluído e ID do administrador são obrigatórios",
+            });
+        }
+
+        // Verifica se o gestor a ser excluído existe
+        const manager = await prisma.manager.findUnique({
+            where: { id },
+        });
+
+        if (!manager) {
+            return res.status(404).json({ error: "Gestor não encontrado" });
+        }
+
+        // Verifica se o gestor já foi excluído
+        if (manager.deletedById) {
+            return res.status(400).json({
+                error: "Este gestor já foi ocultado",
+                deletedAt: manager.deletedAt,
+            });
+        }
+
+        // Verifica se o administrador tem permissão (deve ser admin)
+        const admin = await prisma.manager.findUnique({
+            where: { id: adminId },
+        });
+
+        if (!admin || !admin.isAdmin) {
+            return res.status(403).json({
+                error: "Apenas administradores podem ocultar gestores",
+            });
+        }
+
+        // Atualiza o gestor (soft delete)
+        const deletedManager = await prisma.manager.update({
+            where: { id },
+            data: {
+                deletedAt: new Date(),
+                deletedById: adminId,
+            },
+        });
+
+        console.log(
+            `Gestor ocultado (soft delete): ID=${id}, nome=${
+                manager.name
+            }, deletedById=${adminId}, deletedAt=${new Date()}, reason=${
+                reason || "Não informado"
+            }`
+        );
+
+        return res.status(200).json({
+            message: `Gestor ${manager.name} foi ocultado com sucesso e não aparecerá mais nas listagens normais, mas ainda estará visível em relatórios.`,
+            success: true,
+            managerId: id,
+            managerName: manager.name,
+            deletedById: adminId,
+            deletedAt: deletedManager.deletedAt,
+            canBeRestored: true,
+        });
+    } catch (error) {
+        console.error("Erro ao ocultar gestor:", error);
+        return res.status(500).json({ error: "Erro ao ocultar gestor" });
+    }
+};
+
 // Controlador para restaurar itens ocultados (remover soft delete)
 export const restoreDeletedItem = async (req: Request, res: Response) => {
     try {
@@ -262,9 +333,31 @@ export const restoreDeletedItem = async (req: Request, res: Response) => {
                 message = `Evento foi restaurado com sucesso e agora aparecerá nas listagens normais.`;
                 break;
 
+            case "manager":
+                // Verificar se quem está restaurando é um admin
+                const admin = await prisma.manager.findUnique({
+                    where: { id: managerId },
+                });
+
+                if (!admin || !admin.isAdmin) {
+                    return res.status(403).json({
+                        error: "Apenas administradores podem restaurar gestores",
+                    });
+                }
+
+                result = await prisma.manager.update({
+                    where: { id: itemId },
+                    data: {
+                        deletedAt: null,
+                        deletedById: null,
+                    },
+                });
+                message = `Gestor ${result.name} foi restaurado com sucesso e agora aparecerá nas listagens normais.`;
+                break;
+
             default:
                 return res.status(400).json({
-                    error: "Tipo de item inválido. Deve ser 'car', 'driver' ou 'event'",
+                    error: "Tipo de item inválido. Deve ser 'car', 'driver', 'event' ou 'manager'",
                 });
         }
 
