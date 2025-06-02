@@ -34,5 +34,4 @@ botRoutes.post("/message", async (req: Request, res: Response) => {
         });
     }
 });
-
 export default botRoutes;

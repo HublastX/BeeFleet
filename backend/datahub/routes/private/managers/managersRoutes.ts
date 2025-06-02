@@ -1,21 +1,18 @@
 import express, { Router } from "express";
+import { Request, Response, NextFunction } from "express";
 import { createManager } from "../../../controllers/managers/createManager";
 import { getManager } from "../../../controllers/managers/getManager";
 import { getAllManagers } from "../../../controllers/managers/getAllManager";
 import { putManager } from "../../../controllers/managers/putManager";
 import { deleteManager } from "../../../controllers/managers/deleteManager";
-import { validate } from "../../../middlewares/validate";
-import { managerSchema } from "../../../schemas/managerInterface";
-import { Request, Response, NextFunction } from "express";
+import { softDeleteManager } from "../../../controllers/managers/softDeletes/softDeleteManager";
 import { authenticateManager } from "../../../middlewares/auth";
-import {
-    restoreDeletedItem,
-    softDeleteManager,
-} from "../../../controllers/managers/softDeleteController";
+import { validate } from "../../../middlewares/validate";
+import { restoreDeletedItem } from "../../../controllers/managers/softDeletes/restoreDeleteItem";
+import { managerSchema } from "../../../schemas/managerInterface";
 import { createImageUploader } from "./../../../config/storage/storage";
 
 export const uploadManagerImage = createImageUploader("uploads/managers");
-
 const managerRoutes: Router = express.Router();
 
 managerRoutes.post(
@@ -100,5 +97,4 @@ managerRoutes.patch(
         }
     }
 );
-
 export default managerRoutes;

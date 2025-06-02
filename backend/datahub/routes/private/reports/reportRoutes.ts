@@ -8,12 +8,6 @@ import { getAllDriversUsageReport } from "../../../controllers/reports/getAllDri
 import { getAllEventsReport } from "../../../controllers/reports/getAllEventsReport";
 import { getAllManagersReport } from "../../../controllers/reports/getAllManagersReport";
 import { getCompleteManagersReport } from "../../../controllers/reports/getCompleteManagersReport";
-import {
-    softDeleteCar,
-    softDeleteDriver,
-    softDeleteEvent,
-    restoreDeletedItem,
-} from "../../../controllers/managers/softDeleteController";
 
 const reportRoutes: Router = express.Router();
 
