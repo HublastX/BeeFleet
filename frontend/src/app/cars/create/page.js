@@ -189,9 +189,9 @@ function CreateCarsModal() {
    };
 
    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-         <div className="bg-white dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center gap-3 mb-6 sticky top-0 bg-white dark:bg-bee-dark-800 pb-4 border-b border-bee-dark-300 dark:border-bee-dark-400">
+      <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md p-2">
+         <div className="bg-white dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-lg w-full max-w-2xl max-h-[90vh] flex flex-col">
+            <div className="flex items-center gap-3 mb-6 sticky top-0 z-10 bg-white dark:bg-bee-dark-800 pb-4 border-b border-bee-dark-300 dark:border-bee-dark-400">
                <h2 className="text-2xl font-bold">Cadastrar Novo Veículo</h2>
                <button
                   onClick={() => router.back()}
@@ -203,91 +203,101 @@ function CreateCarsModal() {
                </button>
             </div>
 
-            {carregando && <FormSkeleton />}
-            {!carregando && (
-               <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                     {formList.map(
-                        ({
-                           label,
-                           id,
-                           value,
-                           setValue,
-                           error,
-                           placeholder,
-                           type,
-                           transform,
-                        }) => (
-                           <div key={id} className="space-y-1">
-                              <label
-                                 htmlFor={id}
-                                 className="block text-sm font-medium text-dark dark:text-white"
-                              >
-                                 {label}
-                              </label>
-                              <InputText
-                                 type={type}
-                                 id={id}
-                                 name={id}
-                                 value={value}
-                                 onChange={(e) =>
-                                    setValue(
-                                       transform
-                                          ? transform(e.target.value)
-                                          : e.target.value
-                                    )
-                                 }
-                                 placeholder={placeholder}
-                                 required
-                                 className={`w-full ${error ? "border-red-500 dark:border-red-500 border-2" : ""}`}
-                              />
-                              {error && (
-                                 <p className="text-red-500 text-xs">{error}</p>
-                              )}
-                           </div>
-                        )
-                     )}
-                  </div>
-
-                  <div className="space-y-1">
-                     <label className="block text-sm font-medium">
-                        Imagem do Veículo
-                     </label>
-                     <InputText
-                        type="file"
-                        variant="file"
-                        name="photo"
-                        accept="image/*"
-                        onChange={(e) => setImage(e.target.files[0])}
-                        className={`file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark w-full ${errors.image ? "border-red-500 dark:border-red-500 border-2" : ""}`}
-                     />
-                     {errors.image && (
-                        <p className="text-red-500 text-xs">{errors.image}</p>
-                     )}
-                  </div>
-
-                  <div className="flex justify-end gap-3 pt-4 border-t border-bee-dark-300 dark:border-bee-dark-400">
-                     <Btn
-                        type="button"
-                        onClick={() => router.push("/cars")}
-                        variant="cancel"
-                        texto="Cancelar"
-                     />
-                     <Btn type="submit" variant="primary" disabled={carregando}>
-                        {carregando ? (
-                           <div className="flex items-center justify-center gap-2 min-w-34">
-                              <Icon
-                                 name="circle"
-                                 className="size-5 text-white"
-                              />
-                           </div>
-                        ) : (
-                           "Cadastrar Veículo"
+            <div className="overflow-y-auto flex-1">
+               {carregando && <FormSkeleton />}
+               {!carregando && (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {formList.map(
+                           ({
+                              label,
+                              id,
+                              value,
+                              setValue,
+                              error,
+                              placeholder,
+                              type,
+                              transform,
+                           }) => (
+                              <div key={id} className="space-y-1">
+                                 <label
+                                    htmlFor={id}
+                                    className="block text-sm font-medium text-dark dark:text-white"
+                                 >
+                                    {label}
+                                 </label>
+                                 <InputText
+                                    type={type}
+                                    id={id}
+                                    name={id}
+                                    value={value}
+                                    onChange={(e) =>
+                                       setValue(
+                                          transform
+                                             ? transform(e.target.value)
+                                             : e.target.value
+                                       )
+                                    }
+                                    placeholder={placeholder}
+                                    required
+                                    className={`w-full ${error ? "border-red-500 dark:border-red-500 border-2" : ""}`}
+                                 />
+                                 {error && (
+                                    <p className="text-red-500 text-xs">
+                                       {error}
+                                    </p>
+                                 )}
+                              </div>
+                           )
                         )}
-                     </Btn>
-                  </div>
-               </form>
-            )}
+                     </div>
+
+                     <div className="space-y-1">
+                        <label className="block text-sm font-medium">
+                           Imagem do Veículo
+                        </label>
+                        <InputText
+                           type="file"
+                           variant="file"
+                           name="photo"
+                           accept="image/*"
+                           onChange={(e) => setImage(e.target.files[0])}
+                           className={`file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark w-full ${errors.image ? "border-red-500 dark:border-red-500 border-2" : ""}`}
+                        />
+                        {errors.image && (
+                           <p className="text-red-500 text-xs">
+                              {errors.image}
+                           </p>
+                        )}
+                     </div>
+
+                     <div className="flex justify-end gap-3 pt-4 border-t border-bee-dark-300 dark:border-bee-dark-400">
+                        <Btn
+                           type="button"
+                           onClick={() => router.push("/cars")}
+                           variant="cancel"
+                           texto="Cancelar"
+                        />
+                        <Btn
+                           type="submit"
+                           variant="primary"
+                           disabled={carregando}
+                        >
+                           {carregando ? (
+                              <div className="flex items-center justify-center gap-2 min-w-34">
+                                 <Icon
+                                    name="circle"
+                                    className="size-5 text-white"
+                                 />
+                              </div>
+                           ) : (
+                              "Cadastrar Veículo"
+                           )}
+                        </Btn>
+                     </div>
+                  </form>
+               )}
+            </div>
          </div>
       </div>
    );
