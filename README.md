@@ -5,8 +5,6 @@
 [![GitHub Repository](https://img.shields.io/badge/GitHub-HublastX%2FBeeFleet-blue?style=flat&logo=github)](https://github.com/HublastX/BeeFleet)
 [![Website](https://img.shields.io/badge/Website-BeeFleet-yellow?style=flat&logo=firefox)](https://hublast.com/beefleet/)
 
-[🌐 Acessar Sistema](https://hublast.com/beefleet/) | [💻 Repositório](https://github.com/HublastX/BeeFleet)
-
 </div>
 
 ## 📋 Sobre o Projeto
