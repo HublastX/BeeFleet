@@ -250,20 +250,19 @@ export default function CarTable({ searchTerm }) {
                      </TableBody>
                   </Table>
                )}
-
-               {/* paginacao */}
-               {!carregando && !erro && totalPages > 1 && (
-                  <div className="flex justify-end px-6 py-3 border-t border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
-                     <Pagination
-                        currentPage={currentPage}
-                        totalPages={totalPages}
-                        onPageChange={setCurrentPage}
-                        totalItems={carro.length}
-                     />
-                  </div>
-               )}
             </div>
          </div>
+         {/* paginacao */}
+         {!carregando && !erro && totalPages > 1 && (
+            <div className="flex justify-end px-6 py-3 border-t border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
+               <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  totalItems={carro.length}
+               />
+            </div>
+         )}
          {modalAberto && (
             <DeleteConfirmation
                link={confirmarDelete}

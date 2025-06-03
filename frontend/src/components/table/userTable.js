@@ -246,20 +246,17 @@ export default function UserTable({ searchTerm }) {
                   ))}
                </TableBody>
             </Table>
-
-            {/* paginacao */}
-            {!carregando && !erro && totalPages > 1 && (
-               <div className="flex justify-end px-6 py-3 border-t border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
-                  <Pagination
-                     currentPage={currentPage}
-                     totalPages={totalPages}
-                     onPageChange={setCurrentPage}
-                     totalItems={motoristas.length}
-                  />
-               </div>
-            )}
          </div>
-
+         {!carregando && !erro && totalPages > 1 && (
+            <div className="flex justify-end px-6 py-3 border-t border-bee-dark-300 dark:border-bee-dark-400 bg-bee-dark-100 dark:bg-bee-dark-800">
+               <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                  totalItems={motoristas.length}
+               />
+            </div>
+         )}
          {modalAberto && (
             <DeleteConfirmation
                link={confirmarDelete}
