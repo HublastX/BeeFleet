@@ -24,17 +24,19 @@ BeeFleet é um sistema inovador de gerenciamento de frotas que visa otimizar e s
 
 ### Frontend
 
--   Next.js
--   JavaScript
--   Tailwind CSS
--   ESLint
--   Prettier
+[![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
+[![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)](https://prettier.io/)
+[![PostCSS](https://img.shields.io/badge/PostCSS-DD3A0A?style=for-the-badge&logo=postcss&logoColor=white)](https://postcss.org/)
 
 ### Backend
 
--   Node.js
--   PostgreSQL
--   Docker
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
 
 ## 📦 Estrutura do Projeto
 
@@ -87,36 +89,3 @@ O sistema é auto-explicativo e possui uma interface intuitiva. Para suporte:
 -   💻 Repositório: [github.com/HublastX/BeeFleet](https://github.com/HublastX/BeeFleet)
 
 > **Importante**: Todo o suporte é realizado através do nosso bot inteligente, que está disponível 24 horas por dia para ajudar você.
-
-## 📚 Documentação
-
-A documentação do projeto está disponível em nossa [Wiki](https://github.com/HublastX/BeeFleet/wiki).
-
-### Estrutura da Wiki
-
-#### 📖 Guia do Usuário
-
--   [Introdução ao Sistema](https://github.com/HublastX/BeeFleet/wiki/Introducao-ao-Sistema)
--   [Dashboard e Navegação](https://github.com/HublastX/BeeFleet/wiki/Dashboard-e-Navegacao)
--   [Gestão de Veículos](https://github.com/HublastX/BeeFleet/wiki/Gestao-de-Veiculos)
--   [Gestão de Motoristas](https://github.com/HublastX/BeeFleet/wiki/Gestao-de-Motoristas)
-
-#### 🤖 Bot Assistant
-
--   [Como Usar o Bot](https://github.com/HublastX/BeeFleet/wiki/Como-Usar-o-Bot)
--   [Comandos Disponíveis](https://github.com/HublastX/BeeFleet/wiki/Comandos-do-Bot)
--   [Perguntas Frequentes](https://github.com/HublastX/BeeFleet/wiki/FAQ)
-
-#### 💻 Documentação Técnica
-
--   [Arquitetura Frontend](https://github.com/HublastX/BeeFleet/wiki/Arquitetura-Frontend)
--   [Arquitetura Backend](https://github.com/HublastX/BeeFleet/wiki/Arquitetura-Backend)
--   [DataHub](https://github.com/HublastX/BeeFleet/wiki/DataHub)
-
----
-
-<div align="center">
-
-Feito com ❤️ pela equipe BeeFleet
-
-</div>
