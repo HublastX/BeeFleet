@@ -28,7 +28,9 @@ const Header = () => {
                   type="button"
                   onClick={handleToggle}
                   className={`${!gestor ? "cursor-not-allowed" : ""}`}
-                  aria-label={isMobileOpen ? "Fechar menu lateral" : "Abrir menu lateral"}
+                  aria-label={
+                     isMobileOpen ? "Fechar menu lateral" : "Abrir menu lateral"
+                  }
                   aria-expanded={isMobileOpen}
                   aria-controls="menu-lateral"
                   disabled={!gestor}
@@ -36,13 +38,18 @@ const Header = () => {
                   {isMobileOpen ? (
                      <Icon name="xMark" className="h-7" aria-hidden="true" />
                   ) : (
-                     <Icon name="closeLeft" className="h-7" strokeWidth={1.5} aria-hidden="true" />
+                     <Icon
+                        name="closeLeft"
+                        className="h-7"
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                     />
                   )}
                </Btn>
             </div>
 
             <div className="flex items-center justify-end gap-2 py-4 px-0">
-            {carregando ? (
+               {carregando ? (
                   <HeaderSkeleton />
                ) : (
                   <>
