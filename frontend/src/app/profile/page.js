@@ -14,6 +14,7 @@ import useEvents from "@/hooks/useEvent";
 import ProfileListModal from "@/components/profileList/profileList";
 import { useRouter } from "next/navigation";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Manager() {
    const { gestor, deleteManager } = useAuth();
@@ -74,14 +75,24 @@ function Manager() {
    }
 
    return (
-      <main
+      <motion.main
+         initial={{ opacity: 0 }}
+         animate={{ opacity: 1 }}
          className="max-w-6xl mx-auto p-4 md:p-8 space-y-8"
          role="main"
          aria-labelledby="page-title"
       >
          {/* Header */}
-         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-            <div>
+         <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8"
+         >
+            <motion.div
+               initial={{ opacity: 0, x: -20 }}
+               animate={{ opacity: 1, x: 0 }}
+               transition={{ delay: 0.1 }}
+            >
                <h1
                   id="page-title"
                   className="text-3xl font-bold text-gray-800 dark:text-white"
@@ -91,9 +102,12 @@ function Manager() {
                <p className="text-gray-500 dark:text-gray-400 mt-1">
                   Gerencie seus recursos e informações pessoais
                </p>
-            </div>
+            </motion.div>
 
-            <div
+            <motion.div
+               initial={{ opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0 }}
+               transition={{ delay: 0.2 }}
                className="flex gap-3"
                role="toolbar"
                aria-label="Ações do perfil"
@@ -102,16 +116,30 @@ function Manager() {
                   href="/profile/edit"
                   aria-label="Editar informações do perfil"
                >
-                  <Btn
-                     texto="Editar perfil"
-                     className="flex flex-row-reverse items-center gap-2"
+                  <motion.div
+                     whileHover={{ scale: 1.05 }}
+                     whileTap={{ scale: 0.95 }}
                   >
-                     <Icon name="lapis" className="size-4" aria-hidden="true" />
-                  </Btn>
+                     <Btn
+                        texto="Editar perfil"
+                        className="flex flex-row-reverse items-center gap-2"
+                     >
+                        <Icon
+                           name="lapis"
+                           className="size-4"
+                           aria-hidden="true"
+                        />
+                     </Btn>
+                  </motion.div>
                </Link>
-               <button
+               <motion.button
+                  whileHover={{
+                     scale: 1.05,
+                     backgroundColor: "rgba(239, 68, 68, 0.1)",
+                  }}
+                  whileTap={{ scale: 0.95 }}
                   onClick={() => abrirModalDeletar(id)}
-                  className="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 dark:hover:text-red-400 transition-colors flex items-center gap-2 border border-red-100 dark:border-red-900/30 hover:bg-red-50 dark:hover:bg-red-900/10 rounded-lg"
+                  className="px-4 py-2.5 text-sm font-medium text-red-600 hover:text-red-800 dark:hover:text-red-400 transition-colors flex items-center gap-2 border border-red-100 dark:border-red-900/30 rounded-lg"
                   aria-label="Excluir conta"
                >
                   <Icon
@@ -121,22 +149,34 @@ function Manager() {
                      aria-hidden="true"
                   />
                   Excluir conta
-               </button>
-            </div>
-         </div>
+               </motion.button>
+            </motion.div>
+         </motion.div>
 
          <section
             className="grid grid-cols-1 lg:grid-cols-3 gap-6"
             aria-label="Informações do perfil"
          >
             {/* perfil */}
-            <div
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.3 }}
+               whileHover={{ scale: 1.02 }}
                className="card-hover lg:col-span-2 bg-gradient-to-br from-white to-blue-50 dark:from-bee-dark-400 dark:to-bee-dark-800 rounded-2xl p-6 shadow-sm border border-bee-dark-300 dark:border-bee-dark-400"
                role="region"
                aria-label="Detalhes do perfil"
             >
                <div className="flex flex-col md:flex-row items-center gap-6">
-                  <div className="relative flex-shrink-0 group">
+                  <motion.div
+                     className="relative flex-shrink-0 group"
+                     whileHover={{ scale: 1.1 }}
+                     transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20,
+                     }}
+                  >
                      {!image ? (
                         <div
                            className="w-28 h-28 rounded-full bg-white dark:bg-bee-dark-800 flex items-center justify-center border-2 border-gray-200 dark:border-bee-dark-400"
@@ -161,7 +201,7 @@ function Manager() {
                            />
                         </div>
                      )}
-                  </div>
+                  </motion.div>
 
                   <div className="flex-1 text-center md:text-left space-y-3">
                      <div>
@@ -193,10 +233,14 @@ function Manager() {
                      </div>
                   </div>
                </div>
-            </div>
+            </motion.div>
 
             {/* resumo*/}
-            <div
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.4 }}
+               whileHover={{ scale: 1.02 }}
                className="card-hover bg-white dark:bg-bee-dark-800 rounded-2xl p-6 shadow-sm border border-bee-dark-300 dark:border-bee-dark-400"
                role="region"
                aria-label="Resumo das estatísticas"
@@ -233,27 +277,47 @@ function Manager() {
                      }}
                   />
                </div>
-            </div>
+            </motion.div>
          </section>
 
          {/* Estatisticas */}
-         <section className="mt-8" aria-labelledby="stats-title">
-            <div className="flex justify-between items-center mb-6">
+         <motion.section
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="mt-8"
+            aria-labelledby="stats-title"
+         >
+            <motion.div
+               initial={{ opacity: 0, y: -10 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.6 }}
+               className="flex justify-between items-center mb-6"
+            >
                <h2
                   id="stats-title"
                   className="text-xl font-bold text-gray-800 dark:text-white"
                >
                   Estatísticas Detalhadas
                </h2>
-               <Link
-                  href={`/report?filterType=manager&filterId=${id}`}
-                  className="text-sm font-medium text-bee-purple-600 dark:text-bee-purple-400 hover:underline flex items-center gap-1"
-                  aria-label="Gerar relatório completo de estatísticas"
+               <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                >
-                  <Icon name="reports" className="size-4" aria-hidden="true" />
-                  Gerar relatório completo
-               </Link>
-            </div>
+                  <Link
+                     href={`/report?filterType=manager&filterId=${id}`}
+                     className="text-sm font-medium text-bee-purple-600 dark:text-bee-purple-400 hover:underline flex items-center gap-1"
+                     aria-label="Gerar relatório completo de estatísticas"
+                  >
+                     <Icon
+                        name="reports"
+                        className="size-4"
+                        aria-hidden="true"
+                     />
+                     Gerar relatório completo
+                  </Link>
+               </motion.div>
+            </motion.div>
 
             <div
                className="grid grid-cols-1 md:grid-cols-3 gap-6"
@@ -296,31 +360,40 @@ function Manager() {
                   }}
                />
             </div>
-         </section>
+         </motion.section>
 
          {/* Modals */}
-         <ProfileListModal
-            open={modalListaAberto}
-            onClose={() => setModalListaAberto(false)}
-            tipo={tipoLista}
-         />
+         <AnimatePresence>
+            {modalListaAberto && (
+               <ProfileListModal
+                  open={modalListaAberto}
+                  onClose={() => setModalListaAberto(false)}
+                  tipo={tipoLista}
+               />
+            )}
 
-         {modalAberto && (
-            <DeleteConfirmation
-               link={confirmarDelete}
-               tipo="perfil"
-               onClose={() => setModalAberto(false)}
-            />
-         )}
-      </main>
+            {modalAberto && (
+               <DeleteConfirmation
+                  link={confirmarDelete}
+                  tipo="perfil"
+                  onClose={() => setModalAberto(false)}
+               />
+            )}
+         </AnimatePresence>
+      </motion.main>
    );
 }
 
 function StatItem({ icon, label, value, onClick }) {
    return (
-      <button
+      <motion.button
+         whileHover={{
+            scale: 1.02,
+            backgroundColor: "rgba(152, 16, 250, 0.1)",
+         }}
+         whileTap={{ scale: 0.95 }}
          onClick={onClick}
-         className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 transition-colors"
+         className="flex items-center justify-between w-full p-3 rounded-lg transition-colors"
          aria-label={`Ver detalhes de ${label}: ${value}`}
       >
          <div className="flex items-center gap-3">
@@ -338,7 +411,7 @@ function StatItem({ icon, label, value, onClick }) {
          <span className="font-bold text-gray-800 dark:text-white">
             {value}
          </span>
-      </button>
+      </motion.button>
    );
 }
 
@@ -367,7 +440,11 @@ function StatCard({ icon, title, count, total, color, data, onClick }) {
    const COLORS = [colorClasses[color].chartColor, "#E2E8F0"];
 
    return (
-      <button
+      <motion.button
+         initial={{ opacity: 0, y: 20 }}
+         animate={{ opacity: 1, y: 0 }}
+         whileHover={{ scale: 1.02 }}
+         whileTap={{ scale: 0.98 }}
          onClick={onClick}
          className={`p-6 rounded-xl ${colorClasses[color].bg} shadow-sm border border-bee-dark-300 dark:border-bee-dark-400 transition-all card-hover group w-full h-full text-left`}
          role="listitem"
@@ -441,7 +518,7 @@ function StatCard({ icon, title, count, total, color, data, onClick }) {
                />
             </span>
          </div>
-      </button>
+      </motion.button>
    );
 }
 

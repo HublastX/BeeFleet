@@ -14,6 +14,7 @@ import useEvents from "@/hooks/useEvent";
 import useDrivers from "@/hooks/useDrivers";
 import DetailSkeleton from "@/elements/ui/skeleton/DetailSkeleton";
 import Btn from "@/elements/btn";
+import { motion, AnimatePresence } from "framer-motion";
 
 function formatDate(dateISO) {
    const options = {
@@ -316,66 +317,115 @@ function CarPage() {
          </div>
 
          {/* Mobile Menu */}
-         {showMenu && (
-            <div className="fixed inset-0 z-50">
-               <div
-                  className="absolute inset-0 bg-black/30"
-                  onClick={() => setShowMenu(false)}
-               />
+         <AnimatePresence>
+            {showMenu && (
+               <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-50"
+               >
+                  <motion.div
+                     initial={{ opacity: 0 }}
+                     animate={{ opacity: 1 }}
+                     exit={{ opacity: 0 }}
+                     className="absolute inset-0 bg-black/30"
+                     onClick={() => setShowMenu(false)}
+                  />
 
-               <div className="absolute bottom-0 left-0 right-0 md:bottom-auto md:right-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:min-w-1/3">
-                  <div className="bg-white dark:bg-gray-800 rounded-t-xl md:rounded-xl shadow-xl border-t md:border border-gray-200 dark:border-gray-700 p-4 md:p-6 w-full md:max-w-md">
-                     <div className="space-y-2 md:space-y-3">
-                        <h3 className="hidden md:block text-lg font-medium mb-4">
-                           Opções do Veículo
-                        </h3>
+                  <motion.div
+                     initial={{ y: "100%" }}
+                     animate={{ y: 0 }}
+                     exit={{ y: "100%" }}
+                     transition={{
+                        type: "spring",
+                        damping: 25,
+                        stiffness: 300,
+                     }}
+                     className="absolute bottom-0 left-0 right-0 md:bottom-auto md:right-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:min-w-1/3"
+                  >
+                     <motion.div
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.95 }}
+                        transition={{ delay: 0.1 }}
+                        className="bg-white dark:bg-gray-800 rounded-t-xl md:rounded-xl shadow-xl border-t md:border border-gray-200 dark:border-gray-700 p-4 md:p-6 w-full md:max-w-md"
+                     >
+                        <div className="space-y-2 md:space-y-3">
+                           <motion.h3
+                              initial={{ opacity: 0, y: -10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.2 }}
+                              className="hidden md:block text-lg font-medium mb-4"
+                           >
+                              Opções do Veículo
+                           </motion.h3>
 
-                        <Link
-                           href={`/cars/${id}/edit`}
-                           className="flex items-center gap-3 p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 md:transition-colors"
-                           onClick={() => setShowMenu(false)}
-                        >
-                           <Icon name="lapis" className="size-5" />
-                           <span>Editar Veículo</span>
-                        </Link>
+                           {[
+                              {
+                                 href: `/cars/${id}/edit`,
+                                 icon: "lapis",
+                                 text: "Editar Veículo",
+                              },
+                              {
+                                 href: `/event?tipo=${carroData.isAvailable ? "saida" : "chegada"}&carroId=${id}`,
+                                 icon: "evento",
+                                 text: carroData.isAvailable
+                                    ? "Registrar Saída"
+                                    : "Registrar Chegada",
+                              },
+                              {
+                                 href: `/report?filterType=carro&filterId=${id}`,
+                                 icon: "reports",
+                                 text: "Gerar Relatório",
+                              },
+                           ].map((item, index) => (
+                              <motion.div
+                                 key={item.text}
+                                 initial={{ opacity: 0, x: -20 }}
+                                 animate={{ opacity: 1, x: 0 }}
+                                 transition={{
+                                    delay: 0.3 + index * 0.1,
+                                    type: "spring",
+                                    stiffness: 300,
+                                    damping: 25,
+                                 }}
+                              >
+                                 <Link
+                                    href={item.href}
+                                    className="flex items-center gap-3 p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 md:transition-colors"
+                                    onClick={() => setShowMenu(false)}
+                                 >
+                                    <Icon name={item.icon} className="size-5" />
+                                    <span>{item.text}</span>
+                                 </Link>
+                              </motion.div>
+                           ))}
 
-                        <Link
-                           href={`/event?tipo=${carroData.isAvailable ? "saida" : "chegada"}&carroId=${id}`}
-                           className="flex items-center gap-3 p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 md:transition-colors"
-                           onClick={() => setShowMenu(false)}
-                        >
-                           <Icon name="evento" className="size-5" />
-                           <span>
-                              {carroData.isAvailable
-                                 ? "Registrar Saída"
-                                 : "Registrar Chegada"}
-                           </span>
-                        </Link>
-
-                        <Link
-                           href={`/report?filterType=carro&filterId=${id}`}
-                           className="flex items-center gap-3 p-3 rounded-lg hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 md:transition-colors"
-                           onClick={() => setShowMenu(false)}
-                        >
-                           <Icon name="reports" className="size-5" />
-                           <span>Gerar Relatório</span>
-                        </Link>
-
-                        <button
-                           onClick={() => {
-                              abrirModalDeletar(id);
-                              setShowMenu(false);
-                           }}
-                           className="w-full flex items-center gap-3 p-3 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 md:transition-colors"
-                        >
-                           <Icon name="trash" className="size-5" />
-                           <span>Excluir Veículo</span>
-                        </button>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         )}
+                           <motion.button
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{
+                                 delay: 0.6,
+                                 type: "spring",
+                                 stiffness: 300,
+                                 damping: 25,
+                              }}
+                              onClick={() => {
+                                 abrirModalDeletar(id);
+                                 setShowMenu(false);
+                              }}
+                              className="w-full flex items-center gap-3 p-3 text-red-500 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 md:transition-colors"
+                           >
+                              <Icon name="trash" className="size-5" />
+                              <span>Excluir Veículo</span>
+                           </motion.button>
+                        </div>
+                     </motion.div>
+                  </motion.div>
+               </motion.div>
+            )}
+         </AnimatePresence>
 
          {/* Delete Modal */}
          {showDeleteModal && (

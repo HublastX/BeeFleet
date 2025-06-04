@@ -18,6 +18,7 @@ import {
    ResponsiveContainer,
 } from "recharts";
 import RecentAtualizacao from "@/components/table/atualizacaoTable";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Home() {
    const { gestor, erro, carregando, gestores } = useAuth();
@@ -209,64 +210,70 @@ function Home() {
                </div>
                <main role="main" className="grid grid-cols-12 gap-4 md:gap-6">
                   <div className="col-span-12 space-y-5 xl:col-span-6">
-                     <nav
-                        className="flex row gap-5 overflow-x-scroll md:grid grid-cols-1 sm:grid-cols-2 md:gap-6 no-scrollbar"
-                        aria-label="Cards de navegação"
-                     >
-                        <Link
-                           href="/drivers"
-                           aria-label={`Ver todos os ${motoristas.length} motoristas`}
+                     <AnimatePresence>
+                        <nav
+                           className="flex row gap-5 overflow-x-scroll md:grid grid-cols-1 sm:grid-cols-2 md:gap-6 no-scrollbar"
+                           aria-label="Cards de navegação"
                         >
-                           <Card
-                              titulo="Motoristas"
-                              icone="users"
-                              estado={resultadoMotoristas.estado}
-                              porcentagem={resultadoMotoristas.porcentagem}
-                              quantidade={motoristas.length}
-                              color="purple"
-                           />
-                        </Link>
-                        <Link
-                           href="/cars"
-                           aria-label={`Ver todos os ${carro.length} veículos`}
-                        >
-                           <Card
-                              titulo="Veículos"
-                              icone="car"
-                              estado={resultadoCarros.estado}
-                              porcentagem={resultadoCarros.porcentagem}
-                              quantidade={carro.length}
-                              color="blue"
-                           />
-                        </Link>
+                           <Link
+                              href="/drivers"
+                              aria-label={`Ver todos os ${motoristas.length} motoristas`}
+                           >
+                              <Card
+                                 titulo="Motoristas"
+                                 icone="users"
+                                 estado={resultadoMotoristas.estado}
+                                 porcentagem={resultadoMotoristas.porcentagem}
+                                 quantidade={motoristas.length}
+                                 color="purple"
+                                 index={0}
+                              />
+                           </Link>
+                           <Link
+                              href="/cars"
+                              aria-label={`Ver todos os ${carro.length} veículos`}
+                           >
+                              <Card
+                                 titulo="Veículos"
+                                 icone="car"
+                                 estado={resultadoCarros.estado}
+                                 porcentagem={resultadoCarros.porcentagem}
+                                 quantidade={carro.length}
+                                 color="blue"
+                                 index={1}
+                              />
+                           </Link>
 
-                        <Link
-                           href="/managers"
-                           aria-label={`Ver todos os ${gestores.length} gestores`}
-                        >
-                           <Card
-                              titulo="Gestores"
-                              icone="gestor"
-                              estado={resultadoGestores.estado}
-                              porcentagem={resultadoGestores.porcentagem}
-                              quantidade={gestores.length}
-                              color="orange"
-                           />
-                        </Link>
-                        <Link
-                           href="/event"
-                           aria-label={`Ver todos os ${events.length} eventos`}
-                        >
-                           <Card
-                              titulo="Eventos"
-                              icone="evento"
-                              estado={resultadoEventos.estado}
-                              porcentagem={resultadoEventos.porcentagem}
-                              quantidade={events.length}
-                              color="green"
-                           />
-                        </Link>
-                     </nav>
+                           <Link
+                              href="/managers"
+                              aria-label={`Ver todos os ${gestores.length} gestores`}
+                           >
+                              <Card
+                                 titulo="Gestores"
+                                 icone="gestor"
+                                 estado={resultadoGestores.estado}
+                                 porcentagem={resultadoGestores.porcentagem}
+                                 quantidade={gestores.length}
+                                 color="orange"
+                                 index={2}
+                              />
+                           </Link>
+                           <Link
+                              href="/event"
+                              aria-label={`Ver todos os ${events.length} eventos`}
+                           >
+                              <Card
+                                 titulo="Eventos"
+                                 icone="evento"
+                                 estado={resultadoEventos.estado}
+                                 porcentagem={resultadoEventos.porcentagem}
+                                 quantidade={events.length}
+                                 color="green"
+                                 index={3}
+                              />
+                           </Link>
+                        </nav>
+                     </AnimatePresence>
                      <section
                         aria-label="Gráfico de criações dos últimos 7 dias"
                         className="overflow-hidden rounded-xl border border-bee-dark-300 bg-bee-dark-100 dark:border-bee-dark-400 dark:bg-bee-dark-800 p-6 transition-all duration-300 hover:shadow-lg"

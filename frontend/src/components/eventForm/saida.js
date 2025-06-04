@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useCallback } from "react";
 import EventList from "../profileList/eventList";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Saida() {
    const { motoristas } = useDrivers();
@@ -139,7 +140,6 @@ export default function Saida() {
       }
    }, [carro, searchParams, selecionarCarro]);
 
-
    const toggleInfoSection = () => {
       setShowInfo(!showInfo);
    };
@@ -178,16 +178,32 @@ export default function Saida() {
    };
 
    return (
-      <div className="max-w-4xl mx-auto p-4 overflow-y-auto max-h-[80vh]">
+      <motion.div
+         initial={{ opacity: 0 }}
+         animate={{ opacity: 1 }}
+         className="max-w-4xl mx-auto p-4 overflow-y-auto max-h-[80vh]"
+      >
          <form onSubmit={handleSubmit} className="space-y-6 overflow-y-auto">
             {/* Seção Motorista */}
-            <div className="p-6">
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.1 }}
+               className="p-6"
+            >
                <div className="flex items-center flex-row justify-between w-full mb-4">
-                  <div className="flex items-center gap-3">
-                     <Icon name="user" className="size-6 " />
+                  <motion.div
+                     initial={{ opacity: 0, x: -20 }}
+                     animate={{ opacity: 1, x: 0 }}
+                     transition={{ delay: 0.2 }}
+                     className="flex items-center gap-3"
+                  >
+                     <Icon name="user" className="size-6" />
                      <h2 className="text-xl font-bold">Motorista</h2>
-                  </div>
-                  <button
+                  </motion.div>
+                  <motion.button
+                     whileHover={{ scale: 1.05 }}
+                     whileTap={{ scale: 0.95 }}
                      type="button"
                      onClick={() => setOpenMotoristaList(true)}
                      className="flex items- cursor-pointer"
@@ -200,17 +216,25 @@ export default function Saida() {
                               : "error"
                         }
                      >
-                        <span className="hidden sm:inline">
-                           {motoristasDisponiveis?.length > 0
-                              ? `${motoristasDisponiveis?.length} disponível${motoristasDisponiveis?.length > 1 ? "s" : ""}`
-                              : "0 disponível"}
-                        </span>
-                        <span className="sm:hidden">
-                           {motoristasDisponiveis?.length}
-                        </span>
+                        {motoristasDisponiveis?.length || 0} Disponíveis
                      </Badge>
-                  </button>
+                  </motion.button>
                </div>
+
+               <AnimatePresence>
+                  {motoristaStatusError && (
+                     <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mb-4"
+                     >
+                        <p className="text-red-500 text-sm">
+                           {motoristaStatusError}
+                        </p>
+                     </motion.div>
+                  )}
+               </AnimatePresence>
 
                <div className="space-y-4">
                   <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
@@ -291,24 +315,32 @@ export default function Saida() {
                         </Link>
                      </p>
                   )}
-
-                  {motoristaStatusError && (
-                     <p className="text-red-600 dark:text-red-300">
-                        {motoristaStatusError}
-                     </p>
-                  )}
                </div>
-            </div>
+            </motion.div>
 
             {/* Seção Veículo */}
-            <div className="p-6">
-               <div className="flex items-center gap-3 mb-4">
-                  <Icon name="car" className="size-6 " />
-                  <h2 className="text-xl font-bold">Veículo</h2>
-                  <button
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.3 }}
+               className="p-6"
+            >
+               <div className="flex items-center flex-row justify-between w-full mb-4">
+                  <motion.div
+                     initial={{ opacity: 0, x: -20 }}
+                     animate={{ opacity: 1, x: 0 }}
+                     transition={{ delay: 0.4 }}
+                     className="flex items-center gap-3"
+                  >
+                     <Icon name="car" className="size-6" />
+                     <h2 className="text-xl font-bold">Veículo</h2>
+                  </motion.div>
+                  <motion.button
+                     whileHover={{ scale: 1.05 }}
+                     whileTap={{ scale: 0.95 }}
                      type="button"
                      onClick={() => setOpenCarroList(true)}
-                     className="ml-auto cursor-pointer"
+                     className="flex items- cursor-pointer"
                   >
                      <Badge
                         size="sm"
@@ -316,17 +348,25 @@ export default function Saida() {
                            carrosDisponiveis?.length > 0 ? "success" : "error"
                         }
                      >
-                        <span className="hidden sm:inline">
-                           {carrosDisponiveis?.length > 0
-                              ? `${carrosDisponiveis?.length} disponível${carrosDisponiveis?.length > 1 ? "s" : ""}`
-                              : "0 disponível"}
-                        </span>
-                        <span className="sm:hidden">
-                           {carrosDisponiveis?.length}
-                        </span>
+                        {carrosDisponiveis?.length || 0} Disponíveis
                      </Badge>
-                  </button>
+                  </motion.button>
                </div>
+
+               <AnimatePresence>
+                  {carroStatusError && (
+                     <motion.div
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mb-4"
+                     >
+                        <p className="text-red-500 text-sm">
+                           {carroStatusError}
+                        </p>
+                     </motion.div>
+                  )}
+               </AnimatePresence>
 
                <div className="space-y-4">
                   <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
@@ -407,14 +447,8 @@ export default function Saida() {
                         </Link>
                      </p>
                   )}
-
-                  {carroStatusError && (
-                     <p className="text-red-600 dark:text-red-300">
-                        {carroStatusError}
-                     </p>
-                  )}
                </div>
-            </div>
+            </motion.div>
 
             {/* Seção Confirmação */}
             <div className="bg-bee-dark-100 dark:bg-gray-800 rounded-lg p-6">
@@ -482,27 +516,31 @@ export default function Saida() {
             </div>
 
             {/* Botões */}
-            <div className="mt-6 pt-6 border-t-2 border-bee-dark-300 dark:border-bee-dark-400 flex justify-end gap-3">
-               <Btn
-                  type="button"
-                  texto="Cancelar"
-                  variant="cancel"
-                  onClick={() => router.back()}
-               />
-               <Btn
-                  type="submit"
-                  texto={
-                     carregando ? (
-                        <div className="flex items-center justify-center gap-2 min-w-34">
-                           <Icon name="circle" className="size-5 text-white" />
-                        </div>
-                     ) : (
-                        "Confirmar Saída"
-                     )
-                  }
-                  disabled={!selectedCarro || !selectedMotorista || carregando}
-               />
-            </div>
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.5 }}
+               className="flex justify-end gap-4 p-6"
+            >
+               <Link href="/">
+                  <motion.div
+                     whileHover={{ scale: 1.02 }}
+                     whileTap={{ scale: 0.98 }}
+                  >
+                     <Btn texto="Cancelar" variant="cancel" />
+                  </motion.div>
+               </Link>
+               <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+               >
+                  <Btn
+                     texto={carregando ? "Registrando..." : "Registrar Saída"}
+                     type="submit"
+                     disabled={carregando}
+                  />
+               </motion.div>
+            </motion.div>
 
             {/* Modais de seleção */}
             <EventList
@@ -518,6 +556,6 @@ export default function Saida() {
                onSelect={selecionarCarro}
             />
          </form>
-      </div>
+      </motion.div>
    );
 }

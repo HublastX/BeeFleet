@@ -16,6 +16,7 @@ import {
    Tooltip,
 } from "recharts";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 function Events() {
    const [tipoEvento, setTipoEvento] = useState("");
@@ -51,14 +52,26 @@ function Events() {
    }, [searchParams]);
 
    return (
-      <div>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
          {/* header */}
-         <div className="md:flex justify-between border-b items-center border-bee-dark-300 dark:border-bee-dark-400 pb-3">
-            <h2 className="text-3xl font-bold md:mb-0 mb-3">
+         <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="md:flex justify-between border-b items-center border-bee-dark-300 dark:border-bee-dark-400 pb-3"
+         >
+            <motion.h2
+               initial={{ opacity: 0, x: -20 }}
+               animate={{ opacity: 1, x: 0 }}
+               className="text-3xl font-bold md:mb-0 mb-3"
+            >
                Gerenciar Evento
-            </h2>
+            </motion.h2>
 
-            <div className="flex items-start gap-2">
+            <motion.div
+               initial={{ opacity: 0, x: 20 }}
+               animate={{ opacity: 1, x: 0 }}
+               className="flex items-start gap-2"
+            >
                <h1 className="text-base font-medium self-center">
                   Tipo de evento:
                </h1>
@@ -93,13 +106,19 @@ function Events() {
                      </div>
                   </button>
                </div>
-            </div>
-         </div>
+            </motion.div>
+         </motion.div>
 
          {/* conteudo */}
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
             {/* estatistica */}
-            <div className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover">
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.1 }}
+               whileHover={{ scale: 1.02 }}
+               className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover"
+            >
                <h3 className="text-xl font-bold mb-4 text-bee-dark-800 dark:text-white">
                   Visão Geral
                </h3>
@@ -167,11 +186,19 @@ function Events() {
                      </p>
                   </div>
                </div>
-            </div>
+            </motion.div>
 
-            <div className="flex flex-col gap-4">
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.2 }}
+               className="flex flex-col gap-4"
+            >
                {/* semana */}
-               <div className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover">
+               <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover"
+               >
                   <h3 className="text-xl font-bold mb-4 text-bee-dark-800 dark:text-white">
                      Últimos 7 dias
                   </h3>
@@ -217,10 +244,13 @@ function Events() {
                         </span>
                      </div>
                   </div>
-               </div>
+               </motion.div>
 
                {/* tipos de evento */}
-               <div className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover">
+               <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover"
+               >
                   <h3 className="text-xl font-bold mb-4">Tipos de Evento</h3>
                   <div className="space-y-3">
                      <div>
@@ -269,70 +299,128 @@ function Events() {
                         Total: {events.length} eventos registrados
                      </p>
                   </div>
-               </div>
-            </div>
+               </motion.div>
+            </motion.div>
 
             {/*  acoes rapidas */}
-            <div className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover">
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.3 }}
+               whileHover={{ scale: 1.02 }}
+               className="bg-bee-dark-100 dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-sm card-hover"
+            >
                <h3 className="text-xl font-bold mb-4 text-bee-dark-800 dark:text-white">
                   Ações Rápidas
                </h3>
                <div className="space-y-3">
-                  <button
+                  <motion.button
+                     whileHover={{
+                        scale: 1.05,
+                        backgroundColor: "rgba(152, 16, 250, 0.1)",
+                     }}
+                     whileTap={{ scale: 0.95 }}
                      onClick={() => setTipoEvento("saida")}
-                     className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors hover:bg-purple-500/10 "
+                     className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors"
                   >
                      <Icon name="eventoL" className="size-5 text-purple-500" />
                      <span>Registrar Saída</span>
-                  </button>
-                  <button
+                  </motion.button>
+                  <motion.button
+                     whileHover={{
+                        scale: 1.05,
+                        backgroundColor: "rgba(0, 166, 62, 0.1)",
+                     }}
+                     whileTap={{ scale: 0.95 }}
                      onClick={() => setTipoEvento("chegada")}
-                     className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors hover:bg-green-500/10"
+                     className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors"
                   >
                      <Icon name="evento" className="size-5 text-green-500" />
                      <span>Registrar Chegada</span>
-                  </button>
-                  <Link
-                     href="/report?filterType=event"
-                     className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors hover:bg-blue-500/10"
+                  </motion.button>
+                  <motion.div
+                     whileHover={{
+                        scale: 1.05,
+                        backgroundColor: "rgba(21, 93, 252, 0.1)",
+                     }}
+                     whileTap={{ scale: 0.95 }}
+                     className="rounded-lg"
                   >
-                     <Icon name="reports" className="size-5 text-blue-500" />
-                     <span>Gerar Relatório</span>
-                  </Link>
+                     <Link
+                        href="/report?filterType=event"
+                        className="w-full flex items-center gap-2 p-3 rounded-lg transition-colors"
+                     >
+                        <Icon name="reports" className="size-5 text-blue-500" />
+                        <span>Gerar Relatório</span>
+                     </Link>
+                  </motion.div>
                </div>
-            </div>
+            </motion.div>
 
             {/* Tabela */}
-            <div className="p-0 shadow-sm rounded-md col-span-1 md:col-span-2 lg:col-span-4 ">
+            <motion.div
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: 0.4 }}
+               className="p-0 shadow-sm rounded-md col-span-1 md:col-span-2 lg:col-span-4"
+            >
                <EventTable />
-            </div>
+            </motion.div>
          </div>
 
          {/* Modal de evento */}
-         {tipoEvento && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md">
-               <div className="bg-white dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-lg self-center min-w-[350px] max-w-full">
-                  <div className="flex items-center gap-3 mb-6">
-                     <h2 className="text-2xl font-bold">
-                        {tipoEvento === "saida"
-                           ? "Registrar Saída"
-                           : "Registrar Chegada"}
-                     </h2>
-                     <button
-                        onClick={() => setTipoEvento("")}
-                        className="ml-auto text-gray-400 hover:text-gray-700 dark:hover:text-white text-2xl font-bold focus:outline-none"
-                        aria-label="Fechar"
-                        type="button"
+         <AnimatePresence>
+            {tipoEvento && (
+               <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md"
+               >
+                  <motion.div
+                     initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                     animate={{ opacity: 1, scale: 1, y: 0 }}
+                     exit={{ opacity: 0, scale: 0.9, y: 20 }}
+                     transition={{
+                        type: "spring",
+                        damping: 25,
+                        stiffness: 300,
+                     }}
+                     className="bg-white dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-lg self-center min-w-[350px] max-w-full"
+                  >
+                     <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="flex items-center gap-3 mb-6"
                      >
-                        <Icon name="xMark" className="size-5" strokeWidth={5} />
-                     </button>
-                  </div>
+                        <h2 className="text-2xl font-bold">
+                           {tipoEvento === "saida"
+                              ? "Registrar Saída"
+                              : "Registrar Chegada"}
+                        </h2>
+                        <motion.button
+                           whileHover={{ scale: 1.1, rotate: 90 }}
+                           whileTap={{ scale: 0.9 }}
+                           onClick={() => setTipoEvento("")}
+                           className="ml-auto text-gray-400 hover:text-gray-700 dark:hover:text-white text-2xl font-bold focus:outline-none"
+                           aria-label="Fechar"
+                           type="button"
+                        >
+                           <Icon
+                              name="xMark"
+                              className="size-5"
+                              strokeWidth={5}
+                           />
+                        </motion.button>
+                     </motion.div>
 
-                  {tipoEvento === "saida" ? <Saida /> : <Chegada />}
-               </div>
-            </div>
-         )}
-      </div>
+                     {tipoEvento === "saida" ? <Saida /> : <Chegada />}
+                  </motion.div>
+               </motion.div>
+            )}
+         </AnimatePresence>
+      </motion.div>
    );
 }
 
