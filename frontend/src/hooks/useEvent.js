@@ -30,6 +30,8 @@ export default function useEvents() {
 
             const car = carro.find((c) => c.id === event.carId) || {
                plate: "Excluido",
+               brand: "Excluido",
+               model: "Excluido",
                id: event.carId,
             };
 
