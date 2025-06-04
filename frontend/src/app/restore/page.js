@@ -10,7 +10,7 @@ import ConfirmRestoreModal from "@/components/ConfirmRestoreModal";
 import AdminSkeleton from "@/elements/ui/skeleton/AdminSkeleton";
 
 const Restore = () => {
-   const { gestor } = useAuth();
+   const { gestor, getDeletedManagers, restoreManager } = useAuth();
    const { getDeletedDrivers, restoreDriver } = useDrivers();
    const { getDeletedCars, restoreCar } = useCar();
    const { getDeletedEvent, restoreEvent } = useEvent();
@@ -27,6 +27,7 @@ const Restore = () => {
       { value: "drivers", label: "Motoristas" },
       { value: "cars", label: "Veículos" },
       { value: "events", label: "Eventos" },
+      { value: "managers", label: "Gestores" },
    ];
 
    const handleTypeChange = async (type) => {
@@ -47,6 +48,8 @@ const Restore = () => {
                   cars.map((car) => ({
                      id: car.id,
                      name: `${car.brand} ${car.model} - ${car.plate}`,
+                     deletedBy: car.deletedBy?.name || "Desconhecido",
+                     deletedAt: car.deletedAt,
                   }))
                );
                break;
@@ -61,8 +64,16 @@ const Restore = () => {
                      return {
                         id: e.id,
                         name: `${driver?.name || "Motorista removido"} - ${car?.plate || "Carro removido"}`,
+                        deletedBy: e.deletedBy?.name || "Desconhecido",
+                        deletedAt: e.deletedAt,
                      };
                   })
+               );
+               break;
+            case "managers":
+               const managers = getDeletedManagers();
+               setItems(
+                  managers.filter((manager) => manager.deletedAt !== null)
                );
                break;
             default:
@@ -95,6 +106,9 @@ const Restore = () => {
             case "events":
                await restoreEvent(itemToRestore);
                break;
+            case "managers":
+               await restoreManager(itemToRestore);
+               break;
             default:
                throw new Error("Tipo inválido");
          }
@@ -117,6 +131,8 @@ const Restore = () => {
             return "carro";
          case "events":
             return "evento";
+         case "managers":
+            return "gestor";
          default:
             return "item";
       }
@@ -210,7 +226,7 @@ const Restore = () => {
                         </div>
 
                         {/* Desktop Tabs */}
-                        <div className="hidden md:grid grid-cols-3 gap-4">
+                        <div className="hidden md:grid grid-cols-4 gap-4">
                            {dataTypes.map((type) => (
                               <motion.button
                                  key={type.value}
@@ -261,6 +277,12 @@ const Restore = () => {
                                           <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                              Nome
                                           </th>
+                                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                             Excluído por
+                                          </th>
+                                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
+                                             Data de exclusão
+                                          </th>
                                           <th className="px-6 py-4 text-right text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                              Ações
                                           </th>
@@ -278,6 +300,23 @@ const Restore = () => {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                                    {item.name}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                   {item.deletedBy}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
+                                                   {new Date(
+                                                      item.deletedAt
+                                                   ).toLocaleDateString(
+                                                      "pt-BR",
+                                                      {
+                                                         day: "2-digit",
+                                                         month: "2-digit",
+                                                         year: "numeric",
+                                                         hour: "2-digit",
+                                                         minute: "2-digit",
+                                                      }
+                                                   )}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                                                    <motion.button
@@ -301,7 +340,7 @@ const Restore = () => {
                                        ) : (
                                           <tr>
                                              <td
-                                                colSpan="3"
+                                                colSpan="5"
                                                 className="px-6 py-12 text-center text-sm text-gray-500 dark:text-gray-400"
                                              >
                                                 Nenhum item excluído encontrado
