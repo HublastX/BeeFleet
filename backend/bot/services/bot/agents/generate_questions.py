@@ -107,7 +107,7 @@ class QuestionGenerator:
     6. Se a pergunta for sobre uma funcionalidade específica, explique como ela funciona no sistema.
     7. Se a pergunta for sobre como realizar uma ação específica, forneça os passos necessários.
     8. SUa reposta deve ser curta e direta, não muito longa. no maximo 2 frases.
-    10. Os links que vc envia deixa o texto dele escrito 'click aqui' para o usuario ver e abrir o link
+    10. Os links que vc envia deixa o texto dele escrito 'clique aqui' para o usuario ver e abrir o link
     11. Suas resposta devem ser em markdown.
 
     Importante: Suas respostas devem ser informativas, precisas e focadas especificamente no sistema BeeFleet de gerenciamento de frota.
