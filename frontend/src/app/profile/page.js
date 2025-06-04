@@ -17,7 +17,7 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
 
 function Manager() {
-   const { gestor, deleteManager } = useAuth();
+   const { gestor, deleteManager, getDeletedManagers } = useAuth();
    const { countDriversByManager, motoristas } = useDrivers();
    const { countCarsByManager, carro } = useCar();
    const { countEventsByManager, events } = useEvents();
@@ -30,6 +30,50 @@ function Manager() {
 
    if (!gestor) return null;
    const { name, image, email, id } = gestor;
+
+   // Verifica se o gestor está deletado
+   const gestoresDeletados = getDeletedManagers();
+   const gestorDeletado = gestoresDeletados.find((g) => g.id === id);
+
+   if (gestorDeletado) {
+      return (
+         <div className="flex items-center justify-center p-4">
+            <div className="w-full max-w-md bg-white dark:bg-bee-dark-800 rounded-lg overflow-hidden shadow-sm border border-gray-100 dark:border-bee-dark-400">
+               <div className="p-6 space-y-5">
+                  <div className="text-center space-y-2">
+                     <h2 className="text-2xl font-light text-gray-800 dark:text-white">
+                        Gestor <span className="font-medium">Excluído</span>
+                     </h2>
+                     {gestorDeletado.deletedBy && (
+                        <p className="text-gray-500 dark:text-gray-400 text-sm">
+                           Ação realizada por: {gestorDeletado.deletedBy.name}
+                        </p>
+                     )}
+                  </div>
+
+                  <div className="bg-gray-50 dark:bg-bee-dark-700/50 p-4 rounded-lg">
+                     <p className="text-gray-600 dark:text-gray-300 text-center">
+                        Para restaurar este cadastro, solicite ao time
+                        administrativo.
+                     </p>
+                  </div>
+               </div>
+
+               <div className="px-6 py-4 bg-gray-50 dark:bg-bee-dark-700 border-t border-gray-100 dark:border-bee-dark-600 flex justify-between items-center">
+                  <span className="text-xs text-gray-400 dark:text-gray-500 font-mono">
+                     ID: {id}
+                  </span>
+                  <button
+                     className="text-sm text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
+                     onClick={() => window.history.back()}
+                  >
+                     Voltar
+                  </button>
+               </div>
+            </div>
+         </div>
+      );
+   }
 
    const myDriversCount = countDriversByManager;
    const myCarsCount = countCarsByManager;
@@ -389,7 +433,7 @@ function StatItem({ icon, label, value, onClick }) {
       <motion.button
          whileHover={{
             scale: 1.02,
-            backgroundColor: "rgba(152, 16, 250, 0.1)",
+            backgroundColor: "rgba(128, 128, 128, 0.1)",
          }}
          whileTap={{ scale: 0.95 }}
          onClick={onClick}
