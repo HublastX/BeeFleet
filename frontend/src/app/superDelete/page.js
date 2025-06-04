@@ -10,7 +10,8 @@ import ConfirmDeleteModal from "@/components/ConfirmDeleteModal";
 import AdminSkeleton from "@/elements/ui/skeleton/AdminSkeleton";
 
 const SuperDelete = () => {
-   const { gestores, superDeleteManager, gestor } = useAuth();
+   const { gestores, superDeleteManager, gestor } =
+      useAuth();
    const { motoristas, superDeleteDriver } = useDrivers();
    const { carro, superDeleteCar } = useCar();
    const { events, superDeleteEvent } = useEvent();
