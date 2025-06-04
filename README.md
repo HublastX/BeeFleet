@@ -32,10 +32,7 @@ BeeFleet é um sistema inovador de gerenciamento de frotas que visa otimizar e s
 
 [![Next.js](https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
-[![React](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
-[![ESLint](https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white)](https://eslint.org/)
-[![Prettier](https://img.shields.io/badge/Prettier-F7B93E?style=for-the-badge&logo=prettier&logoColor=black)](https://prettier.io/)
 [![Framer Motion](https://img.shields.io/badge/Framer_Motion-0055FF?style=for-the-badge&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 [![Recharts](https://img.shields.io/badge/Recharts-22B5BF?style=for-the-badge&logo=apache-echarts&logoColor=white)](https://recharts.org/)
 [![React Markdown](https://img.shields.io/badge/React_Markdown-000000?style=for-the-badge&logo=markdown&logoColor=white)](https://remarkjs.github.io/react-markdown/)
@@ -50,8 +47,6 @@ BeeFleet é um sistema inovador de gerenciamento de frotas que visa otimizar e s
 [![Google AI](https://img.shields.io/badge/Google_AI-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![LangChain](https://img.shields.io/badge/LangChain-121212?style=for-the-badge&logo=chainlink&logoColor=white)](https://www.langchain.com/)
 [![Prisma](https://img.shields.io/badge/Prisma-2D3748?style=for-the-badge&logo=prisma&logoColor=white)](https://www.prisma.io/)
-[![Uvicorn](https://img.shields.io/badge/Uvicorn-2D3748?style=for-the-badge&logo=python&logoColor=white)](https://www.uvicorn.org/)
-[![UUID](https://img.shields.io/badge/UUID-000000?style=for-the-badge&logo=npm&logoColor=white)](https://www.npmjs.com/package/uuid)
 
 ## 📦 Estrutura do Projeto
 
