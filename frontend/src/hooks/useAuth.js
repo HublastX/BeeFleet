@@ -8,6 +8,7 @@ export default function useAuth() {
    const [carregando, setCarregando] = useState(false);
    const [erro, setErro] = useState(null);
    const [gestores, setGestores] = useState([]);
+   const [gestoresDeletados, setGestoresDeletados] = useState([]);
    const router = useRouter();
    const { showToast } = useToast();
    // const API_URL = "https://hublast.com/bee-fleet-datahub/api";
@@ -235,7 +236,15 @@ export default function useAuth() {
 
             const data = await res.json();
 
-            const gestorFormatado = data.data.map((gestor) => ({
+            const gestoresAtivos = data.data.filter(
+               (gestor) => gestor.deletedAt === null
+            );
+
+            const gestoresDeletados = data.data.filter(
+               (gestor) => gestor.deletedAt !== null
+            );
+
+            const gestoresFormatados = gestoresAtivos.map((gestor) => ({
                ...gestor,
                image:
                   gestor.image &&
@@ -245,7 +254,8 @@ export default function useAuth() {
                      : null,
             }));
 
-            setGestores(gestorFormatado);
+            setGestores(gestoresFormatados);
+            setGestoresDeletados(gestoresDeletados);
          } catch (err) {
             showToast("Erro!", "warning", "Erro no servidor");
          } finally {
@@ -257,7 +267,7 @@ export default function useAuth() {
    }, [gestor?.token, API_URL, getImageUrl, showToast]);
 
    // Deletar gestor
-   const deleteManager = async (id) => {
+   const superDeleteManager = async (id) => {
       if (!gestor?.token) {
          setErro("Token do gestor não encontrado.");
          return;
@@ -289,36 +299,111 @@ export default function useAuth() {
       }
    };
 
-   // super delete
-   const superDeleteManager = async (id) => {
+   // Soft delete do gestor
+   const deleteManager = async (id) => {
+      if (!gestor?.token) {
+         setErro("token do gestor não encontrado.");
+         return;
+      }
+
+      setCarregando(true);
+      setErro(null);
+
+      try {
+         const manager = gestores.find((manager) => manager.id === id);
+         if (!manager) {
+            showToast("Erro", "error", "Gestor não encontrado.", 5000);
+            return;
+         }
+
+         const res = await fetch(`${API_URL}/api/managers/soft-delete/${id}`, {
+            method: "PATCH",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+            body: JSON.stringify({
+               managerId: gestor.id,
+               reason: "Gestor deletado por ele mesmo.",
+            }),
+         });
+
+         if (!res.ok) {
+            const data = await res.json();
+            throw new Error(data.error || "Erro ao ocultar gestor");
+         }
+
+         localStorage.setItem("toastMessage", "Gestor deletado com sucesso!");
+         localStorage.setItem("toastType", "success");
+         router.push("/managers");
+
+         setGestores((prev) => prev.filter((manager) => manager.id !== id));
+      } catch (error) {
+         setErro(error.message || "Erro ao conectar ao servidor.");
+      } finally {
+         setCarregando(false);
+      }
+   };
+
+   // Restaurar gestor
+   const restoreManager = async (id) => {
       if (!gestor?.token) {
          setErro("Token do gestor não encontrado.");
          return;
       }
 
+      setCarregando(true);
+      setErro(null);
+
       try {
-         const res = await fetch(`${API_URL}/api/managers/${id}`, {
-            method: "DELETE",
+         const res = await fetch(`${API_URL}/api/restore/manager/${id}`, {
+            method: "POST",
             headers: {
                "Content-Type": "application/json",
                Authorization: `Bearer ${gestor.token}`,
             },
+            body: JSON.stringify({
+               managerId: gestor.id,
+            }),
          });
 
          if (!res.ok) {
             const data = await res.json();
-            throw new Error(data.error || "Erro ao deletar gestor");
+            throw new Error(data.error || "Erro ao restaurar gestor");
          }
 
-         showToast("Sucesso", "success", "Gestor deletado com sucesso!", 5000);
-         setGestores((prev) => prev.filter((manager) => manager.id !== id));
+         localStorage.setItem("toastMessage", "Gestor restaurado com sucesso!");
+         localStorage.setItem("toastType", "success");
+         router.push("/managers");
+
+         setGestores((prev) => {
+            const restaurado = gestoresDeletados.find((m) => m.id === id);
+            if (restaurado) {
+               return [
+                  ...prev,
+                  {
+                     ...restaurado,
+                     image: restaurado.image
+                        ? getImageUrl(restaurado.image)
+                        : null,
+                  },
+               ];
+            }
+            return prev;
+         });
+
+         setGestoresDeletados((prev) => prev.filter((m) => m.id !== id));
       } catch (error) {
-         handleError(error, "Erro ao deletar gestor");
-         throw error;
+         handleError(error, "Erro ao restaurar gestor");
       } finally {
          setCarregando(false);
       }
    };
+
+   // Obter gestores deletados
+   const getDeletedManagers = useCallback(() => {
+      return gestoresDeletados.filter((manager) => manager.deletedAt !== null);
+   }, [gestoresDeletados]);
 
    useEffect(() => {
       const toastMessage = localStorage.getItem("toastMessage");
@@ -347,5 +432,7 @@ export default function useAuth() {
       putManager,
       deleteManager,
       superDeleteManager,
+      restoreManager,
+      getDeletedManagers,
    };
 }

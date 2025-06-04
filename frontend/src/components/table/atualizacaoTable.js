@@ -102,7 +102,7 @@ export default function RecentAtualizacao() {
          });
       });
 
-      return allUpdates.sort((a, b) => b.rawDate - a.rawDate).slice(0, 8);
+      return allUpdates.sort((a, b) => b.rawDate - a.rawDate).slice(0, 9);
    };
 
    const ultimasAtualizacoes = prepareData();

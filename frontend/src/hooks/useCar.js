@@ -378,9 +378,12 @@ export default function useCar() {
 
    const restoreCar = async (id) => {
       if (!gestor?.token) {
-         handleError("Gestor não autenticado", "warning");
+         setErro("Token do gestor não encontrado.");
          return;
       }
+
+      setCarregando(true);
+      setErro(null);
 
       try {
          const res = await fetch(`${API_URL}/api/restore/car/${id}`, {
@@ -399,21 +402,34 @@ export default function useCar() {
             throw new Error(data.error || "Erro ao restaurar veículo");
          }
 
-         showToast(
-            "Sucesso",
-            "success",
-            "Veículo restaurado com sucesso!",
-            5000
+         localStorage.setItem(
+            "toastMessage",
+            "Veículo restaurado com sucesso!"
          );
+         localStorage.setItem("toastType", "success");
+         router.push("/cars");
 
-         // Atualiza a lista de carros
-         const updatedCar = await getCar(id);
-         if (updatedCar) {
-            setCarro((prev) => [...prev, updatedCar]);
-         }
+         setCarro((prev) => {
+            const restaurado = carroDeletado.find((c) => c.id === id);
+            if (restaurado) {
+               return [
+                  ...prev,
+                  {
+                     ...restaurado,
+                     image: restaurado.image
+                        ? getImageUrl(restaurado.image)
+                        : null,
+                  },
+               ];
+            }
+            return prev;
+         });
+
+         setCarroDeletado((prev) => prev.filter((c) => c.id !== id));
       } catch (error) {
          handleError(error, "Erro ao restaurar veículo");
-         throw error;
+      } finally {
+         setCarregando(false);
       }
    };
 
