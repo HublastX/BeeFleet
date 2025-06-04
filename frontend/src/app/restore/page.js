@@ -179,50 +179,18 @@ const Restore = () => {
 
                         {/* Mobile Dropdown */}
                         <div className="md:hidden relative mb-6">
-                           <button
-                              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                              className="w-full flex items-center justify-between px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-800 dark:text-white"
+                           <select
+                              value={selectedType}
+                              onChange={(e) => handleTypeChange(e.target.value)}
+                              className="w-full px-4 py-3 bg-gray-100 dark:bg-gray-700 rounded-lg text-gray-800 dark:text-white appearance-none"
                            >
-                              <span>
-                                 {selectedType
-                                    ? dataTypes.find(
-                                         (t) => t.value === selectedType
-                                      )?.label
-                                    : "Selecione um tipo"}
-                              </span>
-                              <span
-                                 className={`transition-transform ${isDropdownOpen ? "rotate-180" : ""}`}
-                              >
-                                 ▼
-                              </span>
-                           </button>
-
-                           <AnimatePresence>
-                              {isDropdownOpen && (
-                                 <motion.div
-                                    initial={{ opacity: 0, height: 0 }}
-                                    animate={{ opacity: 1, height: "auto" }}
-                                    exit={{ opacity: 0, height: 0 }}
-                                    className="absolute z-10 w-full mt-2 bg-white dark:bg-gray-700 rounded-lg shadow-lg overflow-hidden"
-                                 >
-                                    {dataTypes.map((type) => (
-                                       <button
-                                          key={type.value}
-                                          onClick={() =>
-                                             handleTypeChange(type.value)
-                                          }
-                                          className={`w-full text-left px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-600 ${
-                                             selectedType === type.value
-                                                ? "bg-gray-200 dark:bg-gray-600"
-                                                : ""
-                                          }`}
-                                       >
-                                          {type.label}
-                                       </button>
-                                    ))}
-                                 </motion.div>
-                              )}
-                           </AnimatePresence>
+                              <option value="">Selecione um tipo</option>
+                              {dataTypes.map((type) => (
+                                 <option key={type.value} value={type.value}>
+                                    {type.label}
+                                 </option>
+                              ))}
+                           </select>
                         </div>
 
                         {/* Desktop Tabs */}
@@ -278,9 +246,6 @@ const Restore = () => {
                                              Nome
                                           </th>
                                           <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
-                                             Excluído por
-                                          </th>
-                                          <th className="px-6 py-4 text-left text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
                                              Data de exclusão
                                           </th>
                                           <th className="px-6 py-4 text-right text-sm font-medium text-gray-700 dark:text-gray-300 uppercase tracking-wider">
@@ -300,9 +265,6 @@ const Restore = () => {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">
                                                    {item.name}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
-                                                   {item.deletedBy}
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300">
                                                    {new Date(
