@@ -316,7 +316,7 @@ export default function useEvents() {
 
       try {
          const res = await fetch(`${API_URL}/api/restore/event/${id}`, {
-            method: "POST",
+            method: "PATCH",
             headers: {
                "Content-Type": "application/json",
                Authorization: `Bearer ${gestor.token}`,
