@@ -237,11 +237,15 @@ export default function useAuth() {
             const data = await res.json();
 
             const gestoresAtivos = data.data.filter(
-               (gestor) => gestor.deletedAt === null
+               (gestor) =>
+                  !gestor.hasOwnProperty("deletedAt") ||
+                  gestor.deletedAt === null
             );
 
             const gestoresDeletados = data.data.filter(
-               (gestor) => gestor.deletedAt !== null
+               (gestor) =>
+                  gestor.hasOwnProperty("deletedAt") &&
+                  gestor.deletedAt !== null
             );
 
             const gestoresFormatados = gestoresAtivos.map((gestor) => ({
@@ -421,6 +425,47 @@ export default function useAuth() {
       }
    }, [showToast]);
 
+   // Buscar gestor individual
+   const getManager = async (id) => {
+      if (!gestor?.token) return;
+
+      setCarregando(true);
+      setErro(null);
+
+      try {
+         const url = `${API_URL}/api/managers/${id}`;
+
+         const res = await fetch(url, {
+            method: "GET",
+            headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${gestor.token}`,
+            },
+         });
+
+         if (!res.ok) throw new Error("Erro ao buscar gestor");
+
+         const data = await res.json();
+
+         const managerData = data.data || data;
+
+         const managerFormatado = {
+            ...managerData,
+            image:
+               managerData.image && managerData.image !== "null"
+                  ? getImageUrl(managerData.image)
+                  : null,
+         };
+
+         return managerFormatado;
+      } catch (err) {
+         console.error("Erro na requisição:", err);
+         setErro(err.message);
+      } finally {
+         setCarregando(false);
+      }
+   };
+
    return {
       gestor,
       carregando,
@@ -434,5 +479,6 @@ export default function useAuth() {
       superDeleteManager,
       restoreManager,
       getDeletedManagers,
+      getManager,
    };
 }
