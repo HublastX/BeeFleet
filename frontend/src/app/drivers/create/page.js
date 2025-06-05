@@ -8,6 +8,7 @@ import useDrivers from "@/hooks/useDrivers";
 import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
 import { useToast } from "@/utils/ToastContext";
 import Icon from "@/elements/Icon";
+import { motion } from "framer-motion";
 
 function DriverCreate() {
    const { createDriver, carregando, erro } = useDrivers();
@@ -130,14 +131,16 @@ function DriverCreate() {
          <div className="bg-white dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-lg w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center gap-3 mb-6 sticky top-0 bg-white dark:bg-bee-dark-800 pb-4 border-b border-bee-dark-300 dark:border-bee-dark-400">
                <h2 className="text-2xl font-bold">Cadastrar Novo Motorista</h2>
-               <button
+               <motion.button
+                  whileHover={{ scale: 1.1, rotate: 90 }}
+                  whileTap={{ scale: 0.9 }}
                   onClick={() => router.back()}
                   className="ml-auto text-gray-400 hover:text-gray-700 dark:hover:text-white text-2xl font-bold focus:outline-none"
                   aria-label="Fechar"
                   type="button"
                >
                   <Icon name="xMark" className="size-5" strokeWidth={5} />
-               </button>
+               </motion.button>
             </div>
 
             {carregando && <FormSkeleton />}
@@ -203,14 +206,13 @@ function DriverCreate() {
                         variant="cancel"
                         texto="Cancelar"
                      />
-                     <Btn
-                        type="submit"
-                        variant="primary"
-                        disabled={carregando}
-                     >
+                     <Btn type="submit" variant="primary" disabled={carregando}>
                         {carregando ? (
                            <div className="flex items-center justify-center gap-2 min-w-36">
-                              <Icon name="circle" className="size-5 text-white" />
+                              <Icon
+                                 name="circle"
+                                 className="size-5 text-white"
+                              />
                            </div>
                         ) : (
                            "Cadastrar Motorista"

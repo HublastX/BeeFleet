@@ -549,51 +549,33 @@ export default function Chegada() {
             </motion.div>
 
             {/* Botões */}
-            <motion.div
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.7 }}
-               className="mt-6 pt-6 border-t-2 border-bee-dark-300 dark:border-bee-dark-400 flex justify-end gap-3"
-            >
-               <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-               >
-                  <Btn
-                     type="button"
-                     texto="Cancelar"
-                     variant="cancel"
-                     onClick={() => router.back()}
-                  />
-               </motion.div>
-               <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-               >
-                  <Btn
-                     type="submit"
-                     texto={
-                        carregando ? (
-                           <div className="flex items-center justify-center gap-2 min-w-34">
-                              <Icon
-                                 name="circle"
-                                 className="size-5 text-white"
-                              />
-                           </div>
-                        ) : (
-                           "Confirmar Chegada"
-                        )
-                     }
-                     disabled={
-                        !selectedCarro ||
-                        !selectedMotorista ||
-                        !odometro ||
-                        carregando ||
-                        odometroError
-                     }
-                  />
-               </motion.div>
-            </motion.div>
+            <div className="mt-6 pt-6 border-t-2 border-bee-dark-300 dark:border-bee-dark-400 flex justify-end gap-3">
+               <Btn
+                  type="button"
+                  texto="Cancelar"
+                  variant="cancel"
+                  onClick={() => router.back()}
+               />
+               <Btn
+                  type="submit"
+                  texto={
+                     carregando ? (
+                        <div className="flex items-center justify-center gap-2 min-w-34">
+                           <Icon name="circle" className="size-5 text-white" />
+                        </div>
+                     ) : (
+                        "Confirmar Chegada"
+                     )
+                  }
+                  disabled={
+                     !selectedCarro ||
+                     !selectedMotorista ||
+                     !odometro ||
+                     carregando ||
+                     odometroError
+                  }
+               />
+            </div>
          </form>
       </motion.div>
    );

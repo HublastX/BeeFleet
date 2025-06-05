@@ -113,7 +113,13 @@ function Login() {
                   className="w-full text-lg"
                   onClick={handleSubmit}
                >
-                  {carregando ? "Entrando..." : "Entrar"}
+                  {carregando ? (
+                     <div className="flex items-center justify-center gap-2 min-w-34">
+                        <Icon name="circle" className="size-5 text-white" />
+                     </div>
+                  ) : (
+                     "Entrar"
+                  )}
                </Btn>
                <div className="mt-3 text-center">
                   <p className="text-sm text-gray-500 dark:text-gray-400">
