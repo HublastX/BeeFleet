@@ -16,6 +16,27 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
       return date.toLocaleString("pt-BR");
    };
 
+   const calculateDuration = (startDate, endDate) => {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      const diff = end - start;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor(
+         (diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      );
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      let duration = "";
+      if (days > 0) duration += `${days}d `;
+      if (hours > 0) duration += `${hours}h `;
+      if (minutes > 0) duration += `${minutes}min `;
+      duration += `${seconds}s`;
+
+      return duration;
+   };
+
    const hasActivityToday = (manager) => {
       const today = new Date().toLocaleDateString("pt-BR");
       return (
@@ -127,7 +148,9 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
             const event = reportData.managers
                .flatMap((m) => m.events || [])
                .find((e) => e.id === filters.selectedItem.id);
-            return event ? `${event.carInfo} - ${event.driverName}` : "";
+            return event
+               ? `${event.carInfo.split("(")[0].trim()} - ${event.driverName}`
+               : "";
          default:
             return "";
       }
@@ -162,36 +185,98 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
          </div>
       );
 
-      const EventCard = ({ event }) => (
-         <div className="bg-white p-3 rounded-lg border border-gray-200">
-            <div className="flex items-center justify-between mb-1">
-               <span className="font-medium">
-                  {event.eventType === "CHECKOUT" ? "Saída" : "Retorno"}
-               </span>
-               <span className="text-sm text-gray-500">
-                  {formatDateTime(event.createdAt)}
-               </span>
+      const EventCard = ({ event }) => {
+         const findCheckoutEvent = (checkoutEventId) => {
+            return reportData.managers
+               .flatMap((m) => m.events)
+               .find((e) => e.id === checkoutEventId);
+         };
+
+         const getEventDuration = (event) => {
+            if (event.eventType === "RETURN" && event.checkoutEventId) {
+               const checkoutEvent = findCheckoutEvent(event.checkoutEventId);
+               if (checkoutEvent) {
+                  return calculateDuration(
+                     checkoutEvent.createdAt,
+                     event.endedAt
+                  );
+               }
+            }
+            return "N/A";
+         };
+
+         return (
+            <div className="bg-white p-4 rounded-lg border border-gray-200 hover:border-bee-dark-300 transition-colors">
+               <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                     <div>
+                        <h4 className="font-medium">
+                           {event.eventType === "CHECKOUT"
+                              ? "Saída de Veículo"
+                              : "Retorno de Veículo"}
+                        </h4>
+                        <p className="text-sm text-gray-500">
+                           {event.status === "COMPLETED"
+                              ? "Concluído"
+                              : "Em andamento"}
+                        </p>
+                     </div>
+                  </div>
+                  <div className="text-right">
+                     <p className="font-medium">
+                        {formatDateTime(event.createdAt).split(",")[0]}
+                     </p>
+                     <p className="text-sm text-gray-500">
+                        {formatDateTime(event.createdAt).split(",")[1]}
+                     </p>
+                  </div>
+               </div>
+
+               <div className="space-y-3">
+                  <div className="flex items-start gap-2">
+                     <Icon name="car" className="size-4 text-gray-400 mt-1" />
+                     <div>
+                        <p className="text-sm text-gray-600">Veículo</p>
+                        <p className="font-medium">
+                           {event.carInfo.split("(")[0]}
+                        </p>
+                        {event.carInfo.includes("(") && (
+                           <p className="text-sm text-gray-500">
+                              ({event.carInfo.split("(")[1].replace(")", "")})
+                           </p>
+                        )}
+                     </div>
+                  </div>
+
+                  <div className="flex items-start gap-2">
+                     <Icon name="user" className="size-4 text-gray-400 mt-1" />
+                     <div>
+                        <p className="text-sm text-gray-600">Motorista</p>
+                        <p className="font-medium">{event.driverName}</p>
+                        <p className="text-sm text-gray-500">
+                           {event.driverPhone}
+                        </p>
+                     </div>
+                  </div>
+
+                  {event.eventType === "RETURN" && (
+                     <div className="flex items-start gap-2">
+                        <Icon
+                           name="clock"
+                           className="size-4 text-gray-400 mt-1"
+                        />
+                        <div>
+                           <p className="text-sm text-gray-600">Duração</p>
+                           <p className="font-medium">
+                              {getEventDuration(event)}
+                           </p>
+                        </div>
+                     </div>
+                  )}
+               </div>
             </div>
-            <div className="text-sm space-y-1">
-               <p className="text-gray-600">
-                  {event.eventType === "CHECKOUT"
-                     ? "Veículo: "
-                     : "Finalizado: "}
-                  {event.eventType === "CHECKOUT"
-                     ? event.carInfo
-                     : formatDateTime(event.endedAt)}
-               </p>
-               <p className="text-gray-600">
-                  {event.eventType === "CHECKOUT"
-                     ? "Motorista: "
-                     : "Hodômetro: "}
-                  {event.eventType === "CHECKOUT"
-                     ? event.driverName
-                     : `${event.odometer}km`}
-               </p>
-            </div>
-         </div>
-      );
+         );
+      };
 
       switch (filters.filterType) {
          case "manager":
@@ -426,12 +511,13 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                      </div>
                      <div>
                         <h2 className="text-2xl font-bold text-bee-dark-600">
-                           {event.eventType === "CHECKOUT"
-                              ? "Saída de Veículo"
-                              : "Retorno de Veículo"}
+                           {`${event.carInfo.split("(")[0].trim()} - ${event.driverName}`}
                         </h2>
                         <p className="text-gray-500">
-                           {formatDateTime(event.createdAt)}
+                           {event.eventType === "CHECKOUT"
+                              ? "Saída de Veículo"
+                              : "Retorno de Veículo"}{" "}
+                           • {formatDateTime(event.createdAt)}
                         </p>
                      </div>
                   </div>
@@ -463,11 +549,14 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                      </DetailCard>
 
                      <DetailCard title="Informações da Viagem">
-                        <InfoItem label="Motorista" value={event.driverName} />
+                        <InfoItem
+                           label="Motorista"
+                           value={`${event.driverName} - ${event.driverPhone}`}
+                        />
                         <InfoItem label="Veículo" value={event.carInfo} />
                         <InfoItem
-                           label="Hodômetro"
-                           value={`${event.odometer}km`}
+                           label="Distância"
+                           value={`${event.distanceTraveled}km`}
                         />
                      </DetailCard>
                   </div>
@@ -645,17 +734,34 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
          { header: "Gestor", key: "manager", width: 30 },
       ];
       getActiveManagers().forEach((manager) => {
-         (manager.events || []).forEach((event) => {
-            eventsSheet.addRow({
-               type: event.eventType === "CHECKOUT" ? "Saída" : "Retorno",
-               date: formatDateTime(event.createdAt),
-               status: event.status === "COMPLETED" ? "Concluído" : "Ativo",
-               driver: event.driverName,
-               car: event.carInfo,
-               odometer: event.odometer,
-               manager: manager.name,
+         (manager.events || [])
+            .filter((event) => {
+               if (event.eventType === "RETURN") return true;
+               if (event.eventType === "CHECKOUT") {
+                  const hasReturn = getActiveManagers()
+                     .flatMap((m) => m.events)
+                     .some((e) => e.checkoutEventId === event.id);
+                  return !hasReturn;
+               }
+               return true;
+            })
+            .filter(
+               (event) =>
+                  !filters.selectedItem?.id ||
+                  event.id === filters.selectedItem.id
+            )
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+            .forEach((event) => {
+               eventsSheet.addRow({
+                  type: event.eventType === "CHECKOUT" ? "Saída" : "Retorno",
+                  date: formatDateTime(event.createdAt),
+                  status: event.status === "COMPLETED" ? "Concluído" : "Ativo",
+                  driver: event.driverName,
+                  car: event.carInfo,
+                  odometer: event.odometer,
+                  manager: manager.name,
+               });
             });
-         });
       });
       eventsSheet.getRow(1).eachCell((cell) => {
          cell.fill = {
@@ -1110,7 +1216,10 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                        Chegada
                                     </th>
                                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                       Distancia
+                                       Distância
+                                    </th>
+                                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                       Duração
                                     </th>
                                  </tr>
                               </thead>
@@ -1181,6 +1290,9 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
 
                                           <td className="px-6 py-4 whitespace-nowrap">
                                              {event.odometer}km
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {getEventDuration(event)}
                                           </td>
                                        </tr>
                                     ))}
@@ -1469,6 +1581,20 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                            <tbody className="divide-y divide-gray-200">
                               {getActiveManagers()
                                  .flatMap((manager) => manager.events)
+                                 .filter((event) => {
+                                    if (event.eventType === "RETURN")
+                                       return true;
+                                    if (event.eventType === "CHECKOUT") {
+                                       const hasReturn = getActiveManagers()
+                                          .flatMap((m) => m.events)
+                                          .some(
+                                             (e) =>
+                                                e.checkoutEventId === event.id
+                                          );
+                                       return !hasReturn;
+                                    }
+                                    return true;
+                                 })
                                  .filter(
                                     (event) =>
                                        !filters.selectedItem?.id ||

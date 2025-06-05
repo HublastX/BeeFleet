@@ -516,31 +516,27 @@ export default function Saida() {
             </div>
 
             {/* Botões */}
-            <motion.div
-               initial={{ opacity: 0, y: 20 }}
-               animate={{ opacity: 1, y: 0 }}
-               transition={{ delay: 0.5 }}
-               className="flex justify-end gap-4 p-6"
-            >
-               <Link href="/">
-                  <motion.div
-                     whileHover={{ scale: 1.02 }}
-                     whileTap={{ scale: 0.98 }}
-                  >
-                     <Btn texto="Cancelar" variant="cancel" />
-                  </motion.div>
-               </Link>
-               <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-               >
-                  <Btn
-                     texto={carregando ? "Registrando..." : "Registrar Saída"}
-                     type="submit"
-                     disabled={carregando}
-                  />
-               </motion.div>
-            </motion.div>
+            <div className="mt-6 pt-6 border-t-2 border-bee-dark-300 dark:border-bee-dark-400 flex justify-end gap-3">
+               <Btn
+                  texto="Cancelar"
+                  variant="cancel"
+                  onClick={() => router.back()}
+               />
+
+               <Btn
+                  texto={
+                     carregando ? (
+                        <div className="flex items-center justify-center gap-2 min-w-34">
+                           <Icon name="circle" className="size-5 text-white" />
+                        </div>
+                     ) : (
+                        "Registrar Saída"
+                     )
+                  }
+                  type="submit"
+                  disabled={carregando}
+               />
+            </div>
 
             {/* Modais de seleção */}
             <EventList

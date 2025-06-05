@@ -1,8 +1,6 @@
 import { prisma } from "../../config/prisma";
 import { Request, Response } from "express";
-import {
-    ManagerGlobalReport
-} from "../../schemas/reportInterface";
+import { ManagerGlobalReport } from "../../schemas/reportInterface";
 
 export const getCompleteManagersReport = async (
     req: Request,
@@ -185,6 +183,15 @@ export const getCompleteManagersReport = async (
                 },
             });
 
+            const checkoutEvents = await prisma.event.findMany({
+                where: {
+                    managerId: manager.id,
+                    eventType: "CHECKOUT",
+                    deletedById: null,
+                    ...dateFilter,
+                },
+            });
+
             const deletedEvents = await prisma.event.findMany({
                 where: {
                     OR: [
@@ -216,6 +223,29 @@ export const getCompleteManagersReport = async (
                 },
             });
 
+            const deletedCheckoutEvents = await prisma.event.findMany({
+                where: {
+                    OR: [
+                        {
+                            managerId: manager.id,
+                            eventType: "CHECKOUT",
+                            deletedById: { not: null },
+                            ...dateFilter,
+                        },
+                        {
+                            deletedById: manager.id,
+                            eventType: "CHECKOUT",
+                            ...dateFilter,
+                        },
+                    ],
+                },
+            });
+
+            const allCheckoutEvents = [
+                ...checkoutEvents,
+                ...deletedCheckoutEvents,
+            ];
+
             console.log(`Gestor ${manager.name}:
                 - ${activeDrivers.length} motoristas ativos
                 - ${deletedDrivers.length} motoristas excluídos
@@ -237,6 +267,8 @@ export const getCompleteManagersReport = async (
                     license: driver.license,
                     isAvailable: driver.isAvailable,
                     status: "ACTIVE",
+                    createdAt: driver.createdAt,
+                    updatedAt: driver.updatedAt,
                 })),
                 deletedDrivers: deletedDrivers.map((driver: any) => ({
                     id: driver.id,
@@ -249,6 +281,8 @@ export const getCompleteManagersReport = async (
                         ? driver.deletedBy.name
                         : null,
                     status: "DELETED",
+                    createdAt: driver.createdAt,
+                    updatedAt: driver.updatedAt,
                 })),
                 cars: activeCars.map((car) => ({
                     id: car.id,
@@ -262,6 +296,8 @@ export const getCompleteManagersReport = async (
                     color: car.color,
                     status: car.status,
                     isAvailable: car.isAvailable,
+                    createdAt: car.createdAt,
+                    updatedAt: car.updatedAt,
                 })),
                 deletedCars: deletedCars.map((car: any) => ({
                     id: car.id,
@@ -277,6 +313,8 @@ export const getCompleteManagersReport = async (
                     deletedById: car.deletedById,
                     deletedByName: car.deletedBy ? car.deletedBy.name : null,
                     status: "DELETED",
+                    createdAt: car.createdAt,
+                    updatedAt: car.updatedAt,
                 })),
                 events: activeEvents.map((event) => ({
                     id: event.id,
@@ -290,8 +328,17 @@ export const getCompleteManagersReport = async (
                     driverId: event.driver.id,
                     carId: event.car.id,
                     driverName: event.driver.name,
+                    driverPhone: event.driver.phone,
                     carInfo: `${event.car.brand} ${event.car.model} (${event.car.plate})`,
                     checkoutEventId: event.checkoutEventId || null,
+                    distanceTraveled:
+                        event.eventType === "RETURN" && event.checkoutEventId
+                            ? event.odometer -
+                              (allCheckoutEvents.find(
+                                  (checkout) =>
+                                      checkout.id === event.checkoutEventId
+                              )?.odometer || 0)
+                            : 0,
                 })),
                 deletedEvents: deletedEvents.map((event: any) => ({
                     id: event.id,
@@ -309,7 +356,16 @@ export const getCompleteManagersReport = async (
                     driverId: event.driver.id,
                     carId: event.car.id,
                     driverName: event.driver.name,
+                    driverPhone: event.driver.phone,
                     carInfo: `${event.car.brand} ${event.car.model} (${event.car.plate})`,
+                    distanceTraveled:
+                        event.eventType === "RETURN" && event.checkoutEventId
+                            ? event.odometer -
+                              (allCheckoutEvents.find(
+                                  (checkout) =>
+                                      checkout.id === event.checkoutEventId
+                              )?.odometer || 0)
+                            : 0,
                 })),
                 summary: {
                     totalDrivers: activeDrivers.length,
