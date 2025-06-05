@@ -13,7 +13,7 @@ import useEvents from "@/hooks/useEvent";
 export default function ReportForm() {
    const router = useRouter();
    const searchParams = useSearchParams();
-   const { gestor } = useAuth();
+   const { gestor, getManager } = useAuth();
    const { getCar } = useCar();
    const { getDriver } = useDrivers();
    const { getEvent } = useEvents();
@@ -34,11 +34,21 @@ export default function ReportForm() {
          setSearchCriteria(filterType);
 
          if (filterId) {
-            if (filterType === "manager" && gestor && gestor.id === filterId) {
-               setSelectedItem({
-                  id: gestor.id,
-                  name: gestor.name,
-               });
+            if (filterType === "manager") {
+               const fetchManager = async () => {
+                  try {
+                     const managerData = await getManager(filterId);
+                     if (managerData) {
+                        setSelectedItem({
+                           id: managerData.id,
+                           name: managerData.name,
+                        });
+                     }
+                  } catch (error) {
+                     console.error("Erro ao buscar dados do gestor:", error);
+                  }
+               };
+               fetchManager();
             } else if (filterType === "carro") {
                const fetchCar = async () => {
                   try {
@@ -87,7 +97,7 @@ export default function ReportForm() {
             }
          }
       }
-   }, [searchParams, gestor, getCar, getDriver, getEvent]);
+   }, [searchParams, getManager, getCar, getDriver, getEvent]);
 
    const toggleSummary = () => {
       setShowSummary(!showSummary);
