@@ -47,7 +47,7 @@ export default function Toast({
                      whileHover={{ scale: 1.1 }}
                      whileTap={{ scale: 0.9 }}
                      onClick={onClose}
-                     className="p-1 hover:bg-bee-dark-200 dark:hover:bg-bee-dark-700 rounded-full"
+                     className="p-1 hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600 rounded-full"
                   >
                      <Icon name="xMark" className="size-6" strokeWidth={2} />
                   </motion.button>

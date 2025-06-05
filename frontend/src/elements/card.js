@@ -46,7 +46,6 @@ const Card = ({
             delay: index * 0.1,
          }}
          whileHover={{
-            scale: 1.02,
             transition: { duration: 0.2 },
          }}
          className="p-5 min-w-60 flex md:min-w-auto justify-between rounded-2xl border bg-bee-dark-100 dark:bg-bee-dark-800 border-bee-dark-300 dark:border-bee-dark-400 hover:shadow-lg"
