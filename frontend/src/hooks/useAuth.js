@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/utils/ToastContext";
 import { useCallback } from "react";
+import { trackAuthEvent, trackError } from "@/utils/analytics";
 
 export default function useAuth() {
    const [gestor, setGestor] = useState(null);
@@ -52,10 +53,12 @@ export default function useAuth() {
             body: JSON.stringify({ email, password }),
          });
 
-         if (!res.ok)
+         if (!res.ok) {
+            trackAuthEvent("login_failed", "email");
             throw new Error(
                "Credenciais inválidas. Verifique e tente novamente."
             );
+         }
 
          const data = await res.json();
 
@@ -76,6 +79,7 @@ export default function useAuth() {
                isAdmin: data.manager.isAdmin,
             });
 
+            trackAuthEvent("login_success", "email");
             localStorage.setItem(
                "toastMessage",
                "Login realizado com sucesso!"
@@ -83,9 +87,11 @@ export default function useAuth() {
             localStorage.setItem("toastType", "success");
             window.location.href = "/beefleet";
          } else {
+            trackAuthEvent("login_failed", "email");
             throw new Error("Erro inesperado ao fazer login.");
          }
       } catch (error) {
+         trackError("auth_error", error.message);
          handleError(error, "Erro ao fazer login.");
       } finally {
          setCarregando(false);
@@ -209,6 +215,7 @@ export default function useAuth() {
 
    // Logout
    const logout = () => {
+      trackAuthEvent("logout");
       localStorage.removeItem("token");
       localStorage.removeItem("id");
       localStorage.removeItem("name");

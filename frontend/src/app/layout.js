@@ -39,11 +39,9 @@ export default function RootLayout({ children }) {
                      />
                   </noscript>
                   <GTM />
-
                   <div className="min-h-screen xl:flex">
                      <NavBar />
                   </div>
-
                   <MainContent>{children}</MainContent>
                </body>
             </html>

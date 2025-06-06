@@ -20,7 +20,7 @@ export default function withAuth(Component) {
             } else {
                const timeout = setTimeout(() => {
                   setShowPage(true);
-               }, 500);
+               }, 10);
 
                return () => clearTimeout(timeout);
             }

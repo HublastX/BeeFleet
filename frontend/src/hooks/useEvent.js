@@ -5,6 +5,7 @@ import { useToast } from "@/utils/ToastContext";
 import useDrivers from "./useDrivers";
 import useCar from "./useCar";
 import { useCallback } from "react";
+import { trackOperationEvent, trackError } from "@/utils/analytics";
 
 export default function useEvents() {
    const { gestor } = useAuth();
@@ -155,6 +156,7 @@ export default function useEvents() {
       checkoutEventId = null
    ) => {
       if (!gestor?.id || !gestor?.token) {
+         trackError("auth_error", "Gestor não autenticado");
          handleError("Gestor não autenticado", "warning");
          return;
       }
@@ -184,11 +186,22 @@ export default function useEvents() {
          const data = await response.json();
 
          if (!response.ok) {
+            trackOperationEvent("create_failed", null, {
+               event_type: eventType,
+               error: data.error,
+            });
             throw new Error(data.error || "Erro ao criar evento");
          }
 
          const enrichedEvent = enrichEvents([data])[0];
          setEvents((prev) => [...prev, enrichedEvent]);
+
+         trackOperationEvent("create_success", enrichedEvent.id, {
+            event_type: eventType,
+            driver_id: driverId,
+            car_id: carId,
+            odometer,
+         });
 
          const successMessage =
             eventType === "CHECKOUT"
@@ -199,6 +212,7 @@ export default function useEvents() {
 
          router.push("/");
       } catch (error) {
+         trackError("operation_error", error.message);
          handleError(error, "Erro ao criar evento");
       } finally {
          setCarregando(false);

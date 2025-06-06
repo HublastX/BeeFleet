@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import useAuth from "@/hooks/useAuth";
+import { trackUIInteraction, trackNavigation } from "@/utils/analytics";
 
 const NavBarContext = createContext(undefined);
 
@@ -36,31 +37,51 @@ export const NavBarProvider = ({ children }) => {
    }, []);
 
    const toggleNavBar = () => {
-      if (gestor) {  
-         setIsExpanded((prev) => !prev);
+      if (gestor) {
+         const newState = !isExpanded;
+         setIsExpanded(newState);
+         trackUIInteraction("navbar", newState ? "expand" : "collapse", {
+            device: isMobile ? "mobile" : "desktop",
+         });
       }
    };
 
    const toggleMobileNavBar = () => {
-      setIsMobileOpen((prev) => !prev);
+      const newState = !isMobileOpen;
+      setIsMobileOpen(newState);
+      trackUIInteraction("navbar_mobile", newState ? "open" : "close");
    };
 
    const toggleSubmenu = (item) => {
-      if (gestor) { 
-         setOpenSubmenu((prev) => (prev === item ? null : item));
+      if (gestor) {
+         const newState = openSubmenu === item ? null : item;
+         setOpenSubmenu(newState);
+         if (newState) {
+            trackUIInteraction("submenu", "open", { menu_item: item });
+         }
       }
    };
 
    const handleHover = (hoverState) => {
-      if (gestor) {  
+      if (gestor) {
          setIsHovered(hoverState);
+         if (hoverState) {
+            trackUIInteraction("navbar", "hover");
+         }
+      }
+   };
+
+   const handleActiveItemChange = (newItem) => {
+      if (activeItem !== newItem) {
+         trackNavigation(activeItem, newItem);
+         setActiveItem(newItem);
       }
    };
 
    return (
       <NavBarContext.Provider
          value={{
-            isExpanded: isMobile ? false : (gestor ? isExpanded : false),
+            isExpanded: isMobile ? false : gestor ? isExpanded : false,
             isMobileOpen,
             isHovered,
             activeItem,
@@ -68,7 +89,7 @@ export const NavBarProvider = ({ children }) => {
             toggleNavBar,
             toggleMobileNavBar,
             setIsHovered: handleHover,
-            setActiveItem,
+            setActiveItem: handleActiveItemChange,
             toggleSubmenu,
          }}
       >
