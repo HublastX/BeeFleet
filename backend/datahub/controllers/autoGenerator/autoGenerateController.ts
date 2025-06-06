@@ -11,7 +11,7 @@ export const setupAutoGeneration = (
 ): void => {
     try {
         const {
-            managerId = "504580e1-c8d4-4ab1-a2fa-1fb6a22b1bcb",
+            managerId = "965edb48-eaae-45f6-b47c-18aa537fac14",
             carCount = 5,
             driverCount = 3,
             eventCount = 4,
@@ -48,7 +48,7 @@ export const triggerImmediateGeneration = async (
 ): Promise<void> => {
     try {
         const {
-            managerId = "504580e1-c8d4-4ab1-a2fa-1fb6a22b1bcb",
+            managerId = "965edb48-eaae-45f6-b47c-18aa537fac14",
             carCount = 5,
             driverCount = 3,
             eventCount = 4,
