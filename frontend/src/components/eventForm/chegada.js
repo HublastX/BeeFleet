@@ -224,7 +224,7 @@ export default function Chegada() {
          animate={{ opacity: 1 }}
          className="max-w-4xl mx-auto p-4 overflow-y-auto max-h-[80vh]"
       >
-         <form onSubmit={handleSubmit} className="space-y-6 overflow-y-auto">
+         <form onSubmit={handleSubmit} className="space-y-6">
             {/* Seção Motorista */}
             <motion.div
                initial={{ opacity: 0, y: 20 }}

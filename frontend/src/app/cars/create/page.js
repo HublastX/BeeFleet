@@ -8,7 +8,7 @@ import InputText from "@/elements/inputText";
 import FormSkeleton from "@/elements/ui/skeleton/FormSkeleton";
 import { useToast } from "@/utils/ToastContext";
 import Icon from "@/elements/Icon";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 function CreateCarsModal() {
    const { createCar, carregando, erro } = useCar();
@@ -190,119 +190,165 @@ function CreateCarsModal() {
    };
 
    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-md p-2">
-         <div className="bg-white dark:bg-bee-dark-800 p-6 rounded-2xl border border-bee-dark-300 dark:border-bee-dark-400 shadow-lg w-full max-w-2xl max-h-[90vh] flex flex-col">
-            <div className="flex items-center gap-3 mb-6 sticky top-0 z-10 bg-white dark:bg-bee-dark-800 pb-4 border-b border-bee-dark-300 dark:border-bee-dark-400">
-               <h2 className="text-2xl font-bold">Cadastrar Novo Veículo</h2>
-               <motion.button
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                  onClick={() => router.back()}
-                  className="ml-auto text-gray-400 hover:text-gray-700 dark:hover:text-white text-2xl font-bold focus:outline-none"
-                  aria-label="Fechar"
-                  type="button"
-               >
-                  <Icon name="xMark" className="size-5" strokeWidth={5} />
-               </motion.button>
-            </div>
+      <AnimatePresence>
+         {show && (
+            <div className="fixed inset-0 z-50">
+               <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="absolute inset-0 bg-black/30"
+                  onClick={() => {
+                     setShow(false);
+                     setTimeout(() => router.back(), 300);
+                  }}
+               />
 
-            <div className="overflow-y-auto flex-1">
-               {carregando && <FormSkeleton />}
-               {!carregando && (
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {formList.map(
-                           ({
-                              label,
-                              id,
-                              value,
-                              setValue,
-                              error,
-                              placeholder,
-                              type,
-                              transform,
-                           }) => (
-                              <div key={id} className="space-y-1">
-                                 <label
-                                    htmlFor={id}
-                                    className="block text-sm font-medium text-dark dark:text-white"
-                                 >
-                                    {label}
+               <motion.div
+                  initial={{ y: "100%" }}
+                  animate={{ y: 0 }}
+                  exit={{ y: "100%" }}
+                  transition={{
+                     type: "spring",
+                     damping: 25,
+                     stiffness: 300,
+                  }}
+                  className="absolute bottom-0 left-0 right-0 md:bottom-auto md:right-auto md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2"
+               >
+                  <motion.div
+                     initial={{ opacity: 0, scale: 0.95 }}
+                     animate={{ opacity: 1, scale: 1 }}
+                     exit={{ opacity: 0, scale: 0.95 }}
+                     transition={{ delay: 0.1 }}
+                     className="bg-white dark:bg-gray-800 rounded-t-xl md:rounded-xl shadow-xl border-t md:border border-gray-200 dark:border-gray-700 p-4 md:p-6 w-full md:max-w-2xl"
+                  >
+                     <div className="flex items-center gap-3 mb-6">
+                        <h2 className="text-2xl font-bold">
+                           Cadastrar Novo Veículo
+                        </h2>
+                        <motion.button
+                           whileHover={{ scale: 1.1, rotate: 90 }}
+                           whileTap={{ scale: 0.9 }}
+                           onClick={() => {
+                              setShow(false);
+                              setTimeout(() => router.back(), 300);
+                           }}
+                           className="ml-auto text-gray-400 hover:text-gray-700 dark:hover:text-white text-2xl font-bold focus:outline-none"
+                           aria-label="Fechar"
+                           type="button"
+                        >
+                           <Icon
+                              name="xMark"
+                              className="size-5"
+                              strokeWidth={5}
+                           />
+                        </motion.button>
+                     </div>
+
+                     <div className="overflow-y-auto max-h-[calc(100vh-12rem)] md:max-h-[80vh]">
+                        {carregando && <FormSkeleton />}
+                        {!carregando && (
+                           <form onSubmit={handleSubmit} className="space-y-4">
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                 {formList.map(
+                                    ({
+                                       label,
+                                       id,
+                                       value,
+                                       setValue,
+                                       error,
+                                       placeholder,
+                                       type,
+                                       transform,
+                                    }) => (
+                                       <div key={id} className="space-y-1">
+                                          <label
+                                             htmlFor={id}
+                                             className="block text-sm font-medium text-dark dark:text-white"
+                                          >
+                                             {label}
+                                          </label>
+                                          <InputText
+                                             type={type}
+                                             id={id}
+                                             name={id}
+                                             value={value}
+                                             onChange={(e) =>
+                                                setValue(
+                                                   transform
+                                                      ? transform(
+                                                           e.target.value
+                                                        )
+                                                      : e.target.value
+                                                )
+                                             }
+                                             placeholder={placeholder}
+                                             required
+                                             className={`w-full ${error ? "border-red-500 dark:border-red-500 border-2" : ""}`}
+                                          />
+                                          {error && (
+                                             <p className="text-red-500 text-xs">
+                                                {error}
+                                             </p>
+                                          )}
+                                       </div>
+                                    )
+                                 )}
+                              </div>
+
+                              <div className="space-y-1">
+                                 <label className="block text-sm font-medium">
+                                    Imagem do Veículo
                                  </label>
                                  <InputText
-                                    type={type}
-                                    id={id}
-                                    name={id}
-                                    value={value}
+                                    type="file"
+                                    variant="file"
+                                    name="photo"
+                                    accept="image/*"
                                     onChange={(e) =>
-                                       setValue(
-                                          transform
-                                             ? transform(e.target.value)
-                                             : e.target.value
-                                       )
+                                       setImage(e.target.files[0])
                                     }
-                                    placeholder={placeholder}
-                                    required
-                                    className={`w-full ${error ? "border-red-500 dark:border-red-500 border-2" : ""}`}
+                                    className={`file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark w-full ${errors.image ? "border-red-500 dark:border-red-500 border-2" : ""}`}
                                  />
-                                 {error && (
+                                 {errors.image && (
                                     <p className="text-red-500 text-xs">
-                                       {error}
+                                       {errors.image}
                                     </p>
                                  )}
                               </div>
-                           )
-                        )}
-                     </div>
 
-                     <div className="space-y-1">
-                        <label className="block text-sm font-medium">
-                           Imagem do Veículo
-                        </label>
-                        <InputText
-                           type="file"
-                           variant="file"
-                           name="photo"
-                           accept="image/*"
-                           onChange={(e) => setImage(e.target.files[0])}
-                           className={`file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-medium file:bg-primary file:text-dark hover:file:bg-primary-dark w-full ${errors.image ? "border-red-500 dark:border-red-500 border-2" : ""}`}
-                        />
-                        {errors.image && (
-                           <p className="text-red-500 text-xs">
-                              {errors.image}
-                           </p>
-                        )}
-                     </div>
-
-                     <div className="flex justify-end gap-3 pt-4 border-t border-bee-dark-300 dark:border-bee-dark-400">
-                        <Btn
-                           type="button"
-                           onClick={() => router.push("/cars")}
-                           variant="cancel"
-                           texto="Cancelar"
-                        />
-                        <Btn
-                           type="submit"
-                           variant="primary"
-                           disabled={carregando}
-                        >
-                           {carregando ? (
-                              <div className="flex items-center justify-center gap-2 min-w-34">
-                                 <Icon
-                                    name="circle"
-                                    className="size-5 text-white animate-spin"
+                              <div className="flex justify-end gap-3 pt-4 border-t border-bee-dark-300 dark:border-bee-dark-400">
+                                 <Btn
+                                    type="button"
+                                    onClick={() => router.push("/cars")}
+                                    variant="cancel"
+                                    texto="Cancelar"
                                  />
+                                 <Btn
+                                    type="submit"
+                                    variant="primary"
+                                    disabled={carregando}
+                                 >
+                                    {carregando ? (
+                                       <div className="flex items-center justify-center gap-2 min-w-34">
+                                          <Icon
+                                             name="circle"
+                                             className="size-5 text-white"
+                                          />
+                                       </div>
+                                    ) : (
+                                       "Cadastrar Veículo"
+                                    )}
+                                 </Btn>
                               </div>
-                           ) : (
-                              "Cadastrar Veículo"
-                           )}
-                        </Btn>
+                           </form>
+                        )}
                      </div>
-                  </form>
-               )}
+                  </motion.div>
+               </motion.div>
             </div>
-         </div>
-      </div>
+         )}
+      </AnimatePresence>
    );
 }
 
