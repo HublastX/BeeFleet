@@ -37,6 +37,18 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
       return duration;
    };
 
+   const getEventDuration = (event) => {
+      if (event.eventType === "RETURN" && event.checkoutEventId) {
+         const checkoutEvent = reportData.managers
+            .flatMap((m) => m.events)
+            .find((e) => e.id === event.checkoutEventId);
+         if (checkoutEvent) {
+            return calculateDuration(checkoutEvent.createdAt, event.endedAt);
+         }
+      }
+      return "N/A";
+   };
+
    const hasActivityToday = (manager) => {
       const today = new Date().toLocaleDateString("pt-BR");
       return (
