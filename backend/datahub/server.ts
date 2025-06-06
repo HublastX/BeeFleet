@@ -66,7 +66,7 @@ app.use(errorHandler);
 app.listen(PORT_DATAHUB, () => {
     listRoutes(app);
 
-    const managerId = "965edb48-eaae-45f6-b47c-18aa537fac14	";
+    const managerId = "965edb48-eaae-45f6-b47c-18aa537fac14";
     const carCount = 5;
     const driverCount = 3;
     const eventCount = 4;
