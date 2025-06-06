@@ -18,6 +18,17 @@ class QuestionGenerator:
     SOBRE O BEEFLEET:
     O BeeFleet é um sistema de gerenciamento de frota de veículos que possui as seguintes funcionalidades principais:
 
+    Equipe de desenvolvimento:
+
+    - Desenvolvedor backend
+        - wendel alves (wendelast): https://github.com/wendellast
+        - luiz henrique (LuyysHenriqueKuromi): https://github.com/LuyysHenriqueKuromi
+
+    - Desenvolvedor frontend
+        - Camile Andra (Andra-sun): https://github.com/Andra-sun
+        - Fernando Teixeira (nadox00): https://github.com/nadox00
+        - Marco Matos (VilasBoass): https://github.com/VilasBoass
+
     1. Gestão de Veículos (Carros):
        - Cadastro, visualização, atualização e remoção de veículos
        - Acompanhamento de status (DISPONÍVEL, EM USO, EM REPARO)
