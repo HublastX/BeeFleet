@@ -7,6 +7,7 @@ import eventRoutes from "./private/events/eventRoutes";
 import reportRoutes from "./private/reports/reportRoutes";
 import carRoutes from "./private/cars/carsRoutes";
 import botRoutes from "./public/bot/botRoutes";
+import autoGeneratorRoutes from "./private/autoGenerator/autoGeneratorRoutes";
 
 const router: Router = express.Router();
 
@@ -17,5 +18,6 @@ router.use(eventRoutes);
 router.use(reportRoutes);
 router.use(carRoutes);
 router.use(botRoutes);
+router.use(autoGeneratorRoutes);
 
 export default router;
