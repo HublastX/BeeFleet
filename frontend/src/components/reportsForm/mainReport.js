@@ -149,7 +149,7 @@ export default function ReportForm() {
          <div className="overflow-y-auto max-h-[calc(100vh-12rem)]">
             <form className="space-y-6" onSubmit={handleSubmit}>
                {/* Seção Período */}
-               <div className="bg-white dark:bg-bee-dark-800 rounded-lg p-6">
+               <div className=" p-6">
                   <div className="flex items-center gap-3 mb-4">
                      <Icon name="calendar" className="size-6" />
                      <h2 className="text-xl font-bold">Período</h2>
@@ -229,7 +229,7 @@ export default function ReportForm() {
                </div>
 
                {/* Seção Filtros */}
-               <div className="bg-white dark:bg-bee-dark-800 rounded-lg p-6">
+               <div className="p-6">
                   <div className="flex flex-col items-start justify-between mb-4">
                      <div className="flex items-center gap-3">
                         <Icon
@@ -294,7 +294,7 @@ export default function ReportForm() {
                </div>
 
                {/* Resumo */}
-               <div className="bg-bee-dark-100 dark:bg-gray-800 rounded-lg p-6">
+               <div className="bg-bee-dark-100 dark:bg-bee-dark-400 rounded-lg p-6">
                   <div
                      className="flex items-center justify-between cursor-pointer"
                      onClick={toggleSummary}
