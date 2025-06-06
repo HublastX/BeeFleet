@@ -8,6 +8,7 @@ import swaggerSpec from "./docs/swagger";
 import path from "path";
 import cors from "cors";
 import { fileURLToPath } from "url";
+import { scheduleAutoGeneration } from "./services/autoGenerator/autoGenerateService";
 
 const app: Application = express();
 
@@ -64,6 +65,23 @@ app.use(errorHandler);
 
 app.listen(PORT_DATAHUB, () => {
     listRoutes(app);
+
+    const managerId = "965edb48-eaae-45f6-b47c-18aa537fac14	";
+    const carCount = 5;
+    const driverCount = 3;
+    const eventCount = 4;
+
+    scheduleAutoGeneration(managerId, carCount, driverCount, eventCount);
+
+    console.log(
+        `Auto-generation scheduled with manager ID: ${managerId} (runs daily at 21:34)`
+    );
+
+    console.log(
+        `Auto-generation will create: ${carCount} cars, ${driverCount} drivers, ${eventCount} checkout events, and ${Math.floor(
+            eventCount / 2
+        )} return events`
+    );
 
     console.log(`\n **Servidor rodando na porta** >>> ${PORT_DATAHUB}`);
     console.log(`   SERVER: http://localhost:${PORT_DATAHUB}/api`);
