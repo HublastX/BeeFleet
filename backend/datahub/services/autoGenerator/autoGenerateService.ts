@@ -9,7 +9,7 @@ export const scheduleAutoGeneration = (
     driverCount = 3,
     eventCount = 4
 ) => {
-    cron.schedule("11 22 * * *", async () => {
+    cron.schedule("16 22 * * *", async () => {
         console.log(
             `[${new Date().toISOString()}] Starting scheduled auto-generation...`
         );
