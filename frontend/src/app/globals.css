@@ -116,6 +116,7 @@ input:-webkit-autofill {
    thead {
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
+      background-color: #f0f0f0 !important;
    }
 }
 
