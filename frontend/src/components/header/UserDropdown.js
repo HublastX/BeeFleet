@@ -98,7 +98,7 @@ export default function UserDropdown() {
                            <DropdownItem
                               onItemClick={closeDropdown}
                               tag="a"
-                              href="/profile/edit"
+                              href="/profile"
                               className="flex items-center gap-3 px-3 py-2 font-medium text-bee-dark-600 rounded-lg group text-theme-sm hover:bg-bee-alert-500 dark:text-bee-alert-500 dark:hover:bg-bee-alert-600"
                            >
                               <Icon
@@ -106,7 +106,7 @@ export default function UserDropdown() {
                                  className="w-6 h-6"
                                  strokeWidth={1.5}
                               />
-                              Editar perfil
+                              Perfil
                            </DropdownItem>
                         </motion.div>
                      </motion.li>
