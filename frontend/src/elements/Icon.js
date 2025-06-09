@@ -35,6 +35,7 @@ import {
    SunIcon,
    MoonIcon,
    ComputerDesktopIcon,
+   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/solid";
 import {
    ChevronUpIcon,
@@ -114,6 +115,7 @@ const icons = {
    sun: SunIcon,
    computer: ComputerDesktopIcon,
    arrowPath: ArrowPathIcon,
+   bot: ChatBubbleLeftRightIcon
 };
 
 export default function Icon({ name, className, strokeWidth }) {
