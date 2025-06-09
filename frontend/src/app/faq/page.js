@@ -51,7 +51,7 @@ const [openIndex, setOpenIndex] = useState(null);
             {faqs.map((faq, index) => (
                <div
                   key={index}
-                  className="bg-white dark:bg-bee-dark-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-100 dark:border-bee-dark-400"
+                  className="bg-bee-dark-100 dark:bg-bee-dark-800 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden border border-gray-100 dark:border-bee-dark-400"
                >
                   <button
                      className="w-full flex justify-between items-center py-5 px-6 text-left focus:outline-none"

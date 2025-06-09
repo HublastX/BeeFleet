@@ -42,17 +42,14 @@ const navItem = [
 
 const othersItems = [
    {
-      icon: "user",
-      name: "Perfil",
-      path: "/profile",
+      icon: "bot",
+      name: "ChatBot",
+      path: "/chat",
    },
    {
       icon: "suport",
-      name: "suporte",
-      subItems: [
-         { name: "faq", path: "/faq" },
-         { name: "ChatBot", path: "/chat" },
-      ],
+      name: "Faq",
+      path: "/faq",
    },
 ];
 
@@ -84,19 +81,17 @@ const NavBar = () => {
                      <button
                         onClick={() => handleSubmenuToogle(index, menuType)}
                         className={`
-                             group menu-item ${
-                                openSubmenu?.type === menuType &&
-                                openSubmenu?.index === index
-                                   ? " dark:text-bee-yellow-600 text-bee-yellow-700 bg-bee-yellow-100"
-                                   : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
-                             } ${
-                                !isExpanded && !isHovered
-                                   ? "lg:justify-center"
-                                   : "lg:justify-start"
-                             } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                           group menu-item ${
+                              openSubmenu?.type === menuType &&
+                              openSubmenu?.index === index
+                                 ? " dark:text-bee-yellow-600 text-bee-yellow-700 bg-bee-yellow-100"
+                                 : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
+                           } ${
+                              !isExpanded && !isHovered
+                                 ? "lg:justify-center"
+                                 : "lg:justify-start"
+                           } ${!gestor ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                         disabled={!gestor}
-                        role="menuitem"
-                        aria-haspopup="true"
                         aria-expanded={
                            openSubmenu?.type === menuType &&
                            openSubmenu?.index === index
@@ -140,7 +135,6 @@ const NavBar = () => {
                                        ? `${subMenuHeight[`${menuType}-${index}`]}px`
                                        : "0px",
                               }}
-                              role="menu"
                               aria-label={`Submenu de ${nav.name}`}
                            >
                               <ul className="mt-2 space-y-1 ml-9">
@@ -149,7 +143,7 @@ const NavBar = () => {
                                        <Link
                                           passHref
                                           href={subItem.path}
-                                          className={`menu-dropdown-item  ${
+                                          className={`menu-dropdown-item ${
                                              isActive(subItem.path)
                                                 ? " bg-bee-yellow-100 text-bee-yellow-600"
                                                 : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
@@ -157,7 +151,6 @@ const NavBar = () => {
                                           onClick={(e) => {
                                              if (!gestor) e.preventDefault();
                                           }}
-                                          role="menuitem"
                                           aria-current={
                                              isActive(subItem.path)
                                                 ? "page"
@@ -178,7 +171,7 @@ const NavBar = () => {
                      <Link
                         href={nav.path}
                         passHref
-                        className={`menu-item group  ${
+                        className={`menu-item group ${
                            isActive(nav.path)
                               ? " dark:text-bee-yellow-600 text-bee-yellow-700 bg-bee-yellow-100"
                               : " text-bee-dark-600 dark:text-white hover:bg-bee-alert-500 dark:hover:bg-bee-alert-600"
@@ -186,7 +179,6 @@ const NavBar = () => {
                         onClick={(e) => {
                            if (!gestor) e.preventDefault();
                         }}
-                        role="menuitem"
                         aria-current={isActive(nav.path) ? "page" : undefined}
                         aria-label={`${nav.name} ${!gestor ? "(acesso restrito)" : ""}`}
                      >
@@ -274,7 +266,6 @@ const NavBar = () => {
          } ${isMobileOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0`}
          onMouseEnter={() => !isExpanded && setIsHovered(true)}
          onMouseLeave={() => setIsHovered(false)}
-         role="navigation"
          aria-label="Menu principal"
       >
          <div
@@ -284,7 +275,7 @@ const NavBar = () => {
          >
             <Link
                href="/"
-               className="flex items-center gap-0  rounded-lg"
+               className="flex items-center gap-0 rounded-lg"
                aria-label="Ir para página inicial"
             >
                {isExpanded || isHovered || isMobileOpen ? (
@@ -332,7 +323,7 @@ const NavBar = () => {
                            />
                         )}
                      </h2>
-                     <div role="menu" aria-labelledby="menu-principal">
+                     <div aria-labelledby="menu-principal">
                         {menuItem(navItem, "main")}
                      </div>
                   </div>
@@ -344,10 +335,10 @@ const NavBar = () => {
                               ? "lg:justify-center"
                               : "justify-start"
                         }`}
-                        id="menu-outros"
+                        id="menu-suporte"
                      >
                         {isExpanded || isHovered || isMobileOpen ? (
-                           "Outros"
+                           "Suporte"
                         ) : (
                            <Icon
                               name="reticencias"
@@ -356,7 +347,7 @@ const NavBar = () => {
                            />
                         )}
                      </h2>
-                     <div role="menu" aria-labelledby="menu-outros">
+                     <div aria-labelledby="menu-suporte">
                         {menuItem(othersItems, "others")}
                      </div>
                   </div>
@@ -381,7 +372,7 @@ const NavBar = () => {
                               />
                            )}
                         </h2>
-                        <div role="menu" aria-labelledby="menu-admin">
+                        <div aria-labelledby="menu-admin">
                            {menuItem(adminItems, "admin")}
                         </div>
                      </div>

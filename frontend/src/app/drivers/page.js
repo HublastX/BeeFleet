@@ -19,6 +19,7 @@ function Driver() {
                <Btn
                   texto="Novo Motorista"
                   variant="primary"
+                  aria-label="Criar novo motorista"
                   className=" gap-3 text-nowrap cursor-pointer hidden md:flex"
                >
                   <Icon name="addUser" className="size-6" />
@@ -36,10 +37,20 @@ function Driver() {
             </div>
 
             <div className="flex gap-2">
-               <Btn variant="secondary" onClick={() => setView("table")}>
+               <Btn
+                  variant="secondary"
+                  aria-label="Visualizar como tabela"
+                  aria-pressed={view === "table"}
+                  onClick={() => setView("table")}
+               >
                   <Icon name="table" className="size-8" />
                </Btn>
-               <Btn variant="secondary" onClick={() => setView("cards")}>
+               <Btn
+                  variant="secondary"
+                  aria-label="Visualizar como cards"
+                  aria-pressed={view === "cards"}
+                  onClick={() => setView("cards")}
+               >
                   <Icon name="identidade" className="size-8" />
                </Btn>
             </div>
@@ -51,7 +62,8 @@ function Driver() {
          </div>
 
          <div className="md:hidden flex">
-            <Link href="/drivers/create"
+            <Link
+               href="/drivers/create"
                className="fixed bottom-0 right-0 m-4 z-50 p-6 bg-bee-purple-600 hover:bg-bee-purple-700 shadow-xl text-white rounded-full transition-colors duration-300"
             >
                <Icon name="addUser" className="size-6" />

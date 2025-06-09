@@ -295,7 +295,7 @@ function Events() {
                      </div>
                   </div>
                   <div className="mt-4 pt-3 border-t border-bee-dark-300 dark:border-bee-dark-600">
-                     <p className="text-xs text-bee-dark-500 dark:text-bee-dark-400">
+                     <p className="text-xs text-bee-dark-500 dark:text-gray-500">
                         Total: {events.length} eventos registrados
                      </p>
                   </div>
