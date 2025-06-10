@@ -324,6 +324,13 @@ export const getCompleteManagersReport = async (
                     status: event.status,
                     createdAt: event.createdAt,
                     endedAt: event.endedAt,
+                    checkoutCreate:
+                        event.eventType === "RETURN" && event.checkoutEventId
+                            ? allCheckoutEvents.find(
+                                  (checkout) =>
+                                      checkout.id === event.checkoutEventId
+                              )?.createdAt || "ainda não foi finalizado"
+                            : 0,
                     managerId: event.managerId,
                     driverId: event.driver.id,
                     carId: event.car.id,
