@@ -99,10 +99,11 @@ export default function DriverCard({ searchTerm }) {
             animate={{ opacity: 1 }}
             className={gridClass}
          >
-            <AnimatePresence>
+            <AnimatePresence mode="sync">
                {motoristasFiltrados.map((driver, index) => (
                   <motion.div
                      key={driver.id}
+                     layout
                      initial={{ opacity: 0, scale: 0.9, y: 20 }}
                      animate={{ opacity: 1, scale: 1, y: 0 }}
                      exit={{ opacity: 0, scale: 0.9, y: -20 }}
@@ -110,7 +111,7 @@ export default function DriverCard({ searchTerm }) {
                         type: "spring",
                         stiffness: 260,
                         damping: 20,
-                        delay: index * 0.1,
+                        delay: searchTerm ? 0 : Math.min(index * 0.1, 0.5),
                      }}
                      whileHover={{
                         scale: 1.02,

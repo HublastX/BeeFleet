@@ -29,9 +29,9 @@ function Cars() {
                <InputText
                   variant="withIcon"
                   icon="search"
-                  aria-controls="Pesquise por placa ou modelo do veículo"
-                  aria-label="Pesquise por placa ou modelo do veículo"
-                  placeholder="Pesquise por placa ou modelo do veículo"
+                  aria-controls="Pesquise por placa, marca ou modelo do veículo"
+                  aria-label="Pesquise por placa, marca ou modelo do veículo"
+                  placeholder="Pesquise por placa, marca ou modelo do veículo"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                />
