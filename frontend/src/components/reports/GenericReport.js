@@ -546,7 +546,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         />
                         <InfoItem
                            label="Iniciado em"
-                           value={formatDateTime(event.createdAt)}
+                           value={formatDateTime(event.checkoutCreate)}
                         />
                         {event.endedAt && (
                            <InfoItem
@@ -918,7 +918,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
             </div>
          </header>
 
-         {/* Detalhes do Item Selecionado */}
          {getSelectedItemDetails()}
 
          {/* Corpo do Relatório */}
@@ -1253,14 +1252,14 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                                 <span className="text-bold">
                                                    {
                                                       formatDateTime(
-                                                         event.createdAt
+                                                         event.checkoutCreate
                                                       ).split(",")[0]
                                                    }
                                                 </span>
                                                 <span className="text-sm text-gray-500">
                                                    {
                                                       formatDateTime(
-                                                         event.createdAt
+                                                         event.checkoutCreate
                                                       ).split(",")[1]
                                                    }
                                                 </span>

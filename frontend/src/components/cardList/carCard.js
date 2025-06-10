@@ -17,7 +17,8 @@ export default function CarCard({ searchTerm }) {
          const termo = searchTerm.toLowerCase();
          return (
             carro.model.toLowerCase().includes(termo) ||
-            carro.plate.toLowerCase().includes(termo)
+            carro.brand.toLowerCase().includes(termo) ||
+            carro.plate.toLowerCase().includes(termo) 
          );
       })
       .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -86,9 +87,10 @@ export default function CarCard({ searchTerm }) {
             animate={{ opacity: 1 }}
             className={gridClass}
          >
-            <AnimatePresence>
+            <AnimatePresence mode="sync">
                {carrosFiltrados.map((car, index) => (
                   <motion.div
+                     layout
                      key={car.id}
                      initial={{ opacity: 0, scale: 0.9, y: 20 }}
                      animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -97,7 +99,7 @@ export default function CarCard({ searchTerm }) {
                         type: "spring",
                         stiffness: 260,
                         damping: 20,
-                        delay: index * 0.1,
+                        delay: searchTerm ? 0 : Math.min(index * 0.1, 0.5),
                      }}
                      whileHover={{
                         scale: 1.02,
