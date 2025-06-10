@@ -351,6 +351,275 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                            />
                         </div>
                      </div>
+                     {manager.summary.totalDrivers > 0 && (
+                        <section className="mb-8 mt-4">
+                           <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                              <Icon name="users" className="size-5" />
+                              Motoristas
+                           </h2>
+                           <div className="overflow-x-auto">
+                              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                 <thead className="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Nome
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Telefone
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          CNH
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Status
+                                       </th>
+                                    </tr>
+                                 </thead>
+                                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {manager.drivers
+                                       .sort(
+                                          (a, b) =>
+                                             new Date(b.createdAt) -
+                                             new Date(a.createdAt)
+                                       )
+                                       .map((driver) => (
+                                          <tr key={driver.id}>
+                                             <td className="px-6 py-4 whitespace-nowrap">
+                                                {driver.name}
+                                             </td>
+                                             <td className="px-6 py-4 whitespace-nowrap">
+                                                {driver.phone}
+                                             </td>
+                                             <td className="px-6 py-4 whitespace-nowrap">
+                                                {driver.license}
+                                             </td>
+                                             <td className="px-6 py-4 whitespace-nowrap">
+                                                {driver.isAvailable
+                                                   ? "Disponível"
+                                                   : "Indisponível"}
+                                             </td>
+                                          </tr>
+                                       ))}
+                                 </tbody>
+                              </table>
+                           </div>
+                        </section>
+                     )}
+                     {manager.summary.totalCars > 0 && (
+                        <section className="mb-8 mt-4">
+                           <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                              <Icon name="car" className="size-5" />
+                              Veículos
+                           </h2>
+                           <div className="overflow-x-auto">
+                              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                 <thead className="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Placa
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Marca
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Modelo
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Status
+                                       </th>
+                                    </tr>
+                                 </thead>
+                                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {manager.cars.map((car) => (
+                                       <tr key={car.id}>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {car.plate}
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {car.brand}
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {car.model}
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {car.status === "IN_USE"
+                                                ? "Em uso"
+                                                : "Disponível"}
+                                          </td>
+                                       </tr>
+                                    ))}
+                                 </tbody>
+                              </table>
+                           </div>
+                        </section>
+                     )}
+                     {manager.summary.totalEvents > 0 && (
+                        <section className="mb-8 mt-4">
+                           <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                              <Icon name="eventoL" className="size-5" />
+                              Eventos
+                           </h2>
+                           <div className="overflow-x-auto">
+                              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                 <thead className="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Tipo
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Veículo
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Motorista
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Data/Hora
+                                       </th>
+                                    </tr>
+                                 </thead>
+                                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {manager.events.map((event) => (
+                                       <tr key={event.id}>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             <div className="grid grid-cols-1">
+                                                {event.eventType === "CHECKOUT"
+                                                   ? "Saída"
+                                                   : "Retorno"}
+                                             </div>
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             <div className="grid grid-cols-1">
+                                                {event.carInfo.split("(")[0]}
+                                                <span className="text-sm text-gray-500">
+                                                   {event.carInfo
+                                                      .split("(")[1]
+                                                      .replace(")", "")}
+                                                </span>
+                                             </div>
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             <div className="grid grid-cols-1">
+                                                {event.driverName}
+                                                <span className="text-sm text-gray-500">
+                                                   {event.driverPhone}
+                                                </span>
+                                             </div>
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             <div className="grid grid-cols-1">
+                                                {
+                                                   formatDateTime(
+                                                      event.createdAt
+                                                   ).split(",")[0]
+                                                }
+                                                <span className="text-sm text-gray-500">
+                                                   {
+                                                      formatDateTime(
+                                                         event.createdAt
+                                                      ).split(",")[1]
+                                                   }
+                                                </span>
+                                             </div>
+                                          </td>
+                                       </tr>
+                                    ))}
+                                 </tbody>
+                              </table>
+                           </div>
+                        </section>
+                     )}
+                     {manager.summary.totalDeletedDrivers > 0 && (
+                        <section className="mb-8 mt-4">
+                           <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                              <Icon name="trash" className="size-5" />
+                              Motoristas Removidos
+                           </h2>
+                           <div className="overflow-x-auto">
+                              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                 <thead className="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Nome
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Telefone
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          CNH
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Data de Remoção
+                                       </th>
+                                    </tr>
+                                 </thead>
+                                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {manager.deletedDrivers.map((driver) => (
+                                       <tr key={driver.id}>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {driver.name}
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {driver.phone}
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {driver.license}
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {formatDate(driver.deletedAt)}
+                                          </td>
+                                       </tr>
+                                    ))}
+                                 </tbody>
+                              </table>
+                           </div>
+                        </section>
+                     )}
+                     {manager.summary.totalDeletedCars > 0 && (
+                        <section className="mb-8 mt-4">
+                           <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
+                              <Icon name="trash" className="size-5" />
+                              Veículos Removidos
+                           </h2>
+                           <div className="overflow-x-auto">
+                              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                                 <thead className="bg-gray-50 dark:bg-gray-800">
+                                    <tr>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Placa
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Marca
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Modelo
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Status
+                                       </th>
+                                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                          Data de Remoção
+                                       </th>
+                                    </tr>
+                                 </thead>
+                                 <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                                    {manager.deletedCars.map((car) => (
+                                       <tr key={car.id}>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {car.plate}
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {car.brand}
+                                          </td>
+                                          <td className="px-6 py-4 whitespace-nowrap">
+                                             {car.model}
+                                          </td>
+                                       </tr>
+                                    ))}
+                                 </tbody>
+                              </table>
+                           </div>
+                        </section>
+                     )}
                   </div>
                </div>
             );
@@ -1555,10 +1824,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                     Data/Hora
                                  </th>
                                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Status
-                                 </th>
-
-                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Hodômetro
                                  </th>
                               </tr>
@@ -1566,20 +1831,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                            <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
                               {getActiveManagers()
                                  .flatMap((manager) => manager.events)
-                                 .filter((event) => {
-                                    if (event.eventType === "RETURN")
-                                       return true;
-                                    if (event.eventType === "CHECKOUT") {
-                                       const hasReturn = getActiveManagers()
-                                          .flatMap((m) => m.events)
-                                          .some(
-                                             (e) =>
-                                                e.checkoutEventId === event.id
-                                          );
-                                       return !hasReturn;
-                                    }
-                                    return true;
-                                 })
                                  .filter(
                                     (event) =>
                                        !filters.selectedItem?.id ||
@@ -1610,7 +1861,12 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                           </div>
                                        </td>
                                        <td className="px-6 py-4 whitespace-nowrap">
-                                          {event.driverName}
+                                          <div className="grid grid-cols-1">
+                                             {event.driverName}
+                                             <span className="text-sm text-gray-500">
+                                                {event.driverPhone}
+                                             </span>
+                                          </div>
                                        </td>
                                        <td className="px-6 py-4 whitespace-nowrap">
                                           <div className="grid grid-cols-1">
@@ -1630,12 +1886,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                              </span>
                                           </div>
                                        </td>
-                                       <td className="px-6 py-4 whitespace-nowrap">
-                                          {event.status === "COMPLETED"
-                                             ? "Concluído"
-                                             : "Ativo"}
-                                       </td>
-
                                        <td className="px-6 py-4 whitespace-nowrap">
                                           {event.odometer}km
                                        </td>
