@@ -40,7 +40,8 @@ export default function ReportList({ open, onClose, tipo, onSelect }) {
                   minute: "2-digit",
                }),
             };
-         });
+         })
+         .sort((a, b) => new Date(b.endedAt) - new Date(a.endedAt));
       titulo = "Eventos disponíveis";
    }
 
