@@ -135,7 +135,19 @@ export default function CarTable({ searchTerm }) {
                               isHeader
                               className="px-5 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
                            >
-                              Odometro
+                              Hodômetro
+                           </TableCell>
+                           <TableCell
+                              isHeader
+                              className="px-5 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
+                           >
+                              Renavam
+                           </TableCell>
+                           <TableCell
+                              isHeader
+                              className="px-5 py-3 text-start font-medium text-bee-dark-700 dark:text-gray-200"
+                           >
+                              Chassi
                            </TableCell>
                            <TableCell
                               isHeader
@@ -187,9 +199,10 @@ export default function CarTable({ searchTerm }) {
                                           <Icon name="car" />
                                        )}
                                     </div>
-                                    <div>
-                                       <span className="block text-bee-dark-600 dark:text-bee-alert-500">
-                                          {carro.brand} {carro.model}
+                                    <div className="grid grid-cols-1">
+                                       {carro.model}
+                                       <span className="text-gray-500 text-sm">
+                                          {carro.brand}
                                        </span>
                                     </div>
                                  </Link>
@@ -210,6 +223,24 @@ export default function CarTable({ searchTerm }) {
                                     className="px-4 py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 flex items-center h-full w-full hover:text-inherit"
                                  >
                                     {carro.odometer} km
+                                 </Link>
+                              </TableCell>
+
+                              <TableCell className="p-0">
+                                 <Link
+                                    href={`/cars/${carro.id}`}
+                                    className="px-4 py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 flex items-center h-full w-full hover:text-inherit"
+                                 >
+                                    {carro.renavam}
+                                 </Link>
+                              </TableCell>
+
+                              <TableCell className="p-0">
+                                 <Link
+                                    href={`/cars/${carro.id}`}
+                                    className="px-4 py-3 text-bee-dark-600 text-start dark:text-bee-alert-500 flex items-center h-full w-full hover:text-inherit"
+                                 >
+                                    {carro.chassis}
                                  </Link>
                               </TableCell>
 
