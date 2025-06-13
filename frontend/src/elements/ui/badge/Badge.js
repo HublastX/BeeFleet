@@ -15,13 +15,11 @@ const Badge = ({
    const baseStyles =
       " items-center px-2.5 py-0.5 justify-center gap-1 rounded-full font-medium";
 
-   // Define size styles
    const sizeStyles = {
       sm: "text-theme-xs",
       md: "text-sm",
    };
 
-   // cores das variaveis
    const variants = {
       light: {
          success: "bg-bee-alert-200 text-bee-alert-100",
