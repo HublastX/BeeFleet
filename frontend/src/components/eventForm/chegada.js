@@ -33,7 +33,7 @@ export default function Chegada() {
    const [carroError, setCarroError] = useState(false);
    const [carroStatusError, setCarroStatusError] = useState("");
 
-   // Odômetro state
+   // Odometro state
    const [odometro, setOdometro] = useState("");
    const [odometroError, setOdometroError] = useState(false);
    const [showInfo, setShowInfo] = useState(false);
@@ -60,7 +60,6 @@ export default function Chegada() {
       return false;
    });
 
-   // Handlers
    const selecionarMotorista = useCallback(
       (m) => {
          if (m.isAvailable !== false) {
@@ -98,7 +97,6 @@ export default function Chegada() {
       [criterioCarro]
    );
 
-   // Efeitos
    useEffect(() => {
       if (!motoristasFiltrados?.length && motoristaInput) {
          setMotoristaError(true);
@@ -204,8 +202,6 @@ export default function Chegada() {
       }
 
       try {
-         //  await updateCar(selectedCarro.id, odometro);
-
          await createEvent(
             selectedCarro.id,
             selectedMotorista.id,
@@ -433,7 +429,7 @@ export default function Chegada() {
                      </p>
                   )}
 
-                  {/* Campo de odômetro */}
+                  {/* Campo de oometro */}
                   <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
                      <label className="font-medium min-w-[100px]">
                         Hodômetro atualizado:
@@ -466,7 +462,7 @@ export default function Chegada() {
                </div>
             </motion.div>
 
-            {/* Seção Confirmação */}
+            {/* resumo */}
             <motion.div
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
@@ -548,7 +544,7 @@ export default function Chegada() {
                </AnimatePresence>
             </motion.div>
 
-            {/* Botões */}
+            {/* botao */}
             <div className="mt-6 pt-6 border-t-2 border-bee-dark-300 dark:border-bee-dark-400 flex justify-end gap-3">
                <Btn
                   type="button"
