@@ -851,7 +851,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
 
    if (!isOpen) return null;
 
-   // Renderização condicional das tabelas conforme filtro
    const showManagers = filters.filterType === "manager";
    const showDrivers = filters.filterType === "motorista";
    const showCars = filters.filterType === "carro";
@@ -1011,14 +1010,13 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
             { header: "Status", key: "status", width: 15 },
             { header: "Motorista", key: "driver", width: 30 },
             { header: "Veículo", key: "car", width: 30 },
-            { header: "Distancia", key: "distanceTraveled", width: 15 },
+            { header: "Distância", key: "distanceTraveled", width: 15 },
             { header: "Gestor", key: "manager", width: 30 },
          ];
 
          getActiveManagers().forEach((manager) => {
             const eventsToShow = (manager.events || [])
                .filter((event) => {
-                  // Filtro de retorno
                   if (event.eventType === "RETURN") return true;
                   if (event.eventType === "CHECKOUT") {
                      const hasReturn = getActiveManagers()
@@ -1043,6 +1041,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                   driver: event.driverName,
                   car: event.carInfo,
                   odometer: event.odometer,
+                  distanceTraveled: event.distanceTraveled,
                   manager: manager.name,
                });
             });
@@ -1085,7 +1084,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
          styleHeader(statsSheet);
       }
 
-      // Gera o nome do arquivo com base no filtro
       const fileName = filters.selectedItem?.id
          ? `relatorio_${filters.filterType}_${getItemInfo().replace(/[^a-zA-Z0-9]/g, "_")}.xlsx`
          : "relatorio_beefleet.xlsx";
@@ -1112,7 +1110,6 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                <span>Imprimir Relatório</span>
             </button>
          </div>
-         {/* Cabeçalho */}
          <header className="border-b border-gray-300 dark:border-gray-700 pb-4 mb-6">
             <div className="flex justify-between items-start">
                <div>
@@ -1152,7 +1149,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                   />
                </div>
             </div>
-            {/* Filtros aplicados */}
+
             <div className="mt-4">
                <h2 className="text-lg font-semibold mb-2">Filtros Aplicados</h2>
                <div className="grid grid-cols-2 gap-4">
@@ -1189,9 +1186,8 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
 
          {getSelectedItemDetails()}
 
-         {/* Corpo do Relatório */}
          <div className="space-y-8">
-            {/* Estatísticas Gerais */}
+            {/* Estatisticas Gerais */}
             {filters.filterType === "all" && (
                <>
                   <section>
@@ -1226,7 +1222,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         </div>
                      </div>
                   </section>
-                  {/* Quantidade de Itens Excluídos */}
+                  {/* Quantidade de Itens Excluidos */}
                   <section>
                      <h2 className="flex items-center gap-2 text-lg font-semibold mt-6 mb-2">
                         <Icon name="trash" className="size-5" strokeWidth={2} />
@@ -1714,7 +1710,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                   </div>
                </section>
             )}
-            {/* Lista de Veículos */}
+            {/* Lista de Veiculos */}
             {showCars && !filters.selectedItem?.id && (
                <section>
                   <h2 className="flex items-center gap-2 text-xl font-semibold mb-4">
@@ -1902,13 +1898,9 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                </section>
             )}
          </div>
-         {/* Rodapé */}
          <footer className="mt-8 pb-3 pt-6 border-t border-gray-300 dark:border-gray-700">
             <div className="text-xs text-gray-500">
                <p>Relatório gerado automaticamente pelo sistema Bee Fleet</p>
-               <p className="mt-1">
-                  © {new Date().getFullYear()} - Todos os direitos reservados
-               </p>
             </div>
          </footer>
       </div>
