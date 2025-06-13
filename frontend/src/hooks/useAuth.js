@@ -346,7 +346,8 @@ export default function useAuth() {
 
          localStorage.setItem("toastMessage", "Gestor deletado com sucesso!");
          localStorage.setItem("toastType", "success");
-         router.push("/managers");
+         
+         logout();
 
          setGestores((prev) => prev.filter((manager) => manager.id !== id));
       } catch (error) {
