@@ -173,7 +173,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
 
       const DetailCard = ({ title, children }) => (
          <div className="bg-white p-4 rounded-lg border border-gray-300 dark:bg-gray-800 dark:border-gray-700">
-            <h3 className="text-lg font-semibold mb-3 text-bee-dark-600">
+            <h3 className="text-lg font-semibold mb-3 text-bee-dark-600 dark:text-white">
                {title}
             </h3>
             <div className="space-y-2">{children}</div>
@@ -182,7 +182,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
 
       const InfoItem = ({ label, value }) => (
          <div className="flex justify-between items-center py-1 border-b border-gray-300 dark:border-gray-700 last:border-0">
-            <span className="text-gray-600">{label}</span>
+            <span className="text-gray-600 dark:text-gray-300">{label}</span>
             <span className="font-medium">{value}</span>
          </div>
       );
@@ -190,10 +190,10 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
       const StatCard = ({ label, value, icon }) => (
          <div className="bg-white p-4 rounded-lg border border-gray-300 dark:bg-gray-800 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-2">
-               <Icon name={icon} className="size-5 text-bee-dark-600" />
-               <p className="text-sm text-gray-600">{label}</p>
+               <Icon name={icon} className="size-5 text-bee-dark-600 dark:text-white" />
+               <p className="text-sm text-gray-600 dark:text-gray-300">{label}</p>
             </div>
-            <p className="text-2xl font-bold text-bee-dark-600">{value}</p>
+            <p className="text-2xl font-bold text-bee-dark-600 dark:text-white">{value}</p>
          </div>
       );
 
@@ -248,7 +248,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                   <div className="flex items-start gap-2">
                      <Icon name="car" className="size-4 text-gray-400 mt-1" />
                      <div>
-                        <p className="text-sm text-gray-600">Veículo</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">Veículo</p>
                         <p className="font-medium">
                            {event.carInfo.split("(")[0]}
                         </p>
@@ -263,7 +263,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                   <div className="flex items-start gap-2">
                      <Icon name="user" className="size-4 text-gray-400 mt-1" />
                      <div>
-                        <p className="text-sm text-gray-600">Motorista</p>
+                        <p className="text-sm text-gray-600 dark:text-gray-300">Motorista</p>
                         <p className="font-medium">{event.driverName}</p>
                         <p className="text-sm text-gray-500">
                            {event.driverPhone}
@@ -278,7 +278,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                            className="size-4 text-gray-400 mt-1"
                         />
                         <div>
-                           <p className="text-sm text-gray-600">Duração</p>
+                           <p className="text-sm text-gray-600 dark:text-gray-300">Duração</p>
                            <p className="font-medium">
                               {getEventDuration(event)}
                            </p>
@@ -306,7 +306,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         />
                      </div>
                      <div>
-                        <h2 className="text-2xl font-bold text-bee-dark-600">
+                        <h2 className="text-2xl font-bold text-bee-dark-600 dark:text-white">
                            {manager.name}
                         </h2>
                         <p className="text-gray-500">Gestor</p>
@@ -649,7 +649,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         />
                      </div>
                      <div>
-                        <h2 className="text-2xl font-bold text-bee-dark-600">
+                        <h2 className="text-2xl font-bold text-bee-dark-600 dark:text-white">
                            {driver.name}
                         </h2>
                         <p className="text-gray-500">Motorista</p>
@@ -677,7 +677,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                      </DetailCard>
 
                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-bee-dark-600">
+                        <h3 className="text-lg font-semibold text-bee-dark-600 dark:text-white">
                            Últimos Eventos
                         </h3>
                         {driverEvents.length > 0 ? (
@@ -718,7 +718,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         <Icon name="car" className="size-8 text-bee-dark-600" />
                      </div>
                      <div>
-                        <h2 className="text-2xl font-bold text-bee-dark-600">
+                        <h2 className="text-2xl font-bold text-bee-dark-600 dark:text-white">
                            {car.model}
                         </h2>
                         <p className="text-gray-500">{car.brand}</p>
@@ -753,7 +753,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                      </DetailCard>
 
                      <div className="space-y-4">
-                        <h3 className="text-lg font-semibold text-bee-dark-600">
+                        <h3 className="text-lg font-semibold text-bee-dark-600 dark:text-white">
                            Últimos Eventos
                         </h3>
                         {carEvents.length > 0 ? (
@@ -791,7 +791,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         />
                      </div>
                      <div>
-                        <h2 className="text-2xl font-bold text-bee-dark-600">
+                        <h2 className="text-2xl font-bold text-bee-dark-600 dark:text-white">
                            {`${event.carInfo.split("(")[0].trim()} - ${event.driverName}`}
                         </h2>
                         <p className="text-gray-500">
@@ -1196,7 +1196,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         Estatísticas Gerais
                      </h2>
                      <div className="grid grid-cols-3 gap-4">
-                        <div className="p-4 rounded-lg border">
+                        <div className="p-4 rounded-lg border dark:border-gray-500">
                            <p className="text-sm text-gray-500">
                               Total de Gestores
                            </p>
@@ -1204,7 +1204,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               {getFilteredGlobalStats().totalManagers || 0}
                            </p>
                         </div>
-                        <div className="p-4 rounded-lg border">
+                        <div className="p-4 rounded-lg border dark:border-gray-500">
                            <p className="text-sm text-gray-500">
                               Total de Motoristas
                            </p>
@@ -1212,7 +1212,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                               {getFilteredGlobalStats().totalDrivers || 0}
                            </p>
                         </div>
-                        <div className="p-4 rounded-lg border">
+                        <div className="p-4 rounded-lg border dark:border-gray-500">
                            <p className="text-sm text-gray-500">
                               Total de Veículos
                            </p>
@@ -1229,28 +1229,28 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                         Itens Excluídos
                      </h2>
                      <div className="grid grid-cols-3 gap-4">
-                        <div className="p-4 rounded-lg border ">
-                           <p className="text-sm text-red-700">
+                        <div className="p-4 rounded-lg border dark:border-gray-500">
+                           <p className="text-sm text-red-700 dark:text-red-600/50">
                               Motoristas excluídos
                            </p>
-                           <p className="text-xl font-bold text-red-700">
+                           <p className="text-xl font-bold text-red-700 dark:text-red-600/50">
                               {getFilteredGlobalStats().totalDeletedDrivers ||
                                  0}
                            </p>
                         </div>
-                        <div className="p-4 rounded-lg border">
-                           <p className="text-sm text-red-700">
+                        <div className="p-4 rounded-lg border dark:border-gray-500">
+                           <p className="text-sm text-red-700 dark:text-red-600/50">
                               Veículos excluídos
                            </p>
-                           <p className="text-xl font-bold text-red-700">
+                           <p className="text-xl font-bold text-red-700 dark:text-red-600/50">
                               {getFilteredGlobalStats().totalDeletedCars || 0}
                            </p>
                         </div>
-                        <div className="p-4 rounded-lg border">
-                           <p className="text-sm text-red-700">
+                        <div className="p-4 rounded-lg border dark:border-gray-500">
+                           <p className="text-sm text-red-700 dark:text-red-600/50">
                               Eventos excluídos
                            </p>
-                           <p className="text-xl font-bold text-red-700">
+                           <p className="text-xl font-bold text-red-700 dark:text-red-600/50">
                               {getFilteredGlobalStats().totalDeletedEvents || 0}
                            </p>
                         </div>
@@ -1608,9 +1608,7 @@ const GenericReport = ({ isOpen, reportData, filters }) => {
                                        </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
-                                       <div className="text-sm text-gray-500">
                                           {manager.email}
-                                       </div>
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap">
                                        <div className="font-medium">
