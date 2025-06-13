@@ -17,7 +17,6 @@ export default function useEvents() {
    const [erro, setErro] = useState(null);
    const router = useRouter();
    const { showToast } = useToast();
-   // const API_URL = "https://hublast.com/bee-fleet-datahub/api";
    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
    // Função para dados de motorista e veículo
@@ -62,6 +61,7 @@ export default function useEvents() {
       setErro(msg);
       showToast("Erro", type, msg, 5000);
    };
+   
    // Utilitário para filtrar eventos por gestor
    const getEventsByManager = () => {
       if (!gestor?.id) return [];
@@ -130,10 +130,6 @@ export default function useEvents() {
          if (!res.ok) throw new Error("Erro ao buscar evento");
 
          const data = await res.json();
-
-         // const eventosAtivos = data.data.filter(
-         //    (events) => events.deletedAt === null
-         // );
 
          const rawEvent = data.data || data;
 
@@ -352,7 +348,6 @@ export default function useEvents() {
             5000
          );
 
-         // Atualiza a lista de eventos
          const updatedEvent = await getEvent(id);
          if (updatedEvent) {
             setEvents((prev) => [...prev, updatedEvent]);
