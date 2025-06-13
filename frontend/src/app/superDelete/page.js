@@ -167,7 +167,7 @@ const SuperDelete = () => {
                            Selecione o tipo de dado
                         </h2>
 
-                        {/* Mobile Dropdown */}
+                        {/* Mobile  */}
                         <div className="md:hidden relative mb-6">
                            <select
                               value={selectedType}
@@ -183,7 +183,7 @@ const SuperDelete = () => {
                            </select>
                         </div>
 
-                        {/* Desktop Tabs */}
+                        {/* Desktop  */}
                         <div className="hidden md:grid grid-cols-4 gap-4">
                            {dataTypes.map((type) => (
                               <motion.button
