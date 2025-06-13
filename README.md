@@ -90,12 +90,4 @@ O sistema possui registro aberto para novos usuários:
 -   [Fernando Teixeira](https://github.com/nadox00)
 -   [Marcos Vilas](https://github.com/VilasBoass)
 
-## 📞 Contato
 
-O sistema é auto-explicativo e possui uma interface intuitiva. Para suporte:
-
--   🤖 Utilize nosso bot de atendimento dentro da plataforma
--   🌐 Acesse: [https://hublast.com/beefleet/](https://hublast.com/beefleet/)
--   💻 Repositório: [github.com/HublastX/BeeFleet](https://github.com/HublastX/BeeFleet)
-
-> **Importante**: Todo o suporte é realizado através do nosso bot inteligente, que está disponível 24 horas por dia para ajudar você.
