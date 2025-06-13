@@ -334,6 +334,7 @@ export default function useAuth() {
             },
             body: JSON.stringify({
                managerId: gestor.id,
+               adminId: "d339c80d-cad2-46b9-a1f1-c8b7eeaed20f",
                reason: "Gestor deletado por ele mesmo.",
             }),
          });
