@@ -12,6 +12,7 @@ import useEvents from "@/hooks/useEvent";
 import useCar from "@/hooks/useCar";
 import useDrivers from "@/hooks/useDrivers";
 import useAuth from "@/hooks/useAuth";
+import TableSkeleton from "@/elements/ui/skeleton/TableSkeleton";
 
 export default function RecentAtualizacao() {
    const { events, carregando: carregandoEventos } = useEvents();
@@ -31,7 +32,6 @@ export default function RecentAtualizacao() {
       return format(date, "dd/MM HH:mm", { locale: ptBR });
    };
 
-   // Preparar os dados combinados
    const prepareData = () => {
       const allUpdates = [];
 
@@ -122,7 +122,7 @@ export default function RecentAtualizacao() {
 
          {carregando ? (
             <div className="py-4 text-center" role="status" aria-live="polite">
-               Carregando dados...
+               <TableSkeleton />
             </div>
          ) : (
             <div className="relative overflow-x-auto w-full no-scrollbar">

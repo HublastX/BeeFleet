@@ -3,7 +3,6 @@ import React from "react";
 export default function DetailSkeleton() {
    return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-pulse">
-         {/* Header */}
          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
             <div>
                <div className="flex items-center gap-4">
@@ -15,10 +14,8 @@ export default function DetailSkeleton() {
             <div className="h-10 bg-gray-200 dark:bg-gray-700 rounded w-24" />
          </div>
 
-         {/* Principal */}
          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-3 grid grid-cols-1 lg:grid-cols-3 gap-8">
-               {/* Foto */}
                <div className="bg-white dark:bg-gray-800 h-fit rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                   <div className="h-48 bg-gray-200 dark:bg-gray-700" />
                   <div className="p-6">
@@ -33,7 +30,6 @@ export default function DetailSkeleton() {
                   </div>
                </div>
 
-               {/* Informações */}
                <div className="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                   <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-32 mb-6" />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -47,7 +43,6 @@ export default function DetailSkeleton() {
                </div>
             </div>
 
-            {/* Histórico */}
             <div className="lg:col-span-3 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
                <div className="flex justify-between items-center mb-6">
                   <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-48" />

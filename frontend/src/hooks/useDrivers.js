@@ -12,7 +12,6 @@ export default function useDrivers() {
    const [erro, setErro] = useState(null);
    const router = useRouter();
    const { showToast } = useToast();
-   // const API_URL = "https://hublast.com/bee-fleet-datahub/api";
    const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
    const getImageUrl = useCallback(
@@ -409,7 +408,6 @@ export default function useDrivers() {
             5000
          );
 
-         // Atualiza a lista de motoristas
          const updatedDriver = await getDriver(id);
          if (updatedDriver) {
             setMotoristas((prev) => [...prev, updatedDriver]);

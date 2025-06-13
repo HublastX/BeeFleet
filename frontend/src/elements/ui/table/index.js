@@ -1,6 +1,5 @@
 import React from "react";
 
-// Table Component
 const Table = ({
    children,
    className,
@@ -20,7 +19,6 @@ const Table = ({
    );
 };
 
-// TableHeader Component
 const TableHeader = ({ children, className, role = "rowgroup", ...props }) => {
    return (
       <thead className={className} role={role} {...props}>
@@ -29,7 +27,6 @@ const TableHeader = ({ children, className, role = "rowgroup", ...props }) => {
    );
 };
 
-// TableBody Component
 const TableBody = ({ children, className, role = "rowgroup", ...props }) => {
    return (
       <tbody className={className} role={role} {...props}>
@@ -38,7 +35,6 @@ const TableBody = ({ children, className, role = "rowgroup", ...props }) => {
    );
 };
 
-// TableRow Component
 const TableRow = ({
    children,
    className,
@@ -58,7 +54,6 @@ const TableRow = ({
    );
 };
 
-// TableCell Component
 const TableCell = ({
    children,
    isHeader = false,

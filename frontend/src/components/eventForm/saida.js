@@ -105,7 +105,6 @@ export default function Saida() {
       [criterioCarro]
    );
 
-   // Efeitos
    useEffect(() => {
       if (!motoristasFiltrados.length && motoristaInput) {
          setMotoristaError(true);
@@ -170,7 +169,6 @@ export default function Saida() {
             "CHECKOUT",
             odometro,
             null
-            // eventDate.toISOString()
          );
       } catch (error) {
          console.error("Erro no handleSubmit:", error);
@@ -450,7 +448,7 @@ export default function Saida() {
                </div>
             </motion.div>
 
-            {/* Seção Confirmação */}
+            {/* resumo */}
             <div className="bg-bee-dark-100 dark:bg-gray-800 rounded-lg p-6">
                <div
                   className="flex items-center justify-between cursor-pointer"
@@ -515,7 +513,7 @@ export default function Saida() {
                )}
             </div>
 
-            {/* Botões */}
+            {/* botao */}
             <div className="mt-6 pt-6 border-t-2 border-bee-dark-300 dark:border-bee-dark-400 flex justify-end gap-3">
                <Btn
                   texto="Cancelar"
@@ -538,7 +536,6 @@ export default function Saida() {
                />
             </div>
 
-            {/* Modais de seleção */}
             <EventList
                open={openMotoristaList}
                onClose={() => setOpenMotoristaList(false)}
